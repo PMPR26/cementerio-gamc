@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Cuartel;
 
-use App\Http\Controllers\Controller;
+use App\Models\Cuartel;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class CuartelController extends Controller
 {
@@ -25,26 +26,29 @@ class CuartelController extends Controller
             
             $this->validate($request, [
                 'name' => 'required',
-                'cod' => 'required'
+                'codigo' => 'required|unique:cuartel'
             ], [
                 'name.required'  => 'El campo nombre de cuartel es obligatorio!',
-                'name.required'    => 'El campo Codigo cuartel es obligatorio!'
+                'codigo.required'    => 'El campo Codigo cuartel es obligatorio!',
+                'codigo.unique' => 'El código '.$request->codigo.' ya se encuentra en uso!.'
             ]);
             
 
            $new_cuartel =  Cuartel::create([
-            'id_user' => auth()->id(),
-            'num_gral' => trim($request->num_gral),
-            'num_cite' => trim($request->num_cite),
-            'description' => trim($request->descripcion),
-            'date_register_request' => $request->fecha,
+            'codigo' => trim($request->codigo),
+            'nombre' => trim($request->name),
+            'user_id' => auth()->id(),
+            'estado' => 'ACTIVO',
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s"),
            ]);
 
 
             return response([
                 'status'=> true,
-                'response'=> $new_request
+                'response'=> $new_cuartel
              ],201);
+
         }else{
 
             return response([

@@ -16,14 +16,13 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="col-sm-12 col-md-5 col-xl-5 card m-auto">
                 <div class="card-body">
             
-                    <div class="row ">
+                    <div class="row">
                         <div class="col-sm-12 col-md-12 col-xl-12">
                                 <div class="col-sm-12 col-md-12 col-xl-12 form-group">
 
                                     <label>Cuartel</label>
 
-                                    <select class="form-control select2 col-6" id="js-data-example-ajax ">
-                                      
+                                    <select class="form-control select2  col-md-12 col-xl-12" id="cuartel">                                      
                                         @foreach($cuartel as $c)
                                         <option value={{ $c->id}}> {{ $c->codigo }}</option>
                                         @endforeach
@@ -32,7 +31,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-md-12 col-xl-12">
                             <div class="form-group">
                                 <label>Codigo:</label>
                                 <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="code" autocomplete="off">
@@ -45,7 +44,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
 
 
                     <div class="row" >
-                        <div class="col-sm-6">
+                        <div class="col-md-12 col-xl-12">
                             <div class="form-group">
                                 <label>Nombre:</label>
                                 <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="name" autocomplete="off">
@@ -54,7 +53,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     </div>
 
                     <div class="row" >
-                        <div class="col-sm-6">
+                        <div class="col-sm-12 col-md-12 col-xl-12">
                             <div class="form-group">
                                 <label>Estado:</label>
                                 <select name="status" id="status" class="form-control">
@@ -71,7 +70,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                    
                    
                     <div class="col-sm-12" style="text-align: center">
-                        <button type="button" id="btn-ubicacion" class="btn btn-success">Registrar Bloque</button>
+                        <button type="button" id="btn_guardar_bloque" class="btn btn-success">Registrar Bloque</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                     </div> 
             

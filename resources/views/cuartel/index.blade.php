@@ -3,6 +3,7 @@
 @section('plugins.Datatables', true)
 @section('plugins.Animation', true)
 @section('plugins.Toastr', true)
+@section('plugins.Sweetalert2', true)
 
 @section('content_header')
     <h1>Listado de cuarteles</h1>
@@ -49,7 +50,11 @@
         </tbody>
     </table>
 
-    @include('cuartel.modalRegister') 
+    @include('cuartel.modalRegister', [
+        'id_button' => 'btn_guardar_cuartel',
+        'title_buton' => 'Guardar Cuartel',
+        'title_modal' => 'Nuevo Cuartel'
+        ]) 
     
 
 @stop
@@ -80,6 +85,51 @@
     <script> 
     
     $(document).ready(function () {
+
+        $('#btn_guardar_cuartel').on('click', function(){
+            return  $.ajax({
+                        type: 'POST',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: "{{ route('new.cuartel') }}",
+                        async: false,
+                        data: JSON.stringify({
+                            'codigo': $('#cod').val(),
+                            'name':  $('#name').val()
+                        }),
+                        success: function(data_response) {
+                            swal.fire({
+                            title: "Guardado!",
+                            text: "!Registro realizado con éxito!",
+                            type: "success",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false
+                            });
+                            setTimeout(function() { 
+                                location.reload();
+                            }, 2000);
+                            //toastr["success"]("Registro realizado con éxito!");
+                        },
+                        error: function (error) {
+                            
+                            if(error.status == 422){
+                                Object.keys(error.responseJSON.errors).forEach(function(k){
+                                toastr["error"](error.responseJSON.errors[k]);
+                                //console.log(k + ' - ' + error.responseJSON.errors[k]);
+                                });
+                            }else if(error.status == 419){
+                                location.reload();
+                            }
+
+                        }
+                    })
+        });
+
+
+
         $('#new-cuartel').on('click', function(){
 
             $('#modal-register-cuartel').modal('show');

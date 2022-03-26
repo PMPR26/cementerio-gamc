@@ -9,13 +9,13 @@ class Bloque extends Model
 {
     use HasFactory;
 
-
+    protected $table = 'bloque';
     protected $fillable = [
         'codigo',
         'nombre',
         'user_id',
         'estado',
-        'cuartel',
+        'cuartel_id',
         'created_at'
     ];
 

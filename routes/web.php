@@ -14,40 +14,33 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    if (Auth::check()) {
-        return view('home');
-    }else{
-        return redirect('login');
-    }
-    
-    
-});
+        Route::get('/', function () {
+            if (Auth::check()) {
+                return view('home');
+            }else{
+                return redirect('login');
+            }
+            
+            
+        });
 
-Auth::routes();
+        Auth::routes();
 
 
 //request from users
-Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
+
+    Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
     Route::get('/profile', 'App\Http\Controllers\User\UserController@profileUser')->name('profile');
-
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/cuartel', [App\Http\Controllers\Cuartel\CuartelController::class,'index'])->name('cuartel');
-Route::get('/cuartel-create', [App\Http\Controllers\Cuartel\CuartelController::class,'create'])->name('cuartel.create');
-Route::get('/cuartel-register', [App\Http\Controllers\cuartel\CuartelController::class,'register'])->name('cuartel.register');
-
-
-
-Route::get('/bloque', [App\Http\Controllers\Bloque\BloqueController::class,'index'])->name('bloque');
-Route::get('/bloque-create', [App\Http\Controllers\Bloque\BloqueController::class,'create'])->name('bloque.create');
-Route::get('/bloque-register', [App\Http\Controllers\Bloque\BloqueController::class,'register'])->name('bloque.register');
-Route::get('/list-cuartel', [App\Http\Controllers\Bloque\BloqueController::class,'listCuartel'])->name('list-cuartel');
-
-
-    
+});
+    Route::group(['prefix' => 'cuartel', 'middleware' => 'auth'], function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/index', 'App\Http\Controllers\Cuartel\CuartelController@index')->name('cuartel');
+    Route::post('/new-cuartel', 'App\Http\Controllers\Cuartel\CuartelController@createNewCuartel')->name('new.cuartel');
 });
 
-
-
-
+Route::group(['prefix' => 'bloque', 'middleware' => 'auth'], function () {
+    Route::get('/bloque', [App\Http\Controllers\Bloque\BloqueController::class,'index'])->name('bloque');
+    Route::get('/bloque-create', [App\Http\Controllers\Bloque\BloqueController::class,'create'])->name('bloque.create');
+    Route::post('/new-bloque', [App\Http\Controllers\Bloque\BloqueController::class,'createNewBloque'])->name('new.bloque');
+    Route::get('/list-cuartel', [App\Http\Controllers\Bloque\BloqueController::class,'listCuartel'])->name('list-cuartel');
+});

@@ -16,8 +16,7 @@
         <div>
             <button id="new-bloque" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Bloque</button>
         </div>
-        <?php //print_r($solicitudes); ?>
-        
+       
         <div class="col-sm-12">
             <table id="bloque-data" class="table table-striped table-bordered responsive" role="grid"
             aria-describedby="example">
@@ -85,6 +84,51 @@
     <script> 
     
     $(document).ready(function () {
+        $('#btn_guardar_bloque').on('click', function(){
+            return  $.ajax({
+                        type: 'POST',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: "{{ route('new.bloque') }}",
+                        async: false,
+                        data: JSON.stringify({
+                            'codigo': $('#code').val(),
+                            'name':  $('#name').val(),
+                            'cuartel':  $('#cuartel').val(),
+                            'estado':  $('#status').val(),
+
+                        }),
+                        success: function(data_response) {
+                            swal.fire({
+                            title: "Guardado!",
+                            text: "!Registro realizado con éxito!",
+                            type: "success",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false
+                            });
+                            setTimeout(function() { 
+                                location.reload();
+                            }, 2000);
+                            //toastr["success"]("Registro realizado con éxito!");
+                        },
+                        error: function (error) {
+                            
+                            if(error.status == 422){
+                                Object.keys(error.responseJSON.errors).forEach(function(k){
+                                toastr["error"](error.responseJSON.errors[k]);
+                                //console.log(k + ' - ' + error.responseJSON.errors[k]);
+                                });
+                            }else if(error.status == 419){
+                                location.reload();
+                            }
+
+                        }
+                    })
+        });
+
         $('#new-bloque').on('click', function(){
 
             $('#modal-register-bloque').modal('show');
