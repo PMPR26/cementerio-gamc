@@ -274,12 +274,12 @@ return [
 
         ['header' => 'opciones'],
         [
-            'text' => 'SOLICITUDES',
-            'url'  => 'request/all-request',
+            'text' => 'CUARTEL',
+            'url'  => 'cuartel/index',
             'icon' => 'far fa-address-card', 
         ],
         [
-            'text' => 'change_password',
+            'text' => 'BLOQUE',
             'url'  => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
         ],
