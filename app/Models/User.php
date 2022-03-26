@@ -44,6 +44,7 @@ class User extends Authenticatable implements JWTSubject {
 
     //return profile user image
     public function adminlte_image(){
+        
         return 'https://picsum.photos/300/300';
     }
 
@@ -53,7 +54,7 @@ class User extends Authenticatable implements JWTSubject {
     }
     //return profile user view
     public function adminlte_profile_url(){
-        return 'profile/username';
+        return '/user/profile';
     }
 
     /**
