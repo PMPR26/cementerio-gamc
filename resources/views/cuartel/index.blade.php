@@ -2,7 +2,7 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>Cementerio</h1>
+    <h1>Listado de cuarteles</h1>
 @stop
 
 @section('content')

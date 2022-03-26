@@ -19,10 +19,14 @@ class CuartelController extends Controller
 
         return view('cuartel/index', compact('cuartel'));
     }
-    public function create(){
-
-       
+    public function create(){      
 
         return view('cuartel/create');
+    }
+
+    public function register(){    
+          
+
+        return redirect('/Cuartel/index');
     }
 }

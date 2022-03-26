@@ -27,7 +27,9 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/cuartel', [App\Http\Controllers\cuartel\CuartelController::class,'index'])->name('cuartel');
-Route::get('/cuartel-create', [App\Http\Controllers\cuartel\CuartelController::class,'create'])->name('cuartel.create');
+Route::get('/cuartel', [App\Http\Controllers\Cuartel\CuartelController::class,'index'])->name('cuartel');
+Route::get('/cuartel-create', [App\Http\Controllers\Cuartel\CuartelController::class,'create'])->name('cuartel.create');
+Route::get('/cuartel-register', [App\Http\Controllers\cuartel\CuartelController::class,'register'])->name('cuartel.register');
+
 
 
