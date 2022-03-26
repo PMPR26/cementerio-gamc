@@ -19,13 +19,11 @@
                     @method('POST')
                         <div class="form-row">
                             <div class="form-group mb-3">
-                                <label for="select2Multiple">Cuarte</label>
-                                <select class="select2-multiple form-control" name="tags[]" multiple="multiple"
-                                  id="select2Multiple">
-                                  <option value="tag1">tag1</option>
-                                  <option value="tag2">tag2</option>
-                                  <option value="tag3">tag3</option>               
-                                </select>
+                                <select class="js-example-basic-single" name="state">
+                                    <option value="AL">Alabama</option>
+                                      ...
+                                    <option value="WY">Wyoming</option>
+                                  </select>
                               </div>
 
                             <div class="col-sm-12 col-md-12 col-xl-12 form-group">
@@ -69,6 +67,14 @@
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
 @stop
+
+@section('js')
+<script>
+    $(document).ready(function() {
+    $('.js-example-basic-single').select2();
+});
+</script>
+@endsection
 
 
 
