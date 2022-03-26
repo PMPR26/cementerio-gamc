@@ -1,5 +1,8 @@
 @extends('adminlte::page')
-@section('title', 'Dashboard')
+@section('title', 'Cuartel')
+@section('plugins.Datatables', true)
+@section('plugins.Animation', true)
+@section('plugins.Toastr', true)
 
 @section('content_header')
     <h1>Cementerio</h1>
@@ -8,21 +11,13 @@
 @section('content')
 <div class="card card-outline">
     <div class="card-body">
-
-
-        <div class="row">
-            <div class="col-md-10 form-inline" style="display:inline; text-align:right;">
-
-                <form class="form-inline float-left">
-                    <a href="{{ route('cuartel.create') }}" class="btn btn-md bg-amarillo border-0 text-white">
-                        <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Cuartel</a>
-                </form>
+  
+            <div>
+                <button id="new-cuartel" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Cuartel</button>
             </div>
-        </div>
-        <?php //print_r($solicitudes); ?>
         
-        <div class="col-sm-12">
-            <table id="example" class="table table-bordered  table-hover dataTable dt-responsive nowrap" role="grid"
+        <div class="col-sm-12" style="padding: 1%">
+            <table id="cuartel-data" class="table table-bordered  table-hover dataTable dt-responsive nowrap" role="grid"
             aria-describedby="example">
             <thead class="bg-table-header">
                
@@ -57,12 +52,80 @@
         </div>
     </div>
 
+
+    @include('cuartel.modalRegister') 
+    
+
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
+<style>
+    .modal {
+    padding: 2% !important;
+    }
+    .modal .modal-dialog {
+    width: 100%;
+    max-width: none;
+    
+    margin: 0;
+    }
+    .modal .modal-content {
+    height: 95%;
+    border: 0;
+    border-radius: 0;
+    }
+    .modal .modal-body {
+    overflow-y: auto;
+    }
+</style>
 @stop
 
 @section('js')
-    <script> console.log('Hi!'); </script>
+    <script> 
+    
+    $(document).ready(function () {
+        $('#new-cuartel').on('click', function(){
+
+            $('#modal-register-cuartel').modal('show');
+        });
+
+        var datatable = $('#cuartel-data').DataTable({
+        "paging": false,
+        "searching": false,
+        "language": {
+
+            "sProcessing": '<p style="color: #012d02;">Cargando. Por favor espere...</p>',
+            //"sProcessing": '<img src="https://media.giphy.com/media/3o7bu3XilJ5BOiSGic/giphy.gif" alt="Funny image">',
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ninguna ubicación registrada aún",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": 'Buscar Datos Por CI:',
+            "sUrl": "",
+            "sInfoThousands": ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst": 'Primero',
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            },
+            "buttons": {
+                "copy": "Copiar",
+                "colvis": "Visibilidad"
+            }
+        },
+    });
+
+       
+    });
+
+    </script>
 @stop
