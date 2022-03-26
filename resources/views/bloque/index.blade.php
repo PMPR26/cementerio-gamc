@@ -3,6 +3,7 @@
 @section('plugins.Datatables', true)
 @section('plugins.Animation', true)
 @section('plugins.Toastr', true)
+@section('plugins.Sweetalert2', true)
 @section('plugins.Select2', true)
 @section('content_header')
     <h1>Listado de bloques</h1>
@@ -24,10 +25,9 @@
                
                     <tr role="row">
                         <th scope="col">#</th>                           
-                        <th scope="col">Código</th>
-                        <th scope="col">Cuartel</th>
-                        <th scope="col">Bloque</th>
+                        <th scope="col">Código</th>    
                         <th scope="col">Nombre</th>
+                        <th scope="col">Cuartel</th>
                         <th scope="col">Estado</th>   
                         <th scope="col">Opciones</th>
                     </tr>
@@ -40,12 +40,13 @@
                         <tr>
                             <td scope="row">{{ $count++ }}</td>
                            
-                            <td>{{ $bloque->codigo }}</td>   
-                            <td>{{ $bloque->cuartel_cod }}</td>                           
+                            <td>{{ $bloque->codigo }}</td> 
                             <td>{{ $bloque->nombre }}</td>
-                            <td>{{ $bloque->estado }}</td>                           
+                            <td>{{ $bloque->cuartel_cod }}</td> 
+                            <td>{{ $bloque->estado }}</td>  
                             <td>
-                                <a href="#"> editar </a>
+                                <a href="#" id="edit"> <i class='fas fa-pencil-alt' style='font-size:28px;color:red'></i> </a>
+                                                              
                             </td>
                         </tr>
                     @endforeach
@@ -85,6 +86,51 @@
     
     $(document).ready(function () {
         $('#btn_guardar_bloque').on('click', function(){
+            return  $.ajax({
+                        type: 'POST',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: "{{ route('new.bloque') }}",
+                        async: false,
+                        data: JSON.stringify({
+                            'codigo': $('#code').val(),
+                            'name':  $('#name').val(),
+                            'cuartel':  $('#cuartel').val(),
+                            'estado':  $('#status').val(),
+
+                        }),
+                        success: function(data_response) {
+                            swal.fire({
+                            title: "Guardado!",
+                            text: "!Registro realizado con éxito!",
+                            type: "success",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false
+                            });
+                            setTimeout(function() { 
+                                location.reload();
+                            }, 2000);
+                            //toastr["success"]("Registro realizado con éxito!");
+                        },
+                        error: function (error) {
+                            
+                            if(error.status == 422){
+                                Object.keys(error.responseJSON.errors).forEach(function(k){
+                                toastr["error"](error.responseJSON.errors[k]);
+                                //console.log(k + ' - ' + error.responseJSON.errors[k]);
+                                });
+                            }else if(error.status == 419){
+                                location.reload();
+                            }
+
+                        }
+                    })
+        });
+
+         $('#btn_guardar_bloque').on('click', function(){
             return  $.ajax({
                         type: 'POST',
                         headers: {
