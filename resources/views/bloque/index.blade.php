@@ -130,7 +130,7 @@
                     })
         });
 
-         $('#btn_guardar_bloque').on('click', function(){
+         $('#btn_editar_bloque').on('click', function(){
             return  $.ajax({
                         type: 'POST',
                         headers: {
