@@ -15,14 +15,15 @@ class BloqueController extends Controller
                  ->get();
 
 
-        $bloque=DB::table('bloque')
+        $bloque =DB::table('bloque')
                  ->select('bloque.*', 'cuartel.codigo as cuartel_cod')
                  ->join('cuartel' , 'cuartel.id','=', 'bloque.cuartel_id')
                  ->where('bloque.estado', '=', 'ACTIVO')
                  ->get();
 
-        return view('bloque/index', compact('bloque', 'cuartel'));
+        return view('bloque/index', ['bloque' =>$bloque , 'cuartel' => $cuartel]);
     }
+
     public function createNewBloque(Request $request){
 
         if($request->isJson()){

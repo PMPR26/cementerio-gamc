@@ -5,18 +5,21 @@
 @section('plugins.Toastr', true)
 @section('plugins.Sweetalert2', true)
 @section('plugins.Select2', true)
+
+
 @section('content_header')
     <h1>Listado de bloques</h1>
 @stop
 
 @section('content')
-<div class="card card-outline">
+
+<div class="card">
     <div class="card-body">
-
-
-        <div>
-            <button id="new-bloque" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Bloque</button>
+        <button id="new-bloque" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Bloque</button>
+         </div>
         </div>
+
+
        
         <div class="col-sm-12">
             <table id="bloque-data" class="table table-striped table-bordered responsive" role="grid"
@@ -52,14 +55,13 @@
                     @endforeach
                 </tbody>
             </table>
-            
         </div>
-    </div>
 
+
+        
+
+        @include('bloque.modalRegister') 
 @stop
-
-@include('bloque.modalRegister') 
-    
 @section('css')
 <style>
     .modal {
@@ -215,12 +217,19 @@
         },
     });
 
+
+
+    //select2 cuartel
+    $("#cuartel").select2({
+                        width: 'resolve', // need to override the changed default
+                        dropdownParent: $('#modal-register-bloque')
+                    });
+
+
+
        
     });
 
 
-            $(document).ready(function() {
-                 $('#js-data-example-ajax').select2();
-            });
     </script>
 @stop

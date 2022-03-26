@@ -1,7 +1,7 @@
 
 
 <!-- Modal complementacion de entrega de producto -->
-<div class="modal fade fullscreen-modal animated bounceIn" id="modal-register-bloque" data-backdrop="static" tabindex="-1" role="dialog"
+<div class="modal fade fullscreen-modal animated bounceIn" tabindex="-1" id="modal-register-bloque" data-backdrop="static" tabindex="-1" role="dialog"
 aria-labelledby="staticBackdropLabel" aria-hidden="true">
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -21,8 +21,8 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                 <div class="col-sm-12 col-md-12 col-xl-12 form-group">
 
                                     <label>Cuartel</label>
-
-                                    <select class="form-control select2  col-md-12 col-xl-12" id="cuartel">                                      
+                                   
+                                    <select style="width: 100%"  id="cuartel" >                                      
                                         @foreach($cuartel as $c)
                                         <option value={{ $c->id}}> {{ $c->codigo }}</option>
                                         @endforeach
@@ -57,7 +57,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="form-group">
                                 <label>Estado:</label>
                                 <select name="status" id="status" class="form-control">
-                                    <option > Seleccionar</option>
+            
                                     <option value="ACTIVO"> ACTIVO</option>
                                     <option value="INACTIVO"> INACTIVO</option>
 
