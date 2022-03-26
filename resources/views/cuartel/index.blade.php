@@ -9,49 +9,45 @@
 @stop
 
 @section('content')
-<div class="card card-outline">
-    <div class="card-body">
+
   
-            <div>
-                <button id="new-cuartel" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Cuartel</button>
-            </div>
-        
-        <div class="col-sm-12" style="padding: 1%">
-            <table id="cuartel-data" class="table table-bordered  table-hover dataTable dt-responsive nowrap" role="grid"
-            aria-describedby="example">
-            <thead class="bg-table-header">
-               
-                    <tr role="row">
-                        <th scope="col">#</th>                           
-                        <th scope="col">Código</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Estado</th>   
-                        <th scope="col">Opciones</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @php($count = 1)
-                    @foreach ($cuartel as $cuartel)
-                               
-                        <tr>
-                            <td scope="row">{{ $count++ }}</td>
-                           
-                            <td>{{ $cuartel->codigo }}</td>                           
-                            <td>{{ $cuartel->nombre }}</td>
-                            <td>{{ $cuartel->estado }}</td>
-                           
-                            <td>
-                                
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            
+<div class="card">
+    <div class="card-body">
+     <button id="new-cuartel" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Cuartel</button>
+         </div>
         </div>
-    </div>
 
+    <table id="cuartel-data" class="table table-striped table-bordered responsive" role="grid"
+    aria-describedby="example">
+    <thead class="bg-table-header">
+       
+            <tr role="row">
+                <th scope="col">#</th>                           
+                <th scope="col">Código</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Estado</th>   
+                <th scope="col">Opciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @php($count = 1)
+            @foreach ($cuartel as $cuartel)
+                       
+                <tr>
+                    <td scope="row">{{ $count++ }}</td>
+                   
+                    <td>{{ $cuartel->codigo }}</td>                           
+                    <td>{{ $cuartel->nombre }}</td>
+                    <td>{{ $cuartel->estado }}</td>
+                   
+                    <td>
+                        
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 
     @include('cuartel.modalRegister') 
     
@@ -90,8 +86,8 @@
         });
 
         var datatable = $('#cuartel-data').DataTable({
-        "paging": false,
-        "searching": false,
+        "paging": true,
+        "searching": true,
         "language": {
 
             "sProcessing": '<p style="color: #012d02;">Cargando. Por favor espere...</p>',
