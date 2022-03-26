@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\cripta;
+namespace App\Http\Controllers\Cripta;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
