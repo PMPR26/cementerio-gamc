@@ -36,7 +36,8 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
 Route::group(['prefix' => 'cuartel', 'middleware' => 'auth'], function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/index', 'App\Http\Controllers\Cuartel\CuartelController@index')->name('cuartel');
-    Route::get('/cuartel-create', 'App\Http\Controllers\Cuartel\CuartelController@create')->name('cuartel.create');
+    Route::post('/new-cuartel', 'App\Http\Controllers\Cuartel\CuartelController@createNewCuartel')->name('new.cuartel');
+
 });
 
 

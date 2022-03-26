@@ -9,7 +9,7 @@ class Cuartel extends Model
 {
     use HasFactory;
 
-
+    protected $table = 'cuartel';
     protected $fillable = [
         'codigo',
         'nombre',
