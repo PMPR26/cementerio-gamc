@@ -47,4 +47,6 @@ Route::group(['prefix' => 'bloque', 'middleware' => 'auth'], function () {
     Route::get('/bloque-create', [App\Http\Controllers\Bloque\BloqueController::class,'create'])->name('bloque.create');
     Route::post('/new-bloque', [App\Http\Controllers\Bloque\BloqueController::class,'createNewBloque'])->name('new.bloque');
     Route::get('/list-cuartel', [App\Http\Controllers\Bloque\BloqueController::class,'listCuartel'])->name('list-cuartel');
+    Route::get('/get-bloque/{id}', 'App\Http\Controllers\Bloque\BloqueController@getBloque')->name('bloque.get');
+
 });

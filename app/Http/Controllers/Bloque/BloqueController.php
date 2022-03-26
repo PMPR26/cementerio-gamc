@@ -65,5 +65,16 @@ class BloqueController extends Controller
              ],401);
         }
     }
+
+    public function getBloque($id){ 
+
+        $bloque =  Bloque::where('id', $id)->first();
+
+               return response([
+                'status'=> true,
+                'response'=> $bloque
+             ],200);
+    }
+
     
 }

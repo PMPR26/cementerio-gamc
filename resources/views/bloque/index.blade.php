@@ -48,7 +48,7 @@
                             <td>{{ $bloque->cuartel_cod }}</td> 
                             <td>{{ $bloque->estado }}</td>  
                             <td>
-                                <a href="#" id="edit"> <i class='fas fa-pencil-alt' style='font-size:28px;color:red'></i> </a>
+                                <button type="button" class="btn btn-info" value="{{ $bloque->id }}" id="btn-editar" title="Editar cuartel"><i class="fas fa-edit"></i></button>
                                                               
                             </td>
                         </tr>
@@ -61,6 +61,80 @@
         
 
         @include('bloque.modalRegister') 
+
+
+    <!-- Modal -->
+<div class="modal fade  animated bounceIn" id="edit-cuartel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Editar Bloque</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="col-sm-12 col-md-5 col-xl-5 card m-auto">
+                <div class="card-body">
+            
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-xl-12">
+                                <div class="col-sm-12 col-md-12 col-xl-12 form-group">
+
+                                    <label>Cuartel</label>
+                                   
+                                    <select style="width: 100%"  id="cuartel_edit" >                                      
+                                        @foreach($cuartel as $c)
+                                        <option value={{ $c->id}}> {{ $c->codigo }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-xl-12">
+                            <div class="form-group">
+                                <label>Codigo:</label>
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="code_edit" autocomplete="off">
+
+                            </div>
+                        </div>
+                       
+                    </div>
+            
+
+
+                    <div class="row" >
+                        <div class="col-md-12 col-xl-12">
+                            <div class="form-group">
+                                <label>Nombre:</label>
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="name_edit" autocomplete="off">
+                            </div> 
+                        </div>                       
+                    </div>
+
+                    <div class="row" >
+                        <div class="col-sm-12 col-md-12 col-xl-12">
+                            <div class="form-group">
+                                <label>Estado:</label>
+                                <select name="status" id="status_edit" class="form-control">
+            
+                                    <option value="ACTIVO"> ACTIVO</option>
+                                    <option value="INACTIVO"> INACTIVO</option>
+
+                                </select>
+                               
+                            </div> 
+                        </div>                       
+                    </div>
+
+        <div class="modal-footer">
+          <button type="button" id="edit-cuartel" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="btn-editar-va">Guardar Cambios</button>
+        </div>
+      </div>
+    </div>
+  </div>
 @stop
 @section('css')
 <style>
@@ -87,6 +161,7 @@
     <script> 
     
     $(document).ready(function () {
+
         $('#btn_guardar_bloque').on('click', function(){
             return  $.ajax({
                         type: 'POST',
@@ -132,50 +207,30 @@
                     })
         });
 
-         $('#btn_editar_bloque').on('click', function(){
-            return  $.ajax({
-                        type: 'POST',
+        $(document).on('click', '#btn-editar', function(){
+      
+            $('#btn-editar-va').val($(this).val());
+     
+            $.ajax({
+                        type: 'GET',
                         headers: {
                             'Content-Type':'application/json',
                             'X-CSRF-TOKEN':'{{ csrf_token() }}',
                         },
-                        url: "{{ route('new.bloque') }}",
+                        url: '/bloque/get-bloque/' + $(this).val(),
                         async: false,
-                        data: JSON.stringify({
-                            'codigo': $('#code').val(),
-                            'name':  $('#name').val(),
-                            'cuartel':  $('#cuartel').val(),
-                            'estado':  $('#status').val(),
-
-                        }),
                         success: function(data_response) {
-                            swal.fire({
-                            title: "Guardado!",
-                            text: "!Registro realizado con éxito!",
-                            type: "success",
-                            timer: 2000,
-                            showCancelButton: false,
-                            showConfirmButton: false
-                            });
-                            setTimeout(function() { 
-                                location.reload();
-                            }, 2000);
-                            //toastr["success"]("Registro realizado con éxito!");
-                        },
-                        error: function (error) {
-                            
-                            if(error.status == 422){
-                                Object.keys(error.responseJSON.errors).forEach(function(k){
-                                toastr["error"](error.responseJSON.errors[k]);
-                                //console.log(k + ' - ' + error.responseJSON.errors[k]);
-                                });
-                            }else if(error.status == 419){
-                                location.reload();
-                            }
-
+                           
+                            $('#edit-cuartel').modal('show');
+                            $('#name_edit').val(data_response.response.nombre);
+                            $('#code_edit').val(data_response.response.codigo);                           
+                            $('#cuartel_edit option[value="'+data_response.response.cuartel_id+'"]').attr("selected", "selected");
+                            $('#estado option[value="'+data_response.response.estado+'"]').attr("selected", "selected");
                         }
                     })
         });
+
+
 
         $('#new-bloque').on('click', function(){
 
@@ -225,7 +280,11 @@
                         dropdownParent: $('#modal-register-bloque')
                     });
 
-
+  //select2 cuartel
+  $("#cuartel_edit").select2({
+                        width: 'resolve', // need to override the changed default
+                        dropdownParent: $('#edit-cuartel')
+                    });
 
        
     });
