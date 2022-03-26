@@ -217,8 +217,7 @@
         },
     });
 
-
-
+    
     //select2 cuartel
     $("#cuartel").select2({
                         width: 'resolve', // need to override the changed default

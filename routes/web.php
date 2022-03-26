@@ -42,9 +42,15 @@ use Illuminate\Support\Facades\Route;
     
 });
 
+//bloque
 Route::group(['prefix' => 'bloque', 'middleware' => 'auth'], function () {
     Route::get('/bloque', [App\Http\Controllers\Bloque\BloqueController::class,'index'])->name('bloque');
     Route::get('/bloque-create', [App\Http\Controllers\Bloque\BloqueController::class,'create'])->name('bloque.create');
     Route::post('/new-bloque', [App\Http\Controllers\Bloque\BloqueController::class,'createNewBloque'])->name('new.bloque');
     Route::get('/list-cuartel', [App\Http\Controllers\Bloque\BloqueController::class,'listCuartel'])->name('list-cuartel');
+});
+
+//cripta
+Route::group(['prefix' => 'cripta', 'middleware' => 'auth'], function () {
+    Route::get('/index', [App\Http\Controllers\Cripta\CriptaController::class,'index'])->name('cripta.index');
 });
