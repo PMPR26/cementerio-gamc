@@ -13,9 +13,8 @@ class CuartelController extends Controller
     //
     public function index(){
 
-        $cuartel=DB::table('cuartel')
-                 ->select('cuartel.*')
-                 ->where('estado', '=', 'ACTIVO')
+        $cuartel= Cuartel::select('cuartel.*')
+                ->orderBy('codigo', 'DESC')
                  ->get();
 
         return view('cuartel/index', compact('cuartel'));
@@ -58,5 +57,71 @@ class CuartelController extends Controller
         }
     }
        
+    public function disableAndEnableCuartel($id){
+
+        $cuartel = Cuartel::select()
+                        ->where('id', $id)
+                        ->first();
+      
+        if($cuartel->estado == 'ACTIVO'){
+
+            $disable_cuartel =  Cuartel::where('id', $cuartel->id)
+               ->update([
+                   'estado' => 'INACTIVO'
+               ]);
+
+               return response([
+                'status'=> true,
+                'response'=> '!Cuartel desactivado!'
+             ],200);
+        }else{
+            Cuartel::where([
+                'id' => $cuartel->id
+               ])
+               ->update([
+                   'estado' => 'ACTIVO'
+               ]);
+
+               return response([
+                'status'=> true,
+                'response'=> '!Cuartel Activo!'
+             ],200);
+        }
+
+    }
+
+    public function getCuartel($id){
+
+        $cuartel =  Cuartel::where('id', $id)->first();
+
+               return response([
+                'status'=> true,
+                'response'=> $cuartel
+             ],200);
+    }
+
+    public function updateCuartel(Request $request){
+
+        $this->validate($request, [
+            'name' => 'required',
+            'id' => 'required'
+        ], [
+            'name.required'  => 'El campo nombre de cuartel es obligatorio!'
+        ]);
+
+        $disable_cuartel =  Cuartel::where('id', $request->id)
+        ->update([
+            'nombre' => $request->name,
+            'estado' => $request->status,
+            'updated_at' => date("Y-m-d H:i:s")
+        ]);
+
+        return response([
+            'status'=> true,
+            'response'=> 'done'
+         ],200);
+
+
+    }
     
 }
