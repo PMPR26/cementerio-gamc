@@ -42,6 +42,8 @@ Route::get('/cuartel-register', [App\Http\Controllers\cuartel\CuartelController:
 Route::get('/bloque', [App\Http\Controllers\Bloque\BloqueController::class,'index'])->name('bloque');
 Route::get('/bloque-create', [App\Http\Controllers\Bloque\BloqueController::class,'create'])->name('bloque.create');
 Route::get('/bloque-register', [App\Http\Controllers\Bloque\BloqueController::class,'register'])->name('bloque.register');
+Route::get('/list-cuartel', [App\Http\Controllers\Bloque\BloqueController::class,'listCuartel'])->name('list-cuartel');
+
 
     
 });
