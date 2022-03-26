@@ -15,7 +15,7 @@
 
                 <form class="form-inline float-left">
                     <a href="{{ route('cuartel.create') }}" class="btn btn-md bg-amarillo border-0 text-white">
-                        <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Cuartel</a>
+                        <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Bloque</a>
                 </form>
             </div>
         </div>
@@ -29,6 +29,8 @@
                     <tr role="row">
                         <th scope="col">#</th>                           
                         <th scope="col">Código</th>
+                        <th scope="col">Cuartel</th>
+                        <th scope="col">Bloque</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Estado</th>   
                         <th scope="col">Opciones</th>
@@ -37,17 +39,17 @@
 
                 <tbody>
                     @php($count = 1)
-                    @foreach ($cuartel as $cuartel)
+                    @foreach ($bloque as $bloque)
                                
                         <tr>
                             <td scope="row">{{ $count++ }}</td>
                            
-                            <td>{{ $cuartel->codigo }}</td>                           
-                            <td>{{ $cuartel->nombre }}</td>
-                            <td>{{ $cuartel->estado }}</td>
-                           
+                            <td>{{ $bloque->codigo }}</td>   
+                            <td>{{ $bloque->cuartel_cod }}</td>                           
+                            <td>{{ $bloque->nombre }}</td>
+                            <td>{{ $bloque->estado }}</td>                           
                             <td>
-                                
+                                <a href="#"> editar </a>
                             </td>
                         </tr>
                     @endforeach

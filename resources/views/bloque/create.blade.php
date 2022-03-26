@@ -2,6 +2,8 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
+@section('plugins.Datatables', true)
+@section('plugins.Sweetalert2', true)
     <br>
 @stop
 
@@ -13,12 +15,22 @@
             </div>
    
             <div class="card-body m-auto">
-                <form action="{{ route('cuartel.register') }}" method="POST" class="form-group">
+                <form action="{{ route('bloque.register') }}" method="POST" class="form-group">
                     @method('POST')
                         <div class="form-row">
+                            <div class="form-group mb-3">
+                                <label for="select2Multiple">Cuarte</label>
+                                <select class="select2-multiple form-control" name="tags[]" multiple="multiple"
+                                  id="select2Multiple">
+                                  <option value="tag1">tag1</option>
+                                  <option value="tag2">tag2</option>
+                                  <option value="tag3">tag3</option>               
+                                </select>
+                              </div>
+
                             <div class="col-sm-12 col-md-12 col-xl-12 form-group">
                                 <label for="codigo" class="form-label">Código</label>
-                                <input id="codigo" type="text" name="codigo" value="{{ $cuartel->codigo ?? '' }}" class="form-control".@error('codigo') is-invalid @enderror"> 
+                                <input id="codigo" type="text" name="codigo" value="{{ $bloque->codigo ?? '' }}" class="form-control".@error('codigo') is-invalid @enderror"> 
                                     @error('codigo')
                                         <div class="alert alert-danger">{{ $message }}</div>
                                     @enderror
@@ -26,7 +38,7 @@
 
                             <div class="col-sm-12 col-md-12 col-xl-12 form-group">
                                 <label for="title" class="form-label">Nombre</label>
-                                <input id="nombre" type="text" name="nombre" value="{{ $cuartel->nombre ?? '' }}"class="form-control".@error('nombre') is-invalid @enderror"> 
+                                <input id="nombre" type="text" name="nombre" value="{{ $bloque->nombre ?? '' }}"class="form-control".@error('nombre') is-invalid @enderror"> 
                                     @error('nombre')
                                         <div class="alert alert-danger">{{ $message }}</div>
                                     @enderror
@@ -34,7 +46,7 @@
 
                             <div class="col-sm-12 col-md-12 col-xl-12 form-group">
                                 <label for="title" class="form-label">Estado</label>
-                                <input id="estado" type="text" name="estado" value="{{ $cuartel->estado ?? '' }}" class="form-control".@error('estado') is-invalid @enderror"> 
+                                <input id="estado" type="text" name="estado" value="{{ $bloque->estado ?? '' }}" class="form-control".@error('estado') is-invalid @enderror"> 
                                     @error('estado')
                                         <div class="alert alert-danger">{{ $message }}</div>
                                     @enderror

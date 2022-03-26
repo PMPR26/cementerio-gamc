@@ -280,7 +280,7 @@ return [
         ],
         [
             'text' => 'BLOQUE',
-            'url'  => 'admin/settings',
+            'route'  => 'bloque',
             'icon' => 'fas fa-fw fa-lock',
         ],
         [
