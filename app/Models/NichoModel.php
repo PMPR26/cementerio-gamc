@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models\Cuartel;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CuartelModel extends Model
+class NichoModel extends Model
 {
     use HasFactory;
 }

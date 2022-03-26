@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models\Bloque;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BloqueModel extends Model
+class CuartelModel extends Model
 {
     use HasFactory;
 }

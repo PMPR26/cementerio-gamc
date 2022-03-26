@@ -53,7 +53,7 @@ class User extends Authenticatable implements JWTSubject {
     }
     //return profile user view
     public function adminlte_profile_url(){
-        return 'profile/username';
+        return '/user/profile';
     }
 
     /**

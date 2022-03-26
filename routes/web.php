@@ -26,6 +26,13 @@ Route::get('/', function () {
 
 Auth::routes();
 
+
+//request from users
+Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
+    Route::get('/profile', 'App\Http\Controllers\User\UserController@profileUser')->name('profile');
+});
+
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/cuartel', [App\Http\Controllers\cuartel\CuartelController::class,'index'])->name('cuartel');
 Route::get('/cuartel-create', [App\Http\Controllers\cuartel\CuartelController::class,'create'])->name('cuartel.create');
