@@ -22,6 +22,8 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => Hash::make('admin123'),
             'role' => 'ADMIN',
+            'genero' => 'MASCULINO', //FEMENINO
+            'ofice' => 'Departamento de Desarrollo de Sistemas DDSI',
             'created_at' => now(),
             'updated_at' => now()
         ]);
