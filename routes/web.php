@@ -30,6 +30,7 @@ Auth::routes();
 //request from users
 Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
     Route::get('/profile', 'App\Http\Controllers\User\UserController@profileUser')->name('profile');
+    
 });
 
 
