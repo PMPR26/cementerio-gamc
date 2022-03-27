@@ -44,8 +44,7 @@ use Illuminate\Support\Facades\Route;
 
 //bloque
 Route::group(['prefix' => 'bloque', 'middleware' => 'auth'], function () {
-    Route::get('/bloque', [App\Http\Controllers\Bloque\BloqueController::class,'index'])->name('bloque');
-    Route::get('/bloque-create', [App\Http\Controllers\Bloque\BloqueController::class,'create'])->name('bloque.create');
+    Route::get('/bloque', [App\Http\Controllers\Bloque\BloqueController::class,'index'])->name('bloque');  
     Route::post('/new-bloque', [App\Http\Controllers\Bloque\BloqueController::class,'createNewBloque'])->name('new.bloque');
     Route::get('/list-cuartel', [App\Http\Controllers\Bloque\BloqueController::class,'listCuartel'])->name('list-cuartel');
 });
@@ -55,4 +54,13 @@ Route::group(['prefix' => 'cripta', 'middleware' => 'auth'], function () {
     Route::get('/index', [App\Http\Controllers\Cripta\CriptaController::class,'index'])->name('cripta.index');
     Route::post('/save', [App\Http\Controllers\Cripta\CriptaController::class,'saveCripta'])->name('cripta.save');
     
+});
+
+
+Route::group(['prefix' => 'nicho', 'middleware' => 'auth'], function () {
+    Route::get('/nicho', [App\Http\Controllers\Nicho\NichoController::class,'index'])->name('nicho');  
+    Route::post('/new-nicho', [App\Http\Controllers\Nicho\NichoController::class,'createNewnicho'])->name('new.nicho');
+    Route::get('/list-cuartel', [App\Http\Controllers\Nicho\NichoController::class,'listCuartel'])->name('list-cuartel');
+    Route::get('/get-nicho/{id}', 'App\Http\Controllers\Nicho\NichoController@getNicho')->name('nicho.get');
+    Route::put('/update-nicho', 'App\Http\Controllers\Nicho\NichoController@updateNicho')->name('nicho.update');
 });
