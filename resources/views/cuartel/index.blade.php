@@ -67,7 +67,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Editar Cuartel</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -83,7 +83,7 @@
             <div class="col-sm-4">
                 <div class="form-group">
                     <label>Codigo Cuartel:</label>
-                    <input id="codigo-cuartel" disabled>
+                    <input class="form-control" id="codigo-cuartel" disabled>
                 </div>
             </div>
             <div class="col-sm-4">
@@ -92,7 +92,7 @@
                     <select  id="estado" class="form-control">
                         <option value="ACTIVO">ACTIVO</option>
                         <option value="INACTIVO">INACTIVO</option>
-                      </select>
+                    </select>
                 </div>
             </div>
           </div>
