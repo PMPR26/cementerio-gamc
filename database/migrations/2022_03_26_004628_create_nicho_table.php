@@ -20,8 +20,8 @@ class CreateNichoTable extends Migration
             $table->string('nro_nicho',10);
             $table->integer('fila');
             $table->integer('columna');
-            $table->string('codigo',10)->unique();
-            $table->string('codigo_anterior',10);
+            $table->string('codigo',15)->unique();
+            $table->string('codigo_anterior',15)->nullable();
             $table->integer('cantidad_cuerpos');
             $table->string('tipo',20);
             $table->enum('estado_nicho', ['LIBRE', 'OCUPADO'])->nullable(); //PREGUNTAR A RICKY
