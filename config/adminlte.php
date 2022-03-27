@@ -285,7 +285,7 @@ return [
         ],
         [
             'text' => 'CRIPTA',
-            'url'  => 'admin/settings',
+            'url'  => 'cripta/index',
             'icon' => 'fas fa-igloo',
         ],
         [

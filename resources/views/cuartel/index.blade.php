@@ -12,8 +12,8 @@
 @section('content')
 
   
-<div class="card">
-    <div class="card-body">
+         <div class="card">
+     <div class="card-body">
      <button id="new-cuartel" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Cuartel</button>
          </div>
         </div>
