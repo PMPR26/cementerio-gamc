@@ -18,7 +18,7 @@ class BloqueController extends Controller
         $bloque =DB::table('bloque')
                  ->select('bloque.*', 'cuartel.codigo as cuartel_cod')
                  ->join('cuartel' , 'cuartel.id','=', 'bloque.cuartel_id')
-                 ->where('bloque.estado', '=', 'ACTIVO')
+                // ->where('bloque.estado', '=', 'ACTIVO')
                  ->get();
 
         return view('bloque/index', ['bloque' =>$bloque , 'cuartel' => $cuartel]);
@@ -76,5 +76,61 @@ class BloqueController extends Controller
              ],200);
     }
 
+
+    public function updateBloque(Request $request){
+
+        $this->validate($request, [
+            'name' => 'required',
+            'cuartel' => 'required',
+            'codigo' => 'required',
+            'id' => 'required'
+        ], [
+            'name.required'  => 'El campo nombre de bloque es obligatorio!',
+            'codigo.required'  => 'El campo codigo de bloque es obligatorio!',
+            'cuartel.required'  => 'El campo cuartel de bloque es obligatorio!'
+
+
+        ]);
+       $rep= $this->repetido( $request->id,$request->codigo);
+      
+
+      if($rep=="no"){
+        $bloque =  Bloque::where('id', $request->id)
+        ->update([
+            'nombre' => $request->name,
+            'cuartel_id' => $request->cuartel,
+            'codigo' => $request->codigo,
+            'estado' => $request->estado,
+            'updated_at' => date("Y-m-d H:i:s")
+        ]);
+
+        return response([
+            'status'=> true,
+            'response'=> 'done'
+         ],200);
+      }else{
+        return response([
+            'status'=> false,
+            'message'=> 'Error, codigo existente, duplicado!)'
+         ],400);
+      }
+
+      
+
+
+    }
+    public function repetido($id, $codigo){
+        $repetido =  DB::table('bloque')
+                    ->where('id', '!=', $id)
+                    ->where('codigo', '=', ''.$codigo.'')
+                    ->first();
+            if($repetido==null){
+                return $resp="no";
+            }
+            else{
+               return $resp="si";
+            }      
+
+    }
     
 }

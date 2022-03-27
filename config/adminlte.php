@@ -295,7 +295,7 @@ return [
         ],
         [
             'text' => 'NICHOS',
-            'url'  => 'admin/settings',
+            'url'  => 'nicho/nicho',
             'icon' => 'fas fa-dungeon',
         ],
         [

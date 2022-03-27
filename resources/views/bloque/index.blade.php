@@ -162,6 +162,64 @@
     
     $(document).ready(function () {
 
+        //editar cuartel
+        $('#btn-editar-va').on('click', function(){
+            $.ajax({
+                        type: 'PUT',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: "{{ route('bloque.update') }}",
+                        async: false,
+                        data: JSON.stringify({
+                            'name':  $('#name_edit').val(),
+                            'codigo':  $('#code_edit').val(),
+                            'cuartel':  $('#cuartel_edit').val(),
+                            'estado': $('#status_edit').val(),
+                            'id': $('#btn-editar-va').val()
+                        }),
+                        success: function(data_response) {
+                            swal.fire({
+                            title: "Guardado!",
+                            text: "!Registro actualizado con éxito!",
+                            type: "success",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false
+                            });
+                            setTimeout(function() { 
+                                location.reload();
+                            }, 2000);
+                            
+                        },
+                        error: function (error) {
+                            
+                            if(error.status == 422){
+                                Object.keys(error.responseJSON.errors).forEach(function(k){
+                                toastr["error"](error.responseJSON.errors[k]);
+                                //console.log(k + ' - ' + error.responseJSON.errors[k]);
+                                });
+                            }else if(error.status == 400){
+                                swal.fire({
+                            title: "Duplicado!",
+                            text: "!Transacción rechazada!",
+                            type: "error",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false
+                            });
+                            setTimeout(function() { 
+                                location.reload();
+                            }, 2000);
+                            }
+
+                        }
+                    })
+
+
+        });
+
         $('#btn_guardar_bloque').on('click', function(){
             return  $.ajax({
                         type: 'POST',
@@ -224,11 +282,15 @@
                             $('#edit-cuartel').modal('show');
                             $('#name_edit').val(data_response.response.nombre);
                             $('#code_edit').val(data_response.response.codigo);                           
-                            $('#cuartel_edit option[value="'+data_response.response.cuartel_id+'"]').attr("selected", "selected");
+                            $('#cuartel_edit').val(data_response.response.cuartel_id).trigger('change');
+                           
                             $('#estado option[value="'+data_response.response.estado+'"]').attr("selected", "selected");
                         }
                     })
         });
+
+
+        
 
 
 
