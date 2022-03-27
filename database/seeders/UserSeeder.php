@@ -27,5 +27,41 @@ class UserSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now()
         ]);
+
+        DB::table('users')->insert([
+            'name' => 'usuario 2',
+            'email' => 'usuario1@cochabamba.bo',
+            'email_verified_at' => now(),
+            'password' => Hash::make('admin123'),
+            'role' => 'ADMIN',
+            'genero' => 'MASCULINO', //FEMENINO
+            'ofice' => 'Departamento de Desarrollo de Sistemas DDSI',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('users')->insert([
+            'name' => 'usuario 2',
+            'email' => 'usuario2@cochabamba.bo',
+            'email_verified_at' => now(),
+            'password' => Hash::make('admin123'),
+            'role' => 'ADMIN',
+            'genero' => 'MASCULINO', //FEMENINO
+            'ofice' => 'Departamento de Desarrollo de Sistemas DDSI',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('users')->insert([
+            'name' => 'usuario 3',
+            'email' => 'usuario3@cochabamba.bo',
+            'email_verified_at' => now(),
+            'password' => Hash::make('admin123'),
+            'role' => 'ADMIN',
+            'genero' => 'MASCULINO', //FEMENINO
+            'ofice' => 'Departamento de Desarrollo de Sistemas DDSI',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
     }
 }

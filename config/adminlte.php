@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'DCHO PROPIETARIO', //change title the aplications
+    'title' => 'CEMENTERIO GAMC', //change title the aplications
     'title_prefix' => '',
     'title_postfix' => '',
 
