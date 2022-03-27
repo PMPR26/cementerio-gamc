@@ -300,7 +300,7 @@ return [
         ],
         [
             'text' => 'RESPONSABLES',
-            'url'  => 'admin/settings',
+            'url'  => 'responsable/index',
             'icon' => 'far fa-address-card',
         ],
         [
