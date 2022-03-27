@@ -126,6 +126,15 @@ class ResponsableController extends Controller
         ->update([
             'ci' => $request->ci,
             'nombres' => $request->nombres,
+            'primer_apellido' => $request->primer_apellido,
+            'segundo_apellido' => $request->segundo_apellido,
+            'fecha_nacimiento' => $request->fecha_nacimiento,
+            'telefono' => $request->telefono,
+            'celular' => $request->celular,
+            'estado_civil' => $request->estado_civil,
+            'email' => $request->email,
+            'domicilio' => $request->domicilio,
+
             //'estado' => $request->status,
             'updated_at' => date("Y-m-d H:i:s")
         ]);
