@@ -56,42 +56,46 @@ class NichoController extends Controller
                 'tipo.required' => 'El campo tipo nicho  es obligatorio!',
                 'codigo.unique' => 'El código '.$request->codigo.' ya se encuentra en uso!.'
             ]);
-           // dd($request);
+           
+           $rep= $this->repetidoins(  $request->nro , $request->cuartel,$request->bloque);
+       //dd($rep);
 
-           $new_nicho =  Nicho::create([
-            'codigo' => trim($request->codigo),
-            'bloque_id' => trim($request->bloque),
-            'cuartel_id' => trim($request->cuartel),
-            'nro_nicho' => trim($request->nro),
-            'fila' => trim($request->fila),
-            'columna' => trim($request->columna),
-            'codigo' => trim($request->codigo),
-            'codigo_anterior' => trim($request->codigo_anterior),
-            'cantidad_cuerpos' => trim($request->cantidad),
-            'tipo' => trim($request->tipo),
-            //'estado_nicho' => trim($request->estado_nicho),
-            'estado' => trim($request->estado),
+            if($rep=="no"){
+                    $new_nicho =  Nicho::create([
+                        'codigo' => trim($request->codigo),
+                        'bloque_id' => trim($request->bloque),
+                        'cuartel_id' => trim($request->cuartel),
+                        'nro_nicho' => trim($request->nro),
+                        'fila' => trim($request->fila),
+                        'columna' => trim($request->columna),
+                        'codigo' => trim($request->codigo),
+                        'codigo_anterior' => trim($request->codigo_anterior),
+                        'cantidad_cuerpos' => trim($request->cantidad),
+                        'tipo' => trim($request->tipo),
+                        //'estado_nicho' => trim($request->estado_nicho),
+                        'estado' => trim($request->estado),
 
-            'user_id' => auth()->id(),
-            'estado' => 'ACTIVO',
-            'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s"),
-           ]);
+                        'user_id' => auth()->id(),
+                        'estado' => 'ACTIVO',
+                        'created_at' => date("Y-m-d H:i:s"),
+                        'updated_at' => date("Y-m-d H:i:s"),
+                    ]);
 
 
-            return response([
-                'status'=> true,
-                'response'=> $new_nicho
-             ],201);
+                        return response([
+                            'status'=> true,
+                            'response'=> $new_nicho
+                        ],201);
+                }
 
-        }else{
-
-            return response([
-                'status'=> false,
-                'message'=> 'Error 401 (Unauthorized)'
-             ],401);
+            }else{
+                return response([
+                    'status'=> false,
+                    'message'=> 'Error, codigo existente, duplicado!)'
+                 ],400);
+              }
         }
-    }
+    
 
     public function getNicho($id){ 
 
@@ -129,7 +133,7 @@ class NichoController extends Controller
 
             'estado.required'  => 'El campo cuartel de bloque es obligatorio!'
         ]);
-       $rep= $this->repetido( $request->id,$request->codigo);
+       $rep= $this->repetido( $request->id, $request->nro , $request->cuartel,$request->bloque);
       
 
       if($rep=="no"){
@@ -144,7 +148,7 @@ class NichoController extends Controller
             'codigo_anterior' => $request->anterior,
             'codigo' => $request->codigo,
             'tipo' => $request->tipo,
-
+            'user_id' => auth()->id(),
             'estado' => $request->estado,
             'updated_at' => date("Y-m-d H:i:s")
         ]);
@@ -164,10 +168,12 @@ class NichoController extends Controller
 
 
     }
-    public function repetido($id, $codigo){
+    public function repetido($id, $codigo,$cuartel,$bloque){
         $repetido =  DB::table('nicho')
                     ->where('id', '!=', $id)
-                    ->where('codigo', '=', ''.$codigo.'')
+                    ->where('nro_nicho', '=', ''.$codigo.'')
+                    ->where('cuartel_id', '=', ''.$cuartel.'')
+                    ->where('bloque_id', '=', ''.$bloque.'')
                     ->first();
             if($repetido==null){
                 return $resp="no";
@@ -177,7 +183,33 @@ class NichoController extends Controller
             }      
 
     }
-    
+    public function repetidoins( $codigo,$cuartel,$bloque){
+        $repetido =  DB::table('nicho')                    
+                    ->where('nro_nicho', '=', ''.$codigo.'')
+                    ->where('cuartel_id', '=', ''.$cuartel.'')
+                    ->where('bloque_id', '=', ''.$bloque.'')
+                    ->first();
+            if($repetido==null){
+                return $resp="no";
+            }
+            else{
+               return $resp="si";
+            }      
+
+    }
+    public function getBloqueid(Request $request){ 
+
+        $bloque=DB::table('bloque')
+        ->select('bloque.id', 'bloque.codigo')
+        ->where('estado', '=', 'ACTIVO')
+        ->where('cuartel_id', '=', $request->cuartel)
+        ->get();
+      //  dd($bloque);
+               return response([
+                'status'=> true,
+                'response'=> $bloque
+             ],200);
+    }
 
    
 }

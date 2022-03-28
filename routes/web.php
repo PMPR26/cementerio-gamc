@@ -76,6 +76,16 @@ Route::group(['prefix' => 'cripta', 'middleware' => 'auth'], function () {
 });
 
 
+//mausoleo
+Route::group(['prefix' => 'mausoleo', 'middleware' => 'auth'], function () {
+    Route::get('/index', [App\Http\Controllers\Mausoleo\MausoleoController::class,'index'])->name('mausoleo.index');
+    Route::post('/save', [App\Http\Controllers\Mausoleo\MausoleoController::class,'saveMausoleo'])->name('mausoleo.save');
+    Route::get('/get-mausoleo/{id}', [App\Http\Controllers\Mausoleo\MausoleoController::class,'getMausoleo'])->name('mausoleo.get');
+    Route::put('/update-mausoleo', 'App\Http\Controllers\Mausoleo\MausoleoController@updateMausoleo')->name('mausoleo.update');
+    
+});
+
+
 //nicho
 Route::group(['prefix' => 'nicho', 'middleware' => 'auth'], function () {
     Route::get('/nicho', [App\Http\Controllers\Nicho\NichoController::class,'index'])->name('nicho');  
@@ -83,6 +93,8 @@ Route::group(['prefix' => 'nicho', 'middleware' => 'auth'], function () {
     Route::get('/list-cuartel', [App\Http\Controllers\Nicho\NichoController::class,'listCuartel'])->name('list-cuartel');
     Route::get('/get-nicho/{id}', 'App\Http\Controllers\Nicho\NichoController@getNicho')->name('nicho.get');
     Route::put('/update-nicho', 'App\Http\Controllers\Nicho\NichoController@updateNicho')->name('nicho.update');
+    Route::post('/get-bloqueid', 'App\Http\Controllers\Nicho\NichoController@getBloqueid')->name('bloqueid.get');
+
 });
 
 

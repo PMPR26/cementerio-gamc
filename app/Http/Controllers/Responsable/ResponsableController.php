@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Responsable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Responsable;
-
 use Illuminate\Support\Facades\DB;
 
 class ResponsableController extends Controller
@@ -21,8 +20,6 @@ class ResponsableController extends Controller
                 ->select('responsable.id','responsable.ci',DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),'responsable.telefono','responsable.celular','responsable.fecha_nacimiento','responsable.estado_civil','responsable.email','responsable.domicilio','responsable.estado','responsable.genero')        
                 ->get();
             
-
-
         return view('responsable/index', compact('responsable'));
     }
 
@@ -45,7 +42,6 @@ class ResponsableController extends Controller
                 'min' => 'El :attribute debe tener al menos 8 caracteres.',
                 'max' => 'El telefono no debe ser mayor a 10.',
                 'required' => 'El campo :attribute es requerido.'
-
             ]);
             
 
@@ -101,7 +97,7 @@ class ResponsableController extends Controller
                 'status'=> true,
                 'response'=> '!Responsable desactivado!'
              ],200);
-
+             
         }else{
             Responsable::where([
                 'id' => $responsable->id

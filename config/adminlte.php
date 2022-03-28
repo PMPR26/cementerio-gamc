@@ -188,7 +188,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => '/home',
+    'dashboard_url' => 'user/profile', // /home
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register/home',
@@ -295,7 +295,7 @@ return [
         ],
         [
             'text' => 'MAUSOLEOS',
-            'url'  => 'admin/settings',
+            'url'  => 'mausoleo/index',
             'icon' => 'fas fa-church',
         ],
         [
@@ -310,7 +310,7 @@ return [
         ],
         [
             'text' => 'DIFUNTOS',
-            'url'  => 'admin/settings',
+            'url'  => 'difunto/index',
             'icon' => 'fas fa-procedures',
         ],
 

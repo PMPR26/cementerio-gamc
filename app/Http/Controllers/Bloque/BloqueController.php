@@ -39,31 +39,34 @@ class BloqueController extends Controller
                 'codigo.unique' => 'El código '.$request->codigo.' ya se encuentra en uso!.'
             ]);
             
+            $rep= $this->repetidoins( $request->codigo, $request->cuartel   );
+          //dd($rep);
 
-           $new_bloque =  Bloque::create([
-            'codigo' => trim($request->codigo),
-            'nombre' => trim($request->name),
-            'cuartel_id' => trim($request->cuartel),
+            if($rep=="no"){
+                $new_bloque =  Bloque::create([
+                    'codigo' => trim($request->codigo),
+                    'nombre' => trim($request->name),
+                    'cuartel_id' => trim($request->cuartel),
 
-            'user_id' => auth()->id(),
-            'estado' => 'ACTIVO',
-            'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s"),
-           ]);
+                    'user_id' => auth()->id(),
+                    'estado' => 'ACTIVO',
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s"),
+                ]);
 
 
-            return response([
-                'status'=> true,
-                'response'=> $new_bloque
-             ],201);
+                    return response([
+                        'status'=> true,
+                        'response'=> $new_bloque
+                    ],201);
 
-        }else{
-
-            return response([
-                'status'=> false,
-                'message'=> 'Error 401 (Unauthorized)'
-             ],401);
-        }
+                }else{
+                    return response([
+                        'status'=> false,
+                        'message'=> 'Error, codigo existente, duplicado!)'
+                     ],400);
+                  }
+            }
     }
 
     public function getBloque($id){ 
@@ -101,6 +104,7 @@ class BloqueController extends Controller
             'cuartel_id' => $request->cuartel,
             'codigo' => $request->codigo,
             'estado' => $request->estado,
+            'user_id' => auth()->id(),
             'updated_at' => date("Y-m-d H:i:s")
         ]);
 
@@ -124,6 +128,23 @@ class BloqueController extends Controller
                     ->where('id', '!=', $id)
                     ->where('codigo', '=', ''.$codigo.'')
                     ->first();
+            if($repetido==null){
+                return $resp="no";
+            }
+            else{
+               return $resp="si";
+            }      
+
+    }
+
+    public function repetidoins($codigo, $cuartel){
+        $repetido =  DB::table('bloque')
+                   
+                    ->where('codigo', '=', ''.$codigo.'')
+                    ->where('cuartel_id', '=', ''.$cuartel.'')
+
+                    ->first();
+            //  dd($repetido)     ;
             if($repetido==null){
                 return $resp="no";
             }
