@@ -49,7 +49,7 @@
                    
                     <td>
                         <button type="button" class="btn btn-info" value="{{ $difunto->id }}" id="btn-editar" title="Editar difunto"><i class="fas fa-edit"></i></button>
-                        @if($responsable->estado =='ACTIVO')
+                        @if($difunto->estado =='ACTIVO')
                         <button type="button" class="btn btn-warning" value="{{ $difunto->id }}" id="btn-desactivar"><i class="fas fa-thumbs-down"></i></button>
                         @else
                         <button type="button" class="btn btn-success" value="{{ $difunto->id }}" id="btn-desactivar"><i class="fas fa-thumbs-up"></i></button>

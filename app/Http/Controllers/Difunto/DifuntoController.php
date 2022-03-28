@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Difunto;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Difunto;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class DifuntoController extends Controller
 {
