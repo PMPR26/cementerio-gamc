@@ -23,15 +23,19 @@ class ResponsableController extends Controller
         if($request->isJson()){
             
             $this->validate($request, [
-                'ci' => 'required|unique:responsable'
-                // 'email' => 'required|unique:responsable',
-                // 'nombres'=> 'required',
-                // 'primer_apellido'=> 'required',
-                // 'celular'=> 'required'
+                'ci' => 'required|unique:responsable',
+                'nombres' => 'required',
+                'primer_apellido' => 'required',
+                'fecha_nacimiento' => 'required',
+                'telefono' => 'min:8|max:10|numeric',
+                'domicilio' => 'required'
             ], [
                 'nombres.required'  => 'El campo nombre de responsable es obligatorio!',
                 'ci.required'    => 'El campo cedula de identidad es obligatorio!',
-                'ci.unique' => 'El numero de cedula '.$request->ci.' ya se encuentra en uso!.'
+                'ci.unique' => 'El numero de cedula '.$request->ci.' ya se encuentra en uso!.',
+                'min' => 'El :attribute debe tener al menos 8 caracteres.',
+                'max' => 'El telefono no debe ser mayor a 10.',
+                'required' => 'El campo :attribute es requerido.'
             ]);
             
 

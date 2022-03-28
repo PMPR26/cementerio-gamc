@@ -15,7 +15,14 @@
 
 <div class="card">
     <div class="card-body">
-        <button id="new-nicho" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Nicho</button>
+
+
+    <div class="row">
+        <div class="col-sm-6">
+        <button id="new-nicho" type="button" class="btn btn-info col-sm-12" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Nicho</button>
+        </div>
+        </div>
+
     </div>
  </div>
 
@@ -373,7 +380,6 @@
 
 
         $('#new-nicho').on('click', function(){
-
             $('#modal-register-nicho').modal('show');
         });
 
@@ -386,12 +392,12 @@
             //"sProcessing": '<img src="https://media.giphy.com/media/3o7bu3XilJ5BOiSGic/giphy.gif" alt="Funny image">',
             "sLengthMenu": "Mostrar _MENU_ registros",
             "sZeroRecords": "No se encontraron resultados",
-            "sEmptyTable": "Ninguna ubicación registrada aún",
+            "sEmptyTable": "Ningun registro",
             "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
             "sInfoEmpty": "",
             "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
             "sInfoPostFix": "",
-            "sSearch": 'Buscar Datos Por CI:',
+            "sSearch": 'Buscar:',
             "sUrl": "",
             "sInfoThousands": ",",
             "sLoadingRecords": "Cargando...",
