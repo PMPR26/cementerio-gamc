@@ -24,6 +24,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <label>Cuartel</label>
                                    
                                     <select style="width: 100%"  id="cuartel" onchange="generateCode()" >                                      
+                                      <option>SELECCIONAR</option>
                                         @foreach($cuartel as $c)
                                         <option value={{ $c->id}}> {{ $c->codigo }}</option>
                                         @endforeach
@@ -36,7 +37,9 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
 
                                 <label>Bloque</label>
                                
-                                <select style="width: 100%"  id="bloque" onchange="generateCode()" >                                      
+                                <select style="width: 100%"  class="form-control" id="bloque" onchange="generateCode()" disabled >    
+                                      <option>SELECCIONAR</option>
+
                                     @foreach($bloque as $b)
                                     <option value={{ $b->id}}> {{ $b->codigo }}</option>
                                     @endforeach

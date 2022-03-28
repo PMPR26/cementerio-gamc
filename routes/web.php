@@ -67,6 +67,8 @@ Route::group(['prefix' => 'nicho', 'middleware' => 'auth'], function () {
     Route::get('/list-cuartel', [App\Http\Controllers\Nicho\NichoController::class,'listCuartel'])->name('list-cuartel');
     Route::get('/get-nicho/{id}', 'App\Http\Controllers\Nicho\NichoController@getNicho')->name('nicho.get');
     Route::put('/update-nicho', 'App\Http\Controllers\Nicho\NichoController@updateNicho')->name('nicho.update');
+    Route::post('/get-bloqueid', 'App\Http\Controllers\Nicho\NichoController@getBloqueid')->name('bloqueid.get');
+
 });
 
 

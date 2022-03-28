@@ -94,6 +94,8 @@
                             <label>Cuartel</label>
                            
                             <select style="width: 100%"  id="cuartel_edit" onchange="generateCode_edit()" >                                      
+                                <option>SELECCIONAR</option>
+                              
                                 @foreach($cuartel as $c1)
                                 <option value={{ $c1->id}}> {{ $c1->codigo }}</option>
                                 @endforeach
@@ -428,7 +430,7 @@
 
        
 
-    //select2 cuartel
+    //select2 bloque
     $("#bloque").select2({
                         width: 'resolve', // need to override the changed default
                         dropdownParent: $('#modal-register-nicho')
@@ -476,6 +478,39 @@ else{
 }
 
     }
+
+    $(document).on('change', '#cuartel', function(){
+        $('#bloque').empty();
+        var sel_cuartel=$('#cuartel').val();
+              $('#bloque').prop('disabled', false);
+                $.ajax({
+                    type: 'POST',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: "{{ route('bloqueid.get') }}",
+                        async: false,
+                        data: JSON.stringify({
+                            'cuartel': $('#cuartel').val(),
+                        }),
+                        success: function(data_bloque) {
+                           console.log(data_bloque) ;
+
+                            var op1='<option >SELECCIONAR</option>';
+                            $('#bloque').append(op1);
+                           $.each( data_bloque.response, function( key, value ) {                               
+                                 opt2='<option value="'+ value.id +'">'+value.codigo +'</option>';
+                                 $('#bloque').append(opt2);
+                            });
+                                                    
+                        }
+                });
+   
+           
+             
+    });
+
 
     </script>
 @stop

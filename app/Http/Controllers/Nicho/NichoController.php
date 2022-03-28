@@ -178,6 +178,19 @@ class NichoController extends Controller
 
     }
     
+    public function getBloqueid(Request $request){ 
+
+        $bloque=DB::table('bloque')
+        ->select('bloque.id', 'bloque.codigo')
+        ->where('estado', '=', 'ACTIVO')
+        ->where('cuartel_id', '=', $request->cuartel)
+        ->get();
+      //  dd($bloque);
+               return response([
+                'status'=> true,
+                'response'=> $bloque
+             ],200);
+    }
 
    
 }
