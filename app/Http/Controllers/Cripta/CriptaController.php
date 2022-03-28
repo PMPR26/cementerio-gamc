@@ -12,7 +12,7 @@ class CriptaController extends Controller
 {
     public function index(){
 
-        $cripta = Cripta::select('cripta.codigo', 'cuartel.nombre as cuartel_name', 'bloque.nombre as bloque_name', 'cripta.nombre as cripta_name', 'cripta.estado')
+        $cripta = Cripta::select('cripta.id', 'cripta.codigo', 'cuartel.nombre as cuartel_name', 'bloque.nombre as bloque_name', 'cripta.nombre as cripta_name', 'cripta.estado')
         ->join('cuartel', 'cuartel.id', 'cripta.cuartel_id')
         ->join('bloque', 'bloque.id', 'cripta.bloque_id')
         ->orderBy('cripta.nombre', 'DESC')
@@ -67,5 +67,18 @@ class CriptaController extends Controller
             'status'=> true,
             'response'=> $cripta
          ],201);
+    }
+
+
+    public function getCripta($id){
+
+        $cripta = Cripta::select()
+                    ->where('id', $id)
+                    ->first();
+
+        return response([
+              'status'=> true,
+              'response'=> $cripta
+                 ],201);
     }
 }

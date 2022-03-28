@@ -55,6 +55,7 @@ Route::group(['prefix' => 'bloque', 'middleware' => 'auth'], function () {
 Route::group(['prefix' => 'cripta', 'middleware' => 'auth'], function () {
     Route::get('/index', [App\Http\Controllers\Cripta\CriptaController::class,'index'])->name('cripta.index');
     Route::post('/save', [App\Http\Controllers\Cripta\CriptaController::class,'saveCripta'])->name('cripta.save');
+    Route::get('/get-cripta/{id}', [App\Http\Controllers\Cripta\CriptaController::class,'getCripta'])->name('cripta.get');
     
 });
 
@@ -76,5 +77,4 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::get('/disable-responsable/{id}', 'App\Http\Controllers\Responsable\ResponsableController@disableAndEnableResponsable')->name('responsable.disable');
     Route::get('/get-responsable/{id}', 'App\Http\Controllers\Responsable\ResponsableController@getResponsable')->name('responsable.get');
     Route::put('/update-responsable', 'App\Http\Controllers\Responsable\ResponsableController@updateResponsable')->name('responsable.update');
-    
 });

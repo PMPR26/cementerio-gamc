@@ -63,7 +63,7 @@
     </table>
 
 
-      <!-- Modal -->
+      <!-- Modal crear -->
 <div class="modal fade  animated bounceIn" id="modal-cripta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -120,7 +120,7 @@
 
        <hr>
        <div class="col-sm-12" style="text-align: center">
-            <button type="button" id="btn-cripta" class="btn btn-success">Guardar</button>
+            <button type="button" id="btn-cripta" class="btn btn-success btn-editar">Guardar</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         </div> 
             
@@ -163,6 +163,34 @@
 @section('js')
     <script>
         $(document).ready(function(){
+
+
+            $('#btn-editar').on('click', function(){
+               
+                $.ajax({
+                        type: 'GET',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: '/cripta/get-cripta/' + $(this).val(),
+                        async: false,
+                        success: function(data_response) {
+                           
+                            $('#modal-cripta').modal('show');
+
+                        }
+                    });
+
+            });
+
+
+            $('.btn-editar').on('click', function(){
+                alert('dwada');
+            });
+
+
+
             $('#new-cripta').on('click', function(){
                 $('#modal-cripta').modal('show');
             });
