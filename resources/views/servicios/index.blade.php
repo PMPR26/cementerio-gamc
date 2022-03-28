@@ -15,12 +15,10 @@
 
 <div class="card">
     <div class="card-body">
-        <button id="new-servicio" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Servicio</button>
+        <a href="{{ route('load.form') }}" id="new-servicio" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Servicio</a>
     </div>
  </div>
-
-
-       
+  
         <div class="col-sm-12">
             <table id="servicio-data" class="table table-striped table-bordered responsive" role="grid"
             aria-describedby="example">
@@ -99,9 +97,10 @@
 @section('js')
     <script> 
     $(document).ready(function () {
-        $('#new-servicio').on('click', function(){
-            //$('#modal-register-servicio').modal('show');
-        });
+        // $('#new-servicio').on('click', function(){
+        //     //$('#modal-register-servicio').modal('show');
+        //     document.location.href="{{ route('load.form') }}"";
+        // });
 
         var datatable = $('#servicio-data').DataTable({
         "paging": true,
