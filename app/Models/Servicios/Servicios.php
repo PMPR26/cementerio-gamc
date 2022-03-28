@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Servicios;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Nicho extends Model
+class Servicios extends Model
 {
     use HasFactory;
 }

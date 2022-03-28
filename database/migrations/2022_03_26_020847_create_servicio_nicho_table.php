@@ -17,12 +17,12 @@ class CreateServicioNichoTable extends Migration
             $table->bigIncrements('id');
             $table->integer('responsable_id'); 
             $table->integer('difunto_id');  
-            $table->string('codigo_nicho',10);           
+            $table->string('codigo_nicho',20);           
             $table->date('fecha_registro');     
-            $table->string('tipo_servicio_id',10);           
-            $table->string('tipo_servicio',10);           
-            $table->string('servicio_id',10);           
-            $table->string('servicio',10); 
+            $table->string('tipo_servicio_id',30);           
+            $table->string('tipo_servicio',200);           
+            $table->string('servicio_id',30);           
+            $table->string('servicio',200); 
            // $table->jsonb('data')->nullable(); 
             $table->integer('fur');
             $table->integer('gestion_pagada'); //pag_con    

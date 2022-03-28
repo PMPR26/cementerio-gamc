@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'DCHO PROPIETARIO', //change title the aplications
+    'title' => 'CEMENTERIO GAMC', //change title the aplications
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -271,6 +271,11 @@ return [
             //'label'       => 4,
             //'label_color' => 'success',
         ],
+        [
+            'text' => 'SERVICIOS',
+            'route'  => 'serv',
+            'icon' => 'fas fa-laptop-medical',
+        ],
 
         ['header' => 'opciones'],
         [
@@ -295,12 +300,12 @@ return [
         ],
         [
             'text' => 'NICHOS',
-            'url'  => 'admin/settings',
+            'url'  => 'nicho/nicho',
             'icon' => 'fas fa-dungeon',
         ],
         [
             'text' => 'RESPONSABLES',
-            'url'  => 'admin/settings',
+            'url'  => 'responsable/index',
             'icon' => 'far fa-address-card',
         ],
         [
@@ -308,6 +313,7 @@ return [
             'url'  => 'admin/settings',
             'icon' => 'fas fa-procedures',
         ],
+
         // [
         //     'text'    => 'multilevel',
         //     'icon'    => 'fas fa-fw fa-share',
