@@ -162,7 +162,7 @@
         $(document).ready(function(){
 
 
-            $('#btn-editar').on('click', function(){
+            $(document).on('click', '#btn-editar', function(){
                
                 $.ajax({
                         type: 'GET',
