@@ -18,7 +18,7 @@ class MausoleoController extends Controller
         ->orderBy('mausoleo.nombre', 'DESC')
         ->get();
 
-         $cuartel = Cuartel::select('id', 'nombre')
+         $cuartel = Cuartel::select('id', DB::raw("CONCAT(codigo,' - ',nombre) as nombre"))
                     ->where('estado', 'ACTIVO')
                     ->orderBy('nombre', 'DESC')
                     ->get();

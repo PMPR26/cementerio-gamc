@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Cripta;
 
+use App\Models\Bloque;
 use App\Models\Cripta;
 use App\Models\Cuartel;
-use App\Models\Bloque;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class CriptaController extends Controller
@@ -17,7 +18,7 @@ class CriptaController extends Controller
         ->orderBy('cripta.nombre', 'DESC')
         ->get();
 
-         $cuartel = Cuartel::select('id', 'nombre')
+         $cuartel = Cuartel::select('id', DB::raw("CONCAT(codigo,' - ',nombre) as nombre"))
                     ->where('estado', 'ACTIVO')
                     ->orderBy('nombre', 'DESC')
                     ->get();

@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\DB;
 class NichoController extends Controller
 {
     public function index(){
-        $cuartel=DB::table('cuartel')
-                 ->select('cuartel.id', 'cuartel.codigo')
+        $cuartel = DB::table('cuartel')
+                 ->select('cuartel.id', DB::raw("CONCAT(codigo,' - ',nombre) as codigo"))
                  ->where('estado', '=', 'ACTIVO')
                  ->get();
 
-                 $bloque=DB::table('bloque')
+                 $bloque= DB::table('bloque')
                  ->select('bloque.id', 'bloque.codigo')
                  ->where('estado', '=', 'ACTIVO')
                  ->get();
@@ -200,11 +200,12 @@ class NichoController extends Controller
     public function getBloqueid(Request $request){ 
 
         $bloque=DB::table('bloque')
-        ->select('bloque.id', 'bloque.codigo')
+        ->select('bloque.id', DB::raw("CONCAT(codigo,' - ',nombre) as codigo"))
         ->where('estado', '=', 'ACTIVO')
         ->where('cuartel_id', '=', $request->cuartel)
         ->get();
-      //  dd($bloque);
+
+     
                return response([
                 'status'=> true,
                 'response'=> $bloque

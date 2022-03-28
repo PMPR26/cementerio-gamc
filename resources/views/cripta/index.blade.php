@@ -240,7 +240,7 @@
 
 
             $('#new-cripta').on('click', function(){
-
+                
                 $(".select-cuartel").val('').trigger('change');
                 $('#cod-cripta').val('');
                 $('#cripta-name').val('');
