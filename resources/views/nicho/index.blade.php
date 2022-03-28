@@ -335,8 +335,18 @@
                                 toastr["error"](error.responseJSON.errors[k]);
                                 //console.log(k + ' - ' + error.responseJSON.errors[k]);
                                 });
-                            }else if(error.status == 419){
+                            }else if(error.status == 400){
+                                swal.fire({
+                            title: "Duplicado!",
+                            text: "!Transacción rechazada!",
+                            type: "error",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false
+                            });
+                            setTimeout(function() { 
                                 location.reload();
+                            }, 2000);
                             }
 
                         }

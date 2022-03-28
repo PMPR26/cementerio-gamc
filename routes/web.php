@@ -75,6 +75,16 @@ Route::group(['prefix' => 'cripta', 'middleware' => 'auth'], function () {
 });
 
 
+//mausoleo
+Route::group(['prefix' => 'mausoleo', 'middleware' => 'auth'], function () {
+    Route::get('/index', [App\Http\Controllers\Mausoleo\MausoleoController::class,'index'])->name('mausoleo.index');
+    Route::post('/save', [App\Http\Controllers\Mausoleo\MausoleoController::class,'saveMausoleo'])->name('mausoleo.save');
+    Route::get('/get-mausoleo/{id}', [App\Http\Controllers\Mausoleo\MausoleoController::class,'getMausoleo'])->name('mausoleo.get');
+    Route::put('/update-mausoleo', 'App\Http\Controllers\Mausoleo\MausoleoController@updateMausoleo')->name('mausoleo.update');
+    
+});
+
+
 //nicho
 Route::group(['prefix' => 'nicho', 'middleware' => 'auth'], function () {
     Route::get('/nicho', [App\Http\Controllers\Nicho\NichoController::class,'index'])->name('nicho');  

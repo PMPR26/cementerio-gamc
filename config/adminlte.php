@@ -295,7 +295,7 @@ return [
         ],
         [
             'text' => 'MAUSOLEOS',
-            'url'  => 'admin/settings',
+            'url'  => 'mausoleo/index',
             'icon' => 'fas fa-church',
         ],
         [

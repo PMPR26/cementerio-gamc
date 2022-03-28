@@ -131,7 +131,7 @@
                             </div> 
                         </div>                       
                     </div>
-
+                    <input type="hidden" id="id_bloque">
         <div class="modal-footer">
           <button type="button" id="edit-cuartel" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
           <button type="button" class="btn btn-primary" id="btn-editar-va">Guardar Cambios</button>
@@ -181,7 +181,7 @@
                             'codigo':  $('#code_edit').val(),
                             'cuartel':  $('#cuartel_edit').val(),
                             'estado': $('#status_edit').val(),
-                            'id': $('#btn-editar-va').val()
+                            'id': $('#id_bloque').val()
                         }),
                         success: function(data_response) {
                             swal.fire({
@@ -206,16 +206,16 @@
                                 });
                             }else if(error.status == 400){
                                 swal.fire({
-                            title: "Duplicado!",
-                            text: "!Transacción rechazada!",
-                            type: "error",
-                            timer: 2000,
-                            showCancelButton: false,
-                            showConfirmButton: false
-                            });
-                            setTimeout(function() { 
-                                location.reload();
-                            }, 2000);
+                                    title: "Duplicado!",
+                                    text: "!Transacción rechazada!",
+                                    type: "error",
+                                    timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: false
+                                    });
+                                    setTimeout(function() { 
+                                        location.reload();
+                                    }, 2000);
                             }
 
                         }
@@ -261,8 +261,18 @@
                                 toastr["error"](error.responseJSON.errors[k]);
                                 //console.log(k + ' - ' + error.responseJSON.errors[k]);
                                 });
-                            }else if(error.status == 419){
-                                location.reload();
+                            }else if(error.status == 400){
+                                swal.fire({
+                                    title: "Duplicado!",
+                                    text: "!Transacción rechazada!",
+                                    type: "error",
+                                    timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: false
+                                    });
+                                    setTimeout(function() { 
+                                        location.reload();
+                                    }, 2000);
                             }
 
                         }
@@ -287,6 +297,7 @@
                             $('#name_edit').val(data_response.response.nombre);
                             $('#code_edit').val(data_response.response.codigo);                           
                             $('#cuartel_edit').val(data_response.response.cuartel_id).trigger('change');
+                            $('#id_bloque').val(data_response.response.id);                           
                            
                             $('#estado option[value="'+data_response.response.estado+'"]').attr("selected", "selected");
                         }
