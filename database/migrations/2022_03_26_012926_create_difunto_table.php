@@ -16,14 +16,16 @@ class CreateDifuntoTable extends Migration
         Schema::create('difunto', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('ci',10);           
-            $table->string('nombres',10);
-            $table->string('primer_apellido',10);
-            $table->string('segundo_apellido',10);
+            $table->string('nombres',50);
+            $table->string('primer_apellido',50)->nullable();
+            $table->string('segundo_apellido',50)->nullable();
             $table->date('fecha_nacimiento');
             $table->date('fecha_defuncion');
             $table->string('certificado_defuncion');           
             $table->string('causa');
-            $table->string('tipo');         
+            $table->string('tipo');    
+            $table->string('genero')->nullable();
+
             $table->integer('user_id');
             $table->string('estado',10)->default('ACTIVO');
             $table->timestamps();     

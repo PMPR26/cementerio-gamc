@@ -308,6 +308,11 @@ return [
             'url'  => 'admin/settings',
             'icon' => 'fas fa-procedures',
         ],
+        [
+            'text' => 'SERVICIOS',
+            'route'  => 'serv',
+            'icon' => 'fas fa-laptop-medical',
+        ],
         // [
         //     'text'    => 'multilevel',
         //     'icon'    => 'fas fa-fw fa-share',

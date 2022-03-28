@@ -19,10 +19,10 @@ class CreateNichoTable extends Migration
             $table->integer('bloque_id');
             $table->string('nro_nicho',10);
             $table->integer('fila');
-            $table->integer('columna');
+            $table->integer('columna')->nullable();
             $table->string('codigo',15)->unique();
             $table->string('codigo_anterior',15)->nullable();
-            $table->integer('cantidad_cuerpos');
+            $table->integer('cantidad_cuerpos')->nullable();
             $table->string('tipo',20);
             $table->enum('estado_nicho', ['LIBRE', 'OCUPADO'])->nullable(); //PREGUNTAR A RICKY
             $table->string('estado',10)->default('ACTIVO');

@@ -47,6 +47,9 @@ Route::group(['prefix' => 'bloque', 'middleware' => 'auth'], function () {
     Route::get('/bloque', [App\Http\Controllers\Bloque\BloqueController::class,'index'])->name('bloque');  
     Route::post('/new-bloque', [App\Http\Controllers\Bloque\BloqueController::class,'createNewBloque'])->name('new.bloque');
     Route::get('/list-cuartel', [App\Http\Controllers\Bloque\BloqueController::class,'listCuartel'])->name('list-cuartel');
+    Route::get('/get-bloque/{id}', 'App\Http\Controllers\Bloque\BloqueController@getBloque')->name('bloque.get');
+
+    Route::put('/update-bloque', 'App\Http\Controllers\Bloque\BloqueController@updateBloque')->name('bloque.update');
 });
 
 //cripta
@@ -62,3 +65,12 @@ Route::group(['prefix' => 'nicho', 'middleware' => 'auth'], function () {
     Route::get('/get-nicho/{id}', 'App\Http\Controllers\Nicho\NichoController@getNicho')->name('nicho.get');
     Route::put('/update-nicho', 'App\Http\Controllers\Nicho\NichoController@updateNicho')->name('nicho.update');
 });
+
+
+Route::group(['prefix' => 'servicios', 'middleware' => 'auth'], function () {
+    Route::get('/servicios', [App\Http\Controllers\Servicios\ServiciosController::class,'index'])->name('serv'); 
+    Route::post('/new-servicio', [App\Http\Controllers\Servicios\ServiciosController::class,'createNewServicios'])->name('new.servicio');
+    Route::post('/buscar_nicho', [App\Http\Controllers\Cementerio\CementerioController::class, 'buscar_nicho'])->name('buscar.nicho');
+
+});
+
