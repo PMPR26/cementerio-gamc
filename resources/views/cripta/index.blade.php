@@ -5,6 +5,8 @@
 @section('plugins.Toastr', true)
 @section('plugins.Sweetalert2', true)
 @section('plugins.Select2', true)
+@section('plugins.Pace', true)
+
 
 
 @section('content_header')
@@ -161,6 +163,53 @@
     <script>
         $(document).ready(function(){
 
+            $('#btn-cripta-editar').on('click', function(){
+
+                $.ajax({
+                        type: 'PUT',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: '{{ route("cripta.update") }}',
+                        async: false,
+                        data: JSON.stringify({
+                            'id_cripta':  $('#btn-cripta-editar').val(),
+                            'name': $('#cripta-name').val(),
+                            'superficie': $('#superficie').val(),
+                            'status': $('#estado').val()
+                        }),
+                        success: function(data_response) {
+                            swal.fire({
+                            title: "Guardado!",
+                            text: "!Registro actualizado con éxito!",
+                            type: "success",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false
+                            });
+                            setTimeout(function() { 
+                                location.reload();
+                            }, 2000);
+                        },
+                        error: function (error) {
+                            
+                            if(error.status == 422){
+                                Object.keys(error.responseJSON.errors).forEach(function(k){
+                                toastr["error"](error.responseJSON.errors[k]);
+                                //console.log(k + ' - ' + error.responseJSON.errors[k]);
+                                });
+                            }else if(error.status == 419){
+                                location.reload();
+                            }
+
+                        }
+                    });
+
+            });
+
+
+
 
             $(document).on('click', '#btn-editar', function(){
                
@@ -173,7 +222,7 @@
                         url: '/cripta/get-cripta/' + $(this).val(),
                         async: false,
                         success: function(data_response) {
-                            console.log(data_response);
+                            
                             $('#modal-cripta').modal('show');
                             $('#btn-cripta-editar').show(300);
                             $('#btn-cripta').hide(300);
@@ -182,11 +231,7 @@
                             $('#cripta-name').val(data_response.response.nombre);
                             $('#superficie').val(data_response.response.superficie);
                             $('#estado').val(data_response.response.estado);
-                            
-
-
-
-
+                            $('#btn-cripta-editar').val(data_response.response.id);
                         }
                     });
 

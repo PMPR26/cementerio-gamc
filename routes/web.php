@@ -72,6 +72,7 @@ Route::group(['prefix' => 'cripta', 'middleware' => 'auth'], function () {
     Route::get('/index', [App\Http\Controllers\Cripta\CriptaController::class,'index'])->name('cripta.index');
     Route::post('/save', [App\Http\Controllers\Cripta\CriptaController::class,'saveCripta'])->name('cripta.save');
     Route::get('/get-cripta/{id}', [App\Http\Controllers\Cripta\CriptaController::class,'getCripta'])->name('cripta.get');
+    Route::put('/update-cripta', [App\Http\Controllers\Cripta\CriptaController::class,'updateCripta'])->name('cripta.update');
     
 });
 
