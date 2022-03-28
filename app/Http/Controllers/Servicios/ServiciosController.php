@@ -26,7 +26,12 @@ class ServiciosController extends Controller
         return view('servicios/index',['servicio' =>$servicio]);
     }
 
-    
+    public function cargarForm(){
+        
+       
+        return view('servicios/formRegistro');
+    }
+
     public function buscar_nicho(Request $request){
        
         $sql=null;
