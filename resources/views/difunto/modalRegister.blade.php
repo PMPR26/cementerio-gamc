@@ -93,6 +93,20 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             </div>
                         </div>
 
+                        <div class="col-sm-6">
+                 
+                            <div class="form-group">
+                                <label>Genero :</label>
+                                <select name="status" id="genero" class="form-control">
+            
+                                    <option value="MASCULINO"> Masculino</option>
+                                    <option value="FEMENINO"> Femenino</option>
+        
+                                </select>
+                               
+                            </div> 
+                        </div>
+
                         {{-- <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Domicilio :</label>

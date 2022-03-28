@@ -17,7 +17,7 @@ class ResponsableController extends Controller
                 // ->get();
 
         $responsable= DB::table('responsable') 
-                ->select('responsable.id','responsable.ci',DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),'responsable.telefono','responsable.celular','responsable.fecha_nacimiento','responsable.estado_civil','responsable.email','responsable.domicilio','responsable.estado')        
+                ->select('responsable.id','responsable.ci',DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),'responsable.telefono','responsable.celular','responsable.fecha_nacimiento','responsable.estado_civil','responsable.email','responsable.domicilio','responsable.estado','responsable.genero')        
                 ->get();
             
         return view('responsable/index', compact('responsable'));
@@ -32,8 +32,9 @@ class ResponsableController extends Controller
                 'nombres' => 'required',
                 'primer_apellido' => 'required',
                 'fecha_nacimiento' => 'required',
-                'telefono' => 'min:8|max:10|numeric',
-                'domicilio' => 'required'
+                // 'telefono' => 'min:8|max:10|numeric',
+                'domicilio' => 'required',
+                'genero' => 'required'
             ], [
                 'nombres.required'  => 'El campo nombre de responsable es obligatorio!',
                 'ci.required'    => 'El campo cedula de identidad es obligatorio!',
@@ -53,6 +54,7 @@ class ResponsableController extends Controller
             'telefono' => trim($request->telefono),
             'celular' => trim($request->celular),
             'estado_civil' => trim($request->estado_civil),
+            'genero' => trim($request->genero),
             'email' => trim($request->email),
             'domicilio' => trim($request->domicilio),
 
@@ -139,6 +141,7 @@ class ResponsableController extends Controller
             'primer_apellido' => $request->primer_apellido,
             'segundo_apellido' => $request->segundo_apellido,
             'fecha_nacimiento' => $request->fecha_nacimiento,
+            'genero' => $request->genero,
             'telefono' => $request->telefono,
             'celular' => $request->celular,
             'estado_civil' => $request->estado_civil,

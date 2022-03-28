@@ -174,8 +174,22 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label>Tipo :</label>
-                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="tipo-responsable" autocomplete="off">
+                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="tipo-difunto" autocomplete="off">
                     </div>
+                </div>
+
+                <div class="col-sm-6">
+                 
+                    <div class="form-group">
+                        <label>Genero :</label>
+                        <select name="status" id="genero-difunto" class="form-control">
+    
+                            <option value="MASCULINO"> Masculino</option>
+                            <option value="FEMENINO"> Femenino</option>
+
+                        </select>
+                       
+                    </div> 
                 </div>
 
                 {{-- <div class="col-sm-6">
@@ -245,6 +259,7 @@
                             'certificado_defuncion':  $('#certificado_defuncion-difunto').val(),
                             'causa':  $('#causa-difunto').val(),
                             'tipo': $('#tipo-difunto').val(),
+                            'genero': $('#genero-difunto').val(),
                             // 'domicilio': $('#domicilio-responsable').val(),
                             'id': $('#btn-editar-va').val()
                         }),
@@ -345,7 +360,7 @@
                             $('#certificado_defuncion-difunto').val(data_response.response.certificado_defuncion);
                             $('#causa-difunto').val(data_response.response.causa);
                             $('#tipo-difunto').val(data_response.response.tipo);
-                           //$('#domicilio-responsable').val(data_response.response.domicilio);
+                           $('#genero-difunto').val(data_response.response.genero);
 
                             $('#estado option[value="'+data_response.response.estado+'"]').attr("selected", "selected");
                         }
@@ -377,7 +392,7 @@
                             'certificado_defuncion':  $('#fecha_defuncion').val(),
                             'causa':  $('#causa').val(),
                             'tipo': $('#tipo').val(),
-                            // 'domicilio': $('#domicilio').val(),
+                            'genero': $('#genero').val(),
                         }),
                         success: function(data_response) {
                             swal.fire({
