@@ -4,6 +4,8 @@
 @section('plugins.Animation', true)
 @section('plugins.Toastr', true)
 @section('plugins.Sweetalert2', true)
+@section('plugins.Select2', true)
+
 
 @section('content_header')
     <h1>Gestion de Criptas</h1>
@@ -43,6 +45,7 @@
                     <td>{{ $cripta->codigo }}</td>                           
                     <td>{{ $cripta->cuartel_name }}</td>
                     <td>{{ $cripta->bloque_name }}</td>
+                    <td>{{ $cripta->codigo }}</td>
                     <td>{{ $cripta->cripta_name }}</td>
                     <td>{{ $cripta->estado }}</td>
 
@@ -58,6 +61,80 @@
             @endforeach
         </tbody>
     </table>
+
+
+      <!-- Modal crear -->
+<div class="modal fade  animated bounceIn" id="modal-cripta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Registrar Nueva Cripta</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            
+        <div class="row">
+        <div class="col-sm-6">
+                    <label>Cuartel</label>
+                    <select  class="form-control select-cuartel" style="width: 100%">
+                    <option selected disabled>Seleccione un cuartel</option>
+                    @foreach ($cuartel as $value)
+                    <option value="{{ $value->id }}">{{ $value->nombre }}</option>
+                    @endforeach
+                    </select>
+        </div>
+        <div class="col-sm-6">
+                    <label>Bloque</label>
+                    <select  class="form-control select-bloque" style="width: 100%">
+                    <option selected disabled>Seleccione bloque</option>
+                    @foreach ($bloque as $value)
+                    <option value="{{ $value->id }}">{{ $value->nombre }}</option>
+                    @endforeach
+                    </select>
+        </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2">
+                    <label>Codigo:</label>
+                    <input id="cod-cripta" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
+            </div>
+            <div class="col-sm-4">
+                    <label>Nombre:</label>
+                    <input id="cripta-name" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
+            </div>
+            <div class="col-sm-3">
+                    <label>Superficie m2:</label>
+                    <input id="superficie" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
+            </div>
+            <div class="col-sm-3">
+                    <label>Estado:</label>
+                    <select  id="estado" class="form-control">
+                        <option value="ACTIVO">ACTIVO</option>
+                        <option value="INACTIVO">INACTIVO</option>
+                    </select>
+            </div>
+        </div>
+
+       <hr>
+       <div class="col-sm-12" style="text-align: center">
+            <button type="button" id="btn-cripta" class="btn btn-success btn-editar">Guardar</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        </div> 
+            
+        </div>
+        <div class="modal-footer">
+            
+          <!-- <button type="button" id="edit-cuartel" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="btn-editar-va">Guardar Cambios</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 
 @stop
 
@@ -85,6 +162,99 @@
 
 @section('js')
     <script>
+        $(document).ready(function(){
+
+
+            $('#btn-editar').on('click', function(){
+               
+                $.ajax({
+                        type: 'GET',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: '/cripta/get-cripta/' + $(this).val(),
+                        async: false,
+                        success: function(data_response) {
+                           
+                            $('#modal-cripta').modal('show');
+
+                        }
+                    });
+
+            });
+
+
+            $('.btn-editar').on('click', function(){
+                alert('dwada');
+            });
+
+
+
+            $('#new-cripta').on('click', function(){
+                $('#modal-cripta').modal('show');
+            });
+
+
+            $(".select-cuartel").select2({
+                width: 'resolve', // need to override the changed default
+                dropdownParent: $('#modal-cripta')
+            });
+
+            $(".select-bloque").select2({
+                width: 'resolve', // need to override the changed default
+                dropdownParent: $('#modal-cripta')
+            });
+            
+
+            $('#btn-cripta').on('click', function(){
+
+                $.ajax({
+                        type: 'POST',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: "{{ route('cripta.save') }}",
+                        async: false,
+                        data: JSON.stringify({
+                            'id_cuartel':  $('.select-cuartel').val(),
+                            'id_bloque': $('.select-bloque').val(),
+                            'codigo': $('#cod-cripta').val(),
+                            'name': $('#cripta-name').val(),
+                            'superficie': $('#superficie').val(),
+                            'status': $('#estado').val()
+                        }),
+                        success: function(data_response) {
+                            swal.fire({
+                            title: "Guardado!",
+                            text: "!Registro actualizado con éxito!",
+                            type: "success",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false
+                            });
+                            setTimeout(function() { 
+                                location.reload();
+                            }, 2000);
+                            //toastr["success"]("Registro realizado con éxito!");
+                        },
+                        error: function (error) {
+                            
+                            if(error.status == 422){
+                                Object.keys(error.responseJSON.errors).forEach(function(k){
+                                toastr["error"](error.responseJSON.errors[k]);
+                                //console.log(k + ' - ' + error.responseJSON.errors[k]);
+                                });
+                            }else if(error.status == 419){
+                                location.reload();
+                            }
+
+                        }
+                    })
+            });
+            
+        });
 
     </script>
     @stop
