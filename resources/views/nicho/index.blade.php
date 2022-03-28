@@ -115,7 +115,7 @@
 
                         <label>Bloque</label>
                        
-                        <select style="width: 100%"  id="bloque_edit" onchange="generateCode_edit()" >                                      
+                        <select style="width: 100%"  class = "form-control" id="bloque_edit" onchange="generateCode_edit()" >                                      
                             @foreach($bloque as $b1)
                             <option value={{ $b1->id}}> {{ $b1->codigo }}</option>
                             @endforeach
@@ -293,7 +293,7 @@
         });
 
         $('#btn_guardar_nicho').on('click', function(){
-            alert($('#tipo').val());
+           
             return  $.ajax({
                         type: 'POST',
                         headers: {
@@ -508,15 +508,41 @@ else{
                            $.each( data_bloque.response, function( key, value ) {                               
                                  opt2='<option value="'+ value.id +'">'+value.codigo +'</option>';
                                  $('#bloque').append(opt2);
-                            });
-                                                    
+                            });                                                    
                         }
                 });
-   
-           
-             
     });
 
+
+    //bloque_edit
+
+    $(document).on('change', '#cuartel_edit', function(){
+        $('#bloque_edit').empty();
+        var sel_cuartel=$('#cuartel_edit').val();
+              $('#bloque_edit').prop('disabled', false);
+                $.ajax({
+                    type: 'POST',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: "{{ route('bloqueid.get') }}",
+                        async: false,
+                        data: JSON.stringify({
+                            'cuartel': $('#cuartel_edit').val(),
+                        }),
+                        success: function(data_bloque) {
+                           console.log(data_bloque) ;
+
+                            var op1='<option >SELECCIONAR</option>';
+                            $('#bloque_edit').append(op1);
+                           $.each( data_bloque.response, function( key, value ) {                               
+                                 opt2='<option value="'+ value.id +'">'+value.codigo +'</option>';
+                                 $('#bloque_edit').append(opt2);
+                            });                                                    
+                        }
+                });
+    });
 
     </script>
 @stop
