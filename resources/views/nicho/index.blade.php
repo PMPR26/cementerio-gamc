@@ -175,8 +175,8 @@
                     <div class="form-group">
                         <label>Tipo de  nicho:</label>
                         <select name="tipo" id="tipo_edit" class="form-control">
-                            <option value="temporal">TEMPORAL</option>
-                            <option value="perpetuo">PERPETUO</option>
+                            <option value="TEMPORAL">TEMPORAL</option>
+                            <option value="PERPETUO">PERPETUO</option>
 
                         </select>
                         

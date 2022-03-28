@@ -99,8 +99,8 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="form-group">
                                 <label>Tipo de  nicho:</label>
                                 <select name="tipo" id="tipo" class="form-control">
-                                    <option value="temporal">TEMPORAL</option>
-                                    <option value="perpetuo">PERPETUO</option>
+                                    <option value="TEMPORAL">TEMPORAL</option>
+                                    <option value="PERPETUO">PERPETUO</option>
 
                                 </select>
                                 
