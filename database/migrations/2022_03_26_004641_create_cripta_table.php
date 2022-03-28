@@ -15,18 +15,16 @@ class CreateCriptaTable extends Migration
     {
         Schema::create('cripta', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('cuartel_id');
-            $table->integer('bloque_id');           
+            $table->integer('cuartel_id');                   
             $table->string('codigo',10);
-            $table->string('nombre',10);
+            $table->string('nombre',100);
             $table->decimal('superficie', 8, 2);
             $table->string('estado',10)->default('ACTIVO');
             $table->integer('user_id');
             $table->timestamps();
 
             $table->foreign('cuartel_id')->references('id')->on('cuartel');
-            $table->foreign('bloque_id')->references('id')->on('bloque');
-
+         
         });
     }
 
