@@ -79,12 +79,11 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::put('/update-responsable', 'App\Http\Controllers\Responsable\ResponsableController@updateResponsable')->name('responsable.update');
 });
 
+
 // asignacion de servicios
-
-
 Route::group(['prefix' => 'servicios', 'middleware' => 'auth'], function () {
     Route::get('/servicios', [App\Http\Controllers\Servicios\ServiciosController::class,'index'])->name('serv'); 
     Route::post('/new-servicio', [App\Http\Controllers\Servicios\ServiciosController::class,'createNewServicios'])->name('new.servicio');
     Route::post('/buscar_nicho', [App\Http\Controllers\Cementerio\CementerioController::class, 'buscar_nicho'])->name('buscar.nicho');
-
+    
 });

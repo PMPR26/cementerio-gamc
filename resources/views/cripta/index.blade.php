@@ -76,7 +76,7 @@
         <div class="modal-body">
             
         <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-12">
                     <label>Cuartel</label>
                     <select  class="form-control select-cuartel" style="width: 100%">
                     <option selected disabled>Seleccione un cuartel</option>
@@ -85,15 +85,7 @@
                     @endforeach
                     </select>
         </div>
-        <div class="col-sm-6">
-                    <label>Bloque</label>
-                    <select  class="form-control select-bloque" style="width: 100%">
-                    <option selected disabled>Seleccione bloque</option>
-                    @foreach ($bloque as $value)
-                    <option value="{{ $value->id }}">{{ $value->nombre }}</option>
-                    @endforeach
-                    </select>
-        </div>
+       
         </div>
 
         <div class="row">
@@ -201,11 +193,6 @@
                 dropdownParent: $('#modal-cripta')
             });
 
-            $(".select-bloque").select2({
-                width: 'resolve', // need to override the changed default
-                dropdownParent: $('#modal-cripta')
-            });
-            
 
             $('#btn-cripta').on('click', function(){
 

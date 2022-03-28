@@ -23,12 +23,7 @@ class CriptaController extends Controller
                     ->orderBy('nombre', 'DESC')
                     ->get();
 
-        $bloque = Bloque::select('id', 'nombre')
-        ->where('estado', 'ACTIVO')
-        ->orderBy('nombre', 'DESC')
-        ->get();
-      
-        return view('cripta.index', ['cripta' => $cripta, 'cuartel' => $cuartel, 'bloque' => $bloque]);
+        return view('cripta.index', ['cripta' => $cripta, 'cuartel' => $cuartel]);
 
     }
 
@@ -80,5 +75,18 @@ class CriptaController extends Controller
               'status'=> true,
               'response'=> $cripta
                  ],201);
+    }
+
+    public function getBloqueFromCuartel(){
+
+        $bloque = Bloque::select('id', 'nombre')
+        ->where(['estado' => 'ACTIVO', ''])
+        ->orderBy('nombre', 'DESC')
+        ->get();
+
+        return response([
+            'status'=> true,
+            'response'=> $bloque
+               ],200);
     }
 }
