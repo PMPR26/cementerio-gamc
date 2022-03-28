@@ -206,7 +206,6 @@
                         async: false,
                         data: JSON.stringify({
                             'id_cuartel':  $('.select-cuartel').val(),
-                            'id_bloque': $('.select-bloque').val(),
                             'codigo': $('#cod-cripta').val(),
                             'name': $('#cripta-name').val(),
                             'superficie': $('#superficie').val(),
