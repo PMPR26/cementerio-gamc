@@ -99,7 +99,7 @@ class ResponsableController extends Controller
                 'status'=> true,
                 'response'=> '!Responsable desactivado!'
              ],200);
-<
+
         }else{
             Responsable::where([
                 'id' => $responsable->id

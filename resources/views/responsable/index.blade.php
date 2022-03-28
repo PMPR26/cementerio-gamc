@@ -41,7 +41,7 @@
                     <td scope="row">{{ $count++ }}</td>
                    
                     <td>{{ $responsable->ci }}</td>                           
-                    <td>{{ $responsable->nombres }}</td>
+                    <td>{{ $responsable->nombre }}</td>
                     <td>{{ $responsable->telefono }}</td>
                     <td>{{ $responsable->celular }}</td>
                     <td>{{ $responsable->domicilio }}</td>
