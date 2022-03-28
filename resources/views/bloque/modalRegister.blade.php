@@ -1,6 +1,6 @@
 
 
-<!-- Modal complementacion de entrega de producto -->
+<!-- Modal registro bloque -->
 <div class="modal fade fullscreen-modal animated bounceIn" tabindex="-1" id="modal-register-bloque" data-backdrop="static" tabindex="-1" role="dialog"
 aria-labelledby="staticBackdropLabel" aria-hidden="true">
 <div class="modal-dialog modal-lg" role="document">

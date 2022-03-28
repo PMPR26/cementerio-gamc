@@ -18,7 +18,7 @@ class BloqueController extends Controller
         $bloque =DB::table('bloque')
                  ->select('bloque.*', 'cuartel.codigo as cuartel_cod')
                  ->join('cuartel' , 'cuartel.id','=', 'bloque.cuartel_id')
-                 ->where('bloque.estado', '=', 'ACTIVO')
+                // ->where('bloque.estado', '=', 'ACTIVO')
                  ->get();
 
         return view('bloque/index', ['bloque' =>$bloque , 'cuartel' => $cuartel]);
@@ -39,31 +39,119 @@ class BloqueController extends Controller
                 'codigo.unique' => 'El código '.$request->codigo.' ya se encuentra en uso!.'
             ]);
             
+            $rep= $this->repetidoins( $request->codigo, $request->cuartel   );
+          //dd($rep);
 
-           $new_bloque =  Bloque::create([
-            'codigo' => trim($request->codigo),
-            'nombre' => trim($request->name),
-            'cuartel_id' => trim($request->cuartel),
+            if($rep=="no"){
+                $new_bloque =  Bloque::create([
+                    'codigo' => trim($request->codigo),
+                    'nombre' => trim($request->name),
+                    'cuartel_id' => trim($request->cuartel),
 
-            'user_id' => auth()->id(),
-            'estado' => 'ACTIVO',
-            'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s"),
-           ]);
+                    'user_id' => auth()->id(),
+                    'estado' => 'ACTIVO',
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s"),
+                ]);
 
 
-            return response([
+                    return response([
+                        'status'=> true,
+                        'response'=> $new_bloque
+                    ],201);
+
+                }else{
+                    return response([
+                        'status'=> false,
+                        'message'=> 'Error, codigo existente, duplicado!)'
+                     ],400);
+                  }
+            }
+    }
+
+    public function getBloque($id){ 
+
+        $bloque =  Bloque::where('id', $id)->first();
+
+               return response([
                 'status'=> true,
-                'response'=> $new_bloque
-             ],201);
+                'response'=> $bloque
+             ],200);
+    }
 
-        }else{
 
-            return response([
-                'status'=> false,
-                'message'=> 'Error 401 (Unauthorized)'
-             ],401);
-        }
+    public function updateBloque(Request $request){
+
+        $this->validate($request, [
+            'name' => 'required',
+            'cuartel' => 'required',
+            'codigo' => 'required',
+            'id' => 'required'
+        ], [
+            'name.required'  => 'El campo nombre de bloque es obligatorio!',
+            'codigo.required'  => 'El campo codigo de bloque es obligatorio!',
+            'cuartel.required'  => 'El campo cuartel de bloque es obligatorio!'
+
+
+        ]);
+       $rep= $this->repetido( $request->id,$request->codigo);
+      
+
+      if($rep=="no"){
+        $bloque =  Bloque::where('id', $request->id)
+        ->update([
+            'nombre' => $request->name,
+            'cuartel_id' => $request->cuartel,
+            'codigo' => $request->codigo,
+            'estado' => $request->estado,
+            'user_id' => auth()->id(),
+            'updated_at' => date("Y-m-d H:i:s")
+        ]);
+
+        return response([
+            'status'=> true,
+            'response'=> 'done'
+         ],200);
+      }else{
+        return response([
+            'status'=> false,
+            'message'=> 'Error, codigo existente, duplicado!)'
+         ],400);
+      }
+
+      
+
+
+    }
+    public function repetido($id, $codigo){
+        $repetido =  DB::table('bloque')
+                    ->where('id', '!=', $id)
+                    ->where('codigo', '=', ''.$codigo.'')
+                    ->first();
+            if($repetido==null){
+                return $resp="no";
+            }
+            else{
+               return $resp="si";
+            }      
+
+    }
+
+    public function repetidoins($codigo, $cuartel){
+        $repetido =  DB::table('bloque')
+                   
+                    ->where('codigo', '=', ''.$codigo.'')
+                    ->where('cuartel_id', '=', ''.$cuartel.'')
+
+                    ->first();
+            //  dd($repetido)     ;
+            if($repetido==null){
+                return $resp="no";
+            }
+            else{
+               return $resp="si";
+            }      
+
     }
     
 }

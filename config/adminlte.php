@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'DCHO PROPIETARIO', //change title the aplications
+    'title' => 'CEMENTERIO GAMC', //change title the aplications
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -188,7 +188,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => '/home',
+    'dashboard_url' => 'user/profile', // /home
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register/home',
@@ -271,6 +271,11 @@ return [
             //'label'       => 4,
             //'label_color' => 'success',
         ],
+        [
+            'text' => 'SERVICIOS',
+            'route'  => 'serv',
+            'icon' => 'fas fa-laptop-medical',
+        ],
 
         ['header' => 'opciones'],
         [
@@ -290,24 +295,25 @@ return [
         ],
         [
             'text' => 'MAUSOLEOS',
-            'url'  => 'admin/settings',
+            'url'  => 'mausoleo/index',
             'icon' => 'fas fa-church',
         ],
         [
             'text' => 'NICHOS',
-            'url'  => 'admin/settings',
+            'url'  => 'nicho/nicho',
             'icon' => 'fas fa-dungeon',
         ],
         [
             'text' => 'RESPONSABLES',
-            'url'  => 'admin/settings',
+            'url'  => 'responsable/index',
             'icon' => 'far fa-address-card',
         ],
         [
             'text' => 'DIFUNTOS',
-            'url'  => 'admin/settings',
+            'url'  => 'difunto/index',
             'icon' => 'fas fa-procedures',
         ],
+
         // [
         //     'text'    => 'multilevel',
         //     'icon'    => 'fas fa-fw fa-share',

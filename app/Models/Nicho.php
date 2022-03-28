@@ -5,17 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Mausoleo extends Model
+class Nicho extends Model
 {
     use HasFactory;
-    protected $table = 'mausoleo';
+
+    protected $table = 'nicho';
     protected $fillable = [
-        'cuartel_id',
         'codigo',
-        'nombre',
-        'superficie',
-        'estado',
+        'cuartel_id',
+        'bloque_id',
+        'fila',
+        'columna',
+        'nro_nicho',
+        'cantidad_cuerpos',
+        'codigo_anterior',
+
+        'tipo',
         'user_id',
+        'estado',       
         'created_at'
     ];
 
