@@ -20,6 +20,7 @@ class Responsable extends Model
         'certificado_defuncion',
         'causa',
         'tipo',
+        'genero',
         'estado',
         'user_id',
         'created_at'

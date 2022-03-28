@@ -137,6 +137,20 @@
                 </div>
 
                 <div class="col-sm-6">
+                 
+                    <div class="form-group">
+                        <label>Genero :</label>
+                        <select name="status" id="genero-responsable" class="form-control">
+    
+                            <option value="MASCULINO"> Masculino</option>
+                            <option value="FEMENINO"> Femenino</option>
+
+                        </select>
+                       
+                    </div> 
+                </div>
+
+                <div class="col-sm-6">
                     <div class="form-group">
                         <label>Telefono :</label>
                         <input  type="number" class="form-control" id="telefono-responsable" autocomplete="off">
@@ -236,6 +250,7 @@
                             'primer_apellido':  $('#primer_apellido-responsable').val(),
                             'segundo_apellido':  $('#segundo_apellido-responsable').val(),
                             'fecha_nacimiento':  $('#fecha_nacimiento-responsable').val(),
+                            'genero':  $('#genero-responsable').val(),
                             'telefono':  $('#telefono-responsable').val(),
                             'celular':  $('#celular-responsable').val(),
                             'estado_civil':  $('#estado_civil-responsable').val(),
@@ -284,7 +299,7 @@
                             'Content-Type':'application/json',
                             'X-CSRF-TOKEN':'{{ csrf_token() }}',
                         },
-                        url: '/cuartel/disable-responsable/' + $(this).val(),
+                        url: '/responsable/disable-responsable/' + $(this).val(),
                         async: false,
                         success: function(data_response) {
                             swal.fire({
@@ -336,6 +351,7 @@
                             $('#primer_apellido-responsable').val(data_response.response.primer_apellido);
                             $('#segundo_apellido-responsable').val(data_response.response.segundo_apellido);
                             $('#fecha_nacimiento-responsable').val(data_response.response.fecha_nacimiento);
+                            $('#genero-responsable').val(data_response.response.genero);
                             $('#telefono-responsable').val(data_response.response.telefono);
                             $('#celular-responsable').val(data_response.response.celular);
                             $('#estado_civil-responsable').val(data_response.response.estado_civil);
@@ -368,6 +384,7 @@
                             'primer_apellido':  $('#primer_apellido').val(),
                             'segundo_apellido':  $('#segundo_apellido').val(),
                             'fecha_nacimiento':  $('#fecha_nacimiento').val(),
+                            'genero':  $('#genero').val(),
                             'telefono':  $('#telefono').val(),
                             'celular':  $('#celular').val(),
                             'estado_civil':  $('#estado_civil').val(),

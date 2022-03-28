@@ -19,6 +19,7 @@ class Responsable extends Model
         'telefono',
         'celular',
         'estado_civil',
+        'genero',
         'email',
         'domicilio',
         'estado',

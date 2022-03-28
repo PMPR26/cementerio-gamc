@@ -17,7 +17,7 @@ class DifuntoController extends Controller
                 // ->get();
 
         $difunto= DB::table('difunto') 
-                ->select('difunto.id','difunto.ci',DB::raw('CONCAT(difunto.nombres , \' \',difunto.primer_apellido, \' \', difunto.segundo_apellido ) AS nombre'),'difunto.fecha_nacimiento','difunto.fecha_defuncion','difunto.certificado_defuncion','difunto.causa','difunto.tipo','difunto.estado')        
+                ->select('difunto.id','difunto.ci',DB::raw('CONCAT(difunto.nombres , \' \',difunto.primer_apellido, \' \', difunto.segundo_apellido ) AS nombre'),'difunto.fecha_nacimiento','difunto.fecha_defuncion','difunto.certificado_defuncion','difunto.causa','difunto.tipo','difunto.estado','difunto.genero')        
                 ->get();
             
         return view('difunto/index', compact('difunto'));
@@ -50,7 +50,7 @@ class DifuntoController extends Controller
             'certificado_defuncion' => trim($request->certificado_defuncion),
             'causa' => trim($request->causa),
             'tipo' => trim($request->tipo),
-
+            'genero' => trim($request->genero),
             'user_id' => auth()->id(),
             'estado' => 'ACTIVO',
             'created_at' => date("Y-m-d H:i:s"),
@@ -136,7 +136,7 @@ class DifuntoController extends Controller
             'certificado_defuncion' => $request->certificado_defuncion,
             'causa' => $request->causa,
             'tipo' => $request->tipo,
-
+            'genero' => $request->genero,
             //'estado' => $request->status,
             'updated_at' => date("Y-m-d H:i:s")
         ]);
