@@ -6,7 +6,7 @@
 @section('plugins.Sweetalert2', true)
 
 @section('content_header')
-    <h1>Listado de Responsables</h1>
+    <h1>Listado de Difuntos</h1>
 @stop
 
 @section('content')
@@ -14,11 +14,11 @@
   
          <div class="card">
      <div class="card-body">
-     <button id="new-responsable" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Responsable</button>
+     <button id="new-difunto" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Difunto</button>
          </div>
         </div>
 
-    <table id="responsable-data" class="table table-striped table-bordered responsive" role="grid"
+    <table id="difunto-data" class="table table-striped table-bordered responsive" role="grid"
     aria-describedby="example">
     <thead class="bg-table-header">
        
@@ -26,32 +26,32 @@
                 <th scope="col">#</th>                           
                 <th scope="col">Cedula de identidad</th>
                 <th scope="col">Nombre</th>
-                <th scope="col">Telefono</th>  
-                <th scope="col">Celular</th>
-                <th scope="col">Dirección</th>       
+                <th scope="col">Fecha de defunción</th>  
+                <th scope="col">Causa</th>
+                <th scope="col">Tipo</th>       
                 <th scope="col">Opciones</th>
             </tr>
         </thead>
 
         <tbody>
             @php($count = 1)
-            @foreach ($responsable as $responsable)
+            @foreach ($difunto as $difunto)
                        
                 <tr>
                     <td scope="row">{{ $count++ }}</td>
                    
-                    <td>{{ $responsable->ci }}</td>                           
-                    <td>{{ $responsable->nombre }}</td>
-                    <td>{{ $responsable->telefono }}</td>
-                    <td>{{ $responsable->celular }}</td>
-                    <td>{{ $responsable->domicilio }}</td>
+                    <td>{{ $difunto->ci }}</td>                           
+                    <td>{{ $difunto->nombre }}</td>
+                    <td>{{ $difunto->fecha_defuncion }}</td>
+                    <td>{{ $difunto->causa }}</td>
+                    <td>{{ $difunto->tipo }}</td>
                    
                     <td>
-                        <button type="button" class="btn btn-info" value="{{ $responsable->id }}" id="btn-editar" title="Editar responsable"><i class="fas fa-edit"></i></button>
+                        <button type="button" class="btn btn-info" value="{{ $difunto->id }}" id="btn-editar" title="Editar difunto"><i class="fas fa-edit"></i></button>
                         @if($responsable->estado =='ACTIVO')
-                        <button type="button" class="btn btn-warning" value="{{ $responsable->id }}" id="btn-desactivar"><i class="fas fa-thumbs-down"></i></button>
+                        <button type="button" class="btn btn-warning" value="{{ $difunto->id }}" id="btn-desactivar"><i class="fas fa-thumbs-down"></i></button>
                         @else
-                        <button type="button" class="btn btn-success" value="{{ $responsable->id }}" id="btn-desactivar"><i class="fas fa-thumbs-up"></i></button>
+                        <button type="button" class="btn btn-success" value="{{ $difunto->id }}" id="btn-desactivar"><i class="fas fa-thumbs-up"></i></button>
                         @endif
                     </td>
                 </tr>
@@ -59,15 +59,15 @@
         </tbody>
     </table>
 
-    @include('responsable.modalRegister', [
-        'id_button' => 'btn_guardar_responsable',
-        'title_buton' => 'Guardar Responsable',
-        'title_modal' => 'Nuevo Responsable'
+    @include('difunto.modalRegister', [
+        'id_button' => 'btn_guardar_difunto',
+        'title_buton' => 'Guardar Difunto',
+        'title_modal' => 'Nuevo Difunto'
         ]) 
     
 
     <!-- Modal -->
-<div class="modal fade  animated bounceIn" id="edit-responsable" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade  animated bounceIn" id="edit-difunto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -103,54 +103,59 @@
                 <div class="col-sm-6">
                         <div class="form-group">
                             <label>Cedula de Identidad:</label>
-                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="ci-responsable" autocomplete="off">
+                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="ci-difunto" autocomplete="off">
                         </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label>Nombre :</label>
-                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="nombre-responsable" autocomplete="off">
+                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="nombre-difunto" autocomplete="off">
                     </div>
                 </div>
 
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label>Primer apellido :</label>
-                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="primer_apellido-responsable" autocomplete="off">
+                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="primer_apellido-difunto" autocomplete="off">
                     </div>
                 </div>
 
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label>Segundo apellido :</label>
-                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="segundo_apellido-responsable" autocomplete="off">
+                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="segundo_apellido-difunto" autocomplete="off">
                     </div>
                 </div>
 
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label>Fecha de nacimiento :</label>
-                        <input type="date"  class="form-control" placeholder="fecha de nacimiento" id="fecha_nacimiento-responsable" max="2006-12-31" >
-                        {{-- <input type="text" class="form-control datetimepicker" placeholder="Fecha de nacimiento" id="fecha_nacimiento" name="fecha_nacimiento"  />
-                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="segundo_apellido" autocomplete="off"> --}}
+                        <input type="date"  class="form-control" placeholder="fecha de nacimiento" id="fecha_nacimiento-difunto" max="2006-12-31" >
                     </div>
                 </div>
 
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label>Telefono :</label>
-                        <input  type="number" class="form-control" id="telefono-responsable" autocomplete="off">
+                        <label>Fecha de defunción :</label>
+                        <input type="date"  class="form-control" placeholder="fecha de defuncion" id="fecha_defuncion-difunto" max="2006-12-31" >
                     </div>
                 </div>
 
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label>Celular :</label>
-                        <input type="number" class="form-control" id="celular-responsable" autocomplete="off">
+                        <label>Certificado de defunción :</label>
+                        <input  type="number" class="form-control" id="certificado_defuncion-difunto" autocomplete="off">
                     </div>
                 </div>
 
                 <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Causa :</label>
+                        <input type="number" class="form-control" id="causa-difunto" autocomplete="off">
+                    </div>
+                </div>
+
+                {{-- <div class="col-sm-6">
                  
                     <div class="form-group">
                         <label>Estado civil:</label>
@@ -164,26 +169,26 @@
                         </select>
                        
                     </div> 
-                </div>
+                </div> --}}
 
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label>Email :</label>
-                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="email-responsable" autocomplete="off">
+                        <label>Tipo :</label>
+                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="tipo-responsable" autocomplete="off">
                     </div>
                 </div>
 
-                <div class="col-sm-6">
+                {{-- <div class="col-sm-6">
                     <div class="form-group">
                         <label>Domicilio :</label>
                         <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="domicilio-responsable" autocomplete="off">
                     </div>
-                </div>
+                </div> --}}
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" id="edit-responsable" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="button" id="edit-difunto" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
           <button type="button" class="btn btn-primary" id="btn-editar-va">Guardar Cambios</button>
         </div>
       </div>
@@ -220,7 +225,7 @@
     $(document).ready(function () {
 
 
-        //editar cuartel
+        //editar difunto
         $('#btn-editar-va').on('click', function(){
             $.ajax({
                         type: 'PUT',
@@ -228,19 +233,19 @@
                             'Content-Type':'application/json',
                             'X-CSRF-TOKEN':'{{ csrf_token() }}',
                         },
-                        url: "{{ route('responsable.update') }}",
+                        url: "{{ route('difunto.update') }}",
                         async: false,
                         data: JSON.stringify({
-                            'ci':  $('#ci-responsable').val(),
-                            'nombres':  $('#nombre-responsable').val(),
-                            'primer_apellido':  $('#primer_apellido-responsable').val(),
-                            'segundo_apellido':  $('#segundo_apellido-responsable').val(),
-                            'fecha_nacimiento':  $('#fecha_nacimiento-responsable').val(),
-                            'telefono':  $('#telefono-responsable').val(),
-                            'celular':  $('#celular-responsable').val(),
-                            'estado_civil':  $('#estado_civil-responsable').val(),
-                            'email': $('#email-responsable').val(),
-                            'domicilio': $('#domicilio-responsable').val(),
+                            'ci':  $('#ci-difunto').val(),
+                            'nombres':  $('#nombre-difunto').val(),
+                            'primer_apellido':  $('#primer_apellido-difunto').val(),
+                            'segundo_apellido':  $('#segundo_apellido-difunto').val(),
+                            'fecha_nacimiento':  $('#fecha_nacimiento-difunto').val(),
+                            'fecha_defuncion':  $('#fecha_defuncion-difunto').val(),
+                            'certificado_defuncion':  $('#certificado_defuncion-difunto').val(),
+                            'causa':  $('#causa-difunto').val(),
+                            'tipo': $('#tipo-difunto').val(),
+                            // 'domicilio': $('#domicilio-responsable').val(),
                             'id': $('#btn-editar-va').val()
                         }),
                         success: function(data_response) {
@@ -284,7 +289,7 @@
                             'Content-Type':'application/json',
                             'X-CSRF-TOKEN':'{{ csrf_token() }}',
                         },
-                        url: '/cuartel/disable-responsable/' + $(this).val(),
+                        url: '/difunto/disable-difunto/' + $(this).val(),
                         async: false,
                         success: function(data_response) {
                             swal.fire({
@@ -326,21 +331,21 @@
                             'Content-Type':'application/json',
                             'X-CSRF-TOKEN':'{{ csrf_token() }}',
                         },
-                        url: '/responsable/get-responsable/' + $(this).val(),
+                        url: '/difunto/get-difunto/' + $(this).val(),
                         async: false,
                         success: function(data_response) {
                            
-                            $('#edit-responsable').modal('show');
-                            $('#nombre-responsable').val(data_response.response.nombres);
-                            $('#ci-responsable').val(data_response.response.ci);
-                            $('#primer_apellido-responsable').val(data_response.response.primer_apellido);
-                            $('#segundo_apellido-responsable').val(data_response.response.segundo_apellido);
-                            $('#fecha_nacimiento-responsable').val(data_response.response.fecha_nacimiento);
-                            $('#telefono-responsable').val(data_response.response.telefono);
-                            $('#celular-responsable').val(data_response.response.celular);
-                            $('#estado_civil-responsable').val(data_response.response.estado_civil);
-                            $('#email-responsable').val(data_response.response.email);
-                            $('#domicilio-responsable').val(data_response.response.domicilio);
+                            $('#edit-difunto').modal('show');
+                            $('#nombre-difunto').val(data_response.response.nombres);
+                            $('#ci-difunto').val(data_response.response.ci);
+                            $('#primer_apellido-difunto').val(data_response.response.primer_apellido);
+                            $('#segundo_apellido-difunto').val(data_response.response.segundo_apellido);
+                            $('#fecha_nacimiento-difunto').val(data_response.response.fecha_nacimiento);
+                            $('#fecha_defuncion-difunto').val(data_response.response.fecha_defuncion);
+                            $('#certificado_defuncion-difunto').val(data_response.response.certificado_defuncion);
+                            $('#causa-difunto').val(data_response.response.causa);
+                            $('#tipo-difunto').val(data_response.response.tipo);
+                           //$('#domicilio-responsable').val(data_response.response.domicilio);
 
                             $('#estado option[value="'+data_response.response.estado+'"]').attr("selected", "selected");
                         }
@@ -353,14 +358,14 @@
 
 
 
-        $('#btn_guardar_responsable').on('click', function(){
+        $('#btn_guardar_difunto').on('click', function(){
             $.ajax({
                         type: 'POST',
                         headers: {
                             'Content-Type':'application/json',
                             'X-CSRF-TOKEN':'{{ csrf_token() }}',
                         },
-                        url: "{{ route('new.responsable') }}",
+                        url: "{{ route('new.difunto') }}",
                         async: false,
                         data: JSON.stringify({
                             'ci':  $('#ci').val(),
@@ -368,11 +373,11 @@
                             'primer_apellido':  $('#primer_apellido').val(),
                             'segundo_apellido':  $('#segundo_apellido').val(),
                             'fecha_nacimiento':  $('#fecha_nacimiento').val(),
-                            'telefono':  $('#telefono').val(),
-                            'celular':  $('#celular').val(),
-                            'estado_civil':  $('#estado_civil').val(),
-                            'email': $('#email').val(),
-                            'domicilio': $('#domicilio').val(),
+                            'fecha_defuncion':  $('#fecha_defuncion').val(),
+                            'certificado_defuncion':  $('#fecha_defuncion').val(),
+                            'causa':  $('#causa').val(),
+                            'tipo': $('#tipo').val(),
+                            // 'domicilio': $('#domicilio').val(),
                         }),
                         success: function(data_response) {
                             swal.fire({
@@ -405,12 +410,12 @@
 
 
 
-        $('#new-responsable').on('click', function(){
+        $('#new-difunto').on('click', function(){
 
-            $('#modal-register-responsable').modal('show');
+            $('#modal-register-difunto').modal('show');
         });
 
-        var datatable = $('#responsable-data').DataTable({
+        var datatable = $('#difunto-data').DataTable({
         "paging": true,
         "searching": true,
         "language": {
@@ -424,7 +429,7 @@
             "sInfoEmpty": "",
             "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
             "sInfoPostFix": "",
-            "sSearch": 'Buscar Responsable:',
+            "sSearch": 'Buscar difunto:',
             "sUrl": "",
             "sInfoThousands": ",",
             "sLoadingRecords": "Cargando...",

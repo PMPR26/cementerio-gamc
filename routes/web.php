@@ -65,3 +65,13 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::put('/update-responsable', 'App\Http\Controllers\Responsable\ResponsableController@updateResponsable')->name('responsable.update');
     
 });
+
+//difunto
+Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
+    Route::get('/index', 'App\Http\Controllers\Difunto\DifuntoController@index')->name('difunto');
+    Route::post('/new-difunto', 'App\Http\Controllers\Difunto\DifuntoController@createNewDifunto')->name('new.difunto');
+    Route::get('/disable-difunto/{id}', 'App\Http\Controllers\Difunto\DifuntoController@disableAndEnableDifunto')->name('difunto.disable');
+    Route::get('/get-difunto/{id}', 'App\Http\Controllers\Difunto\DifuntoController@getDifunto')->name('difunto.get');
+    Route::put('/update-difunto', 'App\Http\Controllers\Difunto\DifuntoController@updateDifunto')->name('difunto.update');
+    
+});
