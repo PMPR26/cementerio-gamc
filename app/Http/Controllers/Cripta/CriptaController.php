@@ -73,7 +73,24 @@ class CriptaController extends Controller
                  ],201);
     }
 
-    public function getBloqueFromCuartel(){
+    public function updateCripta(Request $request){
+
+        $this->validate($request, [
+            'name' => 'required',
+            'superficie' => 'required|numeric',
+            'status' => 'required'
+        ],[
+            'name.required' => 'Nombre de la cripta es requerido!',
+            'superficie.required' => ':attribute es requerido!' ,
+            'numeric' => 'La :attribute debe ser un número!'
+        ]);
+
+        $cripta = Cripta::where('id', $cuartel->id)
+        ->update([
+            'estado' => 'INACTIVO'
+        ]);
+
+
 
         $bloque = Bloque::select('id', 'nombre')
         ->where(['estado' => 'ACTIVO', ''])
