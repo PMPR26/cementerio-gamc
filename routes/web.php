@@ -55,6 +55,7 @@ use App\Models\User;
     Route::get('/get-cuartel/{id}', 'App\Http\Controllers\Cuartel\CuartelController@getCuartel')->name('cuartel.get');
     Route::put('/update-cuartel', 'App\Http\Controllers\Cuartel\CuartelController@updateCuartel')->name('cuartel.update');
     
+
 });
 
 //bloque
@@ -112,5 +113,25 @@ Route::group(['prefix' => 'servicios', 'middleware' => 'auth'], function () {
     Route::get('/servicios', [App\Http\Controllers\Servicios\ServiciosController::class,'index'])->name('serv'); 
     Route::post('/new-servicio', [App\Http\Controllers\Servicios\ServiciosController::class,'createNewServicios'])->name('new.servicio');
     Route::post('/buscar_nicho', [App\Http\Controllers\Cementerio\CementerioController::class, 'buscar_nicho'])->name('buscar.nicho');
+    
+});
+
+//responsable
+Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
+    Route::get('/index', 'App\Http\Controllers\Responsable\ResponsableController@index')->name('responsable');
+    Route::post('/new-responsable', 'App\Http\Controllers\Responsable\ResponsableController@createNewResponsable')->name('new.responsable');
+    Route::get('/disable-responsable/{id}', 'App\Http\Controllers\Responsable\ResponsableController@disableAndEnableResponsable')->name('responsable.disable');
+    Route::get('/get-responsable/{id}', 'App\Http\Controllers\Responsable\ResponsableController@getResponsable')->name('responsable.get');
+    Route::put('/update-responsable', 'App\Http\Controllers\Responsable\ResponsableController@updateResponsable')->name('responsable.update');
+    
+});
+
+//difunto
+Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
+    Route::get('/index', 'App\Http\Controllers\Difunto\DifuntoController@index')->name('difunto');
+    Route::post('/new-difunto', 'App\Http\Controllers\Difunto\DifuntoController@createNewDifunto')->name('new.difunto');
+    Route::get('/disable-difunto/{id}', 'App\Http\Controllers\Difunto\DifuntoController@disableAndEnableDifunto')->name('difunto.disable');
+    Route::get('/get-difunto/{id}', 'App\Http\Controllers\Difunto\DifuntoController@getDifunto')->name('difunto.get');
+    Route::put('/update-difunto', 'App\Http\Controllers\Difunto\DifuntoController@updateDifunto')->name('difunto.update');
     
 });

@@ -5,16 +5,21 @@ namespace App\Http\Controllers\Responsable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Responsable;
+use Illuminate\Support\Facades\DB;
 
 class ResponsableController extends Controller
 {
-    
+    //
     public function index(){
 
-        $responsable= Responsable::select('responsable.*')
+        //$responsable= Responsable::select('responsable.*')
                 // ->orderBy('codigo', 'DESC')
-                 ->get();
+                // ->get();
 
+        $responsable= DB::table('responsable') 
+                ->select('responsable.id','responsable.ci',DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),'responsable.telefono','responsable.celular','responsable.fecha_nacimiento','responsable.estado_civil','responsable.email','responsable.domicilio','responsable.estado')        
+                ->get();
+            
         return view('responsable/index', compact('responsable'));
     }
 

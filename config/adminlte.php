@@ -310,7 +310,7 @@ return [
         ],
         [
             'text' => 'DIFUNTOS',
-            'url'  => 'admin/settings',
+            'url'  => 'difunto/index',
             'icon' => 'fas fa-procedures',
         ],
 
