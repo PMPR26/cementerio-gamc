@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +17,20 @@ use Illuminate\Support\Facades\Route;
 
         Route::get('/', function () {
             if (Auth::check()) {
+
+                $user = User::select()
+                ->where(['id' => Auth::user()->id])
+                ->first();
+        $genero = ['MASCULINO', 'FEMENINO'];
+       
+
+        return view('user.profile', [
+            'url_profile' => User::adminlte_image(),
+            'user_data' => $user,
+            'genero' => $genero
+        ]);
+
+                //usar este una vez se tenga las estadisticas 
                 return view('home');
             }else{
                 return redirect('login');

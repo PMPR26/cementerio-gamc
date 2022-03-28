@@ -15,7 +15,14 @@
 
 <div class="card">
     <div class="card-body">
-    <button id="new-cripta" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-1x"></i> Nueva Cripta</button>
+
+    <div class="row">
+        <div class="col-sm-6">
+        <button id="new-cripta" type="button" class="btn btn-info col-sm-12" > <i class="fas fa-plus-circle text-white fa-2x"></i> Nueva Cripta</button>
+        </div>
+        </div>
+
+   
         </div>
        </div>
 
@@ -26,8 +33,7 @@
             <tr role="row">
                 <th scope="col">#</th>                           
                 <th scope="col">Código</th>
-                <th scope="col">Cuartel</th>
-                <th scope="col">Bloque</th>   
+                <th scope="col">Cuartel</th>  
                 <th scope="col">Cripta</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Estado</th>
@@ -44,27 +50,21 @@
                    
                     <td>{{ $cripta->codigo }}</td>                           
                     <td>{{ $cripta->cuartel_name }}</td>
-                    <td>{{ $cripta->bloque_name }}</td>
                     <td>{{ $cripta->codigo }}</td>
                     <td>{{ $cripta->cripta_name }}</td>
                     <td>{{ $cripta->estado }}</td>
 
                     <td>
                         <button type="button" class="btn btn-info" value="{{ $cripta->id }}" id="btn-editar" title="Editar cuartel"><i class="fas fa-edit"></i></button>
-                        @if($cripta->estado =='ACTIVO')
-                        <button type="button" class="btn btn-warning" value="{{ $cripta->id }}" id="btn-desactivar"><i class="fas fa-thumbs-down"></i></button>
-                        @else
-                        <button type="button" class="btn btn-success" value="{{ $cripta->id }}" id="btn-desactivar"><i class="fas fa-thumbs-up"></i></button>
-                        @endif
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 
-
+  
       <!-- Modal crear -->
-<div class="modal fade  animated bounceIn" id="modal-cripta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade  animated bounceIn" id="modal-cripta" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -113,6 +113,7 @@
        <hr>
        <div class="col-sm-12" style="text-align: center">
             <button type="button" id="btn-cripta" class="btn btn-success btn-editar">Guardar</button>
+            <button type="button" style="display:none" id="btn-cripta-editar" class="btn btn-success btn-editar">Guardar</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         </div> 
             
@@ -125,6 +126,10 @@
       </div>
     </div>
   </div>
+
+
+  
+   
 
 
 
@@ -168,8 +173,19 @@
                         url: '/cripta/get-cripta/' + $(this).val(),
                         async: false,
                         success: function(data_response) {
-                           
+                            console.log(data_response);
                             $('#modal-cripta').modal('show');
+                            $('#btn-cripta-editar').show(300);
+                            $('#btn-cripta').hide(300);
+                            $(".select-cuartel").val(data_response.response.cuartel_id).trigger('change');
+                            $('#cod-cripta').val(data_response.response.codigo);
+                            $('#cripta-name').val(data_response.response.nombre);
+                            $('#superficie').val(data_response.response.superficie);
+                            $('#estado').val(data_response.response.estado);
+                            
+
+
+
 
                         }
                     });
@@ -177,14 +193,17 @@
             });
 
 
-            $('.btn-editar').on('click', function(){
-                alert('dwada');
-            });
-
-
 
             $('#new-cripta').on('click', function(){
+
+                $(".select-cuartel").val('').trigger('change');
+                $('#cod-cripta').val('');
+                $('#cripta-name').val('');
+                $('#superficie').val('');
+
                 $('#modal-cripta').modal('show');
+                $('#btn-cripta-editar').hide(300);
+                $('#btn-cripta').show(300);
             });
 
 
@@ -239,6 +258,44 @@
                         }
                     })
             });
+
+
+
+            $('#cripta-data').DataTable({
+            "paging": true,
+            "searching": true,
+            "language": {
+
+            "sProcessing": '<p style="color: #012d02;">Cargando. Por favor espere...</p>',
+            //"sProcessing": '<img src="https://media.giphy.com/media/3o7bu3XilJ5BOiSGic/giphy.gif" alt="Funny image">',
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningun registro registrado aún",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": 'Buscar Cripta:',
+            "sUrl": "",
+            "sInfoThousands": ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst": 'Primero',
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            },
+            "buttons": {
+                "copy": "Copiar",
+                "colvis": "Visibilidad"
+            }
+        },
+    });
+
             
         });
 

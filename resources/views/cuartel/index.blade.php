@@ -14,9 +14,18 @@
   
          <div class="card">
      <div class="card-body">
-     <button id="new-cuartel" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Cuartel</button>
+
+     <div class="row">
+        <div class="col-sm-6">
+        <button id="new-cuartel" type="button" class="btn btn-info col-sm-12" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Cuartel</button>
+        </div>
+        </div>
+
+     
          </div>
         </div>
+     
+
 
     <table id="cuartel-data" class="table table-striped table-bordered responsive" role="grid"
     aria-describedby="example">
