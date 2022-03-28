@@ -1,5 +1,6 @@
 @extends('adminlte::auth.auth-page', ['auth_type' => 'login'])
 
+
 @section('adminlte_css_pre')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 @stop
@@ -22,7 +23,7 @@
 @section('auth_header', 'Sistema Cementerio GAMC.')
 
 @section('auth_body')
-    <form action="{{ $login_url }}" method="post">
+    <form action="{{ $login_url }}" method="post" >
         @csrf
 
         {{-- Email field --}}

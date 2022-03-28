@@ -1,5 +1,6 @@
 @extends('adminlte::page')
 @section('title', 'Profile')
+@section('plugins.Pace', true)
 
 @section('content_header') 
 <h1></h1>

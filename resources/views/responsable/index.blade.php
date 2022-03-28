@@ -4,6 +4,7 @@
 @section('plugins.Animation', true)
 @section('plugins.Toastr', true)
 @section('plugins.Sweetalert2', true)
+@section('plugins.Pace', true)
 
 @section('content_header')
     <h1>Listado de Responsables</h1>
