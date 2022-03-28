@@ -18,7 +18,8 @@
     @php( $password_reset_url = $password_reset_url ? url($password_reset_url) : '' )
 @endif
 
-@section('auth_header', __('adminlte::adminlte.login_message'))
+{{-- @section('auth_header', __('adminlte::adminlte.login_message')) --}}
+@section('auth_header', 'Sistema Cementerio GAMC.')
 
 @section('auth_body')
     <form action="{{ $login_url }}" method="post">
@@ -94,11 +95,25 @@
     @endif
 
     {{-- Register link --}}
-    @if($register_url)
+    {{-- @if($register_url)
         <p class="my-0">
             <a href="{{ $register_url }}">
                 {{ __('adminlte::adminlte.register_a_new_membership') }}
             </a>
         </p>
-    @endif
+    @endif --}}
+@stop
+
+@section('css')
+<style>
+.login-page{
+    background-image: url("/img/admin/idex_cementerio.jpeg") !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    padding-top: 4%;
+    justify-content: flex-start !important;
+}
+
+</style>
 @stop
