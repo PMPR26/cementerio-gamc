@@ -403,6 +403,7 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Plugins-Configuration
     |
     */
+  
 
     'plugins' => [
         'Datatables' => [
@@ -411,27 +412,27 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
+                    'location' => '/libreries/datatable/js/jquery.dataTables.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
+                    'location' => '/libreries/datatable/js/dataTables.bootstrap4.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js',
+                    'location' => '/libreries/datatable/js/dataTables.responsive.min.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
+                    'location' => '/libreries/datatable/css/dataTables.bootstrap4.min.css',
                 ],
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => '//cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css',
+                    'location' => '/libreries/datatable/css/responsive.dataTables.min.css',
                 ],
             ],
         ],
@@ -441,7 +442,7 @@ return [
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css',
+                    'location' => '/libreries/animation/css/animate.min.css',
                 ],
             ],
         ],
@@ -451,12 +452,12 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js',
+                    'location' => '/libreries/select2/js/select2.min.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css',
+                    'location' => '/libreries/select2/css/select2.min.css',
                 ],
             ],
         ],
@@ -466,7 +467,7 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
+                    'location' => '/libreries/chartjs/js/Chart.bundle.min.js',
                 ],
             ],
         ],
@@ -476,7 +477,7 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11',
+                    'location' => '/libreries/sweetalert2/js/sweetalert2@11.js',
                 ],
             ],
         ],
@@ -486,12 +487,12 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js',
+                    'location' => '/libreries/toastr/js/toastr.min.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css',
+                    'location' => '/libreries/toastr/css/toastr.min.css',
                 ],
             ],
         ],
@@ -502,43 +503,37 @@ return [
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => '//unpkg.com/leaflet@1.2.0/dist/leaflet.css',
+                    'location' => '/libreries/leaflet/css/leaflet.css',
                 ],
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => '//unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css',
-                ],
-                //aqui
-                [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//unpkg.com/leaflet@1.7.1/dist/leaflet.css',
+                    'location' => '/libreries/leaflet/css/leaflet-routing-machine.css',
                 ],
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//unpkg.com/leaflet@1.7.1/dist/leaflet.js',
+                    'location' => '/libreries/leaflet/js/leaflet.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/leaflet.wms@0.2.0/dist/leaflet.wms.js',
+                    'location' => '/libreries/leaflet/js/leaflet.wms.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.4/proj4.js',
+                    'location' => '/libreries/leaflet/js/proj4.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/proj4leaflet/1.0.2/proj4leaflet.js',
+                    'location' => '/libreries/leaflet/js/proj4leaflet.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js',
+                    'location' => '/libreries/leaflet/js/leaflet-routing-machine.js',
                 ],
             ],
         ],
@@ -548,12 +543,12 @@ return [
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-center-radar.min.css',
+                    'location' => '/libreries/pace/css/pace-theme-center-radar.min.css',
                 ],
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js',
+                    'location' => '/libreries/pace/js/pace.min.js',
                 ],
             ],
         ],
