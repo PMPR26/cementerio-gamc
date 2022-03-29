@@ -50,7 +50,7 @@
                     <td>{{ $difunto->tipo }}</td>
                    
                     <td>
-                        <button type="button" class="btn btn-info" value="{{ $difunto->id }}" id="btn-editar-difunto" title="Editar datos difunto"><i class="fas fa-edit"></i></button>
+                        <button type="button" class="btn btn-info" value="{{ $difunto->id }}" id="btn-editar-difunto-value" title="Editar datos difunto"><i class="fas fa-edit"></i></button>
                         @if($difunto->estado =='ACTIVO')
                         <button type="button" class="btn btn-warning" value="{{ $difunto->id }}" id="btn-desactivar"><i class="fas fa-thumbs-down"></i></button>
                         @else
@@ -62,17 +62,126 @@
         </tbody>
     </table>
 
-    @include('difunto.modalRegister', [
-        'id_button' => 'btn_guardar_difunto',
-        'title_buton' => 'Guardar Difunto',
-        'title_modal' => 'Registro de Difunto'
-        ]) 
     
+<!-- Modal registro nuevo difunto -->
+<div class="modal fade fullscreen-modal animated bounceIn" id="modal-register-difunto" data-backdrop="static" tabindex="-1" role="dialog"
+aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" style="text-align: center">Registro Nuevo Difunto</h3>
+            <button type="button"  class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" >&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+
+            <div class="card">
+                <div class="card-body">
+            
+                    <div class="row">
+                        <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Cedula de Identidad:</label>
+                                    <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="ci" autocomplete="off">
+                                </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Nombre :</label>
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="nombre" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Primer apellido :</label>
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="primer_apellido" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Segundo apellido :</label>
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="segundo_apellido" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Fecha de nacimiento :</label>
+                                <input type="date"  class="form-control" placeholder="fecha de nacimiento" id="fecha_nacimiento" >
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Fecha de defunción :</label>
+                                <input type="date"  class="form-control" placeholder="fecha de defuncion" id="fecha_defuncion"  >
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Certificado de defunción :</label>
+                                <input  type="number" class="form-control" id="certificado_defuncion" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Causa :</label>
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="causa" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Tipo :</label>
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="tipo" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                 
+                            <div class="form-group">
+                                <label>Genero :</label>
+                                <select name="status" id="genero" class="form-control">
+            
+                                    <option value="MASCULINO"> Masculino</option>
+                                    <option value="FEMENINO"> Femenino</option>
+        
+                                </select>
+                               
+                            </div> 
+                        </div>
+                        <hr>
+                        <div class="col-sm-12">
+                            <div id="cert-defuncion" class="dropzone" style="text-align: center">
+                        </div>
+                        <hr>
+                        <input type="hidden" id="url-certification">
+                    </div>
+            
+                   
+                    <div class="col-sm-12" style="text-align: center">
+                        <button type="button" id="btn_guardar_difunto" class="btn btn-success">Guardar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    </div> 
+            
+                </div>
+              </div>
+        </div>
+        </div>
+    </div>
+</div>
+</div>
 
 
-    {{-- //editar datos difunto --}}
-    <!-- Modal complementacion de entrega de producto -->
-<div class="modal fade fullscreen-modal animated bounceIn" id="modal-update-difunto" data-backdrop="static">
+  
+<!-- Modal upload difunto -->
+<div class="modal fade fullscreen-modal animated bounceIn" id="modal-update-difunto" data-backdrop="static" tabindex="-1" role="dialog"
+aria-labelledby="staticBackdropLabel" aria-hidden="true">
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
@@ -83,10 +192,126 @@
         </div>
         <div class="modal-body">
 
-  <h1>hola mundo</h1>
+            <div class="card">
+                <div class="card-body">
+            
+                    <div class="row">
+                        <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Cedula de Identidad:</label>
+                                    <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="ci-edit" autocomplete="off">
+                                </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Nombre :</label>
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="nombre-edit" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Primer apellido :</label>
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="primer_apellido-edit" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Segundo apellido :</label>
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="segundo_apellido-edit" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Fecha de nacimiento :</label>
+                                <input type="date"  class="form-control" placeholder="fecha de nacimiento" id="fecha_nacimiento-edit" >
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Fecha de defunción :</label>
+                                <input type="date"  class="form-control" placeholder="fecha de defuncion" id="fecha_defuncion-edit"  >
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Certificado de defunción :</label>
+                                <input  type="number" class="form-control" id="certificado_defuncion-edit" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Causa :</label>
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="causa-edit" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Tipo :</label>
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="tipo-edit" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                 
+                            <div class="form-group">
+                                <label>Genero :</label>
+                                <select name="status" id="genero-edit" class="form-control">
+            
+                                    <option value="MASCULINO">MASCULINO</option>
+                                    <option value="FEMENINO">fEMENINO</option>
+        
+                                </select>
+                               
+                            </div> 
+                        </div>
+                        <div class="form-group col-12">
+                            <label>Estado</label>
+                            <select name="status" id="estado-edit" class="form-control col-12" style="width: 100%">
+        
+                                <option value="ACTIVO">ACTIVO</option>
+                                <option value="INACTIVO">INACTIVO</option>
+    
+                            </select>
+                           
+                        </div> 
+                        <hr>
+                        <div class="col-sm-12" style="text-align: center" id="show-file">
+                           
+                        </div>
+                        <hr>
+                        <input type="hidden" id="url-certification-edit">
+                    </div>
+            
+                   
+                    <div class="col-sm-12" style="text-align: center">
+                        <button type="button" id="btn_difunto-editar" class="btn btn-success">Guardar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    </div> 
+            
+                </div>
+              </div>
+        </div>
+        </div>
     </div>
 </div>
 </div>
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -193,59 +418,59 @@
 
 
         //editar difunto
-        $('#btn-editar-va').on('click', function(){
-            $.ajax({
-                        type: 'PUT',
-                        headers: {
-                            'Content-Type':'application/json',
-                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
-                        },
-                        url: "{{ route('difunto.update') }}",
-                        async: false,
-                        data: JSON.stringify({
-                            'ci':  $('#ci-difunto').val(),
-                            'nombres':  $('#nombre-difunto').val(),
-                            'primer_apellido':  $('#primer_apellido-difunto').val(),
-                            'segundo_apellido':  $('#segundo_apellido-difunto').val(),
-                            'fecha_nacimiento':  $('#fecha_nacimiento-difunto').val(),
-                            'fecha_defuncion':  $('#fecha_defuncion-difunto').val(),
-                            'certificado_defuncion':  $('#certificado_defuncion-difunto').val(),
-                            'causa':  $('#causa-difunto').val(),
-                            'tipo': $('#tipo-difunto').val(),
-                            'genero': $('#genero-difunto').val(),
-                            // 'domicilio': $('#domicilio-responsable').val(),
-                            'id': $('#btn-editar-va').val()
-                        }),
-                        success: function(data_response) {
-                            swal.fire({
-                            title: "Guardado!",
-                            text: "!Registro actualizado con éxito!",
-                            type: "success",
-                            timer: 2000,
-                            showCancelButton: false,
-                            showConfirmButton: false
-                            });
-                            setTimeout(function() { 
-                                location.reload();
-                            }, 2000);
-                            //toastr["success"]("Registro realizado con éxito!");
-                        },
-                        error: function (error) {
+        // $('#btn-editar-va').on('click', function(){
+        //     $.ajax({
+        //                 type: 'PUT',
+        //                 headers: {
+        //                     'Content-Type':'application/json',
+        //                     'X-CSRF-TOKEN':'{{ csrf_token() }}',
+        //                 },
+        //                 url: "{{ route('difunto.update') }}",
+        //                 async: false,
+        //                 data: JSON.stringify({
+        //                     'ci':  $('#ci-difunto').val(),
+        //                     'nombres':  $('#nombre-difunto').val(),
+        //                     'primer_apellido':  $('#primer_apellido-difunto').val(),
+        //                     'segundo_apellido':  $('#segundo_apellido-difunto').val(),
+        //                     'fecha_nacimiento':  $('#fecha_nacimiento-difunto').val(),
+        //                     'fecha_defuncion':  $('#fecha_defuncion-difunto').val(),
+        //                     'certificado_defuncion':  $('#certificado_defuncion-difunto').val(),
+        //                     'causa':  $('#causa-difunto').val(),
+        //                     'tipo': $('#tipo-difunto').val(),
+        //                     'genero': $('#genero-difunto').val(),
+        //                     // 'domicilio': $('#domicilio-responsable').val(),
+        //                     'id': $('#btn-editar-va').val()
+        //                 }),
+        //                 success: function(data_response) {
+        //                     swal.fire({
+        //                     title: "Guardado!",
+        //                     text: "!Registro actualizado con éxito!",
+        //                     type: "success",
+        //                     timer: 2000,
+        //                     showCancelButton: false,
+        //                     showConfirmButton: false
+        //                     });
+        //                     setTimeout(function() { 
+        //                         location.reload();
+        //                     }, 2000);
+        //                     //toastr["success"]("Registro realizado con éxito!");
+        //                 },
+        //                 error: function (error) {
                             
-                            if(error.status == 422){
-                                Object.keys(error.responseJSON.errors).forEach(function(k){
-                                toastr["error"](error.responseJSON.errors[k]);
-                                //console.log(k + ' - ' + error.responseJSON.errors[k]);
-                                });
-                            }else if(error.status == 419){
-                                location.reload();
-                            }
+        //                     if(error.status == 422){
+        //                         Object.keys(error.responseJSON.errors).forEach(function(k){
+        //                         toastr["error"](error.responseJSON.errors[k]);
+        //                         //console.log(k + ' - ' + error.responseJSON.errors[k]);
+        //                         });
+        //                     }else if(error.status == 419){
+        //                         location.reload();
+        //                     }
 
-                        }
-                    })
+        //                 }
+        //             })
 
 
-        });
+        // });
 
 
 
@@ -289,41 +514,47 @@
         });
 
 
-        $(document).on('click', '#btn-editar-difunto', function(){
-      
-            $('#modal-update-difunto').modal('show');
-            // $('#btn-editar-va').val($(this).val());
-     
-            // $.ajax({
-            //             type: 'GET',
-            //             headers: {
-            //                 'Content-Type':'application/json',
-            //                 'X-CSRF-TOKEN':'{{ csrf_token() }}',
-            //             },
-            //             url: '/difunto/get-difunto/' + $(this).val(),
-            //             async: false,
-            //             success: function(data_response) {
-            //                console.log(data_response);
-            //                 $('#exampleModal').modal('show');
-            //                 $('#nombre-difunto').val(data_response.response.nombres);
-            //                 $('#ci-difunto').val(data_response.response.ci);
-            //                 $('#primer_apellido-difunto').val(data_response.response.primer_apellido);
-            //                 $('#segundo_apellido-difunto').val(data_response.response.segundo_apellido);
-            //                 $('#fecha_nacimiento-difunto').val(data_response.response.fecha_nacimiento);
-            //                 $('#fecha_defuncion-difunto').val(data_response.response.fecha_defuncion);
-            //                 $('#certificado_defuncion-difunto').val(data_response.response.certificado_defuncion);
-            //                 $('#causa-difunto').val(data_response.response.causa);
-            //                 $('#tipo-difunto').val(data_response.response.tipo);
-            //                $('#genero-difunto').val(data_response.response.genero);
+        //modal editar difunto
+        $(document).on('click', '#btn-editar-difunto-value', function(){
+    
+            $.ajax({
+                        type: 'GET',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: '/difunto/get-difunto/' + $(this).val(),
+                        async: false,
+                        success: function(data_response) {
+                           console.log(data_response);
+                            $('#modal-update-difunto').modal('show');
 
-            //                 $('#estado option[value="'+data_response.response.estado+'"]').attr("selected", "selected");
-            //             }
-            //         })
+                            $('#nombre-edit').val(data_response.response.nombres);
+                            $('#ci-edit').val(data_response.response.ci);
+                            $('#primer_apellido-edit').val(data_response.response.primer_apellido);
+                            $('#segundo_apellido-edit').val(data_response.response.segundo_apellido);
+                            $('#fecha_nacimiento-edit').val(data_response.response.fecha_nacimiento);
+                            $('#fecha_defuncion-edit').val(data_response.response.fecha_defuncion);
+                            $('#certificado_defuncion-edit').val(data_response.response.certificado_defuncion);
+                            $('#causa-edit').val(data_response.response.causa);
+                            $('#tipo-edit').val(data_response.response.tipo);
+                            $("#genero-edit").val(data_response.response.genero).change();
+                            $("#estado-edit").val(data_response.response.estado).change();
+                            
+                            if(openFile(data_response.response.certificado_file) == 'image'){
+                                $('#show-file').html('<img src="'+data_response.response.certificado_file+'" class="img-rounded" alt="Cinque Terre">')
+                            }else{
+                                $('#show-file').html('<iframe  style="border:1px solid #666CCC" src="'+data_response.response.certificado_file+'" frameborder="1" scrolling="auto" height="500" width="90%" ></iframe>');
+                            }
+                        }
+                    })
         });
 
 
 
-
+        $('#modal-update-difunto').on('hidden.bs.modal', function () {
+                $('#show-file').empty();
+            });
 
 
 
@@ -423,5 +654,24 @@
        
     });
 
+
+    function openFile(file) {
+    var extension = file.substr( (file.lastIndexOf('.') +1) );
+    switch(extension) {
+        case 'jpg':
+        case 'png':
+            return 'image';  // There's was a typo in the example where
+        break;                         // the alert ended with pdf instead of gif.
+        case 'zip':
+        case 'rar':
+            alert('was zip rar');
+        break;
+        case 'pdf':
+            return 'pdf';
+        break;
+        default:
+           return 'desconocido';
+    }
+};
     </script>
 @stop
