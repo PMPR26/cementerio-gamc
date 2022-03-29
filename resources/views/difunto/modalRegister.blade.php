@@ -89,7 +89,12 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Tipo :</label>
-                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="tipo" autocomplete="off">
+                                <select name="status" id="tipo" class="form-control">
+            
+                                    <option value="ADULTO">ADULTO</option>
+                                    <option value="PARVUL0">PARVULO</option>
+        
+                                </select>
                             </div>
                         </div>
 
@@ -139,3 +144,5 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
     </div>
 </div>
 </div>
+
+
