@@ -117,7 +117,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Fecha de defunción :</label>
-                                <input type="date"  class="form-control" placeholder="fecha de defuncion" id="fecha_defuncion"  >
+                                <input type="date"  class="form-control" placeholder="fecha de defuncion" max="{{ date('Y-m-d') }}" id="fecha_defuncion"  >
                             </div>
                         </div>
 
@@ -148,8 +148,8 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                 <label>Genero :</label>
                                 <select name="status" id="genero" class="form-control">
             
-                                    <option value="MASCULINO"> Masculino</option>
-                                    <option value="FEMENINO"> Femenino</option>
+                                    <option value="MASCULINO">MASCULINO</option>
+                                    <option value="FEMENINO">FEMENINO</option>
         
                                 </select>
                                
@@ -289,6 +289,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <input type="hidden" id="url-certification-edit">
                     </div>
             
+                    <hr>
                    
                     <div class="col-sm-12" style="text-align: center">
                         <button type="button" id="btn_difunto-editar" class="btn btn-success">Guardar</button>
@@ -418,59 +419,58 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
 
 
         //editar difunto
-        // $('#btn-editar-va').on('click', function(){
-        //     $.ajax({
-        //                 type: 'PUT',
-        //                 headers: {
-        //                     'Content-Type':'application/json',
-        //                     'X-CSRF-TOKEN':'{{ csrf_token() }}',
-        //                 },
-        //                 url: "{{ route('difunto.update') }}",
-        //                 async: false,
-        //                 data: JSON.stringify({
-        //                     'ci':  $('#ci-difunto').val(),
-        //                     'nombres':  $('#nombre-difunto').val(),
-        //                     'primer_apellido':  $('#primer_apellido-difunto').val(),
-        //                     'segundo_apellido':  $('#segundo_apellido-difunto').val(),
-        //                     'fecha_nacimiento':  $('#fecha_nacimiento-difunto').val(),
-        //                     'fecha_defuncion':  $('#fecha_defuncion-difunto').val(),
-        //                     'certificado_defuncion':  $('#certificado_defuncion-difunto').val(),
-        //                     'causa':  $('#causa-difunto').val(),
-        //                     'tipo': $('#tipo-difunto').val(),
-        //                     'genero': $('#genero-difunto').val(),
-        //                     // 'domicilio': $('#domicilio-responsable').val(),
-        //                     'id': $('#btn-editar-va').val()
-        //                 }),
-        //                 success: function(data_response) {
-        //                     swal.fire({
-        //                     title: "Guardado!",
-        //                     text: "!Registro actualizado con éxito!",
-        //                     type: "success",
-        //                     timer: 2000,
-        //                     showCancelButton: false,
-        //                     showConfirmButton: false
-        //                     });
-        //                     setTimeout(function() { 
-        //                         location.reload();
-        //                     }, 2000);
-        //                     //toastr["success"]("Registro realizado con éxito!");
-        //                 },
-        //                 error: function (error) {
+        $('#btn_difunto-editar').on('click', function(){
+            $.ajax({
+                        type: 'PUT',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: "{{ route('difunto.update') }}",
+                        async: false,
+                        data: JSON.stringify({
+                            'ci':  $('#ci-edit').val(),
+                            'nombres':  $('#nombre-edit').val(),
+                            'primer_apellido':  $('#primer_apellido-edit').val(),
+                            'segundo_apellido':  $('#segundo_apellido-edit').val(),
+                            'fecha_nacimiento':  $('#fecha_nacimiento-edit').val(),
+                            'fecha_defuncion':  $('#fecha_defuncion-edit').val(),
+                            'certificado_defuncion':  $('#certificado_defuncion-edit').val(),
+                            'causa':  $('#causa-edit').val(),
+                            'tipo': $('#tipo-edit').val(),
+                            'genero': $('#genero-edit').val(),
+                            'status': $('#estado-edit').val(),
+                            'id': $('#btn_difunto-editar').val()
+                        }),
+                        success: function(data_response) {
+                            swal.fire({
+                            title: "Guardado!",
+                            text: "!Registro actualizado con éxito!",
+                            type: "success",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false
+                            });
+                            setTimeout(function() { 
+                                location.reload();
+                            }, 2000);
+                            //toastr["success"]("Registro realizado con éxito!");
+                        },
+                        error: function (error) {
                             
-        //                     if(error.status == 422){
-        //                         Object.keys(error.responseJSON.errors).forEach(function(k){
-        //                         toastr["error"](error.responseJSON.errors[k]);
-        //                         //console.log(k + ' - ' + error.responseJSON.errors[k]);
-        //                         });
-        //                     }else if(error.status == 419){
-        //                         location.reload();
-        //                     }
+                            if(error.status == 422){
+                                Object.keys(error.responseJSON.errors).forEach(function(k){
+                                toastr["error"](error.responseJSON.errors[k]);
+                                //console.log(k + ' - ' + error.responseJSON.errors[k]);
+                                });
+                            }else if(error.status == 419){
+                                location.reload();
+                            }
 
-        //                 }
-        //             })
+                        }
+                    })
 
-
-        // });
+        });
 
 
 
@@ -526,7 +526,8 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         url: '/difunto/get-difunto/' + $(this).val(),
                         async: false,
                         success: function(data_response) {
-                           console.log(data_response);
+                         
+                           $('#btn_difunto-editar').val(data_response.response.id);
                             $('#modal-update-difunto').modal('show');
 
                             $('#nombre-edit').val(data_response.response.nombres);
@@ -542,7 +543,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             $("#estado-edit").val(data_response.response.estado).change();
                             
                             if(openFile(data_response.response.certificado_file) == 'image'){
-                                $('#show-file').html('<img src="'+data_response.response.certificado_file+'" class="img-rounded" alt="Cinque Terre">')
+                                $('#show-file').html('<img src="'+data_response.response.certificado_file+'" class="img-rounded img-fluid" alt="Responsive image" alt="Cinque Terre">')
                             }else{
                                 $('#show-file').html('<iframe  style="border:1px solid #666CCC" src="'+data_response.response.certificado_file+'" frameborder="1" scrolling="auto" height="500" width="90%" ></iframe>');
                             }
