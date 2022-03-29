@@ -25,20 +25,19 @@
                         <div class="row">
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>NRO NICHO</label>                                   
-                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="nro_nicho" autocomplete="off">
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control " id="nro_nicho" autocomplete="off">
                             </div>
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>BLOQUE</label>                                   
-                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="bloque" autocomplete="off">
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control " id="bloque" autocomplete="off">
                             </div>
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>FILA</label>                                   
-                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="fila" autocomplete="off">
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control " id="fila" autocomplete="off">
                             </div>
 
                             <div class="col-sm-12 col-md-3 col-xl-3 p-4 mt-2">
-
                                 <button type="button" class="btn btn-info" id="buscar">
                                     <i class="fa fa-search"></i>BUSCAR
                                 </button>
@@ -48,12 +47,12 @@
                         <div class="row">
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Cuartel</label>                                   
-                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="cuartel" autocomplete="off">
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="cuartel" autocomplete="off">
                             </div> 
                             
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Codigo antiguo</label>                                   
-                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="anterior" autocomplete="off">
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="anterior" autocomplete="off">
                             </div> 
                         </div>
                       
@@ -70,7 +69,7 @@
                     <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>Carnet de Identidad</label> 
                             <div class="input-group input-group-lg">                                 
-                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="search" class="form-control" id="search_dif" autocomplete="off">
+                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="search" class="form-control clear" id="search_dif" autocomplete="off">
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-lg btn-default">
                                     <i class="fa fa-search"></i>
@@ -82,17 +81,17 @@
 
                     <div class="col-sm-12 col-md-3 col-xl-3">
                         <label>Nombres</label>                                   
-                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="nombres_dif" autocomplete="off">
+                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="nombres_dif" autocomplete="off">
                     </div>
                 
                     <div class="col-sm-12 col-md-3 col-xl-3">
                         <label>Primer apellido</label>                                   
-                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="paterno_dif" autocomplete="off">
+                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="paterno_dif" autocomplete="off">
                     </div>
 
                     <div class="col-sm-12 col-md-3 col-xl-3">
                         <label>Segundo apellido</label>                                   
-                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="materno_dif" autocomplete="off">
+                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="materno_dif" autocomplete="off">
                     </div>
                 
                 </div>
@@ -102,22 +101,22 @@
                     
                     <div class="col-sm-12 col-md-3 col-xl-3">
                         <label>Fecha Nacimiento</label>                                   
-                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="date" class="form-control" id="fechanac_dif" autocomplete="off">
+                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="date" class="form-control clear" id="fechanac_dif" autocomplete="off">
                     </div>
                 
                     <div class="col-sm-12 col-md-3 col-xl-3">
                         <label>Fecha Defuncion</label>                                   
-                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="date" class="form-control" id="fechadef_dif" autocomplete="off">
+                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="date" class="form-control clear" id="fechadef_dif" autocomplete="off">
                     </div>
 
                     <div class="col-sm-12 col-md-3 col-xl-3">
                         <label>Causa</label>                                   
-                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="causa" autocomplete="off">
+                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="causa" autocomplete="off">
                     </div>
 
                     <div class="col-sm-12 col-md-3 col-xl-3">
                         <label>SERECI</label>                                   
-                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="sereci" autocomplete="off">
+                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="sereci" autocomplete="off">
                         
                     </div>
                 </div>
@@ -137,7 +136,7 @@
                     </div>
                     
 
-                    <div class="col-sm-12 col-md-4 col-xl-4">
+                    <div class="col-sm-12 col-md-3 col-xl-3">
                         <label>Clasificacion difunto</label>                                   
                         <select name="ecivil" id="tipo_dif" class="form-control">
                             <option value="">Seleccionar</option>
@@ -146,12 +145,21 @@
                         </select> 
                     </div>
 
-                    <div class="col-sm-12 col-md-4 col-xl-4">
+                    <div class="col-sm-12 col-md-3 col-xl-3">
                         <label>Genero</label>                                   
                         <select name="genero" id="genero_dif" class="form-control">
                             <option value="">Seleccionar</option>
                             <option value="FEMENINO">FEMENINO</option>
                             <option value="MASCULINO">MASCULINO</option>                            
+                        </select> 
+                    </div>
+
+                    <div class="col-sm-12 col-md-3 col-xl-3">
+                        <label>Tipo Difunto</label>                                   
+                        <select name="genero" id="genero_dif" class="form-control">
+                            <option value="">Seleccionar</option>
+                            <option value="ADULTO">ADULTO</option>
+                            <option value="PARVULO">PARVULO</option>                            
                         </select> 
                     </div>
                 </div>
@@ -179,17 +187,17 @@
 
                         <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>Nombres</label>                                   
-                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="nombres" autocomplete="off">
+                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="nombres" autocomplete="off">
                         </div>
                     
                         <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>Primer apellido</label>                                   
-                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="paterno" autocomplete="off">
+                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="paterno" autocomplete="off">
                         </div>
 
                         <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>Segundo apellido</label>                                   
-                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="materno" autocomplete="off">
+                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="materno" autocomplete="off">
                         </div>
                     
                     </div>
@@ -199,7 +207,7 @@
                         
                         <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>Fecha Nacimiento</label>                                   
-                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="fechanac_resp" autocomplete="off">
+                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="date" class="form-control" id="fechanac_resp" autocomplete="off">
                         </div>
                     
                         <div class="col-sm-12 col-md-3 col-xl-3">
@@ -304,7 +312,7 @@
                              </div>
 
                             <div class="col-sm-2 col-md-2 col-xl-2">
-                                <button type="button" class="btn btn-info" id="btn_add">
+                                <button type="button" class="btn btn-info" id="btn_add" style="display: none">
                                     <i class="fa fa-search"></i>AGREGAR
                                 </button>
                             </div>
@@ -571,5 +579,136 @@ var fila =   '<div class="card fila p-4">'+
         }
     });
 });
+
+
+//  buscar 
+
+$(document).on('click', '#buscar', function() {
+   
+            $('.clear').val("");
+            $('#pag_con').val();
+            $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
+            $('#form').hide();
+            var bloque = $('#bloque').val();
+            var nicho = $('#nro_nicho').val();
+            var fila = $('#fila').val();
+            if (bloque && nicho && fila) {              
+              dats=  buscar_datos(bloque, nicho, fila);
+                console.log(dats);            
+         
+            }
+          
+        });
+
+
+        function buscar_datos(bloque, nicho, fila) {
+        var datos = "";
+      
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Content-Type': 'application/json'
+            },
+            url: "{{ route('buscar.nicho') }}",
+            method: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+                "bloque": bloque,
+                "nicho": nicho,
+                "fila": fila
+            }),
+            success: function(data) {
+                if (data.mensaje) {
+                    $('#sp').empty();
+                 console.log(data);
+                 // cargar campos del los forms
+
+                } else{
+                                    
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'Content-Type': 'application/json'
+                        },
+                        url: "https://multiservdev.cochabamba.bo/api/v1/cementerio/get-data",
+                        method: 'POST',
+                        dataType: 'json',
+                        data: JSON.stringify({
+                            "bloque": bloque,
+                            "nicho": nicho,
+                            "fila": fila
+                        }),
+                        success: function(data) {
+                            console.log(data);
+                            $('#sp').empty();
+                            $('#form').show();
+                            $('#origen').val('tabla_antigua');
+                                    if(data.response.datos_difuntos!="")
+                                    {                
+                                                  
+                                                    // datos difunto                         
+                                                    if(data.response.datos_difuntos !=""){
+                                                        var fecha=data.response.datos_difuntos[0].fecha;
+                                                        var año= fecha.substr(0, 4);
+                                                        var mes= fecha.substr(4, 2);
+                                                        var dia= fecha.substr(6, 2);
+                                                        var nuevaf=año+"-"+mes+"-"+dia; 
+                                                        $('#fechanac_dif').val(nuevaf);
+                                                        $('#pag_con').val(data.response.datos_difuntos[0].pag_con);
+                                                        $('#causa').val(data.response.datos_difuntos[0].causa_fall);
+                                                        $('#nombres_dif').val(data.response.datos_difuntos[0].difunto);                                                     
+                                                       
+                                                        var genero="Seleccionar";
+                                                           
+                                                            if (data.response.datos_difuntos[0].sexo == "M") {
+                                                                genero = "1";
+                                                            } else {
+                                                            genero = "2";
+                                                            }
+                                                            $('#genero_dif').val(genero);
+                                                        }
+                                                
+                                            if(data.response.ultimo_pago!=""){
+                                                var ult=data.response.ultimo_pago[0].fecha;
+                                                var ultaño= fecha.substr(0, 4);
+                                                var ultmes= fecha.substr(4, 2);
+                                                var ultdia= fecha.substr(6, 2);
+                                                var ultimof=ultaño+"-"+ultmes+"-"+ultdia; 
+                                               
+                                                $('#tiempo_b').val(data.response.ultimo_pago[0].gestiones);
+                                            }
+                                            
+                                                    // datos responsable
+
+                                                    if(data.response.responsable!=""){
+                                                            $('#search_resp').val(data.response.responsable[0].carnet);
+                                                            
+                                                            $('#telefono').val(data.response.responsable[0].telef);
+                                                            $('#direccion_resp').val(data.response.responsable[0].direccion);
+                                                            $('#nombres_resp').val(data.response.responsable[0].razon);
+                                                    }
+                           
+                        
+                                    } else{
+                                        $('#sp').empty();
+                                           Swal.fire(
+                                                'Busqueda finalizada!',
+                                                'El registro no ha  sido encontrado o no existe .',
+                                                'error'
+                                                )
+                                               
+                                             $('.clear').val("");
+                                            $('#form').hide();
+                                    }
+                                }
+                    });
+                }
+               
+            }
+          
+        });
+        // return datos;
+    }
+
     </script>
 @stop

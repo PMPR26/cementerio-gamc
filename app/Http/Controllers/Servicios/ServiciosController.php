@@ -12,18 +12,20 @@ class ServiciosController extends Controller
 {
     public function index(){
         
-        $servicio =DB::table('servicio_nicho')
-                 ->select('servicio_nicho.*', 'responsable.id as responsable_id',
-                  'responsable.nombres as nombre_resp', 
-                 'responsable.primer_apellido as primerap_res', 'responsable.segundo_apellido as segap_resp', 
-                 'difunto.nombres as nombre_dif', 
-                 'difunto.primer_apellido as primerap_dif', 'difunto.segundo_apellido as segap_dif')
-                 ->join('responsable' , 'responsable.id','=', 'servicio_nicho.responsable_id')
-                 ->join('difunto' , 'difunto.id','=', 'servicio_nicho.difunto_id')
-                // ->where('bloque.estado', '=', 'ACTIVO')
-                 ->get();
-// dd($servicio);
-        return view('servicios/index',['servicio' =>$servicio]);
+        $servicio =DB::table('responsable_difunto')
+                 ->select('responsable_difunto.*', 
+                  'responsable.nombres as nombre_resp', 'responsable.primer_apellido as primerap_resp', 
+                  'responsable.segundo_apellido as segap_resp',  
+                  'difunto.nombres as nombre_dif', 'difunto.primer_apellido as primerap_dif', 'difunto.segundo_apellido as segap_dif',
+                  'nicho.codigo',
+                  'servicio_nicho.codigo_nicho', 'servicio_nicho.tipo_servicio', 'servicio_nicho.fur' )                
+                 ->join('responsable' , 'responsable.id','=', 'responsable_difunto.responsable_id')
+                 ->join('difunto' , 'difunto.id','=', 'responsable_difunto.difunto_id')
+                 ->join('nicho' , 'nicho.codigo','=', 'responsable_difunto.codigo_nicho')
+                 ->join('servicio_nicho' , 'servicio_nicho.responsable_difunto_id','=', 'responsable_difunto.id')
+                 ->distinct('servicio_nicho.fur')->get();
+            
+                     return view('servicios/index',['servicio' =>$servicio]);
     }
 
     public function cargarForm(){

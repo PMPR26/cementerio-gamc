@@ -338,16 +338,16 @@
                                 });
                             }else if(error.status == 400){
                                 swal.fire({
-                            title: "Duplicado!",
-                            text: "!Transacción rechazada!",
-                            type: "error",
-                            timer: 2000,
-                            showCancelButton: false,
-                            showConfirmButton: false
-                            });
-                            setTimeout(function() { 
-                                location.reload();
-                            }, 2000);
+                                    title: "Registro Duplicado!",
+                                    text: "!Transacción rechazada!",
+                                    type: "error",
+                                    timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: false
+                                    });
+                                    setTimeout(function() { 
+                                        location.reload();
+                                    }, 2000);
                             }
 
                         }

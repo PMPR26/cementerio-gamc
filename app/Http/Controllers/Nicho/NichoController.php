@@ -11,7 +11,8 @@ class NichoController extends Controller
 {
     public function index(){
         $cuartel = DB::table('cuartel')
-                 ->select('cuartel.id', DB::raw("CONCAT(codigo,' - ',nombre) as codigo"))
+        ->select('cuartel.id', 'cuartel.codigo as codigo')
+                // ->select('cuartel.id', DB::raw("CONCAT(codigo,' - ',nombre) as codigo"))
                  ->where('estado', '=', 'ACTIVO')
                  ->get();
 
@@ -58,42 +59,43 @@ class NichoController extends Controller
             ]);
            
            $rep= $this->repetidoins(  $request->nro , $request->cuartel,$request->bloque);
-       //dd($rep);
+      // dd($rep);
 
             if($rep=="no"){
-                    $new_nicho =  Nicho::create([
-                        'codigo' => trim($request->codigo),
-                        'bloque_id' => trim($request->bloque),
-                        'cuartel_id' => trim($request->cuartel),
-                        'nro_nicho' => trim($request->nro),
-                        'fila' => trim($request->fila),
-                        'columna' => trim($request->columna),
-                        'codigo' => trim($request->codigo),
-                        'codigo_anterior' => trim($request->codigo_anterior),
-                        'cantidad_cuerpos' => trim($request->cantidad),
-                        'tipo' => trim($request->tipo),
-                        //'estado_nicho' => trim($request->estado_nicho),
-                        'estado' => trim($request->estado),
+                            $new_nicho =  Nicho::create([
+                                'codigo' => trim($request->codigo),
+                                'bloque_id' => trim($request->bloque),
+                                'cuartel_id' => trim($request->cuartel),
+                                'nro_nicho' => trim($request->nro),
+                                'fila' => trim($request->fila),
+                                'columna' => trim($request->columna),
+                                'codigo' => trim($request->codigo),
+                                'codigo_anterior' => trim($request->codigo_anterior),
+                                'cantidad_cuerpos' => trim($request->cantidad),
+                                'tipo' => trim($request->tipo),
+                                //'estado_nicho' => trim($request->estado_nicho),
+                                'estado' => trim($request->estado),
 
-                        'user_id' => auth()->id(),
-                        'estado' => 'ACTIVO',
-                        'created_at' => date("Y-m-d H:i:s"),
-                        'updated_at' => date("Y-m-d H:i:s"),
-                    ]);
+                                'user_id' => auth()->id(),
+                                'estado' => 'ACTIVO',
+                                'created_at' => date("Y-m-d H:i:s"),
+                                'updated_at' => date("Y-m-d H:i:s"),
+                            ]);
 
 
-                        return response([
-                            'status'=> true,
-                            'response'=> $new_nicho
-                        ],201);
-                }
+                                return response([
+                                    'status'=> true,
+                                    'response'=> $new_nicho
+                                ],201);
+                        }
 
-            }else{
-                return response([
-                    'status'=> false,
-                    'message'=> 'Error, codigo existente, duplicado!)'
-                 ],400);
-              }
+                            else{
+                                return response([
+                                    'status'=> false,
+                                    'message'=> 'Error, codigo existente, duplicado!)'
+                                ],400);
+                            }
+                } 
         }
     
 
@@ -200,7 +202,8 @@ class NichoController extends Controller
     public function getBloqueid(Request $request){ 
 
         $bloque = DB::table('bloque')
-        ->select('bloque.id', DB::raw("CONCAT(codigo,' - ',nombre) as codigo"))
+        ->select('bloque.id','bloque.codigo as codigo')
+        //->select('bloque.id', DB::raw("CONCAT(codigo,' - ',nombre) as codigo"))
         ->where('estado', '=', 'ACTIVO')
         ->where('cuartel_id', '=', $request->cuartel)
         ->get();
