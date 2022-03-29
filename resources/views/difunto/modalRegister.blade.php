@@ -106,7 +106,13 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                
                             </div> 
                         </div>
+                        <hr>
+                        <div class="col-sm-12">
+                            <div id="cert-defuncion" class="dropzone" style="text-align: center">
+                        </div>
+                        <hr>
 
+                        <input type="hidden" id="url-certification">
                         {{-- <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Domicilio :</label>

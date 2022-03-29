@@ -21,6 +21,7 @@ class Difunto extends Model
         'causa',
         'tipo',
         'genero',
+        'certificado_file',
         'estado',
         'user_id',
         'created_at'

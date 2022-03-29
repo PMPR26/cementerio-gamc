@@ -52,9 +52,10 @@ class DifuntoController extends Controller
             'tipo' => trim($request->tipo),
             'genero' => trim($request->genero),
             'user_id' => auth()->id(),
+            'certificado_file' => $request->certificado_file,
             'estado' => 'ACTIVO',
             'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
            ]);
 
 

@@ -5,6 +5,8 @@
 @section('plugins.Toastr', true)
 @section('plugins.Sweetalert2', true)
 @section('plugins.Pace', true)
+@section('plugins.dropzone', true)
+
 
 @section('content_header')
     <h1>Listado de Difuntos</h1>
@@ -214,6 +216,9 @@
 
 @section('css')
 <style>
+    .dropzone .dz-preview .dz-error-message {
+    top: 150px!important;
+}
     .modal {
     padding: 2% !important;
     }
@@ -238,6 +243,74 @@
     <script> 
     
     $(document).ready(function () {
+
+        $("#cert-defuncion").dropzone({
+        dictDefaultMessage: "Arrastre y suelte aquí los archivos …<br>(o haga clic para seleccionar archivos)",
+        dictRemoveFile: 'Remover Archivo',
+        dictCancelUpload: 'Cancelar carga',
+        dictResponseError: 'Server responded with  code.',
+        dictCancelUploadConfirmation: '¿Estás seguro/a de que deseas cancelar esta carga?',
+        url: "{{ env('URL_FILE') }}/api/v1/repository/upload-files",
+        paramName: "documens_files[]",
+        addRemoveLinks: true,
+        acceptedFiles: 'image/jpeg, image/png, image/jpg, application/pdf',
+        parallelUploads: 1,
+        maxFiles: 1,
+        init: function() {
+        this.on("complete", function(file) {
+            if(file.type != 'application/pdf' && file.type != 'image/png' && file.type != 'image/jpg' && file.type != 'image/jpeg') {
+                this.removeFile(file);
+                toastr["error"]('No se puede subir el archivo '+ file.name);
+                return false;
+            }
+        });
+
+        this.on("removedfile", function(file) {
+            $.ajax({
+                        type: 'DELETE',
+                        headers: {
+                            'Content-Type':'application/json'
+                        },
+                        url: "{{ env('URL_FILE') }}/api/v1/repository/remove-file",
+                        async: false,
+                        data: JSON.stringify({
+                            'url':  JSON.parse(file.xhr.response).response[0].url_file
+                        }),
+                        success: function(data_response) {
+                        }
+                    })
+
+        });
+
+        this.on("maxfilesexceeded", function(file){
+            file.previewElement.classList.add("dz-error");
+            $('.dz-error-message').text('No se puede subir mas archivos!');
+        });
+
+        },
+        sending: function(file, xhr, formData){
+                    formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
+                    formData.append('collector', 'certificados de difuncion');
+                   
+                },
+        success: function (file, response) {
+            file.previewElement.classList.add("dz-success");
+            $('#url-certification').val(response.response[0].url_file);
+            // $(file._removeLink).attr('href', response.response[0].url_file);
+            // $(file._removeLink).attr('id', 'btn-remove-file'); 
+        },
+        error: function (file, response) {
+         
+            if(response == 'You can not upload any more files.'){
+                toastr["error"]('No se puede subir mas archivos');
+                this.removeFile(file);
+            }
+            file.previewElement.classList.add("dz-error");
+            $('.dz-error-message').text('No se pudo subir el archivo '+ file.name);
+        }
+    });
+
+
 
 
         //editar difunto
@@ -394,6 +467,7 @@
                             'causa':  $('#causa').val(),
                             'tipo': $('#tipo').val(),
                             'genero': $('#genero').val(),
+                            'certificado_file': $('#url-certification').val() //aqui
                         }),
                         success: function(data_response) {
                             swal.fire({

@@ -199,17 +199,17 @@ class NichoController extends Controller
     }
     public function getBloqueid(Request $request){ 
 
-        $bloque=DB::table('bloque')
+        $bloque = DB::table('bloque')
         ->select('bloque.id', DB::raw("CONCAT(codigo,' - ',nombre) as codigo"))
         ->where('estado', '=', 'ACTIVO')
         ->where('cuartel_id', '=', $request->cuartel)
         ->get();
 
-     
                return response([
                 'status'=> true,
                 'response'=> $bloque
              ],200);
+             
     }
 
    

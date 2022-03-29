@@ -24,9 +24,10 @@ class CreateDifuntoTable extends Migration
             $table->string('certificado_defuncion');           
             $table->string('causa');
             $table->string('tipo');    
-            $table->string('genero')->nullable();
+            $table->string('genero');
 
             $table->integer('user_id');
+            $table->string('certificado_file')->nullable();
             $table->string('estado',10)->default('ACTIVO');
             $table->timestamps();     
         });
