@@ -45,7 +45,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Fecha de nacimiento :</label>
-                                <input type="date"  class="form-control" placeholder="fecha de nacimiento" id="fecha_nacimiento" max="2006-12-31" >
+                                <input type="date"  class="form-control" placeholder="fecha de nacimiento" id="fecha_nacimiento" >
                             </div>
                         </div>
 
@@ -106,7 +106,13 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                
                             </div> 
                         </div>
+                        <hr>
+                        <div class="col-sm-12">
+                            <div id="cert-defuncion" class="dropzone" style="text-align: center">
+                        </div>
+                        <hr>
 
+                        <input type="hidden" id="url-certification">
                         {{-- <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Domicilio :</label>

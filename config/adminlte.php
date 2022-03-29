@@ -436,6 +436,21 @@ return [
                 ],
             ],
         ],
+        'dropzone' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '/libreries/dropzone/css/dropzone.css'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '/libreries/dropzone/js/dropzone-min.js'
+                ],
+            ]
+        ],
         'Animation' => [
             'active' => false,
             'files' => [

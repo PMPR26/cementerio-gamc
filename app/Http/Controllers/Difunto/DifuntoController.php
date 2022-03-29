@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Difunto;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Difunto;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class DifuntoController extends Controller
 {
@@ -52,9 +52,10 @@ class DifuntoController extends Controller
             'tipo' => trim($request->tipo),
             'genero' => trim($request->genero),
             'user_id' => auth()->id(),
+            'certificado_file' => $request->certificado_file,
             'estado' => 'ACTIVO',
             'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
            ]);
 
 

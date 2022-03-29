@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Responsable extends Model
+class Difunto extends Model
 {
     use HasFactory;
 
@@ -21,6 +21,7 @@ class Responsable extends Model
         'causa',
         'tipo',
         'genero',
+        'certificado_file',
         'estado',
         'user_id',
         'created_at'

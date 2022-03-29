@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Cripta;
 
+use App\Models\Bloque;
 use App\Models\Cripta;
 use App\Models\Cuartel;
-use App\Models\Bloque;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class CriptaController extends Controller
@@ -17,7 +18,7 @@ class CriptaController extends Controller
         ->orderBy('cripta.nombre', 'DESC')
         ->get();
 
-         $cuartel = Cuartel::select('id', 'nombre')
+         $cuartel = Cuartel::select('id', DB::raw("CONCAT(codigo,' - ',nombre) as nombre"))
                     ->where('estado', 'ACTIVO')
                     ->orderBy('nombre', 'DESC')
                     ->get();
@@ -76,6 +77,7 @@ class CriptaController extends Controller
     public function updateCripta(Request $request){
 
         $this->validate($request, [
+            'id_cripta' => 'required',
             'name' => 'required',
             'superficie' => 'required|numeric',
             'status' => 'required'
@@ -85,21 +87,18 @@ class CriptaController extends Controller
             'numeric' => 'La :attribute debe ser un número!'
         ]);
 
-        $cripta = Cripta::where('id', $cuartel->id)
+      
+        $cripta = Cripta::where('id', $request->id_cripta)
         ->update([
-            'estado' => 'INACTIVO'
+            'nombre' => trim($request->name),
+            'superficie' => trim($request->superficie),
+            'estado' => trim($request->status),
+            'updated_at' => date("Y-m-d H:i:s")
         ]);
-
-
-
-        $bloque = Bloque::select('id', 'nombre')
-        ->where(['estado' => 'ACTIVO', ''])
-        ->orderBy('nombre', 'DESC')
-        ->get();
 
         return response([
             'status'=> true,
-            'response'=> $bloque
+            'response'=> $cripta
                ],200);
     }
 }
