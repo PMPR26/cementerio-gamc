@@ -138,7 +138,7 @@ class DifuntoController extends Controller
             'causa' => $request->causa,
             'tipo' => $request->tipo,
             'genero' => $request->genero,
-            //'estado' => $request->status,
+            'estado' => $request->status,
             'updated_at' => date("Y-m-d H:i:s")
         ]);
 
