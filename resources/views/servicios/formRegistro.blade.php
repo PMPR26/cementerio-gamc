@@ -136,7 +136,7 @@
                     </div>
                     
 
-                    <div class="col-sm-12 col-md-4 col-xl-4">
+                    <div class="col-sm-12 col-md-3 col-xl-3">
                         <label>Clasificacion difunto</label>                                   
                         <select name="ecivil" id="tipo_dif" class="form-control">
                             <option value="">Seleccionar</option>
@@ -145,12 +145,21 @@
                         </select> 
                     </div>
 
-                    <div class="col-sm-12 col-md-4 col-xl-4">
+                    <div class="col-sm-12 col-md-3 col-xl-3">
                         <label>Genero</label>                                   
                         <select name="genero" id="genero_dif" class="form-control">
                             <option value="">Seleccionar</option>
                             <option value="FEMENINO">FEMENINO</option>
                             <option value="MASCULINO">MASCULINO</option>                            
+                        </select> 
+                    </div>
+
+                    <div class="col-sm-12 col-md-3 col-xl-3">
+                        <label>Tipo Difunto</label>                                   
+                        <select name="genero" id="genero_dif" class="form-control">
+                            <option value="">Seleccionar</option>
+                            <option value="ADULTO">ADULTO</option>
+                            <option value="PARVULO">PARVULO</option>                            
                         </select> 
                     </div>
                 </div>
@@ -198,7 +207,7 @@
                         
                         <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>Fecha Nacimiento</label>                                   
-                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="fechanac_resp" autocomplete="off">
+                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="date" class="form-control" id="fechanac_resp" autocomplete="off">
                         </div>
                     
                         <div class="col-sm-12 col-md-3 col-xl-3">
