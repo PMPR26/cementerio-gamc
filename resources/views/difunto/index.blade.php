@@ -110,7 +110,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Fecha de nacimiento :</label>
-                                <input type="date"  class="form-control" placeholder="fecha de nacimiento" id="fecha_nacimiento" >
+                                <input type="date"  class="form-control" max="{{ date('Y-m-d') }}" placeholder="fecha de nacimiento" id="fecha_nacimiento" >
                             </div>
                         </div>
 
@@ -226,14 +226,14 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Fecha de nacimiento :</label>
-                                <input type="date"  class="form-control" placeholder="fecha de nacimiento" id="fecha_nacimiento-edit" >
+                                <input type="date"  class="form-control" max="{{ date('Y-m-d') }}" placeholder="fecha de nacimiento" id="fecha_nacimiento-edit" >
                             </div>
                         </div>
 
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Fecha de defunción :</label>
-                                <input type="date"  class="form-control" placeholder="fecha de defuncion" id="fecha_defuncion-edit"  >
+                                <input type="date"  class="form-control" placeholder="fecha de defuncion" max="{{ date('Y-m-d') }}" id="fecha_defuncion-edit"  >
                             </div>
                         </div>
 
@@ -575,7 +575,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             'segundo_apellido':  $('#segundo_apellido').val(),
                             'fecha_nacimiento':  $('#fecha_nacimiento').val(),
                             'fecha_defuncion':  $('#fecha_defuncion').val(),
-                            'certificado_defuncion':  $('#fecha_defuncion').val(),
+                            'certificado_defuncion':  $('#certificado_defuncion').val(),
                             'causa':  $('#causa').val(),
                             'tipo': $('#tipo').val(),
                             'genero': $('#genero').val(),

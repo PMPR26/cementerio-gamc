@@ -15,15 +15,14 @@ class CreateServicioNichoTable extends Migration
     {
         Schema::create('servicio_nicho', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('responsable_id'); 
-            $table->integer('difunto_id');  
             $table->string('codigo_nicho',20);           
             $table->date('fecha_registro');     
             $table->string('tipo_servicio_id',30);           
             $table->string('tipo_servicio',200);           
             $table->string('servicio_id',30);           
             $table->string('servicio',200); 
-           // $table->jsonb('data')->nullable(); 
+            $table->unsignedBigInteger('responsable_difunto_id');
+
             $table->integer('fur');
             $table->integer('gestion_pagada'); //pag_con    
 
@@ -33,8 +32,8 @@ class CreateServicioNichoTable extends Migration
             $table->string('estado',10)->default('ACTIVO');
             $table->timestamps();     
 
-            $table->foreign('responsable_id')->references('id')->on('responsable');
-            $table->foreign('difunto_id')->references('id')->on('difunto');
+
+            $table->foreign('responsable_difunto_id')->references('id')->on('responsable_difunto');
            // $table->foreign('codigo_nicho')->references('codigo')->on('nicho');
         });
     }
