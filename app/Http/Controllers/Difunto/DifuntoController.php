@@ -146,8 +146,7 @@ class DifuntoController extends Controller
             'status'=> true,
             'response'=> 'done'
          ],200);
-
-
     }
+
 
 }

@@ -22,6 +22,7 @@ class ServicioNicho extends Model
         'fur',
         'gestion_pagada',
         'fecha_pago',
+        'id_usuario_caja',
         'estado_pago',
         'user_id',
         'estado',

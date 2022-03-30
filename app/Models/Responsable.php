@@ -32,4 +32,21 @@ class Responsable extends Model
         'updated_at'
     ];
 
+
+    //generate ci reposnsable
+    public function generateCiResponsable(){
+
+        $ci = Responsable::select('ci')
+                ->where('ci', 'ilike', "%SCR-0%")
+                ->orderBy('ci', 'DESC')
+                ->first();
+
+         if($ci){
+            $number = (int) str_replace('-','',filter_var($ci, FILTER_SANITIZE_NUMBER_INT)) + 1;
+            return 'SCR-'.str_pad($number, 4, '0', STR_PAD_LEFT);
+         }else{
+             return 'SCR-0001';
+         }   
+    }
+
 }

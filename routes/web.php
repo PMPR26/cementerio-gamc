@@ -38,7 +38,7 @@ use App\Models\User;
             
             
         });
-
+       
         Auth::routes();
 
 
@@ -115,6 +115,8 @@ Route::group(['prefix' => 'servicios', 'middleware' => 'auth'], function () {
     Route::post('/new-servicio', [App\Http\Controllers\Servicios\ServiciosController::class,'createNewServicios'])->name('new.servicio');
     Route::post('/buscar_nicho', [App\Http\Controllers\Servicios\ServiciosController::class, 'buscar_nicho'])->name('buscar.nicho');
     Route::get('/cargarForm', [App\Http\Controllers\Servicios\ServiciosController::class,'cargarForm'])->name('load.form'); 
+    //generate fur from sinot
+    Route::post('/generate-fur', [App\Http\Controllers\Servicios\ServiciosController::class,'generateFur'])->name('servicio.fur'); 
     
 });
 
@@ -125,6 +127,8 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::get('/disable-responsable/{id}', 'App\Http\Controllers\Responsable\ResponsableController@disableAndEnableResponsable')->name('responsable.disable');
     Route::get('/get-responsable/{id}', 'App\Http\Controllers\Responsable\ResponsableController@getResponsable')->name('responsable.get');
     Route::put('/update-responsable', 'App\Http\Controllers\Responsable\ResponsableController@updateResponsable')->name('responsable.update');
+    //search difunto and responsable por ci
+    Route::post('/search-difunto-responsable', 'App\Http\Controllers\Responsable\ResponsableController@searchResponsableAndDifunt')->name('search.difunto.responsable');
     
 });
 
@@ -137,3 +141,5 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
     Route::put('/update-difunto', 'App\Http\Controllers\Difunto\DifuntoController@updateDifunto')->name('difunto.update');
     
 });
+
+

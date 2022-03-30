@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Responsable;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Difunto;
 use App\Models\Responsable;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class ResponsableController extends Controller
 {
@@ -28,11 +29,11 @@ class ResponsableController extends Controller
         if($request->isJson()){
             
             $this->validate($request, [
-                'ci' => 'required|unique:responsable',
+                'ci' => 'required|unique:responsable|max:9',
                 'nombres' => 'required',
                 'primer_apellido' => 'required',
                 'fecha_nacimiento' => 'required',
-                // 'telefono' => 'min:8|max:10|numeric',
+                'telefono' => 'max:10|numeric',
                 'domicilio' => 'required',
                 'genero' => 'required'
             ], [
@@ -40,7 +41,8 @@ class ResponsableController extends Controller
                 'ci.required'    => 'El campo cedula de identidad es obligatorio!',
                 'ci.unique' => 'El numero de cedula '.$request->ci.' ya se encuentra en uso!.',
                 'min' => 'El :attribute debe tener al menos 8 caracteres.',
-                'max' => 'El telefono no debe ser mayor a 10.',
+                'telefono.max' => 'El telefono no debe ser mayor a 10.',
+                'ci.max' => 'CI no debe ser mayor a 10 caracteres.',
                 'required' => 'El campo :attribute es requerido.'
             ]);
             
@@ -124,6 +126,7 @@ class ResponsableController extends Controller
              ],200);
     }
 
+
     public function updateResponsable(Request $request){
 
         $this->validate($request, [
@@ -157,7 +160,49 @@ class ResponsableController extends Controller
             'response'=> 'done'
          ],200);
 
+    }
 
+    public function searchResponsableAndDifunt(Request $request){
+        
+        if($request->isJson()){
+            $this->validate($request, [
+                'ci' => 'required',
+                'type' => 'required' // responsable
+            ]);
+
+            if(trim($request->type) == 'deceased'){
+                $person = Difunto::select()
+                            ->where(['ci' => trim($request->ci)])
+                            ->first();
+
+                return response([
+                       'status'=> true,
+                       'response'=> $person
+                                ],200);
+            }else if(trim($request->type) == 'responsable'){
+                $person = Responsable::select()
+                            ->where(['ci' => trim($request->ci)])
+                            ->first();
+
+                return response([
+                       'status'=> true,
+                       'response'=> $person
+                                ],200);
+            }else{
+
+                return response([
+                    'status'=> false,
+                    'message'=> 'Parametro type solo acepta los siguientes valores: deceased = "difunto" y responsable = "responsable"'
+                 ],200);
+            }
+
+        }else{
+
+            return response([
+                'status'=> false,
+                'message'=> 'Error 401 (Unauthorized)'
+             ],401);
+        }
     }
 
 }

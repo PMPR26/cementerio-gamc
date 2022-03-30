@@ -32,4 +32,19 @@ class Difunto extends Model
         'updated_at'
     ];
 
+    public function generateCiDifunto(){
+
+        $ci = Difunto::select('ci')
+                ->where('ci', 'ilike', "%SCD-0%")
+                ->orderBy('ci', 'DESC')
+                ->first();
+
+         if($ci){
+            $number = (int) str_replace('-','',filter_var($ci, FILTER_SANITIZE_NUMBER_INT)) + 1;
+            return 'SCD-'.str_pad($number, 4, '0', STR_PAD_LEFT);
+         }else{
+             return 'SCD-0001';
+         }   
+    }
+
 }

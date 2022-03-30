@@ -9,6 +9,9 @@ use Exception;
 
 class JwtMiddleware
 {
+
+
+
     /**
      * Handle an incoming request.
      *

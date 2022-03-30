@@ -26,7 +26,8 @@ class CreateServicioNichoTable extends Migration
             $table->integer('fur');
             $table->integer('gestion_pagada'); //pag_con    
 
-            $table->date('fecha_pago');     
+            $table->timestamp('fecha_pago')->nullable();
+            $table->integer('id_usuario_caja')->nullable();  
             $table->boolean('estado_pago')->default(false);
             $table->integer('user_id');
             $table->string('estado',10)->default('ACTIVO');
