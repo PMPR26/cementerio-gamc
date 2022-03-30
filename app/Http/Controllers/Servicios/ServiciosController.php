@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Servicios;
 
 use App\Models\Servicios;
+use App\Models\Nicho;
+use App\Models\Cuartel;
+use App\Models\Difunto;
+use App\Models\Responsable;
 
 use App\Http\Controllers\Controller;
+use App\Models\Servicios\ServicioNicho;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -60,9 +65,10 @@ class ServiciosController extends Controller
                 'difunto.causa as causa_dif',
                 'difunto.tipo as tipo_dif',
                 'difunto.genero as genero_dif',
-                'difunto.certificado_file as certificado_file_dif',
+                'difunto.certificado_file',
                 'servicio_nicho.fur',
-                'nicho.codigo','bloque.codigo','cuartel.codigo','nicho.nro_nicho')                
+                'nicho.codigo','bloque.codigo','cuartel.codigo','nicho.nro_nicho')   
+                ->join('servicio_nicho', 'servicio_nicho.codigo_nicho','=', 'responsable_difunto.codigo_nicho')           
         ->leftJoin('responsable' , 'responsable.id','=', 'responsable_difunto.responsable_id')
         ->leftJoin('difunto' , 'difunto.id','=', 'responsable_difunto.difunto_id')
         ->join('nicho' , 'nicho.codigo','=', 'responsable_difunto.codigo_nicho')
@@ -72,20 +78,158 @@ class ServiciosController extends Controller
         ->where('nicho.nro_nicho','=', $request->nro_nicho )
         ->where('nicho.fila','=', $request->fila ) 
         ->distinct('servicio_nicho.fur')->get();
-   dd($sql);
-        if($sql){
-            $mensaje=true;
-        }
-        else{
-            $mensaje= false;
-        }
+//    dd($sql);
+            if($sql){
+                    return response([
+                        'status'=> true,
+                        'response'=> $sql
+                    ],200);
+                }else{
+                    return response([
+                        'status'=> false,
+                        'message'=> 'Error, codigo existente, duplicado!)'
+                    ],400);
+                }
 
-        $resp= [
-            "mensaje" => $mensaje,
-            "datos"=>$sql
-            ];
-         return response()->json($resp);
+            
+        // return response()->json($resp);
     }
 
+    public function createNewServicios(Request $request){
+        dd($request);
+        if($request->isJson()){            
+            $this->validate($request, [
+                'nro_nicho'=> 'required',
+                'bloque'=> 'required',
+                'cuartel'=> 'required',
+                'fila'=> 'required',
+                'tipo'=> 'required',
+                'columna'=> 'required',
+                'ci_dif'=> 'required',
+                'nombres_dif'=> 'required',
+                'paterno_dif'=> 'required',
+                'tipo_dif'=> 'required',
+                'genero_dif'=> 'required',
+                'ci_resp'=> 'required',
+                'nombres_resp'=> 'required',
+                'paterno_resp'=> 'required',
+                'celular'=> 'required',
+                'ecivil'=> 'required',
+                'email'=> 'required',
+                'domicilio'=> 'required',
+                'genero_resp'=> 'required',
+
+                'tserv'=> 'required',
+                'cuenta'=> 'required',
+                'hserv'=> 'required',
+                'servicio'=> 'required',                            
+                'cantidad'=> 'required',
+                'unidad'=> 'required',
+                'precio'=> 'required',
+                'montoserv'=> 'required',
+
+
+                'cantidad' => 'required',
+                'unidad' => 'required',
+                'precio_unitario' => 'required',
+                'monto' => 'required',
+                'ultimopago'=>'required',
+                'hserv'=>'required',
+                'servicio'=>'required',
+                'cuenta'=>'required',
+                'tipo_serv'=>'required'
+
+                
+            ], [
+                'cantidad.required'  => 'El campo cantidad es obligatorio!',
+                'unidad.required' => 'El campo Codigo cuartel es obligatorio!',
+                'cuenta.required' => 'Debe asignar al menos un servicio!.'
+            ]);
+            //buscar si existe registrado el nicho sino existe registrarlo
+                    $codigo_n=$request->cuartel.".".$request->bloque.".".$request->nro_nicho.".".$request->fila;
+                    $existeNicho= Nicho::where('codigo', $codigo_n)->first();
+                    
+                    dd($existeNicho);
+
+                    //if($existeNicho)
+
+                //si id_difunto id_responsable es null insertar difunto insertar responsable
+                    if($request->id_difunto==""){
+                        //insertar difunto
+
+                    }else{
+                        $difuntoid=$request->difunto_id;
+                    }
+
+                    if($request->id_responsable==""){
+                        //insertar difunto
+
+                    }else{
+                        $responsableid=$request->responsable_id;
+                    }
+
+
+                //
+              
+              
+
+                if (!empty($request->cuenta) && is_array($request->cuenta)) {
+                    $count = count($request->cuenta);
+                    $codigo_nicho=$request->cuartel.".".$request->bloque.".".$request->nicho.".".$request->fila;
+
+                    
+                    /** generar fur */
+                    $nombre_difunto=$request->nombres_dif." ".$request->primerap_dif." ".$request->segap_dif;
+                    // $response = $this->GenerarFur($request->search_resp, $request->nombres_resp, $request->primerap_resp,
+                    // $request->segapresp, $request->domicilio, $request->telefono, $nombre_difunto, $codigo_nicho,
+                    // $request->bloque, $request->nro_nicho, $request->fila, $request->servicio );
+                   
+                    // if($response['status']==true){
+                    //     $fur = $response['response'];
+                       
+                    // }
+                    $fur="165235";
+                   
+                    //   
+                    
+                }
+
+
+           
+              
+              
+            }
+    }
+
+            public function GenerarFur($ci, $nombre, $primer_apellido,
+                $ap_materno, $direccion, $telefono, $nombre_difunto, $codigo,
+                $bloque, $nicho, $fila, $servicios_cementery )
+                    {
+                    
+                //dd( $servicios_cementery);
+                        $headers =  ['Content-Type' => 'application/json'];
+                        $client = new Client();
+                        $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementery', [
+                            'json' => [
+                                'ci' => $ci,
+                                'nombre' => $nombre,
+                                'primer_apellido' => $primer_apellido,
+                                'ap_materno' => $ap_materno,
+                                'direccion' => $direccion,
+                                'telefono' => $telefono,
+                                'nombre_difunto' => $nombre_difunto,
+                                'codigo' => $codigo,
+                                'bloque' => $bloque,
+                                'fila' => $fila,
+                                'nicho' => $nicho,
+                                'servicios_cementery' => $servicios_cementery
+
+                            ],
+                            'headers' => $headers,
+                        ]);
+                        $fur_response = json_decode((string) $response->getBody(), true);
+                    
+                        return $fur_response;
+            }
     
 }
