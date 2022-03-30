@@ -31,5 +31,14 @@ Route::group([
     Route::get('me', '\App\Http\Controllers\Api\V1\AuthController@me')->name('me');
 });
 
-Route::put('/v1/update-fur-pay', [App\Http\Controllers\Servicios\ServiciosController::class,'updatePay']);
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'v1'
+], function ($router) {
+//request update pay fur
+Route::put('update-fur-pay', [App\Http\Controllers\Servicios\ServiciosController::class,'updatePay']);
+});
+
+
 

@@ -10,6 +10,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Servicios\ServicioNicho;
 
 class ServiciosController extends Controller{
+
+    public function __construct()
+    {
+        $this->middleware('api', ['except' => ['updatePay']]);
+    }
+
+
     public function index(){
         
         $servicio =DB::table('responsable_difunto')
@@ -133,28 +140,6 @@ class ServiciosController extends Controller{
              ],401); 
         }
         
-    }
-
-
-
-
-
-
-
-    public function UpdatePayFur(Request $request){
-        if($request->isJson()){
-            $this->validate($request, [
-                'fur'
-            ]);
-
-        }else{
-
-            return response([
-                'status'=> false,
-                'message'=> 'Error 401 (Unauthorized)'
-             ],401);
-
-        }
     }
 
 
