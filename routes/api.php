@@ -18,7 +18,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
 Route::post('v1/auth/login', [\App\Http\Controllers\Api\V1\AuthController::class, 'login'])->name('login');
+
 
 Route::group([
     'middleware' => 'jwt.verify',
@@ -28,3 +30,6 @@ Route::group([
     Route::get('refresh', '\App\Http\Controllers\Api\V1\AuthController@refresh')->name('refresh');
     Route::get('me', '\App\Http\Controllers\Api\V1\AuthController@me')->name('me');
 });
+
+Route::put('/v1/update-fur-pay', [App\Http\Controllers\Servicios\ServiciosController::class,'updatePay']);
+
