@@ -312,20 +312,11 @@
                          <div class="row">
                                 <div class="col-sm-6">  
                                     <label>Tipo Servicio</label>   
-                                        {{-- <select  id="tipo_servicio_value"  class="form-control" style="width: 100%">
-                                            <option selected disabled>Seleccione un cuartel</option>
+                                         <select  id="tipo_servicio_value"  class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
                                             @foreach ($tipo_service as $value)
                                             <option value="{{ $value['cuenta'] }}">{{ $value['descripcion'] }}</option>
-                                        @endforeach
-                                        </select> --}}
-                                        <select class="form-control select2" multiple="multiple" id="select2">
-                                            <option >cawky parky</option>
-                                            <option>ahoj</option>
-                                            <option>more</option>
-                                            <option>ideme</option>
-                                            <option>na </option>
-                                            <option>pivo?</option>   
-                                   </select> 
+                                            @endforeach
+                                        </select> 
                                 </div>
 
                                 <div class="col-sm-6 col-md-6 col-xl-6" id="service" style="display:none">
@@ -333,6 +324,29 @@
                                         <select name="servicio" id="servicio" class="form-control "></select>
                                 </div>
                           </div>
+
+    <div class="row" style="padding-top: 15px;">
+            <div class="col-sm-6">
+            <div class="card">
+            <div class="card-body" id="servicios-data">
+                
+            </div>
+            </div>
+            </div>
+            <div class="col-sm-6">
+            <div class="card">
+            <div class="card-body">
+                This is some text within a card body.
+            </div>
+            </div>
+            </div>
+    </div>
+
+
+
+
+
+
                            
                           <div class="row pb-2">
                                 <div class="col-sm-4 col-md-4 col-xl-4" id="cantidad_box" style="display:none">
@@ -405,23 +419,66 @@
 @stop
 @section('css')
 <style>
-    .select2-selection__choice__display{
-        padding-left: 15px !important
-    }
-    
+ 
+  .select2-selection__rendered{
+      color:#333232;
+  }
+  .select2-results__option--selected{
+      background-color: #175603 !important;
+  }
+  
 </style>
 
 @section('js')
     <script> 
     $(document).ready(function () {
+
+        
         //code selected select2 services
-        $('#select2').select2({
+        $('#tipo_servicio_value').select2({
             multiple: true,
             width: 'resolve',
-            placeholder:'placeholder',
+            placeholder:'Servicios Cementerio',
             theme: "classic",
-            allowClear: true
+            allowClear: true,
+            "language": {
+            "noResults": function(e){
+                return "Nada Encontrado";
+            }
+           }
         });
+
+        //select event forech
+        $('#tipo_servicio_value').on('select2:select', function (e) {
+            $parrafos = '';
+            $.each($(this).select2('data'), function( index, value ) {
+                $parrafos = '<p>' +$parrafos + (index + 1) + ' - '+ value.text+'</p>';
+                });
+                $('#servicios-data').html($parrafos);
+        });
+
+        //unselect event forech  //hacer que busque y limpie el html
+        $('#tipo_servicio_value').on('select2:unselecting', function (e) {
+            $('#servicios-data').empty();
+            $parrafos = '';
+            $.each($(this).select2('data'), function( index, value ) {
+                $parrafos = '<p>' +$parrafos + (index + 1) + ' - '+ value.text+'</p>';
+                console.log(value);
+            });
+            $('#servicios-data').html($parrafos);
+            //console.log($(this).val());
+            //console.log($(this).find(':selected').text());
+        });
+
+        setTimeout( function() { 
+            $("#tipo_servicio_value").val(null).trigger('change');
+         }, 100);
+
+        
+        
+
+  
+
     });
     </script>
     @stop
