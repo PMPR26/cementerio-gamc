@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Servicios\ServicioNicho;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class ServiciosController extends Controller{
 
@@ -41,8 +43,25 @@ class ServiciosController extends Controller{
 
     public function cargarForm(){
         
-       
-        return view('servicios/formRegistro');
+        $headers = [
+            'Content-Type' => 'application/json'
+        ];
+        try {
+            $client = new Client();
+            $response = $client->get('https://multiservdev.cochabamba.bo/api/v1/cementerio/get-services', [
+                'json' => [],
+                'headers' => $headers
+            ]);
+        } catch (RequestException $re) {
+            // return response([
+            //     'status' => false,
+            //     'message' => 'Error al procesar su solicitud'
+            // ], 200);
+        }
+
+        $tipo_service = json_decode((string) $response->getBody(), true);
+    
+        return view('servicios/formRegistro', ['tipo_service' => $tipo_service['response']]);
     }
 
     public function buscar_nicho(Request $request){
