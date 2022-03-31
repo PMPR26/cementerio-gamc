@@ -61,12 +61,7 @@
                                 <label>Codigo antiguo</label>                                   
                                 <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="anterior" autocomplete="off">
                             </div> 
-
-                            <div class="col-sm-12 col-md-3 col-xl-3">
-                                <label>Columna</label>                                   
-                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control " id="columna" autocomplete="off">
-                            </div>
-
+                            
                         </div>
                       
                     </div>
@@ -874,7 +869,7 @@ $(document).on('click', '#buscar', function() {
                         data: JSON.stringify({
                                                        
                             'nro_nicho': $('#nro_nicho').val(),
-                            'bloque':  $('#bloque option:selected').val(),
+                            'bloque':  $('#bloque').val(),
                             'cuartel':  $('#cuartel').val(),
                             'fila':  $('#fila').val(),
                             'tipo':  $('#tipo').val(),

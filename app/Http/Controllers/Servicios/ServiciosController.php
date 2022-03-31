@@ -177,9 +177,11 @@ class ServiciosController extends Controller{
         
     }
 
-
+   
+    
     public function createNewServicios(Request $request){
-        dd($request);
+        
+
         if($request->isJson()){            
             $this->validate($request, [
                 'nro_nicho'=> 'required',
@@ -201,7 +203,7 @@ class ServiciosController extends Controller{
                 'email'=> 'required',
                 'domicilio'=> 'required',
                 'genero_resp'=> 'required',
-
+//pedir a gus gus
                 'tserv'=> 'required',
                 'cuenta'=> 'required',
                 'hserv'=> 'required',
@@ -228,15 +230,63 @@ class ServiciosController extends Controller{
                 'unidad.required' => 'El campo Codigo cuartel es obligatorio!',
                 'cuenta.required' => 'Debe asignar al menos un servicio!.'
             ]);
-            //buscar si existe registrado el nicho sino existe registrarlo
-                    $codigo_n=$request->cuartel.".".$request->bloque.".".$request->nro_nicho.".".$request->fila;
-                    $existeNicho= Nicho::where('codigo', $codigo_n)->first();
-                    
-                    dd($existeNicho);
 
-                    //if($existeNicho)
+            //step1: nicho buscar si existe registrado el nicho recuperar el id  sino existe registrarlo
+            $codigo_n=$request->cuartel.".".$request->bloque.".".$request->nro_nicho.".".$request->fila;
+            $existeNicho= Nicho::where('codigo', $codigo_n)->first();
+                      
+            if($existeNicho!=null){
+                $id_nicho=$existeNicho->id;
+            }
+            else{
 
-                //si id_difunto id_responsable es null insertar difunto insertar responsable
+                // buscar cuartel si existe recuperar id sino insertar
+                  $existeCuartel= Cuartel::where('codigo', $request->cuartel)->first();
+                    if($existeCuartel!=null){
+                        $id_cuartel=$existeCuartel->id;
+                    }else{
+                        $cuart = new Cuartel;
+                        $cuart->codigo = trim($request->cuartel);
+                        $cuart->nombre = trim($request->cuartel);
+                        $cuart->estado = 'ACTIVO';
+                        $cuart->user_id = auth()->id();
+                        $cuart->save();
+                        $cuart->id;
+                        $id_cuartel=$cuart->id;
+                    }
+
+                //buscar bloque si existe recuperar id sino insertar
+                $existeBloque= Bloque::where('codigo', $request->bloque)->first();
+                        if($existeBloque!=null){
+                            $id_bloque=$existeBloque->id;
+                        }else{
+                            $bloq = new Cuartel;
+                            $bloq->cuartel_id = $cuart->id;
+                            $bloq->codigo = trim($request->bloque);
+                            $bloq->nombre = trim($request->bloque);
+                            $bloq->estado = 'ACTIVO';
+                            $bloq->user_id = auth()->id();
+                            $bloq->save();
+                            $bloq->id;
+                            $id_bloque=$bloq->id;
+
+                        }
+
+                         // insertar nicho
+                        $nicho = new Nicho;
+                        $nicho->cuartel_id = $id_cuartel;
+                        $nicho->bloque_id = $id_bloque;
+                        $nicho->nro_nicho = $request->nro_nicho;
+                        $nicho->fila = $request->fila;
+                        $nicho->codigo = $request->cuartel.".".$request->bloque.".".$request->nro_nicho.".".$request->fila; 
+                        $nicho->codigo_anterior = $request->anterior;  
+                        $nicho->save();
+                        $nicho->id;
+                        $id_nicho= $nicho->id;
+            }
+            // end nicho
+
+            // step1: register difunto --- si id_difunto id_responsable es null insertar difunto insertar responsable
                     if($request->id_difunto==""){
                         //insertar difunto
 
