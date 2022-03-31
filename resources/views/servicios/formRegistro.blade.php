@@ -309,6 +309,7 @@
                 </div>
 
                 <div class="card-body">
+                   
                          <div class="row">
                                 <div class="col-sm-6">  
                                     <label>Tipo Servicio</label>   
@@ -319,34 +320,41 @@
                                         </select> 
                                 </div>
 
-                                <div class="col-sm-6 col-md-6 col-xl-6" id="service" style="display:none">
+                                <div class="col-sm-6" id="service" style="display:none">
                                     <label>Servicio</label> 
-                                        <select name="servicio" id="servicio" class="form-control "></select>
+                                        <select  id="servicio-hijos" class="form-control select2-multiple select2-hidden-accessible" style="width: 100%"></select>
                                 </div>
                           </div>
+
+
+                          <div class="card-header">
+                            <h4>DETALLE DE SERVICIOS SOLICITADOS</h4>
+                        </div>
 
     <div class="row" style="padding-top: 15px;">
             <div class="col-sm-6">
             <div class="card">
             <div class="card-body" id="servicios-data">
-                
+                Ningun dato seleccionado.
             </div>
             </div>
             </div>
             <div class="col-sm-6">
             <div class="card">
-            <div class="card-body">
-                This is some text within a card body.
+            <div class="card-body" id="servicios-hijos">
+                Ningun dato seleccionado.
             </div>
             </div>
             </div>
     </div>
 
-
-
-
-
-
+    <div id="cal_price" style="text-align: center">
+        <div class="card">
+            <div class="card-body" id="servicios-hijos-price" style="text-align: center">
+                <h1>0Bs</h1>
+            </div>
+            </div>
+    </div>
                            
                           <div class="row pb-2">
                                 <div class="col-sm-4 col-md-4 col-xl-4" id="cantidad_box" style="display:none">
@@ -398,9 +406,7 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
-                        <h4>DETALLE DE SERVICIOS SOLICITADOS</h4>
-                    </div>
+                    
     
                     <div class="card-body" style="display:none" id="grilla" >
                              <div class="row pb-2">
@@ -448,26 +454,51 @@
            }
         });
 
+
         //select event forech
         $('#tipo_servicio_value').on('select2:select', function (e) {
+            var data_request = $(this).val();
+        
+            $('#service').show(1000);
             $parrafos = '';
+            $('#servicios-data').empty();
             $.each($(this).select2('data'), function( index, value ) {
-                $parrafos = '<p>' +$parrafos + (index + 1) + ' - '+ value.text+'</p>';
-                });
+                $parrafos = '<p id="'+value.id+'">' + $parrafos + (index + 1) + '.- '+ value.text+'</p>';
                 $('#servicios-data').html($parrafos);
+                });
+
+            //carga select servicios hijos
+            $.ajax({
+                        type: 'POST',
+                        headers: {
+                            'Content-Type':'application/json'
+                        },
+                        url: '{{ env("URL_MULTISERVICE") }}/api/v1/cementerio/generate-all-servicios-nicho',
+                        async: false,
+                        data: JSON.stringify({
+                            'data':  data_request
+                        }),
+                        success: function(data_response) {
+                            console.log(data_response.response);
+                           $('#servicio-hijos').empty();
+                           $.each(data_response.response, function( index, value ) {
+                            $('#servicio-hijos').append('<option value="'+value.num_sec+'">'+value.cuenta + ' - ' +value.descripcion + ' - '+ value.monto1 + ' Bs.</option>')
+                            });
+                        }
+                    });
         });
 
         //unselect event forech  //hacer que busque y limpie el html
-        $('#tipo_servicio_value').on('select2:unselecting', function (e) {
-            $('#servicios-data').empty();
+        $('#tipo_servicio_value').on('select2:unselect', function (e) {
+            if($(this).select2('data').length == 0){
+                $('#servicio-hijos').empty();
+            }
             $parrafos = '';
-            $.each($(this).select2('data'), function( index, value ) {
-                $parrafos = '<p>' +$parrafos + (index + 1) + ' - '+ value.text+'</p>';
-                console.log(value);
-            });
-            $('#servicios-data').html($parrafos);
-            //console.log($(this).val());
-            //console.log($(this).find(':selected').text());
+            $('#servicios-data').empty();
+            $.each($("#tipo_servicio_value").select2("data"), function( index, value ) {
+                $parrafos = '<p id="'+value.id+'">' + $parrafos + (index + 1) + '.- '+ value.text+'</p>';
+                $('#servicios-data').html($parrafos);
+                });
         });
 
         setTimeout( function() { 
@@ -475,9 +506,49 @@
          }, 100);
 
         
+        //--------------------------------------------------------------------
+
+        $('#servicio-hijos').select2({
+            multiple: true,
+            width: 'resolve',
+            placeholder:'Servicios Cementerio',
+            theme: "classic",
+            allowClear: true,
+            "language": {
+            "noResults": function(e){
+                return "Nada Encontrado";
+            }
+           }
+        });
         
 
+          //select event forech services hijo
+          $('#servicio-hijos').on('select2:select', function (e) {
+              $("#tipo_servicio_value").prop("disabled", true);
+            var data_request = $(this).val();
+                    $parrafos = '';
+                    $('#servicios-hijos').empty();
+                    $.each($(this).select2('data'), function( index, value ) {
+                        $parrafos = '<p id="'+value.id+'">' + $parrafos + (index + 1) + ' - '+ value.text+'</p>';
+                        $('#servicios-hijos').html($parrafos);
+                        });
+          });
   
+
+          //unselect event forech services hijos
+        $('#servicio-hijos').on('select2:unselect', function (e) {
+            console.log($("#servicio-hijos").select2("data").length);
+            if ($("#servicio-hijos").select2("data").length == 0){
+                $("#tipo_servicio_value").prop("disabled", false);
+            }
+            $parrafos = '';
+            $('#servicios-hijos').empty();
+            $.each($("#servicio-hijos").select2("data"), function( index, value ) {
+                $parrafos = '<p id="'+value.id+'">' + $parrafos + (index + 1) + ' - '+ value.text+'</p>';
+                $('#servicios-hijos').html($parrafos);
+                });
+
+        });
 
     });
     </script>
