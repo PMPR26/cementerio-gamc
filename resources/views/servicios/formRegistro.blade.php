@@ -16,7 +16,14 @@
         <div class="modal-body">
             <div class="col-sm-12 col-md-12 col-xl-12 card m-auto">
 
+                <div class="card" >
+                    <div class="card-header">
+                        <h2 id="infoPlazo"></h2>
+                    </div>
+                </div>
+
                 {{-- datos busqueda --}}
+
                 <div class="card">
                     <div class="card-header">
                         <h4>BUSCAR REGISTRO</h4>
@@ -299,6 +306,8 @@
                             Monto: <span id="monto_pagos" class="clear"></span>
                          </div>
 
+                         
+
                     </div>
                 </div>
             </div>
@@ -367,6 +376,8 @@
                             <input type="hidden" name="origen" id="origen">
                             <input type="hidden" name="pag_con" id="pag_con">
                             <input type="hidden" name="pag_con_ant" id="pag_con_ant">
+                            <input type="hidden" name="tiempo" id="tiempo">
+
                                     
                 </div>
 
@@ -713,8 +724,14 @@ $(document).on('click', '#buscar', function() {
                                                     
                                                         $('#pag_con').val(data.response.datos_difuntos[0].pag_con);
                                                         $('#causa').val(data.response.datos_difuntos[0].causa_fall);
-                                                        $('#nombres_dif').val(data.response.datos_difuntos[0].difunto);                                                     
-                                                        $('#tiemp').html(data.response.datos_difuntos[0].tiempo);
+                                                        $('#nombres_dif').val(data.response.datos_difuntos[0].difunto);   
+                                                        if(data.response.datos_difuntos[0].tiempo  !=""){
+                                                            $('#tiemp').html(data.response.datos_difuntos[0].tiempo);
+                                                            $('#tiempo').html(data.response.datos_difuntos[0].tiempo);
+
+                                                            calcularPlazo(data.response.datos_difuntos[0].tiempo , año);                                                               
+                                                        }                                                
+                                                      
                                                         $('#pago_cont').html(data.response.datos_difuntos[0].pag_con);
                                                         $('#pago_cont_ant').html(data.response.datos_difuntos[0].pag_con);
 
@@ -885,6 +902,8 @@ $(document).on('click', '#buscar', function() {
                             'domicilio':  $('#domicilio').val(),
                             'genero_resp':  $('#genero_resp').val(),
                             'pag_con':  $('#pag_con').val(),
+                            'tiempo':  $('#tiempo').val(),
+
                             'tserv':  tserv,
                             'cuenta':  cuenta,
                             'hserv':  hserv,  
@@ -934,5 +953,49 @@ $(document).on('click', '#buscar', function() {
                     })
         });
 
+
+        // calcularPlazo nicho
+        function calcularPlazo(tiempo, año){
+           let plazo=0;
+           plazo=parseInt(año)+parseInt(tiempo); 
+           var fecha = new Date();
+	       var year = fecha.getFullYear();  
+           
+            if(plazo<year){
+                $('#infoPlazo').html('El plazo del enterratorio venció el año '+ plazo +'');
+                         swal.fire({
+                                    title: "Notificación!",
+                                    text: "!El plazo del enterratorio venció el año "+ plazo +"!",
+                                    type: "warning",
+                                  //  timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: true
+                                    });
+                                    setTimeout(function() { 
+                                       return false;
+                                    }, 2000);
+            }
+            else{
+                nplazo=parseInt(year)-parseInt(plazo);
+                $('#infoPlazo').html('Quedan '+ nplazo +' años de plazo del enterratorio');
+                swal.fire({
+                                    title: "Notificación!",
+                                    text: "!El plazo del enterratorio ha vence el "+ plazo + "!",
+                                    type: "warning",
+                                  //  timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: true
+                                    });
+                                    setTimeout(function() { 
+                                       return false;
+                                    }, 2000);
+            }
+        }
+
+
+        function calcularMontoExtencion(tiempo,año,precio){
+
+
+        }
     </script>
 @stop
