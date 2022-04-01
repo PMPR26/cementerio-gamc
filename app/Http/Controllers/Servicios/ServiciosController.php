@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Servicios;
 use App\Models\Servicios;
 use App\Models\Nicho;
 use App\Models\Cuartel;
+use App\Models\Bloque;
+
 use App\Models\Difunto;
 use App\Models\Responsable;
 
@@ -200,7 +202,7 @@ class ServiciosController extends Controller{
     
     public function createNewServicios(Request $request){
         
-
+        //dd($request);
         if($request->isJson()){            
             $this->validate($request, [
                 'nro_nicho'=> 'required',
@@ -223,25 +225,18 @@ class ServiciosController extends Controller{
                 'domicilio'=> 'required',
                 'genero_resp'=> 'required',
 //pedir a gus gus
-                'tserv'=> 'required',
-                'cuenta'=> 'required',
-                'hserv'=> 'required',
-                'servicio'=> 'required',                            
-                'cantidad'=> 'required',
-                'unidad'=> 'required',
-                'precio'=> 'required',
-                'montoserv'=> 'required',
-
-
-                'cantidad' => 'required',
-                'unidad' => 'required',
-                'precio_unitario' => 'required',
-                'monto' => 'required',
-                'ultimopago'=>'required',
-                'hserv'=>'required',
-                'servicio'=>'required',
-                'cuenta'=>'required',
-                'tipo_serv'=>'required'
+                'tipo_serv'=> 'required|array',
+                'serv'=> 'required|array',
+                'servname'=> 'required|array',  
+                // 'cantidad' => 'required',
+                // 'unidad' => 'required',
+                // 'precio_unitario' => 'required',
+                // 'monto' => 'required',
+                // 'ultimopago'=>'required',
+                // 'hserv'=>'required',
+                // 'servicio'=>'required',
+                // 'cuenta'=>'required',
+                // 'tipo_serv'=>'required'
 
                 
             ], [
@@ -288,7 +283,6 @@ class ServiciosController extends Controller{
                             $bloq->save();
                             $bloq->id;
                             $id_bloque=$bloq->id;
-
                         }
 
                          // insertar nicho
@@ -299,34 +293,39 @@ class ServiciosController extends Controller{
                         $nicho->fila = $request->fila;
                         $nicho->codigo = $request->cuartel.".".$request->bloque.".".$request->nro_nicho.".".$request->fila; 
                         $nicho->codigo_anterior = $request->anterior;  
+                        $nicho->user_id = auth()->id();
                         $nicho->save();
                         $nicho->id;
                         $id_nicho= $nicho->id;
             }
             // end nicho
 
-            // step1: register difunto --- si id_difunto id_responsable es null insertar difunto insertar responsable
+                 // step2: register difunto --- si id_difunto id_difunto es null insertar difunto insertar responsable
                     if($request->id_difunto==""){
                         //insertar difunto
-
+                         $difuntoid=$this->insertDifunto($request);
                     }else{
                         $difuntoid=$request->difunto_id;
+                        $this->updateDifunto($request, $difuntoid);
+                        
                     }
-
-                    if($request->id_responsable==""){
-                        //insertar difunto
-
-                    }else{
-                        $responsableid=$request->responsable_id;
-                    }
-
-
-                //
+                    // end difunto
+                    // step4: register responsable -- si el responsable     
+                            if($request->id_responsable==""){
+                                //insertar difunto
+                                 $resp=$this->insertReponsables($request);
+                            }else{
+                                $resp=$request->difunto_id;
+                                $this->updateResponsable($request, $difuntoid);
+                                
+                            }
+                    //end responsable
               
+                    //insert services 
               
 
-                if (!empty($request->cuenta) && is_array($request->cuenta)) {
-                    $count = count($request->cuenta);
+                if (!empty($request->servicios) && is_array($request->servicios)) {
+                    $count = count($request->servicios);
                     $codigo_nicho=$request->cuartel.".".$request->bloque.".".$request->nicho.".".$request->fila;
 
                     
@@ -352,6 +351,90 @@ class ServiciosController extends Controller{
               
             }
     }
+
+    public function insertDifunto($request){
+
+        $dif = new Difunto;
+        $dif->ci = $request->search_dif;
+        $dif->nombres = $request->nombres_dif;
+        $dif->primer_apellido = $request->paterno_dif;
+        $dif->segundo_apellido = $request->materno_dif;
+        $dif->fecha_nacimiento = $request->fechanac_dif;
+        $dif->fecha_defuncion = $request->fechadef_dif;
+        $dif->certificado_defuncion = $request->sereci;
+        $dif->causa = $request->causa;
+        $dif->tipo = $request->tipo; 
+        $dif->genero = $request->genero;  
+        $dif->certificado_file=$request->adjunto;               
+        $dif->tiempo = $request->tiempo;  
+        $dif->estado = 'ACTIVO';  
+        $dif->user_id = auth()->id();
+        $dif->save();
+        $dif->id;
+        return  $dif->id;
+
+    }
+
+    public function updateDifunto($request, $difuntoid){
+        $difunto= Difunto::where('id', $difuntoid)->first();
+        $difunto->ci = $request->search_dif;
+        $difunto->nombres = $request->nombres_dif;
+        $difunto->primer_apellido = $request->paterno_dif;
+        $difunto->segundo_apellido = $request->materno_dif;
+        $difunto->fecha_nacimiento = $request->fechanac_dif;
+        $difunto->fecha_defuncion = $request->fechadef_dif;
+        $difunto->certificado_defuncion = $request->sereci;
+        $difunto->causa = $request->causa;
+        $difunto->tipo = $request->tipo; 
+        $difunto->genero = $request->genero;  
+        $difunto->certificado_file=$request->adjunto;       
+        $difunto->tiempo = $request->tiempo;  
+        $difunto->estado = 'ACTIVO';  
+        $difunto->user_id = auth()->id();
+        $difunto->save();
+        return $difunto->id;
+    }
+
+    public function insertResponsable($request){
+
+        $responsable = new Responsable;
+        $responsable->ci = $request->search_resp;
+        $responsable->nombres = $request->nombres_resp;
+        $responsable->primer_apellido = $request->paterno_resp;
+        $responsable->segundo_apellido = $request->materno_resp;
+        $responsable->fecha_nacimiento = $request->fechanac_resp;
+        $responsable->genero = $request->genero_resp;  
+        $responsable->telefono = $request->telefono;  
+        $responsable->celular = $request->celular;  
+        $responsable->ecivil = $request->ecivil;  
+        $responsable->domicilio = $request->domicilio;  
+        $responsable->estado = 'ACTIVO';  
+        $responsable->user_id = auth()->id();
+        $responsable->save();
+        $responsable->id;
+        return  $responsable->id;
+
+    }
+
+    public function updateResponsable($request, $difuntoid){
+        $responsable= Responsable::where('id', $difuntoid)->first();
+        $responsable->ci = $request->search_resp;
+        $responsable->nombres = $request->nombres_resp;
+        $responsable->primer_apellido = $request->paterno_resp;
+        $responsable->segundo_apellido = $request->materno_resp;
+        $responsable->fecha_nacimiento = $request->fechanac_resp;
+        $responsable->genero = $request->genero_resp;  
+        $responsable->telefono = $request->telefono;  
+        $responsable->celular = $request->celular;  
+        $responsable->ecivil = $request->ecivil;  
+        $responsable->domicilio = $request->domicilio;  
+        $responsable->estado = 'ACTIVO';  
+        $responsable->user_id = auth()->id();
+        $responsable->save();
+        return $responsable->id;
+    }
+
+    
 
 
 
