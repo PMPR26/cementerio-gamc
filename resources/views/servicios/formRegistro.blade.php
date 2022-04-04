@@ -71,7 +71,7 @@
                             <div class="input-group input-group-lg">                                 
                             <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="search" class="form-control clear" id="search_dif" autocomplete="off">
                             <div class="input-group-append">
-                                <button type="submit" class="btn btn-lg btn-default">
+                                <button type="submit" class="btn btn-lg btn-default" id="buscarDifunto">
                                     <i class="fa fa-search"></i>
                                 </button>
 
@@ -154,14 +154,14 @@
                         </select> 
                     </div>
 
-                    <div class="col-sm-12 col-md-3 col-xl-3">
+                    {{-- <div class="col-sm-12 col-md-3 col-xl-3">
                         <label>Tipo Difunto</label>                                   
                         <select name="genero" id="genero_dif" class="form-control">
                             <option value="">Seleccionar</option>
                             <option value="ADULTO">ADULTO</option>
                             <option value="PARVULO">PARVULO</option>                            
                         </select> 
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -177,7 +177,7 @@
                                 <div class="input-group input-group-lg">                                 
                                 <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="search" class="form-control" id="search_resp" autocomplete="off">
                                 <div class="input-group-append">
-                                    <button type="submit" class="btn btn-lg btn-default">
+                                    <button type="submit" id="buscarResp" class="btn btn-lg btn-default">
                                         <i class="fa fa-search"></i>
                                     </button>
 
@@ -187,17 +187,17 @@
 
                         <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>Nombres</label>                                   
-                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="nombres" autocomplete="off">
+                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="nombres_resp" autocomplete="off">
                         </div>
                     
                         <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>Primer apellido</label>                                   
-                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="paterno" autocomplete="off">
+                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="paterno_resp" autocomplete="off">
                         </div>
 
                         <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>Segundo apellido</label>                                   
-                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="materno" autocomplete="off">
+                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="materno_resp" autocomplete="off">
                         </div>
                     
                     </div>
@@ -212,17 +212,17 @@
                     
                         <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>Teléfono</label>                                   
-                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="telefono" autocomplete="off">
+                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="telefono_resp" autocomplete="off">
                         </div>
 
                         <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>Celular</label>                                   
-                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="cellular" autocomplete="off">
+                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="cellular_resp" autocomplete="off">
                         </div>
 
                         <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>Estado civil</label>   
-                            <select name="ecivil" id="ecivil" class="form-control">
+                            <select name="ecivil" id="ecivil_resp" class="form-control">
                                 <option value="">Seleccionar</option>
                                 <option value="CASADO">CASADO</option>
                                 <option value="CONCUBINADO">CONCUBINADO</option>
@@ -233,21 +233,23 @@
                         </div>
                     </div>
 
+                    <input type="hidden" name="difunto_search" id="difunto_search">
+                    <input type="hidden" name="responable_search" id="responsable_search">
 
                     <div class="row">
                         <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>E-mail</label>                                   
-                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="email" autocomplete="off">
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="email_resp" autocomplete="off">
                         </div>
                         
 
                         <div class="col-sm-12 col-md-7 col-xl-7">
                             <label>Domicilio</label>                                   
-                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="domicilio" autocomplete="off">
+                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="domicilio_resp" autocomplete="off">
                         </div>
                         <div class="col-sm-12 col-md-2 col-xl-2">
                             <label>Genero</label>                                   
-                            <select name="genero" id="genero_dif" class="form-control">
+                            <select name="genero" id="genero_resp" class="form-control">
                                 <option value="">Seleccionar</option>
                                 <option value="FEMENINO">FEMENINO</option>
                                 <option value="MASCULINO">MASCULINO</option>                            
@@ -583,22 +585,68 @@ var fila =   '<div class="card fila p-4">'+
 
 //  buscar 
 
-$(document).on('click', '#buscar', function() {
+$(document).on('click', '#buscarDifunto', function() {
    
-            $('.clear').val("");
-            $('#pag_con').val();
-            $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
-            $('#form').hide();
-            var bloque = $('#bloque').val();
-            var nicho = $('#nro_nicho').val();
-            var fila = $('#fila').val();
-            if (bloque && nicho && fila) {              
-              dats=  buscar_datos(bloque, nicho, fila);
-                console.log(dats);            
-         
+              var ci = $('#search_dif').val();
+                console.log("sadasdadasd");
+              //var ci ="52525252";
+              if(ci.length<1)
+              {
+                  //alert("el campo Ci esta vacio");
+                  Swal.fire(
+                                                'Busqueda finalizada!',
+                                                'El campo C.I. esta vacio .',
+                                                'warning'
+                                                )
+              }
+              else{
+              var type ="deceased"; 
+              dats=  buscar_ci(ci,type);
+                console.log("entra a estooooooooooooo"+dats);            
             }
+            
           
         });
+$(document).on('click', '#buscarResp', function() {
+   
+              var ci = $('#search_resp').val();
+              console.log("esta es el carnet del gus:"+ ci);  
+              //var ci ="52525252";
+              if(ci.length<1)
+              {
+                  //alert("el campo Ci esta vacio");
+                  Swal.fire(
+                                                'Busqueda finalizada!',
+                                                'El campo C.I. esta vacio .',
+                                                'warning'
+                                                )
+                  
+              }
+              else{
+              var type ="responsable"; 
+              dats=  buscar_ci_resp(ci,type);
+                console.log("entra a esteeeeeeeeeeeeeeeee"+dats);            
+            }
+            
+          
+        });
+
+        $(document).on('click', '#buscar', function() {
+   
+   $('.clear').val("");
+   $('#pag_con').val();
+   $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
+   $('#form').hide();
+   var bloque = $('#bloque').val();
+   var nicho = $('#nro_nicho').val();
+   var fila = $('#fila').val();
+   if (bloque && nicho && fila) {              
+     dats=  buscar_datos(bloque, nicho, fila);
+       console.log(dats);            
+
+   }
+ 
+});
 
 
         function buscar_datos(bloque, nicho, fila) {
@@ -706,6 +754,122 @@ $(document).on('click', '#buscar', function() {
                
             }
           
+        });
+        // return datos;
+    }
+
+    function buscar_ci(ci,type) {
+        var datos = "";
+      
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Content-Type': 'application/json'
+            },
+            url: "{{ route('search.difunto.responsable') }}",
+            method: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+                "ci": ci,
+                "type": type
+            }),
+            success: function(data) {
+                if(data.response==null)
+                {
+                    //alert("El CI ingresado no esta registrado");
+                    Swal.fire(
+                            'Busqueda finalizada!',
+                            'El C.I. ingresado no esta registrado .',
+                            'warning'
+                            )
+                }
+                else{
+                console.log("si entro a esta madre"+ data.response.fecha_nacimiento);    
+                $('#nombres_dif').val(data.response.nombres);
+                $('#paterno_dif').val(data.response.primer_apellido);
+                $('#materno_dif').val(data.response.segundo_apellido);
+                $('#fechanac_dif').val(data.response.fecha_nacimiento);
+                $('#fechadef_dif').val(data.response.fecha_defuncion);
+                $('#tipo_dif').val(data.response.tipo);
+                $('#sereci').val(data.response.certificado_defuncion);
+                $('#causa').val(data.response.causa);
+                $('#genero_dif').val(data.response.genero);
+                $("#difunto_search").val(data.response.id);
+                //$('#ecivil_dif').val(data.response.estado_civil);
+                }
+
+            },
+            error : function(xhr, status) {
+                //alert('Disculpe, existió un problema');
+                Swal.fire(
+                    'Busqueda finalizada!',
+                    'El registro no ha  sido encontrado o no existe .',
+                    'error'
+                )
+            },
+
+            // complete : function(xhr, status) {
+            //     alert('Petición realizada');
+            // }
+          
+        });
+        // return datos;
+    }
+
+    function buscar_ci_resp(ci,type) {
+        var datos = "";
+      
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Content-Type': 'application/json'
+            },
+            url: "{{ route('search.difunto.responsable') }}",
+            method: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+                "ci": ci,
+                "type": type
+            }),
+            success: function(data) {
+                if(data.response==null)
+                {
+                    Swal.fire(
+                            'Busqueda finalizada!',
+                            'El C.I. ingresado no esta registrado .',
+                            'warning'
+                            )
+                }
+                else{
+                console.log("si entro a esta chingada"+ data.response.fecha_nacimiento);    
+                $('#nombres_resp').val(data.response.nombres);
+                $('#paterno_resp').val(data.response.primer_apellido);
+                $('#materno_resp').val(data.response.segundo_apellido);
+                $('#fechanac_resp').val(data.response.fecha_nacimiento);
+                $('#telefono_resp').val(data.response.telefono);
+                $('#cellular_resp').val(data.response.celular);
+                $('#ecivil_resp').val(data.response.estado_civil);
+                $('#email_resp').val(data.response.email);
+                $('#domicilio_resp').val(data.response.domicilio);
+                $('#genero_resp').val(data.response.genero);
+                $("#responsable_search").val(data.response.id);
+                //$('#ecivil_dif').val(data.response.estado_civil);
+                }
+
+            },
+            error : function(xhr, status) {
+               // alert('Disculpe, existió un problema');
+                Swal.fire(
+                            'Busqueda finalizada!',
+                            'El registro no ha  sido encontrado o no existe .',
+                            'error'
+                            )
+            },
+
+            // complete : function(xhr, status) {
+            //     alert('Petición realizada');
+            // }
+            
         });
         // return datos;
     }

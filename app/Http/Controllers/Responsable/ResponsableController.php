@@ -33,7 +33,7 @@ class ResponsableController extends Controller
                 'nombres' => 'required',
                 'primer_apellido' => 'required',
                 'fecha_nacimiento' => 'required',
-                'telefono' => 'max:10|numeric',
+                //'telefono' => 'digit:10|numeric',
                 'domicilio' => 'required',
                 'genero' => 'required'
             ], [
