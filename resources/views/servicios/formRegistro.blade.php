@@ -547,8 +547,8 @@ $(document).ready(function ()
                                     }
                                     // //alert(value.cuenta);
                                     if(value.cuenta == '15224361'){
-                                    //     alert(value.descripcion);
-                                        mostrarConservacion(value.monto1) ;
+                                        $('#precio_b').val(value.monto1);
+                                         $('#monto_b').val(value.monto1);
                                     }
 
                             });
@@ -563,7 +563,7 @@ $(document).ready(function ()
             }
             $parrafos = '';
             $('#servicios-data').empty();
-            $.each($("#tipo_servicio_value").select2("data"), function( index, value ) {
+            $.each($("#tipo_servicio_value").select2("data"), function( index, value ) { alert("sss");
                 $parrafos = '<p id="'+value.id+'">' + $parrafos + (index + 1) + '.- '+ value.text+'</p>';
                 $('#servicios-data').html($parrafos);
                 });
@@ -615,18 +615,57 @@ $(document).ready(function ()
   
 
             //unselect event forech services hijos
-            $('#servicio-hijos').on('select2:unselect', function (e) {
-                console.log($("#servicio-hijos").select2("data").length);
+            $('#servicio-hijos').on('select2:unselect', function (e) { 
+
+                //console.log($('#servicio-hijos').val());
+               
                 if ($("#servicio-hijos").select2("data").length == 0){
                     $("#tipo_servicio_value").prop("disabled", false);
                 }
                 $parrafos = '';
                 $('#servicios-hijos').empty();
                 $.each($("#servicio-hijos").select2("data"), function( index, value ) {
-                   
-                    $parrafos = '<p id="'+value.id+'">' + $parrafos + (index + 1) + ' - '+ value.text+'</p>';
+
+                    $parrafos = '<p id="'+value.id+'">' + $parrafos + (index + 1) + ' - '+ value.text+'</p>';                   
                     $('#servicios-hijos').html($parrafos);
+                   
+                    // if(value.id == 642 ){
+                    //         $('#ren').show();
+                    //      }
+                         
+                         
+                    //      if(value.id != 642){
+                    //         $('#ren').hide();
+                    //      }else if(value.id == 525){
+                    //         $('#conservacion').show();
+                    //      }else if(value.id != 525){
+                    //         $('#conservacion').hide();
+                    //      }
+                         
+                      
                     });
+
+
+                          if(e.params.data.id == 642){
+                             $('#ren').hide();
+                          }
+
+                          if(e.params.data.id == 525){
+                             $('#conservacion').hide();
+                          }
+                          
+                    console.log(e.params.data.id);
+
+                      if($('#servicio-hijos').val().length == 0){
+                                $('#ren').hide();
+                                $('#conservacion').hide();
+                            }
+
+                  
+                     
+
+
+                   
 
             });
 
@@ -986,7 +1025,6 @@ $(document).ready(function ()
                         Renov();
                         calcRenov();
                     })
-
                 
 
                 function calcRenov()
