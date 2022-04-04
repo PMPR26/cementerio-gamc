@@ -426,11 +426,11 @@
                 </div>                                    
 
 
-                <input type="text" name="origen" id="origen">
-                <input type="text" name="pag_con" id="pag_con" value="aaa">
-                <input type="text" name="pag_con_ant" id="pag_con_ant">
-                <input type="text" name="tiempo" id="tiempo">
-                <input type="text" name="vencido" id="vencido" value="asdada">
+                <input type="hidden" name="origen" id="origen">
+                <input type="hidden" name="pag_con" id="pag_con" value="aaa">
+                <input type="hidden" name="pag_con_ant" id="pag_con_ant">
+                <input type="hidden" name="tiempo" id="tiempo">
+                <input type="hidden" name="vencido" id="vencido" value="asdada">
 
                 <div class="card">                  
     
