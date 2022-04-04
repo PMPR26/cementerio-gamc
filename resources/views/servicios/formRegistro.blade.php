@@ -61,6 +61,15 @@
                                 <label>Codigo antiguo</label>                                   
                                 <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="anterior" autocomplete="off">
                             </div> 
+
+                            <div class="col-sm-12 col-md-3 col-xl-3">
+                                <label>Tipo nicho</label>                                   
+                                <select name="tipo_nicho" id="tipo_nicho" class="form-control">
+                                    <option value="">Seleccionar</option>
+                                    <option value="TEMPORAL">TEMPORAL</option>
+                                    <option value="PERPETUO">PERPETUO</option>                            
+                                </select> 
+                            </div>
                             
                         </div>
                       
@@ -330,7 +339,10 @@
                                     <label>Tipo Servicio</label>   
                                          <select  id="tipo_servicio_value"  class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
                                             @foreach ($tipo_service as $value)
-                                            <option value="{{ $value['cuenta'] }}">{{ $value['descripcion'] }}</option>
+                                                @if($value['cuenta'] =='15224150' ||   $value['cuenta'] =='15224350' )
+                                                @else
+                                                   <option value="{{ $value['cuenta'] }}">{{ $value['descripcion'] }}</option>
+                                                @endif
                                             @endforeach
                                         </select> 
                                 </div>
@@ -346,88 +358,107 @@
                             <h4>DETALLE DE SERVICIOS SOLICITADOS</h4>
                         </div>
 
-    <div class="row" style="padding-top: 15px;">
-            <div class="col-sm-6">
-            <div class="card">
-            <div class="card-body" id="servicios-data">
-                Ningun dato seleccionado.
-            </div>
-            </div>
-            </div>
-            <div class="col-sm-6">
-            <div class="card">
-            <div class="card-body" id="servicios-hijos">
-                Ningun dato seleccionado.
-            </div>
-            </div>
-            </div>
-    </div>
+                    <div class="row" style="padding-top: 15px;">
+                            <div class="col-sm-6">
+                            <div class="card">
+                            <div class="card-body" id="servicios-data">
+                                Ningun dato seleccionado.
+                            </div>
+                            </div>
+                            </div>
+                            <div class="col-sm-6">
+                            <div class="card">
+                            <div class="card-body" id="servicios-hijos">
+                                Ningun dato seleccionado.
+                            </div>
+                            </div>
+                            </div>
+                    </div>
 
-    <div id="cal_price" style="text-align: center">
-        <div class="card">
-            <div class="card-body" id="servicios-hijos-price" style="text-align: center">
-                <h1>0Bs</h1>
-            </div>
-            </div>
-    </div>
-                           
-                          <div class="row pb-2">
-                                <div class="col-sm-4 col-md-4 col-xl-4" id="cantidad_box" style="display:none">
-                                    <label>Cantidad</label> 
-                                         <input style="text-transform:uppercase;" value="1" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="cantidad_b" autocomplete="off">                  
-                                </div>
-
-                                <div class="col-sm-4 col-md-4 col-xl-4" id="unidad_box" style="display:none">
-                                    <label>Unidad</label> 
-                                    <input style="text-transform:uppercase;" value="Glb" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="unidad_b" autocomplete="off">                  
-                                </div>
-
-                               {{-- <div class="col-sm-4 col-md-4 col-xl-4" id="tiempo_box" style="display:none">
-                                    <label>Tiempo</label> 
-                                    <input style="text-transform:uppercase;"  onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="tiempo_b" autocomplete="off" readonly>                  
-                              </div> --}}
-
-                              <div class="col-sm-4 col-md-4 col-xl-4" id="precio_box" style="display:none">
-                                <label>Precio Unitario</label> 
-                                <input style="text-transform:uppercase;"  onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="precio_b" autocomplete="off" readonly>                  
-                             </div>
-
-                             <div class="col-sm-4 col-md-4 col-xl-4" id="monto_box" style="display:none">
-                                <label>Precio</label> 
-                                <input style="text-transform:uppercase;"  onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="monto_b" autocomplete="off" readonly>                  
-                             </div>
-                                                        
-                             {{-- <div class="col-sm-4 col-md-4 col-xl-4" id="info_box" style="display:none">
-                                <label>Ultima Gestion Pagada</label> 
-                                <div id="info_pago" style="display:none"></div>
-                            </div> --}}
-                                                       
-                            <div class="col-sm-4 col-md-4 col-xl-4" id="gestion_box" style="display:none">
-                                <label>Gestion</label> 
-                                <input style="text-transform:uppercase;"  onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="gestion_b" autocomplete="off" >                  
-                             </div>
-
-                            <div class="col-sm-2 col-md-2 col-xl-2">
-                                <button type="button" class="btn btn-info" id="btn_add" style="display: none">
-                                    <i class="fa fa-search"></i>AGREGAR
-                                </button>
+                    <div id="cal_price" style="text-align: center">
+                        <div class="card">
+                            <div class="card-body" id="servicios-hijos-price" style="text-align: center">
+                                <h1>0Bs</h1>
                             </div>
                         </div>
-            
-                            <input type="hidden" name="origen" id="origen">
-                            <input type="hidden" name="pag_con" id="pag_con">
-                            <input type="hidden" name="pag_con_ant" id="pag_con_ant">
-                            <input type="hidden" name="tiempo" id="tiempo">
+                    </div>
 
-                                    
+   
+                           
+                         
                 </div>
 
-                <div class="card">
+
+                <div class="row pb-2" id="conservacion" style="display:none">
+                    <div class="col-sm-4 col-md-4 col-xl-4" id="gestion_box">
+                        <label>Gestiones</label> 
+                        <input style="text-transform:uppercase;"  onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clean" id="gestion_b" autocomplete="off" >                  
+                     </div>
+
+                        <div class="col-sm-4 col-md-4 col-xl-4" id="cantidad_box" >
+                            <label>Cantidad de gestiones</label> 
+                                 <input style="text-transform:uppercase;" value="1" onkeyup="calcMant()" type="text" class="form-control clean" id="cantidad_b" autocomplete="off">                  
+                        </div>
+                         
+
+                        <div class="col-sm-4 col-md-4 col-xl-4" id="unidad_box">
+                            <label>Unidad</label> 
+                            <input style="text-transform:uppercase;" value="Glb" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clean" id="unidad_b" autocomplete="off">                  
+                        </div>
                     
+
+                      <div class="col-sm-4 col-md-4 col-xl-4" id="precio_box">
+                        <label>Precio Unitario</label> 
+                        <input style="text-transform:uppercase;"   onkeyup="calcMant()"  type="text" class="form-control clean" id="precio_b" autocomplete="off" readonly>                  
+                     </div>
+
+                     <div class="col-sm-4 col-md-4 col-xl-4" id="monto_box">
+                        <label>Subtotal</label> 
+                        <input style="text-transform:uppercase;"   type="text" class="form-control clean" id="monto_b" autocomplete="off" readonly>                  
+                     </div>
+                                          
+                  
+                    {{-- <div class="col-sm-2 col-md-2 col-xl-2">
+                        <button type="button" class="btn btn-info" id="btn_add" style="display: none">
+                            <i class="fa fa-search"></i>AGREGAR
+                        </button>
+                    </div> --}}
+                </div>                                    
+
+
+                <input type="text" name="origen" id="origen">
+                <input type="text" name="pag_con" id="pag_con" value="aaa">
+                <input type="text" name="pag_con_ant" id="pag_con_ant">
+                <input type="text" name="tiempo" id="tiempo">
+                <input type="text" name="vencido" id="vencido" value="asdada">
+
+                <div class="card">                  
     
-                    <div class="card-body" style="display:none" id="grilla" >
+                    <div class="card-body" style="display:none" id="ren" >
                              <div class="row pb-2">
-                                    <div class="col-sm-12 col-md-12 col-xl-12">  
+                                <input type="number" name="precio_renov" id="precio_renov" class="form-control precio_renov" value="0">
+
+
+                                    <div class="col-sm-12 col-md-3 col-xl-3">  
+                                        <label for=""># de renovacion anterior</label>
+                                        <input type="number" name="renov_ant" id="renov_ant" class="form-control renov"  onkeyup="calcRenov()">
+                                    </div>
+
+                                    <div class="col-sm-12 col-md-3 col-xl-3">  
+                                        <label for="">Ultimo cobro renovacion</label>
+                                        <input type="number" name="precio_renov_ant" id="precio_renov_ant" class="form-control precio_renov_ant" value="0">
+
+                                    </div>
+
+                                    <div class="col-sm-12 col-md-3 col-xl-3">  
+                                        <label for=""># de renovacion </label>
+
+                                        <input type="number" name="renov" id="renov" class="form-control renov" onblur="calcRenov()">
+                                    </div>
+                                    <div class="col-sm-12 col-md-3 col-xl-3">  
+                                        <label for="">Monto renovacion </label>
+
+                                        <input type="number" name="monto_renov" id="monto_renov" class="form-control monto_renov">
                                     </div>
                              </div>
                     </div>
@@ -470,8 +501,10 @@ $(document).ready(function ()
            }
         });
 
+      
 
-        //select event forech
+
+        //select event foreach
         $('#tipo_servicio_value').on('select2:select', function (e) {
             var data_request = $(this).val();
         
@@ -479,6 +512,7 @@ $(document).ready(function ()
             $parrafos = '';
             $('#servicios-data').empty();
             $.each($(this).select2('data'), function( index, value ) {
+                
                 $parrafos = '<p id="'+value.id+'">' + $parrafos + (index + 1) + '.- '+ value.text+'</p>';
                 $('#servicios-data').html($parrafos);
                 });
@@ -498,7 +532,25 @@ $(document).ready(function ()
                             console.log(data_response.response);
                            $('#servicio-hijos').empty();
                            $.each(data_response.response, function( index, value ) {
-                            $('#servicio-hijos').append('<option value="'+value.num_sec+'">'+value.cuenta + ' - ' +value.descripcion + ' - '+ value.monto1 + ' Bs.</option>')
+                            //alert(value.num_sec)
+                                if(value.num_sec == '630' || value.num_sec == '628' || value.num_sec=='526' || value.num_sec=='1995'){}
+                                else{
+                                   // alert('sadasd');
+                                    $('#servicio-hijos').append('<option value="'+value.num_sec+'">'+value.cuenta + ' - ' +value.descripcion + ' - '+ value.monto1 + ' Bs.</option>')
+                                }
+                          
+
+                                    if(value.cuenta == '15224301'){
+                                        $('#precio_renov').val(value.monto1);
+                                       // $('#ren').show(value.monto1);
+                                      //  Renov();
+                                    }
+                                    // //alert(value.cuenta);
+                                    if(value.cuenta == '15224361'){
+                                    //     alert(value.descripcion);
+                                        mostrarConservacion(value.monto1) ;
+                                    }
+
                             });
                         }
                     });
@@ -545,7 +597,17 @@ $(document).ready(function ()
                 var data_request = $(this).val();
                         $parrafos = '';
                         $('#servicios-hijos').empty();
-                        $.each($(this).select2('data'), function( index, value ) {
+                        $.each($(this).select2('data'), function( index, value ) {  
+                            if(value.id == '642')
+                            {
+                                // $('#precio_renov').val(value.monto1);
+                                 $('#ren').show();
+                                Renov();
+                            }
+                            if(value.id=='525'){
+                                //alert(value.descripcion);
+                                 mostrarConservacion(value.monto1) ;
+                            }
                             $parrafos = '<p id="'+value.id+'">' + $parrafos + (index + 1) + ' - '+ value.text+'</p>';
                             $('#servicios-hijos').html($parrafos);
                             });
@@ -561,6 +623,7 @@ $(document).ready(function ()
                 $parrafos = '';
                 $('#servicios-hijos').empty();
                 $.each($("#servicio-hijos").select2("data"), function( index, value ) {
+                   
                     $parrafos = '<p id="'+value.id+'">' + $parrafos + (index + 1) + ' - '+ value.text+'</p>';
                     $('#servicios-hijos').html($parrafos);
                     });
@@ -576,6 +639,7 @@ $(document).ready(function ()
         
             $('.clear').val("");
             $('.clear').html("");
+            $('.clean').val("");
 
             $('#pag_con').val();
             $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
@@ -655,9 +719,9 @@ $(document).ready(function ()
                                                                     $('#nombres_dif').val(data.response.datos_difuntos[0].difunto);   
                                                                     if(data.response.datos_difuntos[0].tiempo  !=""){
                                                                         $('#tiemp').html(data.response.datos_difuntos[0].tiempo);
-                                                                        $('#tiempo').html(data.response.datos_difuntos[0].tiempo);
+                                                                        $('#tiempo').val(data.response.datos_difuntos[0].tiempo);
 
-                                                                        calcularPlazo(data.response.datos_difuntos[0].tiempo , año);                                                               
+                                                                        calcularPlazo(data.response.datos_difuntos[0].tiempo , año,nuevaf );                                                               
                                                                     }                                                
                                                                 
                                                                     $('#pago_cont').html(data.response.datos_difuntos[0].pag_con);
@@ -729,7 +793,7 @@ $(document).ready(function ()
 
 
         // calcularPlazo nicho
-        function calcularPlazo(tiempo, año){
+        function calcularPlazo(tiempo, año, fecha){
            let plazo=0;
            plazo=parseInt(año)+parseInt(tiempo); 
            var fecha = new Date();
@@ -737,9 +801,27 @@ $(document).ready(function ()
            
             if(plazo<year){
                 $('#infoPlazo').html('El plazo del enterratorio venció el año '+ plazo +'');
+                var venc= parseInt(year)-parseInt(año)-tiempo;
+                $('#vencido').val(venc);
                          swal.fire({
                                     title: "Notificación!",
                                     text: "!El plazo del enterratorio venció el año "+ plazo +"!",
+                                    type: "warning",
+                                  //  timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: true
+                                    });
+                                    setTimeout(function() { 
+                                       return false;
+                                    }, 2000);
+            }
+            else if(plazo==year){
+                $('#infoPlazo').html('El plazo del enterratorio vence este el '+ fecha +'');
+                var venc= parseInt(year)-parseInt(año)-tiempo;
+                $('#vencido').val(venc);
+                         swal.fire({
+                                    title: "Notificación!",
+                                    text: "!El plazo del enterratorio vence este el " + fecha +"!",
                                     type: "warning",
                                   //  timer: 2000,
                                     showCancelButton: false,
@@ -754,7 +836,7 @@ $(document).ready(function ()
                 $('#infoPlazo').html('Quedan '+ nplazo +' años de plazo del enterratorio');
                 swal.fire({
                                     title: "Notificación!",
-                                    text: "!El plazo del enterratorio ha vence el "+ plazo + "!",
+                                    text: "!El plazo del enterratorio vence el "+ plazo + "!",
                                     type: "warning",
                                   //  timer: 2000,
                                     showCancelButton: false,
@@ -772,42 +854,7 @@ $(document).ready(function ()
         $('#btn_guardar_servicio').on('click', function(){
             alert("asas");
            
-           let tserv=[];
-           let servicio=[];
-           let hserv=[];
-           let cantidad=[];
-           let unidad=[];
-           let precio=[];
-           let montoserv=[];
-           let cuenta=[];
-       
-           $(".cuenta").each(function(){
-                       cuenta.push($(this).val());
-           });
-       
-           $(".tserv").each(function(){
-               tserv.push($(this).val());
-           });
-       
-           $(".servicio").each(function(){
-               servicio.push($(this).val());
-           });
-       
-           $(".cantidad").each(function(){
-               cantidad.push($(this).val());
-           });
-       
-           $(".unidad").each(function(){
-               unidad.push($(this).val());
-           });
-       
-           $(".precio").each(function(){
-               precio.push($(this).val());
-           });
-       
-           $(".montoserv").each(function(){
-               montoserv.push($(this).val());
-           });
+           
        
                return  $.ajax({
                                type: 'POST',
@@ -849,15 +896,7 @@ $(document).ready(function ()
                                    'genero_resp':  $('#genero_resp').val(),
                                    'pag_con':  $('#pag_con').val(),
                                    'tiempo':  $('#tiempo').val(),
-       
-                                //    'tserv':  tserv,
-                                //    'cuenta':  cuenta,
-                                //    'hserv':  hserv,  
-                                //    'servicio':  servicio,                              
-                                //    'cantidad':  cantidad,
-                                //    'unidad':  unidad,
-                                //    'precio': precio,
-                                //    'montoserv':  montoserv,
+                                    
                                    'tipo_serv':$('#tipo_servicio_value').val(),
                                    'serv':$('#servicio-hijos').val(),
                                    'servname':$('#servicio-hijos option:selected').text(),
@@ -904,5 +943,94 @@ $(document).ready(function ()
                            })
                });
       
+              
+
+                        
+                function mostrarConservacion(precio_mant){
+                  
+                        $('#precio_b').val(precio_mant);
+                        $('#monto_b').val(precio_mant);
+                        $('#conservacion').show();
+                }
+                                    
+                       
+
+                function calcMant(){
+                    var g=$('#pag_con_ant').val();
+                   var cant= $('#cantidad_b').val();
+                   var precio= $('#precio_b').val();
+                    if(cant!='' && precio !=''){
+                        var total=cant*precio;  
+                       var ultima_gestion=parseInt(g)+ parseInt(cant);
+                        $('#pag_con').val(ultima_gestion);
+                        $('#monto_b').val(total);
+                    }
+                }
+
+                function Renov(){
+                    var renov_ant=$('#renov_ant').val();                  
+                        if(renov_ant==''){
+                           renov_ant=0;
+                           var precio=$('#precio_renov').val();
+                           $('#precio_renov_ant').val(precio);
+                           anios_ren=$('#vencido').val();
+                           if(anios_ren==0){  $('#renov').val(1);}
+                           else{ $('#renov').val(anios_ren);}
+                          
+                        }
+                        calcRenov();
+                      
+                    }
+
+                    $(document).on('blur', '#renov_ant', function(){
+                        Renov();
+                        calcRenov();
+                    })
+
+                
+
+                function calcRenov()
+                {
+                    $('#monto_renov').val(0);   
+                    var precio_ant=$('#precio_renov_ant').val();
+                    var porcentaje=0;
+                    var cuota_ant=0;
+                    var cuota1=$('#precio_renov').val();
+                    var acum=0;
+
+                    for(var i=0 ; i<$('#renov').val(); i++){
+                       alert(i);
+                        if(i==0){
+                            cuota=cuota1;  
+                            cuota_ant=cuota1;                      
+                        }
+                        else{
+                            porcentaje=cuota_ant*(20/100);
+                            cuota=  parseFloat(cuota_ant) + parseFloat(porcentaje); alert(cuota);
+                            cuota_ant=cuota;
+                        }
+                       
+                        acum=parseFloat(acum)+ parseFloat(cuota); alert(acum);
+                        
+                    }
+                  
+                    $('#monto_renov').val(acum);                       
+                 
+               }
+                           
+        function filterOption(){
+            if($('#vencido').val() <= 0){
+                   alert($('#vencido').val());
+                $("#tipo_servicio_value option[value='15224300']").remove();
+            
+                 }     
+        }
+             
+        $(document).on('keypress' , '#tipo_servicio_value', function(){
+            $("#tipo_servicio_value option[value='15224300']").remove();
+            filterOption();
+        })
+         
     </script>
+
     @stop

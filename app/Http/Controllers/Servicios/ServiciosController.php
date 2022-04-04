@@ -202,7 +202,7 @@ class ServiciosController extends Controller{
     
     public function createNewServicios(Request $request){
         
-        //dd($request);
+        dd($request);
         if($request->isJson()){            
             $this->validate($request, [
                 'nro_nicho'=> 'required',
@@ -435,7 +435,30 @@ class ServiciosController extends Controller{
     }
 
     
+    public function cargarMantenimiento(){
+        
+        $headers = [
+            'Content-Type' => 'application/json'
+        ];
+        try {
+            $client = new Client();
+            $response = $client->get('https://multiservdev.cochabamba.bo/api/v1/cementerio/get-services', [
+                'json' => [],
+                'headers' => $headers
+            ]);
+        } catch (RequestException $re) {
+            // return response([
+            //     'status' => false,
+            //     'message' => 'Error al procesar su solicitud'
+            // ], 200);
+        }
+        dd($response);
+        $tipo_service = json_decode((string) $response->getBody(), true);
 
+       
+
+        return view('servicios/formRegistro', ['tipo_service' => $tipo_service['response']]);
+    }
 
 
 }
