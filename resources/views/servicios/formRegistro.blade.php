@@ -18,7 +18,7 @@
 
                 <div class="card" >
                     <div class="card-header">
-                        <h2 id="infoPlazo"></h2>
+                        <h2 id="infoPlazo" class="clean"></h2>
                     </div>
                 </div>
 
@@ -49,32 +49,35 @@
                                     <span id="sp"></span> <i class="fa fa-search"></i>BUSCAR
                                 </button>
                             </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-12 col-md-3 col-xl-3">
-                                 <label>Cuartel</label>                                   
-                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="cuartel" autocomplete="off">
-                            </div> 
-                            
-                            <div class="col-sm-12 col-md-3 col-xl-3">
-                                <label>Codigo antiguo</label>                                   
-                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="anterior" autocomplete="off">
-                            </div> 
-
-                            <div class="col-sm-12 col-md-3 col-xl-3">
-                                <label>Tipo nicho</label>                                   
-                                <select name="tipo_nicho" id="tipo_nicho" class="form-control">
-                                    <option value="">Seleccionar</option>
-                                    <option value="TEMPORAL">TEMPORAL</option>
-                                    <option value="PERPETUO">PERPETUO</option>                            
-                                </select> 
-                            </div>
-                            
-                        </div>
-                      
+                        </div>         
                     </div>
                 </div>
+
+    <div id="contenido" style="display: none">
+            <div class="card">
+                <div class="row">
+                    <div class="col-sm-12 col-md-3 col-xl-3">
+                         <label>Cuartel</label>                                   
+                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="cuartel" autocomplete="off">
+                    </div> 
+                    
+                    <div class="col-sm-12 col-md-3 col-xl-3">
+                        <label>Codigo antiguo</label>                                   
+                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="anterior" autocomplete="off">
+                    </div> 
+
+                    <div class="col-sm-12 col-md-3 col-xl-3">
+                        <label>Tipo nicho</label>                                   
+                        <select name="tipo_nicho" id="tipo_nicho" class="form-control">
+                            <option value="">Seleccionar</option>
+                            <option value="TEMPORAL">TEMPORAL</option>
+                            <option value="PERPETUO">PERPETUO</option>                            
+                        </select> 
+                    </div>
+                    
+                </div>
+            </div>
+     
 
             {{-- datos difunto --}}
             <div class="card">                
@@ -469,7 +472,7 @@
                         <button type="button" id="btn_guardar_servicio" class="btn btn-success">Registrar servicio</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                     </div> 
-            
+    </div> 
 @stop
 @section('css')
 <style>
@@ -486,7 +489,8 @@
 @section('js')
     <script> 
 $(document).ready(function () 
-{        
+{   
+
         //code selected select2 services
         $('#tipo_servicio_value').select2({
             multiple: true,
@@ -653,7 +657,7 @@ $(document).ready(function ()
                           if(e.params.data.id == 525){
                              $('#conservacion').hide();
                           }
-                          
+
                     console.log(e.params.data.id);
 
                       if($('#servicio-hijos').val().length == 0){
@@ -679,6 +683,8 @@ $(document).ready(function ()
             $('.clear').val("");
             $('.clear').html("");
             $('.clean').val("");
+            $('.clean').html("");
+
 
             $('#pag_con').val();
             $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
@@ -698,7 +704,7 @@ $(document).ready(function ()
         
         function buscar_datos(bloque, nicho, fila) {
              var datos = "";
-
+                $('#contenido').show();
                     $.ajax({
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -759,9 +765,13 @@ $(document).ready(function ()
                                                                     if(data.response.datos_difuntos[0].tiempo  !=""){
                                                                         $('#tiemp').html(data.response.datos_difuntos[0].tiempo);
                                                                         $('#tiempo').val(data.response.datos_difuntos[0].tiempo);
+                                                                        $('#tipo_nicho').val('TEMPORAL');
+                                                                        calcularPlazo(data.response.datos_difuntos[0].tiempo , año,nuevaf );  
+                                                                                                                                  
+                                                                    } else{
+                                                                        $('#tipo_nicho').val('PERPETUO');
 
-                                                                        calcularPlazo(data.response.datos_difuntos[0].tiempo , año,nuevaf );                                                               
-                                                                    }                                                
+                                                                    }                                                         
                                                                 
                                                                     $('#pago_cont').html(data.response.datos_difuntos[0].pag_con);
                                                                     $('#pago_cont_ant').html(data.response.datos_difuntos[0].pag_con);
@@ -832,7 +842,7 @@ $(document).ready(function ()
 
 
         // calcularPlazo nicho
-        function calcularPlazo(tiempo, año, fecha){
+        function calcularPlazo(tiempo, año, nfecha){
            let plazo=0;
            plazo=parseInt(año)+parseInt(tiempo); 
            var fecha = new Date();
@@ -855,12 +865,12 @@ $(document).ready(function ()
                                     }, 2000);
             }
             else if(plazo==year){
-                $('#infoPlazo').html('El plazo del enterratorio vence este el '+ fecha +'');
-                var venc= parseInt(year)-parseInt(año)-tiempo;
+                $('#infoPlazo').html('El plazo del enterratorio vence el '+ nfecha +'');
+               // var venc= parseInt(fecha)-parseInt(nfecha);
                 $('#vencido').val(venc);
                          swal.fire({
                                     title: "Notificación!",
-                                    text: "!El plazo del enterratorio vence este el " + fecha +"!",
+                                    text: "!El plazo del enterratorio vence el " + nfecha +"!",
                                     type: "warning",
                                   //  timer: 2000,
                                     showCancelButton: false,
