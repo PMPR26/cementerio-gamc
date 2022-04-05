@@ -91,11 +91,11 @@
                             <div class="input-group input-group-lg">                                 
                             <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="search" class="form-control clear" id="search_dif" autocomplete="off">
                             <div class="input-group-append">
-                                <button type="submit" class="btn btn-lg btn-default">
+                                <button type="submit" class="btn btn-lg btn-default"  id="buscarDifunto">
                                     <i class="fa fa-search"></i>
                                 </button>
-                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="hidden" class="form-control clear" id="id_difunto" autocomplete="off">
-
+                            
+                            <input type="hidden" name="difunto_search" id="difunto_search">
                             </div>
                     </div>
                 </div> 
@@ -144,7 +144,7 @@
 
 
                 <div class="row">
-                    <div class="col-sm-12 col-md-3 col-xl-3">
+                    {{-- <div class="col-sm-12 col-md-3 col-xl-3">
                         <label>Estado civil</label>   
                         <select name="ecivil" id="ecivil_dif" class="form-control">
                             <option value="">Seleccionar</option>
@@ -154,7 +154,7 @@
                             <option value="SOLTERO">SOLTERO</option>
                             <option value="VIUDO">VIUDO</option>
                         </select> 
-                    </div>
+                    </div> --}}
                     
 
                     <div class="col-sm-12 col-md-3 col-xl-3">
@@ -202,11 +202,11 @@
                                 <div class="input-group input-group-lg">                                 
                                 <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="search" class="form-control" id="search_resp" autocomplete="off">
                                 <div class="input-group-append">
-                                    <button type="submit" class="btn btn-lg btn-default">
+                                    <button type="submit" class="btn btn-lg btn-default"  id="buscarResp">
                                         <i class="fa fa-search"></i>
                                     </button>
-                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="hidden" class="form-control clear" id="id_responsable" autocomplete="off">
-
+                          
+                            <input type="text" name="responable_search" id="responsable_search">
                                 </div>
                         </div>
                     </div> 
@@ -849,12 +849,15 @@ $(document).ready(function ()
 	       var year = fecha.getFullYear();  
            
             if(plazo<year){
-                $('#infoPlazo').html('El plazo del enterratorio venció el año '+ plazo +'');
-                var venc= parseInt(year)-parseInt(año)-tiempo;
-                $('#vencido').val(venc);
+                var vencimiento= fechaVencimiento(nfecha, tiempo);
+
+                $('#infoPlazo').html('El plazo del enterratorio venció el año '+ plazo +' en fecha '+ vencimiento+'');
+              
+                $('#vencido').val(vencimiento);
+
                          swal.fire({
                                     title: "Notificación!",
-                                    text: "!El plazo del enterratorio venció el año "+ plazo +"!",
+                                    text: "!El plazo del enterratorio venció el año "+ plazo +" en fecha "+vencimiento +"!",
                                     type: "warning",
                                   //  timer: 2000,
                                     showCancelButton: false,
@@ -865,12 +868,14 @@ $(document).ready(function ()
                                     }, 2000);
             }
             else if(plazo==year){
-                $('#infoPlazo').html('El plazo del enterratorio vence el '+ nfecha +'');
+                var vencimiento= fechaVencimiento(nfecha, tiempo);
+                $('#infoPlazo').html('El plazo del enterratorio vence el '+ vencimiento +'');
                // var venc= parseInt(fecha)-parseInt(nfecha);
-                $('#vencido').val(venc);
+            
+                $('#vencido').val(vencimiento);
                          swal.fire({
                                     title: "Notificación!",
-                                    text: "!El plazo del enterratorio vence el " + nfecha +"!",
+                                    text: "!El plazo del enterratorio vence el " + vencimiento +"!",
                                     type: "warning",
                                   //  timer: 2000,
                                     showCancelButton: false,
@@ -881,11 +886,14 @@ $(document).ready(function ()
                                     }, 2000);
             }
             else{
+                var vencimiento= fechaVencimiento(nfecha, tiempo);
+                $('#vencido').val(vencimiento);
+
                 nplazo=parseInt(year)-parseInt(plazo);
-                $('#infoPlazo').html('Quedan '+ nplazo +' años de plazo del enterratorio');
+                $('#infoPlazo').html('Quedan '+ nplazo +' años de plazo del enterratorio, la fecha de vencimiento es '+ vencimiento + '');
                 swal.fire({
                                     title: "Notificación!",
-                                    text: "!El plazo del enterratorio vence el "+ plazo + "!",
+                                    text: "!El plazo del enterratorio vence el "+ plazo + " la fecha de vencimiento es " + vencimiento + "!",
                                     type: "warning",
                                   //  timer: 2000,
                                     showCancelButton: false,
@@ -1079,6 +1087,183 @@ $(document).ready(function ()
             filterOption();
         })
          
+
+
+        // aporte george
+
+
+$(document).on('click', '#buscarDifunto', function() {
+   
+   var ci = $('#search_dif').val();
+     console.log("sadasdadasd");
+   //var ci ="52525252";
+   if(ci.length<1)
+   {
+       //alert("el campo Ci esta vacio");
+       Swal.fire(
+                                     'Busqueda finalizada!',
+                                     'El campo C.I. esta vacio .',
+                                     'warning'
+                                     )
+   }
+   else{
+   var type ="deceased"; 
+   dats=  buscar_ci(ci,type);
+     console.log("entra a estooooooooooooo"+dats);            
+ }
+ 
+
+});
+$(document).on('click', '#buscarResp', function() {
+
+   var ci = $('#search_resp').val();
+   console.log("esta es el carnet del gus:"+ ci);  
+   //var ci ="52525252";
+   if(ci.length<1)
+   {
+       //alert("el campo Ci esta vacio");
+       Swal.fire(
+                                     'Busqueda finalizada!',
+                                     'El campo C.I. esta vacio .',
+                                     'warning'
+                                     )
+       
+   }
+   else{
+   var type ="responsable"; 
+   dats=  buscar_ci_resp(ci,type);
+     console.log("entra a esteeeeeeeeeeeeeeeee"+dats);            
+ }
+ 
+
+});
+function buscar_ci(ci,type) {
+        var datos = "";
+      
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Content-Type': 'application/json'
+            },
+            url: "{{ route('search.difunto.responsable') }}",
+            method: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+                "ci": ci,
+                "type": type
+            }),
+            success: function(data) {
+                if(data.response==null)
+                {
+                    //alert("El CI ingresado no esta registrado");
+                    Swal.fire(
+                            'Busqueda finalizada!',
+                            'El C.I. ingresado no esta registrado .',
+                            'warning'
+                            )
+                }
+                else{
+                console.log("si entro a esta madre"+ data.response.fecha_nacimiento);    
+                $('#nombres_dif').val(data.response.nombres);
+                $('#paterno_dif').val(data.response.primer_apellido);
+                $('#materno_dif').val(data.response.segundo_apellido);
+                $('#fechanac_dif').val(data.response.fecha_nacimiento);
+                $('#fechadef_dif').val(data.response.fecha_defuncion);
+                $('#tipo_dif').val(data.response.tipo);
+                $('#sereci').val(data.response.certificado_defuncion);
+                $('#causa').val(data.response.causa);
+                $('#genero_dif').val(data.response.genero);
+                $("#difunto_search").val(data.response.id);
+                //$('#ecivil_dif').val(data.response.estado_civil);
+                }
+
+            },
+            error : function(xhr, status) {
+                //alert('Disculpe, existió un problema');
+                Swal.fire(
+                    'Busqueda finalizada!',
+                    'El registro no ha  sido encontrado o no existe .',
+                    'error'
+                )
+            },
+
+            // complete : function(xhr, status) {
+            //     alert('Petición realizada');
+            // }
+          
+        });
+        // return datos;
+    }
+
+    function buscar_ci_resp(ci,type) {
+        var datos = "";
+      
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Content-Type': 'application/json'
+            },
+            url: "{{ route('search.difunto.responsable') }}",
+            method: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+                "ci": ci,
+                "type": type
+            }),
+            success: function(data) {
+                if(data.response==null)
+                {
+                    Swal.fire(
+                            'Busqueda finalizada!',
+                            'El C.I. ingresado no esta registrado .',
+                            'warning'
+                            )
+                }
+                else{
+                console.log("si entro a esta chingada"+ data.response.fecha_nacimiento);    
+                $('#nombres_resp').val(data.response.nombres);
+                $('#paterno_resp').val(data.response.primer_apellido);
+                $('#materno_resp').val(data.response.segundo_apellido);
+                $('#fechanac_resp').val(data.response.fecha_nacimiento);
+                $('#telefono_resp').val(data.response.telefono);
+                $('#cellular_resp').val(data.response.celular);
+                $('#ecivil_resp').val(data.response.estado_civil);
+                $('#email_resp').val(data.response.email);
+                $('#domicilio_resp').val(data.response.domicilio);
+                $('#genero_resp').val(data.response.genero);
+                $("#responsable_search").val(data.response.id);
+                //$('#ecivil_dif').val(data.response.estado_civil);
+                }
+
+            },
+            error : function(xhr, status) {
+               // alert('Disculpe, existió un problema');
+                Swal.fire(
+                            'Busqueda finalizada!',
+                            'El registro no ha  sido encontrado o no existe .',
+                            'error'
+                            )
+            },
+
+            // complete : function(xhr, status) {
+            //     alert('Petición realizada');
+            // }
+            
+        });
+        // return datos;
+    }
+
+
+    // calcular fecha vencimiento
+    function fechaVencimiento(fecha, tiempo){
+                var d = new Date(fecha);
+                var strDate = parseInt(d.getFullYear())+parseInt(tiempo);
+                var strDate =strDate + "/" + (d.getMonth()+1) + "/" + (d.getDate()+1);               
+                
+                 console.log(strDate);
+                 return strDate;
+                }
+
     </script>
 
     @stop
