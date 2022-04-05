@@ -909,10 +909,7 @@ $(document).ready(function ()
 
 
         $('#btn_guardar_servicio').on('click', function(){
-            alert("asas");
-           
-           
-       
+                
                return  $.ajax({
                                type: 'POST',
                                headers: {
