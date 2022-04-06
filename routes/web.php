@@ -148,7 +148,7 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
       Route::group(['prefix' => 'mantenimiento', 'middleware' => 'auth'], function () {
     Route::get('/mantenimiento', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'index'])->name('mant'); 
      Route::get('/form-pay', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'createPay'])->name('pay');
-    // Route::post('/buscar_nicho', [App\Http\Controllers\Servicios\MantenimientoController::class, 'buscar_nicho'])->name('buscar.nicho');
+    Route::post('/save-pay', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'savePay'])->name('save.pay');
     // Route::get('/cargarForm', [App\Http\Controllers\Servicios\MantenimientoController::class,'cargarForm'])->name('load.form'); 
     // Route::get('/cargarMantenimiento', [App\Http\Controllers\Servicios\MantenimientoController::class,'cargarMantenimiento'])->name('load.mant'); 
 
