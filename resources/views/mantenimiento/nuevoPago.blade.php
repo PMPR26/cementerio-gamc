@@ -146,7 +146,7 @@
                                 <div class="row">
                                 
                                     <div class="col-sm-12 col-md-3 col-xl-3">
-                                        <label>Tipo Difunto/label>                                   
+                                        <label>Tipo Difunto</label>                                   
                                         <select name="tipo_dif" id="tipo_dif" class="form-control">
                                             <option value="">Seleccionar</option>
                                             <option value="ADULTO">ADULTO</option>
@@ -194,7 +194,7 @@
                                                     <i class="fa fa-search"></i>
                                                 </button>
                                     
-                                        <input type="text" name="responable_search" id="responsable_search">
+                                        <input type="hidden" name="responable_search" id="responsable_search">
                                             </div>
                                     </div>
                                 </div> 
@@ -272,11 +272,10 @@
                         </div>
 
                         <input type="hidden" name="origen" id="origen">
-                        <input type="text" name="pag_con" id="pag_con" value="aaa">
-                        <input type="text" name="pag_con_ant" id="pag_con_ant">
+                        <input type="hidden" name="pag_con" id="pag_con" value="">
                         <input type="hidden" name="tiempo" id="tiempo">                     
-                        <input type="text" name="precio_sinot" id="precio_sinot" value="{{ $precio }}">
-                        <input type="text" name="desc_sinot" id="desc_sinot" value="{{ $descrip }}">
+                        <input type="hidden" name="precio_sinot" id="precio_sinot" value="{{ $precio }}">
+                        <input type="hidden" name="desc_sinot" id="desc_sinot" value="{{ $descrip }}">
                         <input type="text" name="txttotal" id="txttotal" value="">
 
                         
@@ -331,9 +330,13 @@
                         </div>
 
                         <div class="card">
-                            <div class="card-header">
+                            <div class="col-sm-12 col-md-12 col-xl-12 card-header">
                                 <h4>GESTIONES ADEUDADAS</h4>
-                                <p>Pago por {{ $descrip }}</p>
+                                <div class="row">
+                                <div class="col-sm-12 col-md- col-xl-6">Pago por {{ $descrip }}</div>
+                                <div class="col-sm-6 col-md-3 col-xl-3"> Regularizar Transaccion <input type="checkbox" name="reg" id="reg" value="reg" style="width: 30px; height:30px" ></div>
+                                <div class="col-sm-6 col-md-3 col-xl-3" id="fur_reg" style="display: none"> FUR <input type="text" name="nrofur" id="nrofur" value="" ></div>
+                                </div>
                             </div>            
 
                             <div class="card-body" id="conservacion" style="display:none">  
@@ -384,14 +387,23 @@ $(document).ready(function ()
          // calcular total a pagar
         
        $(document).on('click', '.sel', function(){
-            var sum=4;
+            var sum=0;
+            var prev=0;
+            var next=0;
+            var current=0;
             let cpago=[];
             $('.sel' ).each(function( index ) {
-                if($(this).is(':checked')){
-                    alert($(this).is(':checked'));
-                  //  console.log( index + ": " + $( this ).val() );
+                current=$(this).val();
+                next=parseInt(current)+parseInt(1);
+                if($(this).is(':checked')){                 
                     sum=parseFloat(sum)+ parseFloat($('#precio_sinot').val());
+                   
                     cpago.push($(this).val());
+                    
+                    $('#'+next+'').prop('disabled', false);
+                  }
+                  else{
+                    revisarCheck($(this).val());
                   }
                
             });
@@ -401,7 +413,26 @@ $(document).ready(function ()
 
           });
 
+          // validacion seccion consecutiva
+          function revisarCheck(valor){
+              var next=parseInt(valor)+ parseInt(1);
+            if($('#'+next+'').is(':checked')){  
+                swal.fire({
+                                    title: "Precaucion!",
+                                    text: "!El pago de las cuotas debe ser consecutivo!",
+                                    type: "warning",
+                                  //  timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: true
+                                    });
+                                    setTimeout(function() { 
+                                       return false;
+                                    }, 2000);
+                        $('#'+valor+'').prop('checked', true);
 
+            }
+             
+          }
 
 
     
@@ -476,6 +507,10 @@ $(document).ready(function ()
                                                     $('#sp').empty();
                                                     $('#form').show();
                                                     $('#origen').val('tabla_antigua');
+                                                  
+                                                    if(data.codigo_ni){ $('#anterior').val(data.codigo_ni);}
+                                                   
+                                                    
                                                     if(data.response.datos_difuntos!="")
                                                         {
                                                              // datos difunto                         
@@ -670,13 +705,25 @@ $(document).ready(function ()
            
                 for(var i=1; i<gest; i++){
                     var c=parseInt(anio)+ parseInt(i);
-                     html='<tr>'+
+                    
+                    if(i==1){
+                        html='<tr>'+
                              '<td scope="row" >'+ i + '</td> '+
                              '<td>'+ c + '</td> '+  
                              '<td>'+ $('#precio_sinot').val() + '</td> '+  
-                             '<td> <input type="checkbox" style="width:30px;  height: 30px;" name="sel[]" class="sel" value="'+c+'"></td> '+  
+                             '<td> <input type="checkbox" style="width:30px;  height: 30px;" name="sel[]" class="sel"  id="'+c+'" value="'+c+'"></td> '+  
                              '</tr>';  
                              $('#row-cuota').append(html);
+                    }else{
+                        html='<tr>'+
+                             '<td scope="row" >'+ i + '</td> '+
+                             '<td>'+ c + '</td> '+  
+                             '<td>'+ $('#precio_sinot').val() + '</td> '+  
+                             '<td> <input type="checkbox" style="width:30px;  height: 30px;" name="sel[]" class="sel" value="'+c+'"  id="'+c+'" disabled></td> '+  
+                             '</tr>';  
+                             $('#row-cuota').append(html);
+                    }
+                    
                 }
         }
 
@@ -687,7 +734,7 @@ $(document).ready(function ()
             let cpago=[];
             $('.sel' ).each(function( index ) {
                 if($(this).is(':checked')){
-                    alert($(this).is(':checked'));                  
+                  //  alert($(this).is(':checked'));                  
                     cpago.push($(this).val());
                   }
             });
@@ -705,10 +752,10 @@ $(document).ready(function ()
                                    'bloque':  $('#bloque').val(),
                                    'cuartel':  $('#cuartel').val(),
                                    'fila':  $('#fila').val(),
-                                   'tipo':  $('#tipo').val(),
-                                  
+                                   'tipo_nicho':  $('#tipo_nicho').val(),                                  
                                    'anterior':  $('#anterior').val(),
                                    'ci_dif':  $('#search_dif').val(),
+                                   'id_difunto':  $('#difunto_search').val(),
                                    'nombres_dif':  $('#nombres_dif').val(),
                                    'paterno_dif':  $('#paterno_dif').val(),
                                    'materno_dif':  $('#materno_dif').val(),
@@ -719,6 +766,7 @@ $(document).ready(function ()
                                    'tipo_dif':  $('#tipo_dif').val(),
                                    'genero_dif':  $('#genero_dif').val(),
                                    'ci_resp':  $('#search_resp').val(),
+                                   'id_responsable':  $('#responsable_search').val(),
                                    'nombres_resp':  $('#nombres_resp').val(),
                                    'paterno_resp':  $('#paterno_resp').val(),
                                    'materno_resp':  $('#materno_resp').val(),
@@ -731,11 +779,14 @@ $(document).ready(function ()
                                    'genero_resp':  $('#genero_resp').val(),
                                    'pag_con':  $('#pag_con').val(),
                                    'tiempo':  $('#tiempo').val(),
-                                   'precio_sinot':$('#precio_sinot').val(),                                    
+                                   'precio_sinot':$('#precio_sinot').val(),    
+                                   'txttotal':$('#txttotal').val(),    
+
                                    'sel':cpago,
                                    
                                }),
                                success: function(data_response) {
+                                   console.log(data_response);
                                    swal.fire({
                                    title: "Guardado!",
                                    text: "!Registro realizado con éxito!",
@@ -785,7 +836,7 @@ $(document).ready(function ()
                 $(document).on('click', '#buscarDifunto', function() {
                 
                         var ci = $('#search_dif').val();
-                            console.log("sadasdadasd");
+                           
                         //var ci ="52525252";
                         if(ci.length<1)
                         {
@@ -946,6 +997,17 @@ $(document).ready(function ()
                  return strDate;
                 }
 
+            });
+
+
+            $(document).on('click', '#reg', function(){
+                if($(this).is(':checked')){
+                    $('#fur_reg').show();
+                }
+                else{
+                    $('#nrofur').val("");
+                    $('#fur_reg').hide();
+                }
             });
            </script>
 

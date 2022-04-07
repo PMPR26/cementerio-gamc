@@ -57,7 +57,7 @@
                  
                    
                     <td>
-                        <button type="button" class="btn btn-info" value="{{ $mant->id }}" id="btn-editar" title="ver detalle"><i class="fas fa-eye"></i></button>
+                        <button type="button" class="btn btn-info" value="{{ $mant->fur }}" id="btn-editar" title="re imprimir preliquiquidacion"><i class="fas fa-print"></i></button>
                         {{-- @if($mant->estado =='ACTIVO')
                         <button type="button" class="btn btn-warning" value="{{ $mant->id }}" id="btn-desactivar"><i class="fas fa-thumbs-down"></i></button>
                         @else
