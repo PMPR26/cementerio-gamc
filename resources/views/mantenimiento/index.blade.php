@@ -32,7 +32,7 @@
        
             <tr role="row">
                 <th scope="col">#</th>  
-                <th scope="col">FECHA</th>
+                <th scope="col">PAGO</th>
                 <th scope="col">FUR</th>
                 <th scope="col">RESPONSABLE</th>
                 <th scope="col">GESTION/ES</th>   
@@ -48,7 +48,7 @@
                 <tr>
                     <td scope="row">{{ $count++ }}</td>
                    
-                    <td>{{ $mant->fecha_pago }}</td>  
+                    <td>{{  ($mant->pagado == true)? "Pagado" : "Pendiente" }}</td>  
                     <td>{{ $mant->fur }}</td>   
                     <td>{{ $mant->nombre }} </td>
                     <td>{{ $mant->gestion }}</td>                          
@@ -57,7 +57,14 @@
                  
                    
                     <td>
-                        <button type="button" class="btn btn-info" value="{{ $mant->fur }}" id="btn-editar" title="re imprimir preliquiquidacion"><i class="fas fa-print"></i></button>
+
+                        <form action="{{ route('generatePDF') }}" method="GET" target="blank">
+                            @csrf
+                             <input type="hidden" name="id" value={{ $mant->id }}> 
+                             <button type='sumit' class="btn btn-info "><i class="fas fa-file-pdf fa-2x  accent-blue " ></i></button>
+                        </form> 
+
+                        {{-- <button type="button" class="btn btn-info" value="{{ $mant->fur }}" id="btn-editar" title="re imprimir preliquiquidacion"><i class="fas fa-print"></i></button> --}}
                         {{-- @if($mant->estado =='ACTIVO')
                         <button type="button" class="btn btn-warning" value="{{ $mant->id }}" id="btn-desactivar"><i class="fas fa-thumbs-down"></i></button>
                         @else

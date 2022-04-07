@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-
+use PDF;
 
 class MantenimientoController extends Controller
 {
@@ -56,6 +56,10 @@ class MantenimientoController extends Controller
         return view('mantenimiento/nuevoPago', ['precio' =>$precio, 'cuenta' =>$cuenta, 'descrip' =>$descrip]);
     }
 
+
+     public function consultaMant(){
+         
+     }
 
     public function savePay(Request $request){
         
@@ -220,7 +224,7 @@ class MantenimientoController extends Controller
                                                 $last= $request->sel[count($request->sel)-1];
                                                 $ultimo_pago=$last;
                                                 $mant = new Mantenimiento; 
-                                                $mant->gestion =json_encode($request->sel); 
+                                                $mant->gestion =implode(', ', $request->sel);
                                                 $mant->fur=$fur;
                                                 $mant->date_in=$request->fechadef_dif;
                                                 $mant->respdifunto_id=$iddifuntoResp;
@@ -229,11 +233,8 @@ class MantenimientoController extends Controller
                                                 $mant->monto=$request->txttotal;
                                                 $mant->ultimo_pago=$ultimo_pago;
                                                 $mant->estado='ACTIVO';
-
                                                 $mant->save();
                                                 return  $mant->id;
-
-
 
                              }
                     
@@ -349,5 +350,21 @@ class MantenimientoController extends Controller
     }
 
 
+    public function generatePDF(Request $request)
+    {
+      
+          $table = Mantenimiento::where('mantenimiento_nicho.id', $request->id)
+          ->Join('responsable_difunto' , 'responsable_difunto.responsable_id','=', 'mantenimiento_nicho.respdifunto_id')
+          ->Join('responsable' , 'responsable.id','=', 'responsable_difunto.responsable_id')
+          ->first();
+
+         
+                     $td=$table->getOriginal();
+              
+                    $pdf = PDF::setPaper('A4', 'landscape');
+                    $pdf = PDF::loadView('mantenimiento/reportMant', $td);
+                    return  $pdf-> stream("preliquidacion_mantenimiento.pdf", array("Attachment" => false));
+
+            }
 
 }
