@@ -7,7 +7,7 @@
 @section('plugins.Pace', true)
 
 @section('content_header')
-    <h1>Detalle de transacciones diarias</h1>
+    <h1>Detalle de transacciones diarias sassss</h1>
 @stop
 
 @section('content')
