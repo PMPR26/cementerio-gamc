@@ -359,10 +359,10 @@ class MantenimientoController extends Controller
           ->first();
 
          
-                     $td=$table->getOriginal();
+                    // $td=$table->getOriginal();
               
                     $pdf = PDF::setPaper('A4', 'landscape');
-                    $pdf = PDF::loadView('mantenimiento/reportMant', $td);
+                    $pdf = PDF::loadView('mantenimiento/reportMant', $table);
                     return  $pdf-> stream("preliquidacion_mantenimiento.pdf", array("Attachment" => false));
 
             }

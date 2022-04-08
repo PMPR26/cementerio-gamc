@@ -129,9 +129,9 @@
     <!-- Envuelva el contenido de su PDF dentro de una etiqueta principal -->
     <main>
         <pre>
-               {{-- @php(print_r($gestion)) --}}
-               {{-- @php(die()) --}}
-            </pre>
+               @php(print_r($table)) 
+                @php(die())
+        </pre>
 
         <!-- tabla encabezado boleta -->
         <table width="100%">
