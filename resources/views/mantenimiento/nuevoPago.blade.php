@@ -276,7 +276,7 @@
                         <input type="hidden" name="tiempo" id="tiempo">                     
                         <input type="hidden" name="precio_sinot" id="precio_sinot" value="{{ $precio }}">
                         <input type="hidden" name="desc_sinot" id="desc_sinot" value="{{ $descrip }}">
-                        <input type="text" name="txttotal" id="txttotal" value="">
+                        <input type="hidden" name="txttotal" id="txttotal" value="">
 
                         
 
@@ -361,7 +361,7 @@
 
                                 <div class="col-sm-12" style="text-align: center">
                                     <button type="button" id="btn_guardar_pago" class="btn btn-success">Registrar servicio</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelar">Cancelar</button>
                                 </div> 
                 </div> 
             </div> 
@@ -469,7 +469,7 @@ $(document).ready(function ()
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                                 'Content-Type': 'application/json'
                             },
-                            url: "{{ route('buscar.nicho') }}",
+                            url: "{{ route('buscar.registros') }}",
                             method: 'POST',
                             dataType: 'json',
                             data: JSON.stringify({
@@ -480,13 +480,16 @@ $(document).ready(function ()
                             success: function(data) {
 
                                 if (data.mensaje) {
-                                        $('#sp').empty();
-                                    console.log(data);
+                                     $('#sp').empty();
+                                     $('#origen').val('tabla_nueva');
+                                      console.log(data);
                                     // cargar campos del los forms
-                                    $('#origen').val('tabla_nueva');
-                                    //setear campos
-                                  //  $('#cuartel').val()
+                                  alert(data.datos.cuartel);
 
+                                    $('#cuartel').val(data.datos.cuartel);
+                                    $('#anterior').val(data.datos.anterior);
+                                    $('#tipo_nicho').val(data.datos.anterior);
+                                   
 
                                 }
                                 else{
@@ -1009,6 +1012,12 @@ $(document).ready(function ()
                     $('#fur_reg').hide();
                 }
             });
+              
+            $(document).on('click', '#cancelar', function(){
+                window.location.href="{{ route('mant')}}"
+            });
+
+
            </script>
 
     @stop

@@ -367,4 +367,45 @@ class MantenimientoController extends Controller
 
             }
 
+
+            /// buscar en la base local
+
+            public function buscar_registros(Request $request){
+                $sql=DB::table('mantenimiento_nicho')  
+                ->join('responsable_difunto', 'responsable_difunto.id', '=', 'mantenimiento_nicho.respdifunto_id')    
+                ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')    
+                ->join('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
+                ->join('nicho', 'nicho.codigo', '=', 'responsable_difunto.codigo_nicho') 
+                ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id') 
+                ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')   
+                ->where( 'nicho.fila', '=', ''.$request->fila.'')               
+                ->where('bloque.codigo', '=', ''.$request->bloque.'') 
+                ->where('nicho.nro_nicho', '=',  $request->nicho)
+                // ->orwhere('nicho.codigo_anterior', '=', ''. $request->anterior.'')    
+                ->select('mantenimiento_nicho.gestion', 'mantenimiento_nicho.pagado', 'mantenimiento_nicho.fur', 'mantenimiento_nicho.precio_sinot', 
+                'mantenimiento_nicho.monto', 'mantenimiento_nicho.ultimo_pago', 
+                'difunto.ci','difunto.nombres as nombre_dif','difunto.primer_apellido as paterno_dif', 'difunto.segundo_apellido as materno_dif',
+                'difunto.fecha_nacimiento as nacimiento_dif', 'difunto.fecha_defuncion', 'difunto.genero as genero_dif', 'difunto.causa', 'difunto.certificado_defuncion',
+                'difunto.tipo as tipo_dif','difunto.certificado_file', 
+                'responsable.ci',  'responsable.nombres as nombre_resp',  'responsable.primer_apellido as paterno_resp', 
+                'responsable.segundo_apellido as materno_resp',  'responsable.fecha_nacimiento as nacimiento_resp',  'responsable.domicilio as dir_resp', 
+                 'cuartel.codigo as cuartel', 'bloque.codigo as bloque', 'nicho.nro_nicho as nicho', 'nicho.codigo_anterior as anterior', 'nicho.fila as fila')
+                 ->orderBy('mantenimiento_nicho.id', 'DESC')                
+                ->first();
+       // dd( $sql);
+                if($sql){
+                    $mensaje=true;
+                }
+                else{
+                    $mensaje= false;
+                }
+        
+                $resp= [
+                    "mensaje" => $mensaje,
+                    "datos"=>$sql
+                    ];
+                 return response()->json($resp);
+            }
+
 }
+

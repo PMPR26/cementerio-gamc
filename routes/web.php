@@ -150,7 +150,7 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
       Route::get('/form-pay', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'createPay'])->name('pay');
       Route::post('/save-pay', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'savePay'])->name('save.pay');
       Route::get('generate-pdf', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'generatePDF'])->name('generatePDF')->middleware('auth');
-
+      Route::post('/buscar_registros', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'buscar_registros'])->name('buscar.registros');
 });
 
 
