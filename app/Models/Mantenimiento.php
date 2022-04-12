@@ -28,22 +28,5 @@ class Mantenimiento extends Model
         'updated_at'
     ];
   
-    public function verificarFur($dato)
-      {
-        
-  //dd( $servicios_cementery);
-          $headers =  ['Content-Type' => 'application/json'];
-          $client = new Client();
-          $response = $client->post('http://192.168.104.117/cobrosnotributarios/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
-              'json' => [
-                  'buscar' => $dato              
-  
-              ],
-              'headers' => $headers,
-          ]);
-          $resp = json_decode((string) $response->getBody(), true);
-        
-          return $resp;
-      }
-
+    
 }

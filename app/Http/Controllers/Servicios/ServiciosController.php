@@ -172,7 +172,7 @@ class ServiciosController extends Controller{
             ->first();
 
             if($servicio){
-                NichoServicioModel::where('fur', trim($request->fur))
+                ServicioNicho::where('fur', trim($request->fur))
                 ->update([      
                    'estado_pago' => true,
                    'id_usuario_caja' => $request->id_usuario_caja,
