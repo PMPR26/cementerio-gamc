@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class Mantenimiento extends Model
 {
@@ -26,44 +28,22 @@ class Mantenimiento extends Model
         'updated_at'
     ];
   
-
-    public function updatePay(Request $request){
-          
-        if($request->isJson()){
-            $this->validate($request,[
-                "fur"=> 'required',
-                "id_usuario_caja" => 'required'
-            ]);
-
-            $pago = Mantenimiento::select('id', 'fur')
-            ->where(['fur' => trim($request->fur), 'pagado' => false, 'estado' => 'ACTIVO'])
-            ->first();
-
-            if($pago){
-                Mantenimiento::where('fur', trim($request->fur))
-                ->update([      
-                   'pagado' => true,
-                   'id_usuario_caja' => $request->id_usuario_caja,
-                   'fecha_pago'=> date('Y-m-d h:i:s')
-                ]);
-                return response([
-                    'status'=> true
-                   // 'message'=> 'El nro fur  no existe o ya fue pagado por favor recargue la pagina'
-                 ],200);
-
-            }else{
-                return response([
-                    'status'=> false,
-                    'message'=> 'El nro fur  no existe o ya fue pagado por favor recargue la pagina'
-                 ],200);
-            }
-        }else{
-            return response([
-                'status'=> false,
-                'message'=> 'No autorizado'
-             ],401); 
-        }
+    public function verificarFur($dato)
+      {
         
-    }
+  //dd( $servicios_cementery);
+          $headers =  ['Content-Type' => 'application/json'];
+          $client = new Client();
+          $response = $client->post('http://192.168.104.117/cobrosnotributarios/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+              'json' => [
+                  'buscar' => $dato              
+  
+              ],
+              'headers' => $headers,
+          ]);
+          $resp = json_decode((string) $response->getBody(), true);
+        
+          return $resp;
+      }
 
 }

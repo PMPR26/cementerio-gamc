@@ -17,12 +17,18 @@ use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use PDF;
-
+use Illuminate\Support\Facades\Http;
 class MantenimientoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('api', ['except' => ['updatePayMant']]);
+    }
+
     public function index(){
-        $mant= Mantenimiento::select('mantenimiento_nicho.*',  DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'))
+        $mant= Mantenimiento::select('mantenimiento_nicho.*',  DB::raw('CONCAT(mantenimiento_nicho.nombrepago , \' \',mantenimiento_nicho.paternopago, \' \', mantenimiento_nicho.maternopago ) AS nombre'))
                 ->leftJoin('responsable', 'responsable.id', '=', 'mantenimiento_nicho.respdifunto_id')
+                ->where('pagado', false)
                 ->orderBy('id', 'DESC')
                  ->get();
 
@@ -32,6 +38,8 @@ class MantenimientoController extends Controller
     }
 
     public function createPay(){
+
+    
 
         $headers =  ['Content-Type' => 'application/json'];
         $client = new Client();
@@ -72,19 +80,19 @@ class MantenimientoController extends Controller
                 'cuartel'=> 'required',
                 'fila'=> 'required',
                 'tipo_nicho'=> 'required',               
-                'ci_dif'=> 'required',
+              //  'ci_dif'=> 'required',
                 'nombres_dif'=> 'required',
                 'paterno_dif'=> 'required',
-                'tipo_dif'=> 'required',
-                'genero_dif'=> 'required',
-                'ci_resp'=> 'required',
-                'nombres_resp'=> 'required',
-                'paterno_resp'=> 'required',
-                'celular'=> 'required',
-                'ecivil'=> 'required',
-                'email'=> 'required',
-                'domicilio'=> 'required',
-                'genero_resp'=> 'required',
+               // 'tipo_dif'=> 'required',
+               // 'genero_dif'=> 'required',
+               // 'ci_resp'=> 'required',
+               // 'nombres_resp'=> 'required',
+               // 'paterno_resp'=> 'required',
+               // 'celular'=> 'required',
+               // 'ecivil'=> 'required',
+               // 'email'=> 'required',
+               // 'domicilio'=> 'required',
+             //   'genero_resp'=> 'required',
                 'sel'=>'required',
 
                 
@@ -98,20 +106,21 @@ class MantenimientoController extends Controller
                 'nombres_dif.required'=> 'El campo nombres del difunto es obligatorio',
                 'paterno_dif.required'=> 'El campo apellido paterno es obligatorio',
                 'tipo_dif.required'=> 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
-                'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
-                'ci_resp.required'=> 'El campo ci del responsable es obligatorio',
-                'nombres_resp.required'=> 'El campo nombre del responsable es obligatorio',
-                'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
-                'celular.required'=> 'El campo celular es obligatorio',
-                'ecivil.required'=> 'El campo estado civil  es obligatorio',
-                'email.required'=> 'El campo email es obligatorio',
-                'domicilio.required'=> 'El campo domicilio es obligatorio',
-                'genero_resp.required'=> 'El campo genero_resp es obligatorio',
+               // 'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
+             //   'ci_resp.required'=> 'El campo ci del responsable es obligatorio',
+             //   'nombres_resp.required'=> 'El campo nombre del responsable es obligatorio',
+               // 'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
+              //  'celular.required'=> 'El campo celular es obligatorio',
+              //  'ecivil.required'=> 'El campo estado civil  es obligatorio',
+              //  'email.required'=> 'El campo email es obligatorio',
+              //  'domicilio.required'=> 'El campo domicilio es obligatorio',
+              //  'genero_resp.required'=> 'El campo genero_resp es obligatorio',
                 'sel.required'=>'Debe seleccionar al menos una gestion a pagar',
 
                
             ]);
 
+          //  dd($request);
             //step1: nicho buscar si existe registrado el nicho recuperar el id  sino existe registrarlo
             $codigo_n=$request->cuartel.".".$request->bloque.".".$request->nro_nicho.".".$request->fila;
             $existeNicho= Nicho::where('codigo', $codigo_n)->first();
@@ -174,7 +183,7 @@ class MantenimientoController extends Controller
                         //insertar difunto
                          $difuntoid=$this->insertDifunto($request);
                     }else{
-                        $difuntoid=$request->difunto_id;
+                        $difuntoid=$request->id_difunto;
                         $this->updateDifunto($request, $difuntoid);
                         
                     }
@@ -184,7 +193,7 @@ class MantenimientoController extends Controller
                                 //insertar difunto
                                  $idresp=$this->insertResponsable($request); 
                             }else{
-                                $idresp=$request->responsable_id;
+                                $idresp=$request->id_responsable;
                                 $this->updateResponsable($request, $idresp);
                                 
                             }
@@ -195,14 +204,34 @@ class MantenimientoController extends Controller
                             }
 
 
-
                                //insert pago 
-              
+                               if($request->person!= "responsable"){
+                                $pago_por="Tercera persona";
+                                $nombre_pago=$request->name_pago;
+                                $paterno_pago=$request->paterno_pago;
+                                $materno_pago=$request->materno_pago;
+                                $ci=$request->ci;
+                                $domicilio= "SIN ESPECIFICACION";
+                             //   dd($nombre_pago."--".$paterno_pago."--".$materno_pago);
 
+                              }
+                              else{
+                                $pago_por="Titular responsable";
+                                $nombre_pago=$request->nombres_resp;
+                                $paterno_pago=$request->paterno_resp;
+                                $materno_pago=$request->materno_resp;                               
+                                $ci=$request->ci_resp;
+                                $domicilio= $request->domicilio;
+ //dd($nombre_pago."--".$paterno_pago."--".$materno_pago);
+
+                              }
+                             // dd($request);
+                             $codigo_nicho=$request->cuartel.".".$request->bloque.".".$request->nicho.".".$request->fila;
+                             $servicio=['525'];
                             if (!empty($request->sel) && is_array($request->sel))
                              {
                                 $count = count($request->sel);
-                                $codigo_nicho=$request->cuartel.".".$request->bloque.".".$request->nicho.".".$request->fila;
+                               
                                                 if(isset($request->reg)){
                                                     $fur=$request->nrofur;
                                                 }
@@ -210,9 +239,9 @@ class MantenimientoController extends Controller
                                                         /** generar fur */
                                                             $nombre_difunto=$request->nombres_dif." ".$request->primerap_dif." ".$request->segap_dif;
                                                             $obj= new ServicioNicho;
-                                                            $response=$obj->GenerarFur($request->ci_resp, $request->nombres_resp, $request->paterno_resp,
-                                                            $request->segapresp, $request->domicilio,  $nombre_difunto, $codigo_nicho,
-                                                            $request->bloque, $request->nro_nicho, $request->fila, $request->sel );
+                                                            $response=$obj->GenerarFur($ci, $nombre_pago, $paterno_pago,
+                                                            $materno_pago, $domicilio,  $nombre_difunto, $codigo_nicho,
+                                                            $request->bloque, $request->nro_nicho, $request->fila, $servicio );
                                                         
                                                             if($response['status']==true){
                                                                 $fur = $response['response'];
@@ -221,6 +250,7 @@ class MantenimientoController extends Controller
                                                 //insertar mantenimiento
 
                                               //  dd(count($request->sel));
+                                            
                                                 $last= $request->sel[count($request->sel)-1];
                                                 $ultimo_pago=$last;
                                                 $mant = new Mantenimiento; 
@@ -231,6 +261,12 @@ class MantenimientoController extends Controller
                                                 $mant->precio_sinot= $request->precio_sinot;
                                                 $mant->cantidad_gestiones=count($request->sel);
                                                 $mant->monto=$request->txttotal;
+                                                $mant->nombrepago=$nombre_pago;
+                                                $mant->paternopago=$paterno_pago;
+                                                $mant->maternopago=$materno_pago;
+                                                $mant->ci=$ci;
+                                                $mant->pago_por=$pago_por;
+
                                                 $mant->ultimo_pago=$ultimo_pago;
                                                 $mant->estado='ACTIVO';
                                                 $mant->save();
@@ -280,7 +316,7 @@ class MantenimientoController extends Controller
         $dif->causa = $request->causa;
         $dif->tipo = $request->tipo_dif; 
         $dif->genero = $request->genero_dif;  
-        $dif->certificado_file=$request->adjunto;               
+       // $dif->certificado_file=$request->adjunto;               
       //  $dif->tiempo = $request->tiempo;  
         $dif->estado = 'ACTIVO';  
         $dif->user_id = auth()->id();
@@ -300,9 +336,9 @@ class MantenimientoController extends Controller
         $difunto->fecha_defuncion = $request->fechadef_dif;
         $difunto->certificado_defuncion = $request->sereci;
         $difunto->causa = $request->causa;
-        $difunto->tipo = $request->tipo; 
-        $difunto->genero = $request->genero;  
-        $difunto->certificado_file=$request->adjunto;       
+        $difunto->tipo = $request->tipo_dif; 
+        $difunto->genero = $request->genero_dif;  
+       // $difunto->certificado_file=$request->adjunto;       
       //  $difunto->tiempo = $request->tiempo;  
         $difunto->estado = 'ACTIVO';  
         $difunto->user_id = auth()->id();
@@ -341,7 +377,7 @@ class MantenimientoController extends Controller
         $responsable->genero = $request->genero_resp;  
         $responsable->telefono = $request->telefono;  
         $responsable->celular = $request->celular;  
-        $responsable->ecivil = $request->ecivil;  
+        $responsable->estado_civil = $request->ecivil;  
         $responsable->domicilio = $request->domicilio;  
         $responsable->estado = 'ACTIVO';  
         $responsable->user_id = auth()->id();
@@ -353,16 +389,18 @@ class MantenimientoController extends Controller
     public function generatePDF(Request $request)
     {
       
-          $table = Mantenimiento::where('mantenimiento_nicho.id', $request->id)
-          ->Join('responsable_difunto' , 'responsable_difunto.responsable_id','=', 'mantenimiento_nicho.respdifunto_id')
-          ->Join('responsable' , 'responsable.id','=', 'responsable_difunto.responsable_id')
+          $table = DB::table('mantenimiento_nicho')
+          ->where('mantenimiento_nicho.id', $request->id)
+          ->Join('responsable_difunto' , 'responsable_difunto.id','=', 'mantenimiento_nicho.respdifunto_id')
+          ->select('mantenimiento_nicho.*', 'responsable_difunto.codigo_nicho')       
           ->first();
 
-         
-                     $td=$table->getOriginal();
+         //dd($table);
+                //     $td=$table->getOriginal();
+                    
               
                     $pdf = PDF::setPaper('A4', 'landscape');
-                    $pdf = PDF::loadView('mantenimiento/reportMant', $td);
+                    $pdf = PDF::loadView('mantenimiento/reportMant', compact('table'));
                     return  $pdf-> stream("preliquidacion_mantenimiento.pdf", array("Attachment" => false));
 
             }
@@ -383,13 +421,19 @@ class MantenimientoController extends Controller
                 ->where('nicho.nro_nicho', '=',  $request->nicho)
                 // ->orwhere('nicho.codigo_anterior', '=', ''. $request->anterior.'')    
                 ->select('mantenimiento_nicho.gestion', 'mantenimiento_nicho.pagado', 'mantenimiento_nicho.fur', 'mantenimiento_nicho.precio_sinot', 
-                'mantenimiento_nicho.monto', 'mantenimiento_nicho.ultimo_pago', 
-                'difunto.ci','difunto.nombres as nombre_dif','difunto.primer_apellido as paterno_dif', 'difunto.segundo_apellido as materno_dif',
+                'mantenimiento_nicho.monto', 'mantenimiento_nicho.ultimo_pago', 'mantenimiento_nicho.nombrepago',
+                'mantenimiento_nicho.paternopago', 'mantenimiento_nicho.paternopago', 'mantenimiento_nicho.ci as cipago',
+                'mantenimiento_nicho.gestion', 'mantenimiento_nicho.fecha_pago', 'mantenimiento_nicho.monto',  'mantenimiento_nicho.fur', 
+                'difunto.id as id_dif','difunto.ci as ci_dif','difunto.nombres as nombre_dif','difunto.primer_apellido as paterno_dif', 'difunto.segundo_apellido as materno_dif',
                 'difunto.fecha_nacimiento as nacimiento_dif', 'difunto.fecha_defuncion', 'difunto.genero as genero_dif', 'difunto.causa', 'difunto.certificado_defuncion',
-                'difunto.tipo as tipo_dif','difunto.certificado_file', 
-                'responsable.ci',  'responsable.nombres as nombre_resp',  'responsable.primer_apellido as paterno_resp', 
+                'difunto.tipo as tipo_dif', 
+                'responsable_difunto.fecha_adjudicacion', 'responsable_difunto.tiempo',
+                'responsable.id as id_resp','responsable.ci as ci_resp',  'responsable.nombres as nombre_resp',  'responsable.primer_apellido as paterno_resp', 
                 'responsable.segundo_apellido as materno_resp',  'responsable.fecha_nacimiento as nacimiento_resp',  'responsable.domicilio as dir_resp', 
-                 'cuartel.codigo as cuartel', 'bloque.codigo as bloque', 'nicho.nro_nicho as nicho', 'nicho.codigo_anterior as anterior', 'nicho.fila as fila')
+                'responsable.telefono', 
+                'responsable.celular', 
+                'responsable.estado_civil',  'responsable.email', 'responsable.genero as genero_resp',
+                 'cuartel.codigo as cuartel', 'bloque.codigo as bloque', 'nicho.nro_nicho as nicho', 'nicho.codigo_anterior as anterior', 'nicho.fila as fila','nicho.tipo as tipo_nicho')
                  ->orderBy('mantenimiento_nicho.id', 'DESC')                
                 ->first();
        // dd( $sql);
@@ -407,5 +451,81 @@ class MantenimientoController extends Controller
                  return response()->json($resp);
             }
 
+            public function generateCiDif(){
+                $dif=new Difunto;
+                $nro_ci=$dif->generateCiDifunto();
+                return json_encode($nro_ci);
+            }
+
+            public function generateCiResp(){
+                $resp=new Responsable;
+                $nro_ci_resp=$resp->generateCiResponsable();
+                return json_encode($nro_ci_resp);
+            }
+
+
+
+            
+    public function updatePayMant(Request $request){
+          
+        if($request->isJson()){
+            $this->validate($request,[
+                "fur"=> 'required',
+                "id_usuario_caja" => 'required'
+            ]);
+
+            $pago = Mantenimiento::select('id', 'fur')
+            ->where(['fur' => trim($request->fur), 'pagado' => false, 'estado' => 'ACTIVO'])
+            ->first();
+
+            if($pago){
+                Mantenimiento::where('fur', trim($request->fur))
+                ->update([      
+                   'pagado' => true,
+                   'id_usuario_caja' => $request->id_usuario_caja,
+                   'fecha_pago'=> date('Y-m-d h:i:s')
+                ]);
+                return response([
+                    'status'=> true
+                   // 'message'=> 'El nro fur  no existe o ya fue pagado por favor recargue la pagina'
+                 ],200);
+
+            }else{
+                return response([
+                    'status'=> false,
+                    'message'=> 'El nro fur  no existe o ya fue pagado por favor recargue la pagina'
+                 ],200);
+            }
+        }else{
+            return response([
+                'status'=> false,
+                'message'=> 'No autorizado'
+             ],401); 
+        }
+        
+    }
+
+   
+
+    public function buscarFurLiquidacion(Request $request) {
+        $arrayBusqueda = [];
+        $arrayBusqueda[] = (string)2;
+        $arrayBusqueda[] = (string)$request->fur;
+        $arrayBusquedaString = json_encode($arrayBusqueda);
+        $response = Http::asForm()->post('http://192.168.104.117/cb-dev/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+            'buscar' => $arrayBusquedaString
+        ]);
+        if ($response->successful()) {
+            if($response->object()->status == true) {
+                $dato = $response->object()->data->cobrosVarios[0];
+
+                
+                return $dato;
+            }
+        }
+    }
+
+
+   
 }
 
