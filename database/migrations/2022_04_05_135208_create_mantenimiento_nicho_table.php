@@ -30,10 +30,10 @@ class CreateMantenimientoNichoTable extends Migration
             $table->string('maternopago')->nullable();
             $table->string('ci')->nullable();
             $table->string('pago_por')->nullable();
-
-
-            $table->integer('id_usuario_caja')->nullable();
+            $table->string('id_usuario_caja')->nullable();
             $table->string('estado');
+            $table->string('observacion')->nullable();
+
             $table->timestamps();
 
             $table->foreign('respdifunto_id')->references('id')->on('responsable_difunto');

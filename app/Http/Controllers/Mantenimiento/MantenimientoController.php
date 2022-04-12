@@ -82,12 +82,12 @@ class MantenimientoController extends Controller
                 'tipo_nicho'=> 'required',               
                 'ci_dif'=> 'required',
                 'nombres_dif'=> 'required',
-                'paterno_dif'=> 'required',
+               // 'paterno_dif'=> 'required',
                // 'tipo_dif'=> 'required',
                // 'genero_dif'=> 'required',
                 'ci_resp'=> 'required',
                 'nombres_resp'=> 'required',
-                'paterno_resp'=> 'required',
+               // 'paterno_resp'=> 'required',
                // 'celular'=> 'required',
                // 'ecivil'=> 'required',
                // 'email'=> 'required',
@@ -105,16 +105,16 @@ class MantenimientoController extends Controller
                 'ci_dif.required'=> 'El campo ci del difunto es obligatorio, si no tiene documento presione el boton "generar carnet provisional  (icono lapiz)" para asignarle un numero provisional',
              
                 'nombres_dif.required'=> 'El campo nombres del difunto es obligatorio',
-                'paterno_dif.required'=> 'El campo apellido paterno es obligatorio',
+               // 'paterno_dif.required'=> 'El campo apellido paterno es obligatorio',
                 'tipo_dif.required'=> 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
                // 'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
                'ci_resp.required'=> 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
                  'nombres_resp.required'=> 'El campo nombre del responsable es obligatorio',
-                 'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
+                // 'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
               //  'celular.required'=> 'El campo celular es obligatorio',
               //  'ecivil.required'=> 'El campo estado civil  es obligatorio',
               //  'email.required'=> 'El campo email es obligatorio',
-                'domicilio.required'=> 'El campo domicilio es obligatorio',
+               // 'domicilio.required'=> 'El campo domicilio es obligatorio',
               //  'genero_resp.required'=> 'El campo genero_resp es obligatorio',
                 'sel.required'=>'Debe seleccionar al menos una gestion a pagar',
 
@@ -219,10 +219,16 @@ class MantenimientoController extends Controller
                               else{
                                 $pago_por="Titular responsable";
                                 $nombre_pago=$request->nombres_resp;
-                                $paterno_pago=$request->paterno_resp;
+                                if($request->paterno_resp==""){ $paterno_pago="NO DEFINIDO";}else{
+                                    $paterno_pago=$request->paterno_resp;
+                                }
+                                if($request->domicilio==""){ $domicilio="NO DEFINIDO";}else{
+                                    $domicilio= $request->domicilio;
+                                }                              
+                               
                                 $materno_pago=$request->materno_resp;                               
                                 $ci=$request->ci_resp;
-                                $domicilio= $request->domicilio;
+                               
                                }
                              // dd($request);
                              $codigo_nicho=$request->cuartel.".".$request->bloque.".".$request->nicho.".".$request->fila;
@@ -268,6 +274,8 @@ class MantenimientoController extends Controller
                                                 $mant->id_usuario_caja = auth()->id();
                                                 $mant->ultimo_pago=$ultimo_pago;
                                                 $mant->estado='ACTIVO';
+                                                $mant->observacion=$request->observacion;
+
                                                 $mant->save();
                                                 return  $mant->id;
 
@@ -529,4 +537,3 @@ class MantenimientoController extends Controller
 
    
 }
-

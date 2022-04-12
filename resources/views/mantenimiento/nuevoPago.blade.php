@@ -404,6 +404,13 @@
 
 
                         </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="obs">Observaciones</label>
+                                <textarea name="observacion" id="observacion" class="form-control" cols="30" rows="3"></textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -506,10 +513,13 @@
                         showCancelButton: false,
                         showConfirmButton: true
                     });
+
+                   
                     setTimeout(function() {
                         return false;
                     }, 2000);
-                    $('#' + valor + '').prop('checked', true);
+                   // $('#' + valor + '').prop('checked', true);
+                    $(".sel").prop("checked", false);
                 }
             }
 
@@ -595,7 +605,7 @@
                             $('#monto_pagos').html(data.datos.monto);
                             $('#difunto_search').val(data.datos.id_dif);
                             $('#responsable_search').val(data.datos.id_resp);
-                            $('#comprob').html(data.datos.fur)
+                            $('#comprob').html(data.datos.fur);
                             gestionesAdeudadas(data.datos.ultimo_pago);
 
                         } else {
@@ -624,7 +634,11 @@
 
 
                                     if (data.response.datos_difuntos != "") {
-                                        // datos difunto                         
+                                        // datos difunto       
+                                        var pg=data.response.datos_difuntos[0]
+                                                .pag_con;
+                                               
+                                                if(pg > 10 && pg<1000 && pg!=1999 ){ pg='20'+pg; }                  
                                         if (data.response.datos_difuntos != "") {
                                             var fecha = data.response.datos_difuntos[0]
                                                 .fecha;
@@ -635,8 +649,7 @@
 
 
 
-                                            $('#pag_con').val(data.response.datos_difuntos[
-                                                0].pag_con);
+                                            $('#pag_con').val(pg);
                                             $('#causa').val(data.response.datos_difuntos[0]
                                                 .causa_fall);
                                             $('#nombres_dif').val(data.response
@@ -651,19 +664,18 @@
                                                     .datos_difuntos[0].tiempo);
                                                 $('#tipo_nicho').val('TEMPORAL');
                                             } else if (data.response.datos_difuntos[0]
-                                                .pag_con != '') {
+                                                .pag_con > 0) {
+                                                
+                                                  
                                                 $('#tiemp').html(data.response
                                                     .datos_difuntos[0].tiempo);
                                                 $('#tiempo').val(data.response
                                                     .datos_difuntos[0].tiempo);
 
-                                                gestionesAdeudadas(data.response
-                                                    .datos_difuntos[0].pag_con);
+                                                gestionesAdeudadas(pg);
 
-                                                $('#pago_cont').html(data.response
-                                                    .datos_difuntos[0].pag_con);
-                                                $('#pago_cont_ant').html(data.response
-                                                    .datos_difuntos[0].pag_con);
+                                                $('#pago_cont').html(pg);
+                                                $('#pago_cont_ant').html(pg);
                                                 $('#fechadef_dif').val(nuevaf);
                                                 $('#tipo_nicho').val('PERPETUO');
                                             }
@@ -743,7 +755,11 @@
 
             // calcularPlazo nicho
             function calcularPlazo(tiempo, año, nfecha) {
-                let plazo = 0;
+                let plazo = 0; alert(año);
+                if(año.length==2){
+                    año='20'+año; alert(año);
+                }
+                
                 plazo = parseInt(año) + parseInt(tiempo);
                 var fecha = new Date();
                 var year = fecha.getFullYear();
@@ -811,7 +827,8 @@
             // calcular nro de gestiones adeudadas
             function gestionesAdeudadas(ultpago) {
                 $('#conservacion').show();
-
+               
+                 $('#row-cuota').empty();
                 var fecha = new Date();
                 var year = fecha.getFullYear();
                 var gest = year - ultpago;
@@ -931,6 +948,8 @@
                         'sereci': $('#sereci').val(),
                         'id_difunto': $('#difunto_search').val(),
                         'id_responsable': $('#responsable_search').val(),
+                        'observacion': $('#observacion').val(),
+
 
                     }),
                     success: function(data_response) {
