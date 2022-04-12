@@ -86,8 +86,8 @@ class MantenimientoController extends Controller
                // 'tipo_dif'=> 'required',
                // 'genero_dif'=> 'required',
                 'ci_resp'=> 'required',
-               // 'nombres_resp'=> 'required',
-               // 'paterno_resp'=> 'required',
+                'nombres_resp'=> 'required',
+                'paterno_resp'=> 'required',
                // 'celular'=> 'required',
                // 'ecivil'=> 'required',
                // 'email'=> 'required',
@@ -109,12 +109,12 @@ class MantenimientoController extends Controller
                 'tipo_dif.required'=> 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
                // 'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
                'ci_resp.required'=> 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
-             //   'nombres_resp.required'=> 'El campo nombre del responsable es obligatorio',
-               // 'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
+                 'nombres_resp.required'=> 'El campo nombre del responsable es obligatorio',
+                 'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
               //  'celular.required'=> 'El campo celular es obligatorio',
               //  'ecivil.required'=> 'El campo estado civil  es obligatorio',
               //  'email.required'=> 'El campo email es obligatorio',
-              //  'domicilio.required'=> 'El campo domicilio es obligatorio',
+                'domicilio.required'=> 'El campo domicilio es obligatorio',
               //  'genero_resp.required'=> 'El campo genero_resp es obligatorio',
                 'sel.required'=>'Debe seleccionar al menos una gestion a pagar',
 
@@ -213,7 +213,7 @@ class MantenimientoController extends Controller
                                 $materno_pago=$request->materno_pago;
                                 $ci=$request->ci;
                                 $domicilio= "SIN ESPECIFICACION";
-                             //   dd($nombre_pago."--".$paterno_pago."--".$materno_pago);
+                            
 
                               }
                               else{
@@ -223,9 +223,7 @@ class MantenimientoController extends Controller
                                 $materno_pago=$request->materno_resp;                               
                                 $ci=$request->ci_resp;
                                 $domicilio= $request->domicilio;
- //dd($nombre_pago."--".$paterno_pago."--".$materno_pago);
-
-                              }
+                               }
                              // dd($request);
                              $codigo_nicho=$request->cuartel.".".$request->bloque.".".$request->nicho.".".$request->fila;
                              $servicio=['525'];
@@ -267,7 +265,7 @@ class MantenimientoController extends Controller
                                                 $mant->maternopago=$materno_pago;
                                                 $mant->ci=$ci;
                                                 $mant->pago_por=$pago_por;
-
+                                                $mant->id_usuario_caja = auth()->id();
                                                 $mant->ultimo_pago=$ultimo_pago;
                                                 $mant->estado='ACTIVO';
                                                 $mant->save();
@@ -359,7 +357,8 @@ class MantenimientoController extends Controller
         $responsable->telefono = $request->telefono;  
         $responsable->celular = $request->celular;  
         $responsable->estado_civil = $request->ecivil;  
-        $responsable->domicilio = $request->domicilio;  
+        $responsable->domicilio = $request->domicilio; 
+        $responsable->email = $request->email;  
         $responsable->estado = 'ACTIVO';  
         $responsable->user_id = auth()->id();
         $responsable->save();
@@ -380,6 +379,7 @@ class MantenimientoController extends Controller
         $responsable->celular = $request->celular;  
         $responsable->estado_civil = $request->ecivil;  
         $responsable->domicilio = $request->domicilio;  
+        $responsable->email = $request->email;  
         $responsable->estado = 'ACTIVO';  
         $responsable->user_id = auth()->id();
         $responsable->save();
