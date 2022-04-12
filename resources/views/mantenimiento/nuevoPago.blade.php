@@ -510,22 +510,17 @@
                         return false;
                     }, 2000);
                     $('#' + valor + '').prop('checked', true);
-
                 }
-
             }
 
 
 
 
             $(document).on('click', '#buscar', function() {
-
                 $('.clear').val("");
                 $('.clear').html("");
                 $('.clean').val("");
                 $('.clean').html("");
-
-
                 $('#pag_con').val();
                 $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
                 $('#form').hide();
@@ -533,11 +528,8 @@
                 var nicho = $('#nro_nicho').val();
                 var fila = $('#fila').val();
                 if (bloque && nicho && fila) {
-                    dats = buscar_datos(bloque, nicho, fila);
-                    console.log(dats);
-
+                    dats = buscar_datos(bloque, nicho, fila);                   
                 }
-
             });
 
 
@@ -565,8 +557,6 @@
                             $('#origen').val('tabla_nueva');
                             console.log(data);
                             // cargar campos del los forms
-
-
                             $('#cuartel').val(data.datos.cuartel);
                             $('#anterior').val(data.datos.anterior);
                             $('#tipo_nicho').val(data.datos.tipo_nicho);
@@ -878,7 +868,7 @@
 
             $(document).on('click', '#btn_guardar_pago', function() {
 
-                if($('#').val()!=""){
+                if($('#nrofur').val()!=""){
                     verificarfur();
                 }
                 let cpago = [];
@@ -1145,8 +1135,6 @@
                 var d = new Date(fecha);
                 var strDate = parseInt(d.getFullYear()) + parseInt(tiempo);
                 var strDate = strDate + "/" + (d.getMonth() + 1) + "/" + (d.getDate() + 1);
-
-                console.log(strDate);
                 return strDate;
             }
 
@@ -1180,10 +1168,7 @@
                     "fur": $('#nrofur').val(),
                 }),
                 success: function(verif) {
-                    console.log(verif); 
-                  
-                    
-                    if(!verif){
+                         if(!verif){
                         swal.fire({
                                 title: "Numero de FUR no existente!",
                                 text: "!Transacción rechazada!",
@@ -1241,8 +1226,8 @@
                     $('#search_dif').val(cidif);
 
                 }
-            })
-        })
+            });
+        });
 
         $(document).on('click', '#generarciresp', function() {
 
