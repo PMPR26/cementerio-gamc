@@ -883,8 +883,7 @@
                 }
                 let cpago = [];
                 $('.sel').each(function(index) {
-                    if ($(this).is(':checked')) {
-                        //  alert($(this).is(':checked'));                  
+                    if ($(this).is(':checked')) {                     
                         cpago.push($(this).val());
                     }
                 });
@@ -999,9 +998,9 @@
 
                 var ci = $('#search_dif').val();
 
-                //var ci ="52525252";
+              
                 if (ci.length < 1) {
-                    //alert("el campo Ci esta vacio");
+                   
                     Swal.fire(
                         'Busqueda finalizada!',
                         'El campo C.I. esta vacio .',
@@ -1010,17 +1009,17 @@
                 } else {
                     var type = "deceased";
                     dats = buscar_ci(ci, type);
-                    console.log("entra a estooooooooooooo" + dats);
+                   
                 }
             });
 
 
             $(document).on('click', '#buscarResp', function() {
                 var ci = $('#search_resp').val();
-                console.log("esta es el carnet del gus:" + ci);
+               
 
                 if (ci.length < 1) {
-                    //alert("el campo Ci esta vacio");
+                  
                     Swal.fire(
                         'Busqueda finalizada!',
                         'El campo C.I. esta vacio .',
@@ -1052,7 +1051,7 @@
                     }),
                     success: function(data) {
                         if (data.response == null) {
-                            //alert("El CI ingresado no esta registrado");
+                          
                             Swal.fire(
                                 'Busqueda finalizada!',
                                 'El C.I. ingresado no esta registrado .',
@@ -1070,11 +1069,11 @@
                             $('#causa').val(data.response.causa);
                             $('#genero_dif').val(data.response.genero);
                             $("#difunto_search").val(data.response.id);
-                            //$('#ecivil_dif').val(data.response.estado_civil);
+                           
                         }
                     },
                     error: function(xhr, status) {
-                        //alert('Disculpe, existió un problema');
+                        
                         Swal.fire(
                             'Busqueda finalizada!',
                             'El registro no ha  sido encontrado o no existe .',
@@ -1121,12 +1120,12 @@
                             $('#domicilio_resp').val(data.response.domicilio);
                             $('#genero_resp').val(data.response.genero);
                             $("#responsable_search").val(data.response.id);
-                            //$('#ecivil_dif').val(data.response.estado_civil);
+                            
                         }
 
                     },
                     error: function(xhr, status) {
-                        // alert('Disculpe, existió un problema');
+                    
                         Swal.fire(
                             'Busqueda finalizada!',
                             'El registro no ha  sido encontrado o no existe .',
