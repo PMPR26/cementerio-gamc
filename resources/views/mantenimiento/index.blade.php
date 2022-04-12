@@ -66,12 +66,7 @@
                                     class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
                         </form>
 
-                        {{-- <button type="button" class="btn btn-info" value="{{ $mant->fur }}" id="btn-editar" title="re imprimir preliquiquidacion"><i class="fas fa-print"></i></button> --}}
-                        {{-- @if ($mant->estado == 'ACTIVO')
-                        <button type="button" class="btn btn-warning" value="{{ $mant->id }}" id="btn-desactivar"><i class="fas fa-thumbs-down"></i></button>
-                        @else
-                        <button type="button" class="btn btn-success" value="{{ $mant->id }}" id="btn-desactivar"><i class="fas fa-thumbs-up"></i></button>
-                        @endif --}}
+                      
                     </td>
                 </tr>
             @endforeach

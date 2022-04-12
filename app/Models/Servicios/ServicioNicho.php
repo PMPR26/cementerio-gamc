@@ -68,45 +68,7 @@ class ServicioNicho extends Model
       }
 
 
-      public function updatePay(Request $request){
-          
-        if($request->isJson()){
-            $this->validate($request,[
-                "fur"=> 'required',
-                "id_usuario_caja" => 'required'
-            ]);
-
-            $servicio = ServicioNicho::select('id', 'fur')
-            ->where(['fur' => trim($request->fur), 'estado_pago' => false, 'estado' => 'ACTIVO'])
-            ->first();
-
-            if($servicio){
-                NichoServicioModel::where('fur', trim($request->fur))
-                ->update([      
-                   'estado_pago' => true,
-                   'id_usuario_caja' => $request->id_usuario_caja,
-                   'fecha_pago'=> date('Y-m-d h:i:s')
-                ]);
-                return response([
-                    'status'=> true
-                   // 'message'=> 'El nro fur  no existe o ya fue pagado por favor recargue la pagina'
-                 ],200);
-
-            }else{
-                return response([
-                    'status'=> false,
-                    'message'=> 'El nro fur  no existe o ya fue pagado por favor recargue la pagina'
-                 ],200);
-            }
-        }else{
-            return response([
-                'status'=> false,
-                'message'=> 'No autorizado'
-             ],401); 
-        }
-        
-    }
-
+     
    
 
 }

@@ -25,6 +25,13 @@ class CreateMantenimientoNichoTable extends Migration
             $table->float('precio_sinot', 12, 2);           
             $table->string('monto');
             $table->string('ultimo_pago');
+            $table->string('nombrepago')->nullable();
+            $table->string('paternopago')->nullable();
+            $table->string('maternopago')->nullable();
+            $table->string('ci')->nullable();
+            $table->string('pago_por')->nullable();
+
+
             $table->integer('id_usuario_caja')->nullable();
             $table->string('estado');
             $table->timestamps();

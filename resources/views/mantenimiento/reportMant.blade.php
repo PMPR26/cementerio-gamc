@@ -129,9 +129,9 @@
     <!-- Envuelva el contenido de su PDF dentro de una etiqueta principal -->
     <main>
         <pre>
-               @php(print_r($table)) 
-                @php(die())
-        </pre>
+               {{-- @php(print_r($table ))
+               @php(die()) --}}
+            </pre>
 
         <!-- tabla encabezado boleta -->
         <table width="100%">
@@ -140,7 +140,7 @@
                     <h4 align="center">BOLETA DE PRELIQUIDACION</h4>
                 </th>
                 <td width="20%">
-                    <span class="txtred">Nro. FUR:{{ $fur ?? '' }}</span><br>
+                    <span class="txtred">Nro. FUR:{{ $table->fur ?? '' }}</span><br>
                     <span class="txtadd">Tasa por otros servicios</span>
                 </td>
 
@@ -152,12 +152,12 @@
                 <td></td>
             </tr>
             <tr>
-                <td width="80%" colspan="2">Nombre: {{ $nombres }} {{ $primer_apellido }}
-                    {{ $segundo_apellido ?? '' }}</td>
-                <td width="20%">C.I.:{{ $ci }} </td>
+                <td width="80%" colspan="2">Nombre: {{ $table->nombrepago }} {{ $table->paternopago }}
+                    {{ $table->maternopago ?? '' }}</td>
+                <td width="20%">C.I.:{{ $table->ci }} </td>
             </tr>
             <tr>
-                <td width="60%" colspan="2">Direccion: {{ $domicilio }}</td>
+                <td width="60%" colspan="2">Pago realizado por : {{ $table->pago_por }}</td>
                 <td width="20%">Actividad: Preliquidación</td>
             </tr>
 
@@ -170,7 +170,7 @@
                 </td>
             </tr>
             <tr>
-                <td width="100%" colspan="2">Codigo nicho: {{ $codigo_nicho }}</td>
+                <td width="100%" colspan="2">Codigo nicho: {{ $table->codigo_nicho??'' }}</td>
             </tr>
 
             <tr class="thead">
@@ -184,20 +184,20 @@
             <tr>
                 <td width="10%" align="left">15224361 </td>
                 <td width="50%" align="center">Pago por Conservación de nichos perpetuos de forma anual gestion(es):
-                    {{ $gestion ?? '' }} </td>
-                <td width="10%" align="center">{{ $precio_sinot ?? '' }}</td>
-                <td width="10%" align="right">{{ $cantidad_gestiones ?? '' }}</td>
-                <td width="10%" align="right">{{ $monto ?? '' }}</td>
+                    {{ $table->gestion ?? '' }} </td>
+                <td width="10%" align="center">{{ $table->precio_sinot ?? '' }}</td>
+                <td width="10%" align="right">{{ $table->cantidad_gestiones ?? '' }}</td>
+                <td width="10%" align="right">{{ $table->monto ?? '' }}</td>
             </tr>
             <tr class="odd">
                 <td width="80%" align="left" colspan="4">Total </td>
-                <td width="10%" align="right">{{ $monto ?? '' }}</td>
+                <td width="10%" align="right">{{ $table->monto ?? '' }}</td>
             </tr>
 
 
             <tr>
                 <td width='100%' colspan="5" height="80px">
-                    <?php $subt1 = round($monto, 3);
+                    <?php $subt1 = round($table->monto, 3);
                     $subtLit = number_format(floatval($subt1), 2, ',', '.');
                     $lit = convertir($subtLit);
                     $txt = 'SON: BOLIVIANOS  ' . $lit . ' ';

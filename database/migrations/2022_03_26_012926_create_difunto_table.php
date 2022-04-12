@@ -19,14 +19,12 @@ class CreateDifuntoTable extends Migration
             $table->string('nombres',50);
             $table->string('primer_apellido',50)->nullable();
             $table->string('segundo_apellido',50)->nullable();
-            $table->date('fecha_nacimiento');
+            $table->date('fecha_nacimiento')->nullable();
             $table->date('fecha_defuncion');
             $table->string('certificado_defuncion')->nullable();           
-            $table->string('causa');
-            $table->string('tipo');    
-            $table->string('genero');
-            $table->string('ecivil');
-
+            $table->string('causa')->nullable();
+            $table->string('tipo')->nullable();    
+            $table->string('genero')->nullable();
             $table->integer('user_id');
             $table->string('certificado_file')->nullable();
             $table->string('estado',10)->default('ACTIVO');
