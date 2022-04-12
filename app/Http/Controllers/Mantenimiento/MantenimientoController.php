@@ -472,7 +472,7 @@ class MantenimientoController extends Controller
         if($request->isJson()){
             $this->validate($request,[
                 "fur"=> 'required',
-                 "id_usuario_caja" => 'required'
+               //  "id_usuario_caja" => 'required'
             ]);
 
             $pago = Mantenimiento::select('id', 'fur')
