@@ -38,7 +38,7 @@ Route::group([
 ], function ($router) {
 //request update pay fur
 Route::put('update-fur-pay', [App\Http\Controllers\Servicios\ServiciosController::class,'updatePay']);
-Route::put('update-fur-pay-mant', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'updatePayMant']);
+Route::put('updatePayMant', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'updatePayMant']);
 
 });
 
