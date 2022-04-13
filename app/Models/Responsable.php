@@ -49,4 +49,45 @@ class Responsable extends Model
          }   
     }
 
+    public function insertResponsable($request){
+
+        $responsable = new Responsable;
+        $responsable->ci = $request->ci_resp;
+        $responsable->nombres = $request->nombres_resp;
+        $responsable->primer_apellido = $request->paterno_resp;
+        $responsable->segundo_apellido = $request->materno_resp;
+        $responsable->fecha_nacimiento = $request->fechanac_resp;
+        $responsable->genero = $request->genero_resp;  
+        $responsable->telefono = $request->telefono;  
+        $responsable->celular = $request->celular;  
+        $responsable->estado_civil = $request->ecivil;  
+        $responsable->domicilio = $request->domicilio; 
+        $responsable->email = $request->email;  
+        $responsable->estado = 'ACTIVO';  
+        $responsable->user_id = auth()->id();
+        $responsable->save();
+        $responsable->id;
+        return  $responsable->id;
+
+    }
+
+    public function updateResponsable($request, $difuntoid){
+        $responsable= Responsable::where('id', $difuntoid)->first();
+        $responsable->ci = $request->ci_resp;
+        $responsable->nombres = $request->nombres_resp;
+        $responsable->primer_apellido = $request->paterno_resp;
+        $responsable->segundo_apellido = $request->materno_resp;
+        $responsable->fecha_nacimiento = $request->fechanac_resp;
+        $responsable->genero = $request->genero_resp;  
+        $responsable->telefono = $request->telefono;  
+        $responsable->celular = $request->celular;  
+        $responsable->estado_civil = $request->ecivil;  
+        $responsable->domicilio = $request->domicilio;  
+        $responsable->email = $request->email;  
+        $responsable->estado = 'ACTIVO';  
+        $responsable->user_id = auth()->id();
+        $responsable->save();
+        return $responsable->id;
+    }
+
 }

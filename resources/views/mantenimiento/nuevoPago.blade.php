@@ -36,19 +36,19 @@
                             <label>BLOQUE</label>
                             <input style="text-transform:uppercase;"
                                 onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control "
-                                id="bloque" autocomplete="off">
+                                id="bloque" autocomplete="off" maxlength="3">
                         </div>
                         <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>NRO NICHO</label>
                             <input style="text-transform:uppercase;"
                                 onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control "
-                                id="nro_nicho" autocomplete="off">
+                                id="nro_nicho" autocomplete="off" maxlength="5">
                         </div>
                         <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>FILA</label>
                             <input style="text-transform:uppercase;"
                                 onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control "
-                                id="fila" autocomplete="off">
+                                id="fila" autocomplete="off" maxlength="2">
                         </div>
 
                         <div class="col-sm-12 col-md-3 col-xl-3 p-4 mt-2">
@@ -220,11 +220,11 @@
                                             <i class="fa fa-search"></i>
                                         </button>
 
-                                        <button type="button" class="btn btn-lg btn-default" id="generarciresp"
+                                        {{-- <button type="button" class="btn btn-lg btn-default" id="generarciresp"
                                             title="generar carnet provisional">
 
                                             <i class="fa fa-pen"></i>
-                                        </button>
+                                        </button> --}}
 
                                         <input type="hidden" name="responable_search" id="responsable_search">
                                     </div>
@@ -669,6 +669,9 @@
 
                                         if (pg > 10 && pg < 1000 && pg != 1999) {
                                             pg = '20' + pg;
+                                        }
+                                        else if (pg < 10) {
+                                            pg = '200' + pg;
                                         }
                                         if (data.response.datos_difuntos != "") {
                                             var fecha = data.response.datos_difuntos[0]

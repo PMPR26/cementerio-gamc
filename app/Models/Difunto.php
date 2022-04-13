@@ -47,4 +47,48 @@ class Difunto extends Model
          }   
     }
 
+    
+    public function insertDifunto($request){
+
+        $dif = new Difunto;
+        $dif->ci = $request->ci_dif;
+        $dif->nombres = $request->nombres_dif;
+        $dif->primer_apellido = $request->paterno_dif;
+        $dif->segundo_apellido = $request->materno_dif;
+        $dif->fecha_nacimiento = $request->fechanac_dif;
+        $dif->fecha_defuncion = $request->fechadef_dif;
+        $dif->certificado_defuncion = $request->sereci;
+        $dif->causa = $request->causa;
+        $dif->tipo = $request->tipo_dif; 
+        $dif->genero = $request->genero_dif;  
+       // $dif->certificado_file=$request->adjunto;               
+      //  $dif->tiempo = $request->tiempo;  
+        $dif->estado = 'ACTIVO';  
+        $dif->user_id = auth()->id();
+        $dif->save();
+        $dif->id;
+        return  $dif->id;
+
+    }
+
+    public function updateDifunto($request, $difuntoid){
+        $difunto= Difunto::where('id', $difuntoid)->first();
+        $difunto->ci = $request->ci_dif;
+        $difunto->nombres = $request->nombres_dif;
+        $difunto->primer_apellido = $request->paterno_dif;
+        $difunto->segundo_apellido = $request->materno_dif;
+        $difunto->fecha_nacimiento = $request->fechanac_dif;
+        $difunto->fecha_defuncion = $request->fechadef_dif;
+        $difunto->certificado_defuncion = $request->sereci;
+        $difunto->causa = $request->causa;
+        $difunto->tipo = $request->tipo_dif; 
+        $difunto->genero = $request->genero_dif;  
+       // $difunto->certificado_file=$request->adjunto;       
+      //  $difunto->tiempo = $request->tiempo;  
+        $difunto->estado = 'ACTIVO';  
+        $difunto->user_id = auth()->id();
+        $difunto->save();
+        return $difunto->id;
+    }
+
 }
