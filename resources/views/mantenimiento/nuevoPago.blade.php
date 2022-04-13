@@ -80,7 +80,7 @@
                         <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>Tipo nicho</label>
                             <select name="tipo_nicho" id="tipo_nicho" class="form-control">
-                                <option value="">Seleccionar</option>
+                                <option value="">SELECCIONAR</option>
                                 <option value="TEMPORAL">TEMPORAL</option>
                                 <option value="PERPETUO">PERPETUO</option>
                             </select>
@@ -266,20 +266,25 @@
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Teléfono</label>
-                                <input type="tel" class="form-control" id="telefono" autocomplete="off" maxlength="7">
+                                {{-- <input type="number" class="form-control" id="telefono" autocomplete="off" maxlength="7"> --}}
+                                <input name="telefono" id="telefono"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    type="number" maxlength="7"  class="form-control" />
                             </div>
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Celular</label>
-                                <input style="text-transform:uppercase;"
-                                    onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
-                                    class="form-control" id="celular" autocomplete="off">
+
+
+                                <input name="celular" id="celular"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    type="number" maxlength="8"  class="form-control" />
                             </div>
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Estado civil</label>
                                 <select name="ecivil" id="ecivil" class="form-control">
-                                    <option value="">Seleccionar</option>
+                                    <option value="">SELECCIONAR</option>
                                     <option value="CASADO">CASADO</option>
                                     <option value="CONCUBINADO">CONCUBINADO</option>
                                     <option value="DIVORCIADO">DIVORCIADO</option>
@@ -294,7 +299,7 @@
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>E-mail</label>
                                 <input style="text-transform:uppercase;"
-                                    onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
+                                    onkeyup="javascript:this.value=this.value.toUpperCase();" type="email" size="50"
                                     class="form-control" id="email" autocomplete="off">
                             </div>
 
@@ -330,7 +335,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h4>INFORMACION PAGOS</h4>
+                        <h4>INFORMACION ULTIMO PAGO</h4>
                     </div>
 
                     <div class="card-body">
@@ -377,7 +382,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <div class="col-sm-6 col-md-3 col-xl-3">Pago por tercera persona <input type="checkbox"
+                        <div class="col-sm-6 col-md-12 col-xl-12">PAGO POR TERCERA PERSONA &nbsp;&nbsp;&nbsp; <input type="checkbox"
                                 name="person" id="person" value="responsable" style="width: 30px; height:30px"></div>
                     </div>
                     <div class="card-body">
@@ -418,10 +423,10 @@
                     <div class="col-sm-12 col-md-12 col-xl-12 card-header">
                         <h4>GESTIONES ADEUDADAS</h4>
                         <div class="row">
-                            <div class="col-sm-12 col-md- col-xl-6">Pago por {{ $descrip }}</div>
-                            <div class="col-sm-6 col-md-3 col-xl-3"> Regularizar Transaccion <input type="checkbox"
+                            <div class="col-sm-12 col-md-12 col-xl-12">Pago por {{ $descrip }}</div>
+                            <div class="col-sm-6 col-md-6 col-xl-6"> Regularizar Transaccion  &nbsp;&nbsp;&nbsp;  <input type="checkbox"
                                     name="reg" id="reg" value="reg" style="width: 30px; height:30px"></div>
-                            <div class="col-sm-6 col-md-3 col-xl-3" id="fur_reg" style="display: none"> FUR <input
+                            <div class="col-sm-6 col-md-6 col-xl-6" id="fur_reg" style="display: none"> FUR <input
                                     type="text" name="nrofur" id="nrofur" value=""></div>
                         </div>
                     </div>
@@ -514,11 +519,11 @@
                         showConfirmButton: true
                     });
 
-                   
+
                     setTimeout(function() {
                         return false;
                     }, 2000);
-                   // $('#' + valor + '').prop('checked', true);
+                    // $('#' + valor + '').prop('checked', true);
                     $(".sel").prop("checked", false);
                 }
             }
@@ -537,8 +542,11 @@
                 var bloque = $('#bloque').val();
                 var nicho = $('#nro_nicho').val();
                 var fila = $('#fila').val();
+
+                cuartel = buscarCuartel(bloque, nicho, fila);
+
                 if (bloque && nicho && fila) {
-                    dats = buscar_datos(bloque, nicho, fila);                   
+                    dats = buscar_datos(bloque, nicho, fila);
                 }
             });
 
@@ -635,10 +643,12 @@
 
                                     if (data.response.datos_difuntos != "") {
                                         // datos difunto       
-                                        var pg=data.response.datos_difuntos[0]
-                                                .pag_con;
-                                               
-                                                if(pg > 10 && pg<1000 && pg!=1999 ){ pg='20'+pg; }                  
+                                        var pg = data.response.datos_difuntos[0]
+                                            .pag_con;
+
+                                        if (pg > 10 && pg < 1000 && pg != 1999) {
+                                            pg = '20' + pg;
+                                        }
                                         if (data.response.datos_difuntos != "") {
                                             var fecha = data.response.datos_difuntos[0]
                                                 .fecha;
@@ -665,8 +675,8 @@
                                                 $('#tipo_nicho').val('TEMPORAL');
                                             } else if (data.response.datos_difuntos[0]
                                                 .pag_con > 0) {
-                                                
-                                                  
+
+
                                                 $('#tiemp').html(data.response
                                                     .datos_difuntos[0].tiempo);
                                                 $('#tiempo').val(data.response
@@ -755,11 +765,13 @@
 
             // calcularPlazo nicho
             function calcularPlazo(tiempo, año, nfecha) {
-                let plazo = 0; alert(año);
-                if(año.length==2){
-                    año='20'+año; alert(año);
+                let plazo = 0;
+                alert(año);
+                if (año.length == 2) {
+                    año = '20' + año;
+                    alert(año);
                 }
-                
+
                 plazo = parseInt(año) + parseInt(tiempo);
                 var fecha = new Date();
                 var year = fecha.getFullYear();
@@ -827,8 +839,8 @@
             // calcular nro de gestiones adeudadas
             function gestionesAdeudadas(ultpago) {
                 $('#conservacion').show();
-               
-                 $('#row-cuota').empty();
+
+                $('#row-cuota').empty();
                 var fecha = new Date();
                 var year = fecha.getFullYear();
                 var gest = year - ultpago;
@@ -885,12 +897,35 @@
 
             $(document).on('click', '#btn_guardar_pago', function() {
 
-                if($('#nrofur').val()!=""){
+                if ($('#person').is(':checked')) {
+                    if($('#name_pago').val()==""  || $('#paterno_pago').val()=="" || $('#ci').val()==""  ){
+                        swal.fire({
+                            title: "Completar los datos de la persona que esta realizando el pago!",                          
+                            type: "warning",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false
+                        });
+                     }
+                }else{
+                    if($('#search_resp').val()==""  || $('#nombres_resp').val()=="" || $('#paterno_resp').val()==""  ){
+                        swal.fire({
+                            title: "Completar los datos del responsable que esta realizando el pago!",                          
+                            type: "warning",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false
+                        });
+                     }
+
+                }
+
+                if ($('#nrofur').val() != "") {
                     verificarfur();
                 }
                 let cpago = [];
                 $('.sel').each(function(index) {
-                    if ($(this).is(':checked')) {                     
+                    if ($(this).is(':checked')) {
                         cpago.push($(this).val());
                     }
                 });
@@ -1007,9 +1042,9 @@
 
                 var ci = $('#search_dif').val();
 
-              
+
                 if (ci.length < 1) {
-                   
+
                     Swal.fire(
                         'Busqueda finalizada!',
                         'El campo C.I. esta vacio .',
@@ -1018,17 +1053,17 @@
                 } else {
                     var type = "deceased";
                     dats = buscar_ci(ci, type);
-                   
+
                 }
             });
 
 
             $(document).on('click', '#buscarResp', function() {
                 var ci = $('#search_resp').val();
-               
+
 
                 if (ci.length < 1) {
-                  
+
                     Swal.fire(
                         'Busqueda finalizada!',
                         'El campo C.I. esta vacio .',
@@ -1060,7 +1095,7 @@
                     }),
                     success: function(data) {
                         if (data.response == null) {
-                          
+
                             Swal.fire(
                                 'Busqueda finalizada!',
                                 'El C.I. ingresado no esta registrado .',
@@ -1078,11 +1113,11 @@
                             $('#causa').val(data.response.causa);
                             $('#genero_dif').val(data.response.genero);
                             $("#difunto_search").val(data.response.id);
-                           
+
                         }
                     },
                     error: function(xhr, status) {
-                        
+
                         Swal.fire(
                             'Busqueda finalizada!',
                             'El registro no ha  sido encontrado o no existe .',
@@ -1122,19 +1157,20 @@
                             $('#paterno_resp').val(data.response.primer_apellido);
                             $('#materno_resp').val(data.response.segundo_apellido);
                             $('#fechanac_resp').val(data.response.fecha_nacimiento);
-                            $('#telefono_resp').val(data.response.telefono);
-                            $('#cellular_resp').val(data.response.celular);
-                            $('#ecivil_resp').val(data.response.estado_civil);
-                            $('#email_resp').val(data.response.email);
-                            $('#domicilio_resp').val(data.response.domicilio);
+                            $('#telefono').val(data.response.telefono);
+                            $('#celular').val(data.response.celular);
+                            $('#ecivil').val(data.response.estado_civil);
+                         
+                            $('#domicilio').val(data.response.domicilio);
                             $('#genero_resp').val(data.response.genero);
                             $("#responsable_search").val(data.response.id);
-                            
+                            $('#email').val(data.response.email);
+
                         }
 
                     },
                     error: function(xhr, status) {
-                    
+
                         Swal.fire(
                             'Busqueda finalizada!',
                             'El registro no ha  sido encontrado o no existe .',
@@ -1169,12 +1205,12 @@
             }
         });
 
-        $(document).on('keyup', '#nrofur', function() {           
+        $(document).on('keyup', '#nrofur', function() {
             verificarfur();
         });
 
 
-        function verificarfur(){
+        function verificarfur() {
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -1187,22 +1223,21 @@
                     "fur": $('#nrofur').val(),
                 }),
                 success: function(verif) {
-                         if(!verif){
+                    if (!verif) {
                         swal.fire({
-                                title: "Numero de FUR no existente!",
-                                text: "!Transacción rechazada!",
-                                type: "error",
-                                timer: 2000,
-                                showCancelButton: false,
-                                showConfirmButton: false
-                            });
-                            setTimeout(function() {
-                                $('#btn_guardar_pago').prop('disabled', true);
-                                return false;
-                            }, 2000);
+                            title: "Numero de FUR no existente!",
+                            text: "!Transacción rechazada!",
+                            type: "error",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false
+                        });
+                        setTimeout(function() {
+                            $('#btn_guardar_pago').prop('disabled', true);
+                            return false;
+                        }, 2000);
 
-                    }
-                    else{
+                    } else {
                         $('#btn_guardar_pago').prop('disabled', false);
 
                     }
@@ -1266,6 +1301,32 @@
             })
 
         })
+
+
+        function buscarCuartel(bloque, nicho, fila) {
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Content-Type': 'application/json'
+                },
+                url: "{{ route('buscar.cuartel') }}",
+                method: 'POST',
+                dataType: 'json',
+                data: JSON.stringify({
+                    "bloque": bloque,
+                    "nicho": nicho,
+                    "fila": fila
+
+                }),
+                success: function(data) {
+                    console.log(data);
+                    if (data) {
+                        $('#cuartel').val(data.codigo);
+                    }
+                }
+            });
+
+        }
     </script>
 
 @stop

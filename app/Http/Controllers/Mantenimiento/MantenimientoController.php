@@ -180,7 +180,8 @@ class MantenimientoController extends Controller
                      // end nicho
 
                  // step2: register difunto --- si id_difunto id_difunto es null insertar difunto insertar responsable
-                    if($request->id_difunto==""){
+                 $existeDifunto= Difunto::where('ci', $request->ci_dif)->first();     
+                 if($request->id_difunto==""  || !$existeDifunto){
                         //insertar difunto
                          $difuntoid=$this->insertDifunto($request);
                     }else{
@@ -189,8 +190,9 @@ class MantenimientoController extends Controller
                         
                     }
                     // end difunto
-                    // step4: register responsable -- si el responsable     
-                            if($request->id_responsable==""){
+                    // step4: register responsable -- si el responsable  
+                    $existeResponsable= Responsable::where('ci', $request->ci_resp)->first();   
+                            if($request->id_responsable=="" || !$existeResponsable){
                                 //insertar difunto
                                  $idresp=$this->insertResponsable($request); 
                             }else{
@@ -201,7 +203,15 @@ class MantenimientoController extends Controller
                     //end responsable
                     //insertar tbl responsable_difunto
                             if(isset($difuntoid) && isset($idresp)){
-                                $iddifuntoResp=$this->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n);
+
+                                $rf=new ResponsableDifunto();
+                               $existeRespDif= $rf->searchResponsableDifunt($request);
+                                if($existeRespDif!= null ){
+                                    $iddifuntoResp= $this->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n);
+                                }else{
+                                    $iddifuntoResp=$this->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n);
+                                }
+                               
                             }
 
 
@@ -212,9 +222,7 @@ class MantenimientoController extends Controller
                                 $paterno_pago=$request->paterno_pago;
                                 $materno_pago=$request->materno_pago;
                                 $ci=$request->ci;
-                                $domicilio= "SIN ESPECIFICACION";
-                            
-
+                                $domicilio= "SIN ESPECIFICACION";                            
                               }
                               else{
                                 $pago_por="Titular responsable";
@@ -309,6 +317,23 @@ class MantenimientoController extends Controller
         return  $dif->id;
 
     }
+
+        public function updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n){
+            $dif= ResponsableDifunto::where('responsable_id', $idresp)
+                               ->where('difunto_id', $difuntoid)
+                               ->where('codigo_nicho', $codigo_n)->first();   
+            $dif->responsable_id = $idresp;
+            $dif->difunto_id = $difuntoid;
+            $dif->codigo_nicho = $codigo_n;       
+            $dif->fecha_adjudicacion = $request->fechadef_dif;       
+            $dif->tiempo = $request->tiempo;       
+            $dif->estado = 'ACTIVO';  
+            $dif->user_id = auth()->id();
+            $dif->save();
+            $dif->id;
+            return  $dif->id;
+        }
+
 
     public function insertDifunto($request){
 
@@ -535,5 +560,14 @@ class MantenimientoController extends Controller
     }
 
 
-   
+   public function buscarCuartel(Request $request){
+            $sql= Nicho::where('codigo_anterior', $request->anterior)  
+            ->Where('nicho.fila', $request->fila)
+            ->orWhere('bloque.codigo', $request->bloque)
+            ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id') 
+            ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id') 
+            ->first(); 
+
+           return $sql;
+   }
 }

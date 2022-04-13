@@ -59,8 +59,6 @@ class ResponsableController extends Controller
             'genero' => trim($request->genero),
             'email' => trim($request->email),
             'domicilio' => trim($request->domicilio),
-
-
             'user_id' => auth()->id(),
             'estado' => 'ACTIVO',
             'created_at' => date("Y-m-d H:i:s"),
