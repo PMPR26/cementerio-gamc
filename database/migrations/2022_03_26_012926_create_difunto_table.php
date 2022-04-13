@@ -20,7 +20,7 @@ class CreateDifuntoTable extends Migration
             $table->string('primer_apellido',50)->nullable();
             $table->string('segundo_apellido',50)->nullable();
             $table->date('fecha_nacimiento')->nullable();
-            $table->date('fecha_defuncion');
+            $table->date('fecha_defuncion')->nullable();;
             $table->string('certificado_defuncion')->nullable();           
             $table->string('causa')->nullable();
             $table->string('tipo')->nullable();    
