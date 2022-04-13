@@ -152,8 +152,8 @@
                 <td></td>
             </tr>
             <tr>
-                <td width="80%" colspan="2">Nombre: {{ $table->nombrepago }} {{ $table->paternopago }}
-                    {{ $table->maternopago ?? '' }}</td>
+                <td width="80%" colspan="2">Nombre: {{ucwords($table->nombrepago )}} {{ucwords( $table->paternopago) }}
+                    {{ ucwords($table->maternopago ?? '') }}</td>
                 <td width="20%">C.I.:{{ $table->ci }} </td>
             </tr>
             <tr>

@@ -52,7 +52,7 @@
                         </div>
 
                         <div class="col-sm-12 col-md-3 col-xl-3 p-4 mt-2">
-                            <button type="button" class="btn btn-info" id="buscar">
+                            <button type="button" class="btn btn-info" id="buscar" disabled>
                                 <span id="sp"></span> <i class="fa fa-search"></i>BUSCAR
                             </button>
                         </div>
@@ -477,6 +477,27 @@
 @section('js')
     <script>
         $(document).ready(function() {
+
+            $(document).on('keyup', '#bloque', function(){
+                habilitarBusqueda();
+            });
+
+            $(document).on('keyup', '#fila', function(){
+                habilitarBusqueda();
+            });
+            $(document).on('keyup', '#nro_nicho', function(){
+                habilitarBusqueda();
+            });
+
+            function habilitarBusqueda(){
+                if($('#bloque').val()=="" || $('#nro_nicho').val()=="" || $('#fila').val()=="" ){
+                    $('#buscar').prop('disabled', true);
+                }
+                else if($('#bloque').val()!="" || $('#nro_nicho').val()!="" || $('#fila').val()!="" ){
+                    $('#buscar').prop('disabled', false);
+                }
+                
+            }
 
             // calcular total a pagar
 
