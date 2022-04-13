@@ -154,7 +154,9 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
       Route::get('generarci-difunto', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'generateCiDif'])->name('generateCiDif')->middleware('auth');
       Route::get('generarci-responsable', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'generateCiResp'])->name('generateCiResp')->middleware('auth');
       Route::post('/verificar-fur', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'buscarFurLiquidacion'])->name('verificarFur'); 
+      Route::post('/buscarCuartel', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'buscarCuartel'])->name('buscar.cuartel');
 
+      
 
 });
 
