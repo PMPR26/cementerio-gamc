@@ -32,17 +32,15 @@ Route::group([
 });
 
 
-Route::group([
-    'middleware' => 'api',
-    'prefix' => 'v1'
-], function ($router) {
-//request update pay fur
-Route::put('update-fur-pay', [App\Http\Controllers\Servicios\ServiciosController::class,'updatePay']);
+// Route::group([
+//     'middleware' => 'api',
+//     'prefix' => 'v1'
+// ], function ($router) {
+// //request update pay fur
 
 
-});
+//});
 
+
+Route::put('updatefurpay', [App\Http\Controllers\Servicios\ServiciosController::class,'updatePay'])->name('updatefurpay');
 Route::put('updatePayMant', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'updatePayMant'])->name('updatePayMant');
-
-
-

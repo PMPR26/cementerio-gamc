@@ -28,5 +28,6 @@ class Mantenimiento extends Model
         'updated_at'
     ];
   
-    
+   
+
 }
