@@ -15,7 +15,7 @@ class CreateMantenimientoNichoTable extends Migration
     {
         Schema::create('mantenimiento_nicho', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->date('date_in');
+            $table->date('date_in')->nullable();
             $table->string('gestion');
             $table->boolean('pagado')->default(false);
             $table->timestamp('fecha_pago')->nullable();

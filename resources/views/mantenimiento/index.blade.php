@@ -39,6 +39,7 @@
                 <th scope="col">RESPONSABLE</th>
                 <th scope="col">GESTION/ES</th>
                 <th scope="col">MONTO</th>
+                <th scope="col">OBSERVACION</th>
                 <th scope="col">ACCIONES</th>
             </tr>
         </thead>
@@ -54,9 +55,7 @@
                     <td>{{ $mant->nombre }} </td>
                     <td>{{ $mant->gestion }}</td>
                     <td>{{ $mant->monto }}</td>
-
-
-
+                    <td>{{ $mant->observacion }}</td>
                     <td>
 
                         <form action="{{ route('generatePDF') }}" method="GET" target="blank">
