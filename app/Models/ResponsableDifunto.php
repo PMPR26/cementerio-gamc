@@ -58,10 +58,42 @@ class ResponsableDifunto extends Model
             }else{
     
                 return null;
-            }
-
-       
+            }     
 
     }
+
+    
+    public function insDifuntoResp($request, $difuntoid, $idresp, $codigo_n){
+
+        $dif = new ResponsableDifunto ;
+        $dif->responsable_id = $idresp;
+        $dif->difunto_id = $difuntoid;
+        $dif->codigo_nicho = $codigo_n;       
+        $dif->fecha_adjudicacion = $request->fechadef_dif;       
+        $dif->tiempo = $request->tiempo;       
+        $dif->estado = 'ACTIVO';  
+        $dif->user_id = auth()->id();
+        $dif->save();
+        $dif->id;
+        return  $dif->id;
+
+    }
+
+        public function updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n){
+            $dif= ResponsableDifunto::where('responsable_id', $idresp)
+                               ->where('difunto_id', $difuntoid)
+                               ->where('codigo_nicho', $codigo_n)->first();   
+            $dif->responsable_id = $idresp;
+            $dif->difunto_id = $difuntoid;
+            $dif->codigo_nicho = $codigo_n;       
+            $dif->fecha_adjudicacion = $request->fechadef_dif;       
+            $dif->tiempo = $request->tiempo;       
+            $dif->estado = 'ACTIVO';  
+            $dif->user_id = auth()->id();
+            $dif->save();
+            $dif->id;
+            return  $dif->id;
+        }
+
 
 }

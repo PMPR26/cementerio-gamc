@@ -87,7 +87,7 @@ class MantenimientoController extends Controller
                // 'genero_dif'=> 'required',
                 'ci_resp'=> 'required',
                 'nombres_resp'=> 'required',
-               // 'paterno_resp'=> 'required',
+                'paterno_resp'=> 'required',
                // 'celular'=> 'required',
                // 'ecivil'=> 'required',
                // 'email'=> 'required',
@@ -110,7 +110,7 @@ class MantenimientoController extends Controller
                // 'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
                'ci_resp.required'=> 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
                  'nombres_resp.required'=> 'El campo nombre del responsable es obligatorio',
-                // 'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
+                 'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
               //  'celular.required'=> 'El campo celular es obligatorio',
               //  'ecivil.required'=> 'El campo estado civil  es obligatorio',
               //  'email.required'=> 'El campo email es obligatorio',
@@ -568,6 +568,18 @@ class MantenimientoController extends Controller
             ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id') 
             ->first(); 
 
-           return $sql;
+            if($sql){
+                return response([
+                    'status'=> true,
+                    'resp'=> $sql
+                 ],200); 
+            }else{
+                return response([
+                    'status'=> false,
+                    'message'=> 'No autorizado'
+                 ],201); 
+            }
+
+          
    }
 }
