@@ -112,8 +112,6 @@
 
                                             <i class="fa fa-pen"></i>
                                         </button>
-
-
                                         <input type="hidden" name="difunto_search" id="difunto_search">
                                     </div>
                                 </div>
@@ -123,21 +121,21 @@
                                 <label>Nombres</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
-                                    class="form-control clear" id="nombres_dif" autocomplete="off">
+                                    class="form-control clear soloLetras" id="nombres_dif" autocomplete="off">
                             </div>
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Primer apellido</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
-                                    class="form-control clear" id="paterno_dif" autocomplete="off">
+                                    class="form-control clear soloLetras" id="paterno_dif" autocomplete="off">
                             </div>
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Segundo apellido</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
-                                    class="form-control clear" id="materno_dif" autocomplete="off">
+                                    class="form-control clear soloLetras" id="materno_dif" autocomplete="off">
                             </div>
 
                         </div>
@@ -235,21 +233,21 @@
                                 <label>Nombres</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
-                                    class="form-control clear" id="nombres_resp" autocomplete="off">
+                                    class="form-control clear soloLetras" id="nombres_resp" autocomplete="off">
                             </div>
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Primer apellido</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
-                                    class="form-control clear" id="paterno_resp" autocomplete="off">
+                                    class="form-control clear soloLetras" id="paterno_resp" autocomplete="off">
                             </div>
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Segundo apellido</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
-                                    class="form-control clear" id="materno_resp" autocomplete="off">
+                                    class="form-control clear soloLetras" id="materno_resp" autocomplete="off">
                             </div>
 
                         </div>
@@ -313,7 +311,7 @@
                             <div class="col-sm-12 col-md-2 col-xl-2">
                                 <label>Genero</label>
                                 <select name="genero_resp" id="genero_resp" class="form-control">
-                                    <option value="">Seleccionar</option>
+                                    <option value="">SELECCIONAR</option>
                                     <option value="FEMENINO">FEMENINO</option>
                                     <option value="MASCULINO">MASCULINO</option>
                                 </select>
@@ -1342,15 +1340,38 @@
                     "fila": fila
 
                 }),
-                success: function(data) {
-                    console.log(data);
-                    if (data) {
-                        $('#cuartel').val(data.codigo);
+                success: function(data) {                   
+                    if (data.status==true) {
+                        $('#cuartel').val(data.resp.nombre);
+                    }else{
+                        $('#cuartel').val("NN");
                     }
                 }
             });
 
         }
+
+
+
+        $(document).ready(function(){
+                $(function() {
+                                $('.numeroEntero').keypress(function(e) {
+                                        if (isNaN(this.value + String.fromCharCode(e.charCode)))
+                                            return false;
+                                    })
+                                    .on("cut copy paste", function(e) {
+                                        e.preventDefault();
+                                    });
+
+                            });
+                            $(function() {
+                                $('.soloLetras').bind('keyup input', function() {
+                                    if (this.value.match(/[^a-zA-Z áéíóúÁÉÍÓÚüÜñÑ]/g)) {
+                                        this.value = this.value.replace(/[^a-zA-Z áéíóúÁÉÍÓÚüÜñÑ]/g, '');
+                                    }
+                                });
+                            });
+            });
     </script>
 
 @stop

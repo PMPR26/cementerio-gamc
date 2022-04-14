@@ -568,6 +568,18 @@ class MantenimientoController extends Controller
             ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id') 
             ->first(); 
 
-           return $sql;
+            if($sql){
+                return response([
+                    'status'=> true,
+                    'resp'=> $sql
+                 ],200); 
+            }else{
+                return response([
+                    'status'=> false,
+                    'message'=> 'No autorizado'
+                 ],201); 
+            }
+
+          
    }
 }
