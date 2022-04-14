@@ -1342,7 +1342,7 @@
                 }),
                 success: function(data) {                   
                     if (data.status==true) {
-                        $('#cuartel').val(data.resp.nombre);
+                        $('#cuartel').val(data.resp.codigo);
                     }else{
                         $('#cuartel').val("NN");
                     }
