@@ -1774,7 +1774,7 @@
                         }),
                         success: function(data) {
                             console.log(data);
-                            if(data.data.nro_renovacion>0){
+                            if(data.status==true){
                                 $('#renov_ant').val(data.data.nro_renovacion);
                                  $('#precio_renov_ant').val(data.data.monto_renovacion);
                                  var rn=parseInt($('#renov_ant').val()) + parseInt(1);
