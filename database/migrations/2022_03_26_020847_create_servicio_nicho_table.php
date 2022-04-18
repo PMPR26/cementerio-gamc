@@ -22,20 +22,25 @@ class CreateServicioNichoTable extends Migration
             $table->string('servicio_id',30);           
             $table->string('servicio',200); 
             $table->unsignedBigInteger('responsable_difunto_id');
-
             $table->integer('fur');
-            $table->integer('gestion_pagada'); //pag_con    
-
             $table->timestamp('fecha_pago')->nullable();
-            $table->integer('id_usuario_caja')->nullable();  
-            $table->boolean('estado_pago')->default(false);
-            $table->integer('user_id');
+            $table->integer('id_usuario_caja')->nullable(); 
+            $table->integer('nro_renovacion')->nullable();
+            $table->string('monto_renovacion')->nullable();
+            $table->string('monto'); 
+            $table->string('nombrepago');
+            $table->string('paternopago');
+            $table->string('maternopago')->nullable();
+            $table->string('ci');
+            $table->string('pago_por')->nullable();
+            $table->string('observacion')->nullable();
+            $table->boolean('estado_pago')->default(false);           
             $table->string('estado',10)->default('ACTIVO');
             $table->timestamps();     
 
 
             $table->foreign('responsable_difunto_id')->references('id')->on('responsable_difunto');
-           // $table->foreign('codigo_nicho')->references('codigo')->on('nicho');
+          
         });
     }
 
