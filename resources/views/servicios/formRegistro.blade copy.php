@@ -741,10 +741,12 @@ $(document).ready(function ()
                     }),
                     success: function(data) {
 
-                        if (data.mensaje) {
+                        if (data) 
+                        {
+                             console.log(data);
                             $('#sp').empty();
                             $('#origen').val('tabla_nueva');
-                            console.log(data);
+                           
                             // cargar campos del los forms
                             $('#cuartel').val(data.datos.cuartel);
                             $('#anterior').val(data.datos.anterior);
