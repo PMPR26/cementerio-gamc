@@ -462,7 +462,7 @@
                                 <label for=""># de renovacion </label>
 
                                 <input type="number" name="renov" id="renov" class="form-control renov"
-                                    onblur="calcRenov()">
+                                    onkeyup="calcRenov()">
                             </div>
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label for="">Monto renovacion </label>
@@ -737,17 +737,18 @@
                             {
                                  $('#ren').show();
                                  buscarUltimaRenovacion();
-                              //   Renov();
-                                 calcularPrice();
+                            //   //   Renov();
+                            //      calcularPrice();
                                
                             }else{
                                 var v = (value.text).split('-');
-                                var costo = '<input type="hidden" name="costo" value="' + v[v.length - 2] +
+                                var costo = '<input type="text" name="costo" value="' + v[v.length - 2] +
                                     '" class="costo" id="txt-' + value.id + '" />';
                                 $('#servicios-hijos-price').append(costo);
-                                calcularPrice();
+                               
                             }
-                 
+                            // calcularPrice();
+                            consolidado();
                     });
 
 
@@ -781,7 +782,9 @@
                             var costo = '<input type="hidden" name="costo" value="' + v[v.length - 2] +
                             '" class="costo" id="txt-' + value.id + '" />';
                             $('#servicios-hijos-price').append(costo);
-                            calcularPrice();
+                            // calcularPrice();
+                            consolidado();
+                            $('#ren').hide();
                            
                         }
                     });
@@ -790,13 +793,17 @@
                             $('#ren').show();
                             //  Renov();
                             buscarUltimaRenovacion();
-                              calcularPrice();
+                            //   calcularPrice();
+                            consolidado();
                        
                     }else{
+                        $('#ren').hide();
                         $('#cuenta_renov').val("0");
                             $('#monto_renov').val("0");
                             $('#renov').val("0");
-                            calcularPrice();
+                            // calcularPrice();
+                            consolidado();
+
                     }
 
 
@@ -808,6 +815,8 @@
 
                 function calcularPrice() {
                     var acum = 0;
+                    $('#totalServ').html(0);
+                    $('#totalservicios').val(0)
                     $('.costo').each(function(index) {
                         acum = parseFloat(acum) + parseFloat($(this).val());
                     });
@@ -1708,13 +1717,20 @@
             // }
 
             $(document).on('keyup', '#renov_ant', function() {
-               // Renov();
+              $('#totalServ').html(0);
+              $('#totalservicios').val(0);
+             $('#monto_renov').val(0);
+
+              
                buscarUltimaRenovacion();
-                calcRenov();
+            //    calcularPrice();
+                consolidado();
             })
 
 
             function calcRenov() {
+                $('#totalServ').html(0);
+                $('#totalservicios').val(0);
                 $('#monto_renov').val(0);
                 var precio_ant = $('#precio_renov_ant').val();
                 var porcentaje = 0;
@@ -1738,6 +1754,7 @@
                 }
 
                 $('#monto_renov').val(acum);
+               
                 consolidado();
 
             }
@@ -1745,15 +1762,29 @@
             function consolidado() {
                 // totalServ
                 var totalgral = 0;
+                var acum = 0;
+
                 console.log("monto renov" + $('#monto_renov').val());
               
                 console.log($('#totalservicios').val());
-                if ($('#monto_renov').val() != 0 || $('#monto_renov').val() != null || $('#totalservicios').val() != 0) {
+                if ($('#monto_renov').val() != 0 || $('#monto_renov').val() != null ) {
 
+                    $('.costo').each(function(index) {
+                        acum = parseFloat(acum) + parseFloat($(this).val());
+                    });
+                    totalgral = parseFloat($('#monto_renov').val()) + parseFloat(acum);
+                    $('#totalServ').html(totalgral);
+                    $('#totalservicios').val(totalgral);
                 }
-                totalgral = parseFloat($('#monto_renov').val()) + parseFloat($('#totalservicios').val());
-                $('#totalServ').html(totalgral);
-                $('#totalservicios').val(totalgral);
+                else{
+                    $('.costo').each(function(index) {
+                        acum = parseFloat(acum) + parseFloat($(this).val());
+                    });
+                    $('#totalServ').html(acum);
+                    $('#totalservicios').val(acum);
+                }
+              
+               
                 // alert(totalgral);
             }
 
@@ -1796,6 +1827,7 @@
                                 }
 
                                 calcRenov();
+                                //consolidado();
                             }
                 });
 
