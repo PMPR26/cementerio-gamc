@@ -326,14 +326,6 @@
                 <input type="hidden" name="vencido" id="vencido">
                 <input type="hidden" name="aniosdeuda" id="aniosdeuda">
 
-                {{-- <input type="hidden" name="precio_sinot" id="precio_sinot" value="{{ $precio }}"> --}}
-                {{-- <input type="hidden" name="desc_sinot" id="desc_sinot" value="{{ $descrip }}"> --}}
-                {{-- <input type="hidden" name="txttotal" id="txttotal" value=""> --}}
-
-
-
-
-
                 <div class="card">
                     <div class="card-header">
                         <h4>INFORMACION ULTIMO PAGO</h4>
@@ -429,73 +421,71 @@
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h4>ASIGNACION SERVICIOS</h4>
-                    </div>
-
-                    <div class="card-body">
-                    
-                        <div class="row" id="ren" style="display: none">
-                            <h2>Calcular monto renovacion de enterratorio</h2>
-                            <input type="hidden" name="precio_renov" id="precio_renov" class="form-control precio_renov"
-                                value="0">
-                            <input type="hidden" name="cuenta_renov" id="cuenta_renov" class="form-control cuenta_renov"
-                                value="0">
-
-
-                            <div class="col-sm-12 col-md-3 col-xl-3">
-                                <label for=""># de renovacion anterior</label>
-                                <input type="number" name="renov_ant" id="renov_ant" class="form-control renov"
-                                    onkeyup="calcRenov()" value="0">
-                            </div>
-
-                            <div class="col-sm-12 col-md-3 col-xl-3">
-                                <label for="">Ultimo cobro renovacion</label>
-                                <input type="number" name="precio_renov_ant" id="precio_renov_ant"
-                                    class="form-control precio_renov_ant" value="0">
-
-                            </div>
-
-                            <div class="col-sm-12 col-md-3 col-xl-3">
-                                <label for=""># de renovacion </label>
-
-                                <input type="number" name="renov" id="renov" class="form-control renov"
-                                    onblur="calcRenov()">
-                            </div>
-                            <div class="col-sm-12 col-md-3 col-xl-3">
-                                <label for="">Monto renovacion </label>
-
-                                <input type="number" name="monto_renov" id="monto_renov" class="form-control monto_renov"
-                                    value="0">
-                            </div>
-
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>ASIGNACION SERVICIOS</h4>
                         </div>
 
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <label>Tipo Servicio</label>
-                                <select id="tipo_servicio_value"
-                                    class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
-                                    @foreach ($tipo_service as $value)
-                                        @if ($value['cuenta'] == '15224150' || $value['cuenta'] == '15224350' )
-                                        @else
-                                            <option value="{{ $value['cuenta'] }}">{{ $value['descripcion'] }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
+                        <div class="card-body">                    
+                            <div class="form-row " id="ren" style="display: none">
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-12 col-xl-12">
+                                            <h2>Calcular monto renovacion de enterratorio</h2>
+                                            <input type="hidden" name="precio_renov" id="precio_renov" class="form-control precio_renov"
+                                            value="0">
+                                            <input type="hidden" name="cuenta_renov" id="cuenta_renov" class="form-control cuenta_renov"
+                                            value="0">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                            <div class="col-sm-12 col-md-3 col-xl-3">
+                                                <label for=""># de renovacion anterior</label>
+                                                <input type="number" name="renov_ant" id="renov_ant" class="form-control renov"
+                                                    onkeyup="calcRenov()" value="0">
+                                            </div>
 
-                            <div class="col-sm-6" id="service" style="display:none">
-                                <label>Servicio</label>
-                                <select id="servicio-hijos" class="form-control select2-multiple select2-hidden-accessible"
-                                    style="width: 100%"></select>
+                                            <div class="col-sm-12 col-md-3 col-xl-3">
+                                                <label for="">Ultimo cobro renovacion</label>
+                                                <input type="number" name="precio_renov_ant" id="precio_renov_ant"
+                                                    class="form-control precio_renov_ant" value="0">
+                                            </div>
+
+                                            <div class="col-sm-12 col-md-3 col-xl-3">
+                                                <label for=""># de renovacion </label>
+                                                <input type="number" name="renov" id="renov" class="form-control renov"
+                                                    onblur="calcRenov()">
+                                            </div>
+                                            <div class="col-sm-12 col-md-3 col-xl-3">
+                                                <label for="">Monto renovacion </label>
+                                                <input type="number" name="monto_renov" id="monto_renov" class="form-control monto_renov"
+                                                    value="0">
+                                            </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label>Tipo Servicio</label>
+                                            <select id="tipo_servicio_value"
+                                                class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
+                                                @foreach ($tipo_service as $value)
+                                                    @if ($value['cuenta'] == '15224150' || $value['cuenta'] == '15224350' )
+                                                    @else
+                                                        <option value="{{ $value['cuenta'] }}">{{ $value['descripcion'] }}</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="col-sm-6" id="service" style="display:none">
+                                            <label>Servicio</label>
+                                            <select id="servicio-hijos" class="form-control select2-multiple select2-hidden-accessible"
+                                                style="width: 100%"></select>
+                                        </div>
+                                    </div>
                             </div>
                         </div>
                     </div>
-
-
-
                     <div class="card">
                         <div class="card-header">
                             <h4>DETALLE DE SERVICIOS SOLICITADOS</h4>
@@ -521,55 +511,13 @@
                         <div id="cal_price" style="text-align: center">
                             <div class="card">
                                 <div class="card-body" id="servicios-hijos-price" style="text-align: center">
-
-
-
                                 </div>
                                 <h1><span id="totalServ"> 0 </span> Bs</h1>
                                 <input type="hidden" name="totalservicios" id="totalservicios" value="0"
                                     class="form-control">
                             </div>
                         </div>
-
-
-
-
                     </div>
-
-                    {{-- <div class="card">
-                    <div class="col-sm-12 col-md-12 col-xl-12 card-header">
-                        <h4>GESTIONES ADEUDADAS</h4>
-                        <div class="row">
-                        
-                            <div class="col-sm-6 col-md-6 col-xl-6"> Regularizar Transaccion  &nbsp;&nbsp;&nbsp;  <input type="checkbox"
-                                    name="reg" id="reg" value="reg" style="width: 30px; height:30px"></div>
-                            <div class="col-sm-6 col-md-6 col-xl-6" id="fur_reg" style="display: none"> FUR <input
-                                    type="text" name="nrofur" id="nrofur" value=""></div>
-                        </div>
-                    </div>
-
-                    <div class="card-body" id="conservacion" style="display:none">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col"> Cuota</th>
-                                    <th scope="col"> GESTION</th>
-                                    <th scope="col"> MONTO</th>
-                                    <th scope="col"> SELECCIONAR</th>
-                                </tr>
-                            </thead>
-                            <tbody id="row-cuota">
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="3">Total</td>
-                                    <td id="total"></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div> --}}
-
 
                     <div class="col-sm-12" style="text-align: center" id="print">
                         <button type="button" id="btn_guardar_pago" class="btn btn-success">Registrar servicio</button>
@@ -795,6 +743,7 @@
                         $('#cuenta_renov').val("0");
                             $('#monto_renov').val("0");
                             $('#renov').val("0");
+                            calcularPrice();
                     }
 
 
@@ -1772,7 +1721,7 @@
                         }),
                         success: function(data) {
                             console.log(data);
-                            if(data.data.nro_renovacion>0){
+                            if(!empty(data)){
                                 $('#renov_ant').val(data.data.nro_renovacion);
                                  $('#precio_renov_ant').val(data.data.monto_renovacion);
                                  var rn=parseInt($('#renov_ant').val()) + parseInt(1);
