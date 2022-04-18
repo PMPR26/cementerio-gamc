@@ -324,7 +324,7 @@
                 <input type="hidden" name="pag_con" id="pag_con" value="">
                 <input type="hidden" name="tiempo" id="tiempo">
                 <input type="hidden" name="vencido" id="vencido">
-                <input type="hidden" name="aniosdeuda" id="aniosdeuda">
+                <input type="text" name="aniosdeuda" id="aniosdeuda">
 
                 {{-- <input type="hidden" name="precio_sinot" id="precio_sinot" value="{{ $precio }}"> --}}
                 {{-- <input type="hidden" name="desc_sinot" id="desc_sinot" value="{{ $descrip }}"> --}}
@@ -1110,7 +1110,7 @@
                     plazo = parseInt(año) + parseInt(tiempo);
                     var fecha = new Date();
                     var year = fecha.getFullYear();
-                    var adeuda = year - plazo;
+                    var adeuda = year - plazo; 
                     $('#aniosdeuda').val(adeuda);
 
                     if (plazo < year) {
@@ -1685,27 +1685,27 @@
             // });
 
 
-            function Renov() {
-                var renov_ant = $('#renov_ant').val();
+            // function Renov() {
+            //     var renov_ant = $('#renov_ant').val();
                        
-                if (renov_ant == 0) { 
-                    renov_ant = 0;  
-                    var precio = $('#precio_renov').val();
-                    $('#precio_renov_ant').val(precio);
-                    anios_ren = $('#aniosdeuda').val();
-                    if (anios_ren <= 0 && anios_ren !="") {  
-                        $('#renov').val(1);
-                    } else if(anios_ren!=""){
-                        $('#renov').val(anios_ren);  
-                    }
+            //     if (renov_ant == 0) { 
+            //         renov_ant = 0;  
+            //         var precio = $('#precio_renov').val();
+            //         $('#precio_renov_ant').val(precio);
+            //         anios_ren = $('#aniosdeuda').val();
+            //         if (anios_ren <= 0 && anios_ren !="") {  
+            //             $('#renov').val(1);
+            //         } else if(anios_ren!=""){
+            //             $('#renov').val(anios_ren);  
+            //         }
 
-                }else if(renov_ant >0){
-                    var rn=parseInt($('#renov_ant').val()) + parseInt(1);
-                        $('#renov').val(rn);
-                }
-                calcRenov();
+            //     }else if(renov_ant >0){
+            //         var rn=parseInt($('#renov_ant').val()) + parseInt(1);
+            //             $('#renov').val(rn);
+            //     }
+            //     calcRenov();
 
-            }
+            // }
 
             $(document).on('keyup', '#renov_ant', function() {
                // Renov();
@@ -1781,17 +1781,17 @@
                                  $('#renov').val(rn);
                             }
                            else {
-                                    var renov_ant = $('#renov_ant').val();
-                       
+                                var renov_ant = $('#renov_ant').val();                       
                                     if (renov_ant == 0) {                                         
                                         var precio = $('#precio_renov').val();
                                         $('#precio_renov_ant').val(precio);
                                         anios_ren = $('#aniosdeuda').val();
-                                        if (anios_ren <= 0 && anios_ren !="") {  
+                                        if (anios_ren <= 0 && anios_ren =="" ) {  
                                             $('#renov').val(1);
-                                        } else if(anios_ren!=""){
-                                            $('#renov').val(anios_ren);  
                                         }
+                                        // else if(anios_ren!=""){
+                                        //     $('#renov').val(anios_ren);  
+                                        // }
                                      }
                                 }
 
