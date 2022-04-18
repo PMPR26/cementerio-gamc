@@ -43,7 +43,7 @@ class CreateServicioNichoTable extends Migration
           
         });
     }
-
+ 
     /**
      * Reverse the migrations.
      *
