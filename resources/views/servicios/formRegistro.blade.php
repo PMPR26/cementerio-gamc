@@ -878,7 +878,7 @@
                         }),
                         success: function(data) {
 
-                            if (data.status) {
+                            if (data.mensaje) {
                                 $('#sp').empty();
                                 $('#origen').val('tabla_nueva');
                                 console.log(data);

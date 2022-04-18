@@ -148,22 +148,19 @@ class ServiciosController extends Controller
             ->where('nicho.fila', '=', $request->fila)
             ->orderBy('servicio_nicho.id', 'DESC')
             ->first();
-           
-        //    dd($sql);
-        if ($sql) {
-            return response([
-                'status' => true,
-                'response' => $sql
-            ], 200);
-        } else {
-            return response([
-                'status' => false,
-                'message' => 'Error, codigo existente, duplicado!)'
-            ], 400);
-        }
-
-
-        // return response()->json($resp);
+            if($sql){
+                $mensaje=true;
+            }
+            else{
+                $mensaje= false;
+            }
+    
+            $resp= [
+                "mensaje" => $mensaje,
+                "response"=>$sql
+                ];
+             return response()->json($resp);
+        
     }
 
 
@@ -638,50 +635,6 @@ class ServiciosController extends Controller
 
 
 
-            /// buscar en la base local
-
-            public function buscar_registros(Request $request){
-                $sql=DB::table('mantenimiento_nicho')  
-                ->join('responsable_difunto', 'responsable_difunto.id', '=', 'mantenimiento_nicho.respdifunto_id')    
-                ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')    
-                ->join('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
-                ->join('nicho', 'nicho.codigo', '=', 'responsable_difunto.codigo_nicho') 
-                ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id') 
-                ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')   
-                ->where( 'nicho.fila', '=', ''.$request->fila.'')               
-                ->where('bloque.codigo', '=', ''.$request->bloque.'') 
-                ->where('nicho.nro_nicho', '=',  $request->nicho)
-                // ->orwhere('nicho.codigo_anterior', '=', ''. $request->anterior.'')    
-                ->select('mantenimiento_nicho.gestion', 'mantenimiento_nicho.pagado', 'mantenimiento_nicho.fur', 'mantenimiento_nicho.precio_sinot', 
-                'mantenimiento_nicho.monto', 'mantenimiento_nicho.ultimo_pago', 'mantenimiento_nicho.nombrepago',
-                'mantenimiento_nicho.paternopago', 'mantenimiento_nicho.paternopago', 'mantenimiento_nicho.ci as cipago',
-                'mantenimiento_nicho.gestion', 'mantenimiento_nicho.fecha_pago', 'mantenimiento_nicho.monto',  'mantenimiento_nicho.fur', 
-                'difunto.id as id_dif','difunto.ci as ci_dif','difunto.nombres as nombre_dif','difunto.primer_apellido as paterno_dif', 'difunto.segundo_apellido as materno_dif',
-                'difunto.fecha_nacimiento as nacimiento_dif', 'difunto.fecha_defuncion', 'difunto.genero as genero_dif', 'difunto.causa', 'difunto.certificado_defuncion',
-                'difunto.tipo as tipo_dif', 
-                'responsable_difunto.fecha_adjudicacion', 'responsable_difunto.tiempo',
-                'responsable.id as id_resp','responsable.ci as ci_resp',  'responsable.nombres as nombre_resp',  'responsable.primer_apellido as paterno_resp', 
-                'responsable.segundo_apellido as materno_resp',  'responsable.fecha_nacimiento as nacimiento_resp',  'responsable.domicilio as dir_resp', 
-                'responsable.telefono', 
-                'responsable.celular', 
-                'responsable.estado_civil',  'responsable.email', 'responsable.genero as genero_resp',
-                 'cuartel.codigo as cuartel', 'bloque.codigo as bloque', 'nicho.nro_nicho as nicho', 'nicho.codigo_anterior as anterior', 'nicho.fila as fila','nicho.tipo as tipo_nicho')
-                 ->orderBy('mantenimiento_nicho.id', 'DESC')                
-                ->first();
-       // dd( $sql);
-                if($sql){
-                    $mensaje=true;
-                }
-                else{
-                    $mensaje= false;
-                }
-        
-                $resp= [
-                    "mensaje" => $mensaje,
-                    "datos"=>$sql
-                    ];
-                 return response()->json($resp);
-            }
 
             public function generateCiDif(){
                 $dif=new Difunto;
