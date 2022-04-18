@@ -116,10 +116,15 @@ Route::group(['prefix' => 'servicios', 'middleware' => 'auth'], function () {
     Route::post('/buscar_nicho', [App\Http\Controllers\Servicios\ServiciosController::class, 'buscar_nicho'])->name('buscar.nicho');
     Route::get('/cargarForm', [App\Http\Controllers\Servicios\ServiciosController::class,'cargarForm'])->name('load.form'); 
     Route::get('/cargarMantenimiento', [App\Http\Controllers\Servicios\ServiciosController::class,'cargarMantenimiento'])->name('load.mant'); 
-
+    Route::get('/renovacion', [App\Http\Controllers\Servicios\ServiciosController::class,'precioRenov'])->name('precio.renovacion'); 
+    Route::get('generate-pdf', [App\Http\Controllers\Servicios\ServiciosController::class, 'generatePDF'])->name('serv.generatePDF')->middleware('auth');
+   
+ 
     //generate fur from sinot
-    Route::post('/generate-fur', [App\Http\Controllers\Servicios\ServiciosController::class,'generateFur'])->name('servicio.fur'); 
-     
+    Route::post('/generate-fur', [App\Http\Controllers\Servicios\ServiciosController::class,'generateFur'])->name('servicio.fur');
+    Route::post('/buscar-renovacion', [App\Http\Controllers\Servicios\ServiciosController::class,'buscarRenovacion'])->name('buscar.renovacion'); 
+
+
 });
 
 //responsable

@@ -678,7 +678,7 @@
                                             var mes = fecha.substr(4, 2);
                                             var dia = fecha.substr(6, 2);
                                             var nuevaf = año + "-" + mes + "-" + dia;
-
+                                            $('#fechadef_dif').val(nuevaf);
 
 
                                             $('#pag_con').val(pg);
@@ -708,7 +708,7 @@
 
                                                 $('#pago_cont').html(pg);
                                                 $('#pago_cont_ant').html(pg);
-                                                $('#fechadef_dif').val(nuevaf);
+                                               
                                                 $('#tipo_nicho').val('PERPETUO');
                                             }
 

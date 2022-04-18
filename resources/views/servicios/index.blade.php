@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-@section('title', 'Bloque')
+@section('title', 'Servicios')
 @section('plugins.Datatables', true)
 @section('plugins.Animation', true)
 @section('plugins.Toastr', true)
@@ -26,16 +26,12 @@
             <thead class="bg-table-header">
                
                     <tr role="row">
-                        <th scope="col">#</th>                           
+                        <th scope="col">#</th>  
+                        <th scope="col">Codigo nicho</th> 
                         <th scope="col">Responable</th>  
-                        <th scope="col">Difunto</th>
-                        <th scope="col">Nicho</th>
-                        <th scope="col">Tipo Servicio</th>
                         <th scope="col">Servicios</th>
                         <th scope="col">Monto</th>
-
                         <th scope="col">FUR</th>
-                        <th scope="col">Gestion Pagada</th>
                         <th scope="col">Estado Pago</th>                        
                         <th scope="col">Opciones</th>
                     </tr>
@@ -47,19 +43,26 @@
                                
                         <tr>
                             <td scope="row">{{ $count++ }}</td>
-                           
-                            <td>{{ $serv->responsable }}</td> 
-                            <td>{{ $serv->difunto }}</td> 
-                            <td>{{ $serv->bloque }}</td>
-                            <td>{{ $serv->tipo_serv }}</td>
-                            <td>{{ $serv->serv }}</td>
-                            <td>{{ $serv->monto }}</td>
+                            <td>{{ $serv->codigo_nicho??'' }}</td>                            
+                            <td>{{ $serv->nombre_resp??'' }} {{ $serv->primerap_resp??'' }}{{ $serv->segap_resp??'' }}</td>                          
+                            <td>{{ $serv->servicio?? '' }}</td>
+                            <td>{{ $serv->monto ?? '' }}</td>
                             <td>{{ $serv->fur }}</td>
-                            <td>{{ $serv->gestion_pagada }}</td>
-                            <td>{{ $serv->estado_pago }}</td>     
-                            <td>{{ $serv->estado }}</td>  
+                            <td>@if( $serv->estado_pago==false)
+                               @php( print_r( 'PENDIENTE'))
+                            @else
+                            @php( print_r( 'PAGADO'))
+                            @endif
+                        </td>     
+                            
                             <td>
-                                <button type="button" class="btn btn-info" value="{{ $serv->id }}" id="btn-print" title="Editar imprimir"><i class="fas fa-print"></i></button>
+                                <form action="{{ route('serv.generatePDF') }}" method="GET" target="blank">
+                                    @csrf
+                                    <input type="hidden" name="id" value={{ $serv->fur }}>
+                                    <button type='submit' class="btn btn-info "><i
+                                            class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
+                                </form>
+                              
                                                               
                             </td>
                         </tr>
