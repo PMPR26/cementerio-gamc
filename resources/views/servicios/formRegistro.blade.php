@@ -324,7 +324,7 @@
                 <input type="hidden" name="pag_con" id="pag_con" value="">
                 <input type="hidden" name="tiempo" id="tiempo">
                 <input type="hidden" name="vencido" id="vencido">
-                <input type="text" name="aniosdeuda" id="aniosdeuda">
+                <input type="hidden" name="aniosdeuda" id="aniosdeuda">
 
                 {{-- <input type="hidden" name="precio_sinot" id="precio_sinot" value="{{ $precio }}"> --}}
                 {{-- <input type="hidden" name="desc_sinot" id="desc_sinot" value="{{ $descrip }}"> --}}
