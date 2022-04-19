@@ -18,9 +18,9 @@ class CreateServicioNichoTable extends Migration
             $table->string('codigo_nicho',20);           
             $table->date('fecha_registro');     
             $table->string('tipo_servicio_id',30);           
-            $table->string('tipo_servicio',200);           
+            $table->text('tipo_servicio');           
             $table->string('servicio_id',30);           
-            $table->string('servicio',200); 
+            $table->text('servicio'); 
             $table->unsignedBigInteger('responsable_difunto_id');
             $table->integer('fur');
             $table->timestamp('fecha_pago')->nullable();
