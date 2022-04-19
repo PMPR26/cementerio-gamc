@@ -499,8 +499,9 @@ class ServiciosController extends Controller
         $dif->codigo_nicho = $codigo_n;       
         $dif->fecha_adjudicacion = $request->fechadef_dif;       
         $dif->tiempo = $request->tiempo;  
-        if($estado_nicho!=""){ 
-            $dif->estado_nicho = $estado_nicho;       
+        if($estado_nicho=="LIBRE"){ 
+            $dif->estado_nicho = $estado_nicho;   
+            $dif->fecha_liberacion= date("Y-m-d H:i:s");   
             } 
       
         $dif->estado = 'ACTIVO';  
@@ -520,9 +521,10 @@ class ServiciosController extends Controller
             $dif->codigo_nicho = $codigo_n;       
             $dif->fecha_adjudicacion = $request->fechadef_dif;       
             $dif->tiempo = $request->tiempo;  
-            if($estado_nicho!=""){ 
-            $dif->estado_nicho = $estado_nicho;       
-            }
+            if($estado_nicho=="LIBRE"){ 
+                $dif->estado_nicho = $estado_nicho;   
+                $dif->fecha_liberacion= date("Y-m-d H:i:s");   
+                } 
             $dif->estado = 'ACTIVO';  
             $dif->user_id = auth()->id();
             $dif->save();
