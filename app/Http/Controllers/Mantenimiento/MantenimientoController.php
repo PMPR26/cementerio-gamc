@@ -559,14 +559,16 @@ class MantenimientoController extends Controller
         }
     }
 
+   
 
    public function buscarCuartel(Request $request){
-            $sql= Nicho::where('codigo_anterior', $request->anterior)  
-            ->Where('nicho.fila', $request->fila)
-            ->orWhere('bloque.codigo', $request->bloque)
-            ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id') 
-            ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id') 
-            ->first(); 
+    $sql= DB::table('nicho')
+    ->Where('nicho.fila', $request->fila)
+    ->Where('bloque.codigo', $request->bloque)
+    ->Where('nicho.nro_nicho', $request->nicho)
+    ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id') 
+    ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id') 
+    ->first(); 
 
             if($sql){
                 return response([

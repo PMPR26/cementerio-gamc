@@ -283,7 +283,7 @@ class ServiciosController extends Controller
                 'tipo_nicho.required' => 'El campo tipo de nicho es obligatorio',
                 'ci_dif.required' => 'El campo ci del difunto es obligatorio, si no tiene documento presione el boton "generar carnet provisional  (icono lapiz)" para asignarle un numero provisional',
                 'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
-                'paterno_dif.required'=> 'El campo apellido paterno es obligatorio',
+                'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
                 'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
                  'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
                 'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
@@ -308,8 +308,9 @@ class ServiciosController extends Controller
                       $estado_nicho="OCUPADO";
                     }else if($servi == '645' || $servi =='644'){
                       $estado_nicho="LIBRE";
-                    }else{
-                        $estado_nicho="";
+                    }
+                    else{
+                        $estado_nicho="OCUPADO";
                     }
                     
                 }
@@ -321,12 +322,13 @@ class ServiciosController extends Controller
             if ($existeNicho != null) {
                 $id_nicho = $existeNicho->id;
                 $upnicho= Nicho::where('id',  $id_nicho)->first();
-                if($estado_nicho!=""){
+                if(isset($estado_nicho)){
                   
                     $upnicho->estado_nicho=$estado_nicho;
                 }
                 $upnicho->codigo_anterior=$request->anterior;
-              
+                $upnicho->save();
+                $upnicho->id;
 
             } else {      // buscar cuartel si existe recuperar id sino insertar
                 $existeCuartel = Cuartel::where('codigo', $request->cuartel)->first();
@@ -754,5 +756,30 @@ class ServiciosController extends Controller
                 }
                 return response()->json($resp);
     }
+
+    public function buscarCuartel(Request $request){
+        dd($request);
+        $sql= Nicho::orWhere('codigo_anterior', $request->anterior)  
+        ->Where('nicho.fila', $request->fila)
+        ->Where('bloque.codigo', $request->bloque)
+        ->Where('nicho.nro_nicho', $request->nro_nicho)
+        ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id') 
+        ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id') 
+        ->first(); 
+
+        if($sql){
+            return response([
+                'status'=> true,
+                'resp'=> $sql
+             ],200); 
+        }else{
+            return response([
+                'status'=> false,
+                'message'=> 'No autorizado'
+             ],201); 
+        }
+
+      
+}
 
 }
