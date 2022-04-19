@@ -702,7 +702,12 @@ $(document).ready(function ()
 
 
 
-        $(document).on('click', '#buscar', function() {
+        $(document).on('click', '#buscar1', function() {
+                var bloque = $('#bloque').val();
+                var nicho = $('#nro_nicho').val(); alert(nicho);
+                var fila = $('#fila').val();
+
+                cuartel = buscarCuartel(bloque, nicho, fila);
                 $('.clear').val("");
                 $('.clear').html("");
                 $('.clean').val("");
@@ -710,11 +715,7 @@ $(document).ready(function ()
                 $('#pag_con').val();
                 $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
                 $('#form').hide();
-                var bloque = $('#bloque').val();
-                var nicho = $('#nro_nicho').val();
-                var fila = $('#fila').val();
-
-                cuartel = buscarCuartel(bloque, nicho, fila);
+               
 
                 if (bloque && nicho && fila) {
                     dats = buscar_datos(bloque, nicho, fila);
