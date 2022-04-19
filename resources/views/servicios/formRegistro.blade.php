@@ -742,7 +742,7 @@
                                
                             }else{
                                 var v = (value.text).split('-');
-                                var costo = '<input type="text" name="costo" value="' + v[v.length - 2] +
+                                var costo = '<input type="hidden" name="costo" value="' + v[v.length - 2] +
                                     '" class="costo" id="txt-' + value.id + '" />';
                                 $('#servicios-hijos-price').append(costo);
                                
