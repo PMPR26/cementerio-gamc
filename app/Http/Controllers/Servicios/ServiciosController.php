@@ -308,8 +308,6 @@ class ServiciosController extends Controller
                       $estado_nicho="OCUPADO";
                     }else if($servi == '645' || $servi =='644'){
                       $estado_nicho="LIBRE";
-                    }else{
-                        $estado_nicho="";
                     }
                     
                 }
@@ -326,7 +324,8 @@ class ServiciosController extends Controller
                     $upnicho->estado_nicho=$estado_nicho;
                 }
                 $upnicho->codigo_anterior=$request->anterior;
-              
+                $upnicho->save();
+                $upnicho->id;
 
             } else {      // buscar cuartel si existe recuperar id sino insertar
                 $existeCuartel = Cuartel::where('codigo', $request->cuartel)->first();
@@ -754,5 +753,28 @@ class ServiciosController extends Controller
                 }
                 return response()->json($resp);
     }
+
+    public function buscarCuartel(Request $request){
+        $sql= Nicho::where('codigo_anterior', $request->anterior)  
+        ->Where('nicho.fila', $request->fila)
+        ->orWhere('bloque.codigo', $request->bloque)
+        ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id') 
+        ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id') 
+        ->first(); 
+
+        if($sql){
+            return response([
+                'status'=> true,
+                'resp'=> $sql
+             ],200); 
+        }else{
+            return response([
+                'status'=> false,
+                'message'=> 'No autorizado'
+             ],201); 
+        }
+
+      
+}
 
 }
