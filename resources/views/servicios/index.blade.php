@@ -27,12 +27,12 @@
                
                     <tr role="row">
                         <th scope="col">#</th>  
-                        <th scope="col">Codigo nicho</th> 
-                        <th scope="col">Responable</th>  
-                        <th scope="col">Servicios</th>
-                        <th scope="col">Monto</th>
+                        <th scope="col">CÓDIGO NICHO</th> 
+                        <th scope="col">RESPONSABLE</th>  
+                        <th scope="col">SERVICIOS</th>
+                        <th scope="col">MONTO</th>
                         <th scope="col">FUR</th>
-                        <th scope="col">Estado Pago</th>                        
+                        <th scope="col">ESTADO PAGO</th>                        
                         <th scope="col">Opciones</th>
                     </tr>
                 </thead>
@@ -46,7 +46,7 @@
                             <td>{{ $serv->codigo_nicho??'' }}</td>                            
                             <td>{{ $serv->nombre_resp??'' }} {{ $serv->primerap_resp??'' }}{{ $serv->segap_resp??'' }}</td>                          
                             <td>{{ $serv->servicio?? '' }}</td>
-                            <td>{{ $serv->monto ?? '' }}</td>
+                            <td>{{ $serv->monto ?? '0' }}</td>
                             <td>{{ $serv->fur }}</td>
                             <td>@if( $serv->estado_pago==false)
                                @php( print_r( 'PENDIENTE'))

@@ -61,7 +61,10 @@ class ServiciosController extends Controller
             ->join('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
             ->join('nicho', 'nicho.codigo', '=', 'responsable_difunto.codigo_nicho')
             ->join('servicio_nicho', 'servicio_nicho.responsable_difunto_id', '=', 'responsable_difunto.id')
-            ->distinct('servicio_nicho.fur')->get();
+            ->orderBy('responsable_difunto.id', 'DESC')
+            ->get();
+
+          
 
         return view('servicios/index', ['servicio' => $servicio]);
     }
@@ -87,64 +90,71 @@ class ServiciosController extends Controller
 
         $tipo_service = json_decode((string) $response->getBody(), true);
 
-        return view('servicios/formRegistro', ['tipo_service' => $tipo_service['response']]);
+        $funeraria=DB::table('difunto')
+        ->select('funeraria')
+        ->whereNotNull('funeraria')
+        ->distinct()->get();
+
+        return view('servicios/formRegistro', ['tipo_service' => $tipo_service['response'], 'funeraria' => $funeraria]);
     }
-   
+ 
+
     public function buscar_nicho(Request $request)
     {
 
         $sql = DB::table('responsable_difunto')
-            ->select(
-                'responsable_difunto.*',
-                'responsable.segundo_apellido as segap_resp',
-                'responsable.fecha_nacimiento as nacimiento_resp',
-                'responsable.telefono',
-                'responsable.celular',
-                'responsable.estado_civil as ecivil_resp',
-                'responsable.genero as genero_resp',
-                'responsable.email as email_resp',
-                'responsable.domicilio as domicilio_resp',
-                'responsable.ci as ci_resp',
-                'responsable.nombres as nombre_resp',
-                'responsable.primer_apellido as paterno_resp',
-                'responsable.segundo_apellido as segap_resp',
-                'difunto.ci as ci_dif',
-                'difunto.nombres as nombre_dif',
-                'difunto.primer_apellido as primerap_dif',
-                'difunto.segundo_apellido as segap_dif',
-                'difunto.segundo_apellido as segap_dif',
-                'difunto.fecha_nacimiento as fecha_nac_dif',
-                'difunto.fecha_defuncion as fecha_def_dif',
-                'difunto.causa as causa_dif',
-                'difunto.tipo as tipo_dif',
-                'difunto.certificado_defuncion',
-                'difunto.genero as genero_dif',
-                'difunto.certificado_file',
-                'servicio_nicho.fur',
-                'servicio_nicho.nombrepago',
-                'servicio_nicho.paternopago',
-                'servicio_nicho.maternopago',
-                'servicio_nicho.ci as ci_pago',
-                'servicio_nicho.fecha_pago as fecha_pago',
-                'servicio_nicho.monto as monto',
-                'servicio_nicho.nro_renovacion',
-                'servicio_nicho.monto_renovacion',
-                'nicho.tipo as tipo_nicho',
+            ->select(DB::raw('
+            
+               responsable_difunto.*,
+               responsable.segundo_apellido as segap_resp,
+               responsable.fecha_nacimiento as nacimiento_resp,
+               responsable.telefono,
+               responsable.celular,
+               responsable.estado_civil as ecivil_resp,
+               responsable.genero as genero_resp,
+               responsable.email as email_resp,
+               responsable.domicilio as domicilio_resp,
+               responsable.ci as ci_resp,
+               responsable.nombres as nombre_resp,
+               responsable.primer_apellido as paterno_resp,
+               responsable.segundo_apellido as segap_resp,
+               difunto.ci as ci_dif,
+               difunto.nombres as nombre_dif,
+               difunto.primer_apellido as primerap_dif,
+               difunto.segundo_apellido as segap_dif,
+               difunto.segundo_apellido as segap_dif,
+               difunto.fecha_nacimiento as fecha_nac_dif,
+               difunto.fecha_defuncion as fecha_def_dif,
+               difunto.causa as causa_dif,
+               difunto.tipo as tipo_dif,
+               difunto.certificado_defuncion,
+               difunto.genero as genero_dif,
+               difunto.certificado_file,
+               difunto.funeraria,
+               servicio_nicho.fur,
+                CONCAT(servicio_nicho.nombrepago , \' \',servicio_nicho.paternopago, \' \', servicio_nicho.maternopago) AS razon,
+               servicio_nicho.ci as ci_pago,
+               servicio_nicho.fecha_pago as fecha_pago,
+               servicio_nicho.monto as monto,
+               servicio_nicho.nro_renovacion,
+               servicio_nicho.monto_renovacion,
+               nicho.tipo as tipo_nicho,
+               nicho.codigo as nicho,
+               nicho.codigo_anterior as anterior,
+               bloque.codigo as bloque,
+               cuartel.codigo as cuartel,
+               nicho.nro_nicho,
+               nicho.cantidad_cuerpos
 
-                'nicho.codigo as nicho',
-                'nicho.codigo_anterior as anterior',
-                'bloque.codigo as bloque',
-                'cuartel.codigo as cuartel',
-                'nicho.nro_nicho'
-            )
+                ') )
             ->join('servicio_nicho', 'servicio_nicho.codigo_nicho', '=', 'responsable_difunto.codigo_nicho')
             ->leftJoin('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
             ->leftJoin('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
             ->join('nicho', 'nicho.codigo', '=', 'responsable_difunto.codigo_nicho')
             ->leftJoin('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
             ->leftJoin('bloque', 'bloque.id', '=', 'nicho.bloque_id')
-            ->where('bloque.codigo', '=', $request->bloque)
-            ->where('nicho.nro_nicho', '=', $request->nicho)
+            ->where('bloque.codigo', '=',''. $request->bloque.'')
+            ->where('nicho.nro_nicho', '=',''. $request->nicho.'')
             ->where('nicho.fila', '=', $request->fila)
             ->orderBy('servicio_nicho.id', 'DESC')
             ->first();
@@ -159,6 +169,7 @@ class ServiciosController extends Controller
                 "mensaje" => $mensaje,
                 "response"=>$sql
                 ];
+
              return response()->json($resp);
         
     }
@@ -250,7 +261,7 @@ class ServiciosController extends Controller
 
     public function createNewServicios(Request $request)
     {
-//  dd($request->servicio_hijos);
+  dd($request->gratis);
         if ($request->isJson()) {
             $this->validate($request, [
                 'nro_nicho' => 'required',
@@ -301,100 +312,114 @@ class ServiciosController extends Controller
             ]);
             if (!empty($request->servicio_hijos) && is_array($request->servicio_hijos)) {
              
-                $count = count($request->servicio_hijos);
+              //  $count = count($request->servicio_hijos);
 
                 foreach($request->servicio_hijos as $servi){
-                    if($servi=='1979' || $servi=='1977'  || $servi=='1981' ){
+                    if($servi=='1979' || $servi=='1977' || $servi=='1978'  || $servi=='1981' || $servi=='1980' || $servi=='1982'){
                       $estado_nicho="OCUPADO";
+                      $cant=$request->cant+1;
                     }else if($servi == '645' || $servi =='644'){
                       $estado_nicho="LIBRE";
+                      $cant=$request->cant-1;
                     }
                     else{
                         $estado_nicho="OCUPADO";
+                        $cant=$request->cant;
                     }
                     
                 }
-            //  dd($request);
-            //step1: nicho buscar si existe registrado el nicho recuperar el id  sino existe registrarlo
-            $codigo_n = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
-            $existeNicho = Nicho::where('codigo', $codigo_n)->first();
-
-            if ($existeNicho != null) {
-                $id_nicho = $existeNicho->id;
-                $upnicho= Nicho::where('id',  $id_nicho)->first();
-                if(isset($estado_nicho)){
-                  
-                    $upnicho->estado_nicho=$estado_nicho;
-                }
-                $upnicho->codigo_anterior=$request->anterior;
-                $upnicho->save();
-                $upnicho->id;
-
-            } else {      // buscar cuartel si existe recuperar id sino insertar
-                $existeCuartel = Cuartel::where('codigo', $request->cuartel)->first();
-                if ($existeCuartel != null) {
-                    $id_cuartel = $existeCuartel->id;
-                } else {
-                    $cuart = new Cuartel;
-                    $cuart->codigo = trim($request->cuartel);
-                    $cuart->nombre = trim($request->cuartel);
-                    $cuart->estado = 'ACTIVO';
-                    $cuart->user_id = auth()->id();
-                    $cuart->save();
-                    $cuart->id;
-                    $id_cuartel = $cuart->id;
-                }
-
-                //buscar bloque si existe recuperar id sino insertar
-                $existeBloque = Bloque::where('codigo', $request->bloque)->first();
-                if ($existeBloque != null) {
-                    $id_bloque = $existeBloque->id;
-                } else {
-                    $bloq = new Bloque;
-                    $bloq->cuartel_id = $id_cuartel;
-                    $bloq->codigo = trim($request->bloque);
-                    $bloq->nombre = trim($request->bloque);
-                    $bloq->estado = 'ACTIVO';
-                    $bloq->user_id = auth()->id();
-                    $bloq->save();
-                    $bloq->id;
-                    $id_bloque = $bloq->id;
-                }
-
-                // insertar nicho
-                $nicho = new Nicho;
-                $nicho->cuartel_id = $id_cuartel;
-                $nicho->bloque_id = $id_bloque;
-                $nicho->nro_nicho = $request->nro_nicho;
-                $nicho->fila = $request->fila;
-                $nicho->tipo = $request->tipo_nicho;
-                $nicho->codigo = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
-                $nicho->codigo_anterior = $request->anterior;
-                $nicho->estado_nicho =$estado_nicho;
-                $nicho->user_id = auth()->id();
-                $nicho->save();
-                $nicho->id;
-                $id_nicho = $nicho->id;
+            
+            if($request->externo=="externo"){
+                $codigo_n="00000" ;
+                $estado_nicho="EXTERNO";
+                $codigo_nicho = $codigo_n;
             }
+            else{
+                        $codigo_n = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
+                        $existeNicho = Nicho::where('codigo', $codigo_n)->first();
+
+                        if ($existeNicho != null) {
+                            $id_nicho = $existeNicho->id;
+                            $upnicho= Nicho::where('id',  $id_nicho)->first();
+                            if(isset($estado_nicho)){                            
+                                $upnicho->estado_nicho=$estado_nicho;
+                            }
+                            $upnicho->codigo_anterior=$request->anterior;
+                            $upnicho->save();
+                            $upnicho->id;
+
+                        } else {      // buscar cuartel si existe recuperar id sino insertar
+                                        $existeCuartel = Cuartel::where('codigo', $request->cuartel)->first();
+                                        if ($existeCuartel != null) {
+                                            $id_cuartel = $existeCuartel->id;
+                                        } else {
+                                            $cuart = new Cuartel;
+                                            $cuart->codigo = trim($request->cuartel);
+                                            $cuart->nombre = trim($request->cuartel);
+                                            $cuart->estado = 'ACTIVO';
+                                            $cuart->user_id = auth()->id();
+                                            $cuart->save();
+                                            $cuart->id;
+                                            $id_cuartel = $cuart->id;
+                                        }
+
+                                        //buscar bloque si existe recuperar id sino insertar
+                                        $existeBloque = Bloque::where('codigo', $request->bloque)->first();
+                                        if ($existeBloque != null) {
+                                            $id_bloque = $existeBloque->id;
+                                        } else {
+                                            $bloq = new Bloque;
+                                            $bloq->cuartel_id = $id_cuartel;
+                                            $bloq->codigo = trim($request->bloque);
+                                            $bloq->nombre = trim($request->bloque);
+                                            $bloq->estado = 'ACTIVO';
+                                            $bloq->user_id = auth()->id();
+                                            $bloq->save();
+                                            $bloq->id;
+                                            $id_bloque = $bloq->id;
+                                        }
+
+                                        // insertar nicho
+                                        $nicho = new Nicho;
+                                        $nicho->cuartel_id = $id_cuartel;
+                                        $nicho->bloque_id = $id_bloque;
+                                        $nicho->nro_nicho = $request->nro_nicho;
+                                        $nicho->fila = $request->fila;
+                                        $nicho->tipo = $request->tipo_nicho;
+                                        $nicho->codigo = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
+                                        $nicho->codigo_anterior = $request->anterior;
+                                        $nicho->estado_nicho =$estado_nicho;
+                                        $nicho->cantidad_cuerpos =$cant;
+                                        $nicho->user_id = auth()->id();
+                                        $nicho->save();
+                                        $nicho->id;
+                                        $id_nicho = $nicho->id;
+                                    }
             // end nicho
+
+            $codigo_nicho = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
+
+            }
+            //step1: nicho buscar si existe registrado el nicho recuperar el id  sino existe registrarlo
+            
 
             // step2: register difunto --- si id_difunto id_difunto es null insertar difunto insertar responsable
             $existeDifunto = Difunto::where('ci', $request->ci_dif)->first();
-            if ($request->id_difunto == ""  || !$existeDifunto) {
+            if ( !$existeDifunto) {
                 //insertar difunto
                 $difuntoid = $this->insertDifunto($request);
             } else {
-                $difuntoid = $request->id_difunto;
+                $difuntoid = $existeDifunto->id;
                 $this->updateDifunto($request, $difuntoid);
             }
             // end difunto
             // step4: register responsable -- si el responsable  
             $existeResponsable = Responsable::where('ci', $request->ci_resp)->first();
-            if ($request->id_responsable == "" || !$existeResponsable) {
+            if (!$existeResponsable) {
                 //insertar difunto
                 $idresp = $this->insertResponsable($request);
             } else {
-                $idresp = $request->id_responsable;
+                $idresp = $existeResponsable->id;
                 $this->updateResponsable($request, $idresp);
             }
             //end responsable
@@ -412,38 +437,44 @@ class ServiciosController extends Controller
 
 
             //insert pago 
-            if ($request->person != "responsable") {
-                $pago_por = "Tercera persona";
-                $nombre_pago = $request->name_pago;
-                $paterno_pago = $request->paterno_pago;
-                $materno_pago = $request->materno_pago;
-                $ci = $request->ci;
-                $domicilio = "SIN ESPECIFICACION";
-            } else {
-                $pago_por = "Titular responsable";
-                $nombre_pago = $request->nombres_resp;
-                if ($request->paterno_resp == "") {
-                    $paterno_pago = "NO DEFINIDO";
-                } else {
-                    $paterno_pago = $request->paterno_resp;
-                }
-                if ($request->domicilio == "") {
-                    $domicilio = "NO DEFINIDO";
-                } else {
-                    $domicilio = $request->domicilio;
-                }
+                                        if ($request->person != "responsable") {
+                                            $pago_por = "Tercera persona";
+                                            $nombre_pago = $request->name_pago;
+                                            $paterno_pago = $request->paterno_pago;
+                                            $materno_pago = $request->materno_pago;
+                                            $ci = $request->ci;
+                                            $domicilio = "SIN ESPECIFICACION";
+                                        } else {
+                                                    $pago_por = "Titular responsable";
+                                                    $nombre_pago = $request->nombres_resp;
+                                                    if ($request->paterno_resp == "") {
+                                                        $paterno_pago = "NO DEFINIDO";
+                                                    } else {
+                                                        $paterno_pago = $request->paterno_resp;
+                                                    }
+                                                    if ($request->domicilio == "") {
+                                                        $domicilio = "NO DEFINIDO";
+                                                    } else {
+                                                        $domicilio = $request->domicilio;
+                                                    }
 
-                $materno_pago = $request->materno_resp;
-                $ci = $request->ci_resp;
-            }
-            // dd($request);
-            $codigo_nicho = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
+                                                    $materno_pago = $request->materno_resp ?? '';
+                                                    $ci = $request->ci_resp;
+                                        }
+         
+          
 
                                                 if($request->reg=="reg"){
                                                     $fur=$request->nrofur;
+                                                    $estado_pago=true;
+                                                }
+                                                elseif($request->gratis=="gratis"){
+                                                    $fur=0;
+                                                    $estado_pago=true;
                                                 }
                                            else{
-                                                        /** generar fur */
+                                            $estado_pago=false;    
+                                             /** generar fur */
                                                             $nombre_difunto=$request->nombres_dif." ".$request->primerap_dif." ".$request->segap_dif;
                                                             $obj= new ServicioNicho;
                                                             $response=$obj->GenerarFur($ci, $nombre_pago, $paterno_pago,
@@ -458,7 +489,7 @@ class ServiciosController extends Controller
                                                 //insertar servicio
 //dd($request->txttotal);
                                                 $serv = new ServicioNicho; 
-                                                $serv->codigo_nicho=$codigo_nicho;
+                                                $serv->codigo_nicho=$codigo_nicho ?? '';
                                                 $serv->fecha_registro = date("Y-m-d");
                                                 $serv->tipo_servicio_id=implode(', ',  $request->tipo_servicio);
                                                 $serv->tipo_servicio=$request->tipo_servicio_txt;
@@ -477,6 +508,9 @@ class ServiciosController extends Controller
                                                 $serv->maternopago=$materno_pago;
                                                 $serv->ci=$ci;
                                                 $serv->pago_por=$pago_por;
+                                                $serv->estado_pago=$estado_pago;
+                                                $serv->fecha_pago=$fecha_pago;
+
                                              
                                                 $serv->estado='ACTIVO';
                                                 $serv->observacion=$request->observacion;
@@ -519,7 +553,7 @@ class ServiciosController extends Controller
             $dif->responsable_id = $idresp;
             $dif->difunto_id = $difuntoid;
             $dif->codigo_nicho = $codigo_n;       
-            $dif->fecha_adjudicacion = $request->fechadef_dif;       
+            $dif->fecha_adjudicacion = $request->fechadef_dif ?? '';       
             $dif->tiempo = $request->tiempo;  
             if($estado_nicho=="LIBRE"){ 
                 $dif->estado_nicho = $estado_nicho;   
@@ -546,8 +580,8 @@ class ServiciosController extends Controller
         $dif->causa = $request->causa;
         $dif->tipo = $request->tipo_dif; 
         $dif->genero = $request->genero_dif;  
-       // $dif->certificado_file=$request->adjunto;               
-      //  $dif->tiempo = $request->tiempo;  
+        $dif->certificado_file = $request->urlcertificacion;           
+        $dif->funeraria = $request->funeraria;  
         $dif->estado = 'ACTIVO';  
         $dif->user_id = auth()->id();
         $dif->save();
@@ -568,8 +602,8 @@ class ServiciosController extends Controller
         $difunto->causa = $request->causa;
         $difunto->tipo = $request->tipo_dif; 
         $difunto->genero = $request->genero_dif;  
-       // $difunto->certificado_file=$request->adjunto;       
-      //  $difunto->tiempo = $request->tiempo;  
+        $difunto->certificado_file = $request->urlcertificacion;           
+        $difunto->funeraria = $request->funeraria;  
         $difunto->estado = 'ACTIVO';  
         $difunto->user_id = auth()->id();
         $difunto->save();
@@ -731,8 +765,7 @@ class ServiciosController extends Controller
       
     }
 
-    // select "nro_renovacion", "monto_renovacion" from "servicio_nicho1" 
-    // where "codigo_nicho" = A.001..1 and "nro_renovacion!" is null order by "id" desc limit 1)
+   
 
     public function buscarRenovacion(Request $request)
     {
@@ -759,29 +792,5 @@ class ServiciosController extends Controller
                 return response()->json($resp);
     }
 
-    public function buscarCuartel(Request $request){
-        dd($request);
-        $sql= Nicho::orWhere('codigo_anterior', $request->anterior)  
-        ->Where('nicho.fila', $request->fila)
-        ->Where('bloque.codigo', $request->bloque)
-        ->Where('nicho.nro_nicho', $request->nro_nicho)
-        ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id') 
-        ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id') 
-        ->first(); 
-
-        if($sql){
-            return response([
-                'status'=> true,
-                'resp'=> $sql
-             ],200); 
-        }else{
-            return response([
-                'status'=> false,
-                'message'=> 'No autorizado'
-             ],201); 
-        }
-
-      
-}
 
 }

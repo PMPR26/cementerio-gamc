@@ -70,21 +70,16 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             </div>
                         </div>
 
-                        {{-- <div class="col-sm-6">
-                         
-                            <div class="form-group">
-                                <label>Estado civil:</label>
-                                <select name="status" id="estado_civil" class="form-control">
-            
-                                    <option value="SOLTERO"> Soltero/a</option>
-                                    <option value="CASADO"> Casado/a</option>
-                                    <option value="DIVORCIADO"> Divociado/a</option>
-                                    <option value="VIUDO"> Viudo/a</option>
-
-                                </select>
-                               
-                            </div> 
-                        </div> --}}
+                        <div class="col-sm-12 col-md-6 col-xl-6">
+                            <label>Funeraria</label>
+                            <select id="funeraria"
+                            class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
+                                <option value="">SELECIONAR FUNERARIA</option>
+                                @foreach ($funeraria as $fun)                                  
+                                        <option value="{{ $fun->funeraria }}">{{$fun->funeraria }}</option>                                   
+                                @endforeach
+                           </select>
+                        </div>
 
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -113,17 +108,13 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         </div>
                         <hr>
                         <div class="col-sm-12">
+                            <label for=""> Certificado de defunción</label>
                             <div id="cert-defuncion" class="dropzone" style="text-align: center">
                         </div>
                         <hr>
 
                         <input type="hidden" id="url-certification">
-                        {{-- <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Domicilio :</label>
-                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="domicilio" autocomplete="off">
-                            </div>
-                        </div> --}}
+                       
                     </div>
             
                    

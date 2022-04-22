@@ -42,7 +42,7 @@ class ServicioNicho extends Model
      $bloque, $nicho, $fila, $servicios_cementery )
       {
         
-  //dd( $servicios_cementery);
+ 
           $headers =  ['Content-Type' => 'application/json'];
           $client = new Client();
           $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementery', [
