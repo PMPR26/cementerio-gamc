@@ -105,7 +105,6 @@ class DifuntoController extends Controller
         }
 
     }
-
     public function getDifunto($id){
 
         $difunto =  Difunto::where('id', $id)->first();
@@ -117,7 +116,7 @@ class DifuntoController extends Controller
     }
 
     public function updateDifunto(Request $request){
-//dd($request);
+
         $this->validate($request, [
             'ci' => 'required',
             'nombres' => 'required',

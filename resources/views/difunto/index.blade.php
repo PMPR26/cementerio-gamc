@@ -475,10 +475,7 @@ $(document).ready(function ()
                 return false;
             }
         });
-
-        
-
-        this.on("removedfile", function(file) {
+           this.on("removedfile", function(file) {
             $.ajax({
                         type: 'DELETE',
                         headers: {
@@ -509,8 +506,7 @@ $(document).ready(function ()
         success: function (file, response) {
             file.previewElement.classList.add("dz-success");
             $('#url-certification-edit').val(response.response[0].url_file);
-            // $(file._removeLink).attr('href', response.response[0].url_file);
-            // $(file._removeLink).attr('id', 'btn-remove-file'); 
+          
         },
         error: function (file, response) {
          
@@ -550,9 +546,7 @@ $(document).ready(function ()
 
         //editar difunto
         $('#btn_difunto-editar').on('click', function(){
-            // alert($('#funeraria_edit').val());
-            // alert($('#funeraria_edit option:selected').val());
-            // return false;
+       
             $.ajax({
                         type: 'PUT',
                         headers: {
