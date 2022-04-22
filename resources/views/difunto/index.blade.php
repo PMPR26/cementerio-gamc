@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-@section('title', 'Cuartel')
+@section('title', 'Difunto')
 @section('plugins.Datatables', true)
 @section('plugins.Animation', true)
 @section('plugins.Toastr', true)
@@ -550,6 +550,9 @@ $(document).ready(function ()
 
         //editar difunto
         $('#btn_difunto-editar').on('click', function(){
+            // alert($('#funeraria_edit').val());
+            // alert($('#funeraria_edit option:selected').val());
+            // return false;
             $.ajax({
                         type: 'PUT',
                         headers: {
@@ -569,6 +572,7 @@ $(document).ready(function ()
                             'causa':  $('#causa-edit').val(),
                             'tipo': $('#tipo-edit').val(),
                             'funeraria': $('#funeraria_edit').val(),
+                            'url_certificacion': $('#url-certification-edit').val(),
 
                             'genero': $('#genero-edit').val(),
                             'status': $('#estado-edit').val(),
