@@ -239,7 +239,7 @@
                             </div>
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Tiempo</label>
-                                <input type="text" name="tiempo" id="tiempo" class="form-control">
+                                <input type="number" name="tiempo" id="tiempo" class="form-control">
                              </div>
                         </div>
 
