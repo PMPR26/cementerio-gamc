@@ -4,6 +4,7 @@
 @section('plugins.Sweetalert2', true)
 @section('plugins.Select2', true)
 @section('plugins.Pace', true)
+@section('plugins.dropzone', true)
 
 @section('content_header')
     <h1>Cobro de servicios nichos cementerio</h1>
@@ -22,6 +23,28 @@
                 </div>
             </div>
 
+            <div class="card">
+                <div class="card-header">
+                    <h2> SELECCIONAR ANTES DE INICIAR </h2>
+                    <P>Seleccione "EXTERNO" si solicitará algun servicio que no este relacionado a un nicho, seleccione "GRATIS" si el cervicio será gratuito</P>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6 col-xl-6">
+                            <label for="">EXTERNO</label>
+                            <input type="checkbox" name="externo" id="externo" class="form-control">
+                        </div>
+
+                        <div class="col-sm-6 col-md-6 col-xl-6">
+                            <label for="">GRATUITO</label>
+                            <input type="checkbox" name="gratis" id="gratis" class="form-control">
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+        <div class="col-12 interno" >   
             {{-- datos busqueda --}}
 
             <div class="card">
@@ -60,7 +83,7 @@
                 </div>
             </div>
 
-            <div id="contenido">
+           
                 <div class="card">
                     <div class="row">
                         <div class="col-sm-12 col-md-3 col-xl-3">
@@ -88,8 +111,8 @@
 
                     </div>
                 </div>
-
-
+             </div>
+            <div id="contenido">
                 {{-- datos difunto --}}
                 <div class="card">
                     <div class="card-header">
@@ -145,23 +168,32 @@
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Fecha Nacimiento</label>
-                                <input style="text-transform:uppercase;"
-                                    onkeyup="javascript:this.value=this.value.toUpperCase();" type="date"
+                                <input type="date"
                                     class="form-control clear" id="fechanac_dif" autocomplete="off">
                             </div>
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Fecha Ingreso al nicho</label>
-                                <input style="text-transform:uppercase;"
-                                    onkeyup="javascript:this.value=this.value.toUpperCase();" type="date"
+                                <input type="date"
                                     class="form-control clear" id="fechadef_dif" autocomplete="off">
                             </div>
 
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+                            {{-- <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Causa</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
                                     class="form-control clear" id="causa" autocomplete="off">
+                            </div> --}}
+                            <div class="col-sm-12 col-md-3 col-xl-3">
+                                <label>Causa</label>
+                                <select id="causa" style="text-transform:uppercase; width: 100%"
+                                onkeyup="javascript:this.value=this.value.toUpperCase();"
+                                class="form-control select2-multiple select2-hidden-accessible">
+                                <option value="">SELECIONAR CAUSA FALLECIMIENTO</option>
+                                @foreach ($causa as $causa)                                  
+                                        <option value="{{ $causa->causa }}">{{$causa->causa }}</option>                                   
+                                @endforeach
+                            </select>
                             </div>
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
@@ -179,7 +211,7 @@
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Tipo Difunto</label>
                                 <select name="tipo_dif" id="tipo_dif" class="form-control">
-                                    <option value="">Seleccionar</option>
+                                    <option value="">SELECIONAR</option>
                                     <option value="ADULTO">ADULTO</option>
                                     <option value="PARVULO">PARVULO</option>
                                 </select>
@@ -188,16 +220,42 @@
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Genero</label>
                                 <select name="genero" id="genero_dif" class="form-control">
-                                    <option value="">Seleccionar</option>
+                                    <option value="">SELECIONAR</option>
                                     <option value="FEMENINO">FEMENINO</option>
                                     <option value="MASCULINO">MASCULINO</option>
                                 </select>
                             </div>
 
-
+                            <div class="col-sm-12 col-md-3 col-xl-3">
+                                <label>Funeraria</label>
+                                <select id="funeraria" style="text-transform:uppercase; width: 100%"
+                                onkeyup="javascript:this.value=this.value.toUpperCase();"
+                                class="form-control select2-multiple select2-hidden-accessible">
+                                <option value="">SELECIONAR FUNERARIA</option>
+                                @foreach ($funeraria as $fun)                                  
+                                        <option value="{{ $fun->funeraria }}">{{$fun->funeraria }}</option>                                   
+                                @endforeach
+                            </select>
+                            </div>
+                            <div class="col-sm-12 col-md-3 col-xl-3">
+                                <label>Tiempo</label>
+                                <input type="number" name="tiempo" id="tiempo" class="form-control">
+                             </div>
                         </div>
 
 
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-xl-12">
+                            <div class="col-sm-12">
+                                <label for=""> Certificado de defunción</label>
+                                <div id="cert-defuncion" class="dropzone" style="text-align: center">
+                            </div>
+                            <hr>
+    
+                            <input type="hidden" id="url-certification">
+                           
+                        </div>
                     </div>
                 </div>
                 {{-- datos responsables --}}
@@ -255,12 +313,12 @@
 
                         <div class="row">
 
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+                            {{-- <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Fecha Nacimiento</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="date"
                                     class="form-control" id="fechanac_resp" autocomplete="off">
-                            </div>
+                            </div> --}}
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Teléfono</label>
@@ -272,14 +330,21 @@
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Celular</label>
-
-
                                 <input name="celular" id="celular"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     type="number" maxlength="8" class="form-control" />
                             </div>
 
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+                            <div class="col-sm-12 col-md-2 col-xl-2">
+                                <label>Genero</label>
+                                <select name="genero_resp" id="genero_resp" class="form-control">
+                                    <option value="">SELECCIONAR</option>
+                                    <option value="FEMENINO">FEMENINO</option>
+                                    <option value="MASCULINO">MASCULINO</option>
+                                </select>
+                            </div>
+
+                            {{-- <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Estado civil</label>
                                 <select name="ecivil" id="ecivil" class="form-control">
                                     <option value="">SELECCIONAR</option>
@@ -289,52 +354,40 @@
                                     <option value="SOLTERO">SOLTERO</option>
                                     <option value="VIUDO">VIUDO</option>
                                 </select>
-                            </div>
+                            </div> --}}
                         </div>
 
 
-                        <div class="row">
+                           {{-- <div class="row">
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>E-mail</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="email" size="50"
                                     class="form-control" id="email" autocomplete="off">
-                            </div>
+                            </div> --}}
 
 
-                            <div class="col-sm-12 col-md-7 col-xl-7">
+                            <div class="col-sm-12 col-md-12 col-xl-12">
                                 <label>Domicilio</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
                                     class="form-control" id="domicilio" autocomplete="off">
                             </div>
-                            <div class="col-sm-12 col-md-2 col-xl-2">
-                                <label>Genero</label>
-                                <select name="genero_resp" id="genero_resp" class="form-control">
-                                    <option value="">SELECCIONAR</option>
-                                    <option value="FEMENINO">FEMENINO</option>
-                                    <option value="MASCULINO">MASCULINO</option>
-                                </select>
-                            </div>
+                           
                         </div>
                     </div>
                 </div>
 
                 <input type="hidden" name="origen" id="origen">
                 <input type="hidden" name="pag_con" id="pag_con" value="">
-                <input type="hidden" name="tiempo" id="tiempo">
+               
                 <input type="hidden" name="vencido" id="vencido">
                 <input type="hidden" name="aniosdeuda" id="aniosdeuda">
-
-                {{-- <input type="hidden" name="precio_sinot" id="precio_sinot" value="{{ $precio }}"> --}}
-                {{-- <input type="hidden" name="desc_sinot" id="desc_sinot" value="{{ $descrip }}"> --}}
-                {{-- <input type="hidden" name="txttotal" id="txttotal" value=""> --}}
+                <input type="hidden" name="cant_cuerpos" id="cant_cuerpos" value="0">
 
 
 
-
-
-                <div class="card">
+                <div class="card interno">
                     <div class="card-header">
                         <h4>INFORMACION ULTIMO PAGO</h4>
                     </div>
@@ -356,6 +409,9 @@
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 Ultimo Pago: <span id="pago_cont" class="clear"></span>
                             </div>
+                            <div class="col-sm-12 col-md-3 col-xl-3">
+                                Cantidad de cuerpos: <span id="cuerpos" class="clear"></span>
+                            </div>
                         </div>
 
                         <div class="row pb-2">
@@ -374,14 +430,11 @@
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 Monto: <span id="monto_pagos" class="clear"></span>
                             </div>
-
-
-
                         </div>
                     </div>
                 </div>
 
-                <div class="card">
+                <div class="card interno">
                     <div class="card-header">
                         <div class="col-sm-6 col-md-12 col-xl-12">PAGO POR TERCERA PERSONA &nbsp;&nbsp;&nbsp; <input
                                 type="checkbox" name="person" id="person" value="responsable"
@@ -420,7 +473,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card ">
+                <div class="card interno">
                     <div class="row">
                         <div class="col-sm-6 col-md-6 col-xl-6"> Regularizar Transaccion &nbsp;&nbsp;&nbsp; <input
                                 type="checkbox" name="reg" id="reg" style="width: 30px; height:30px"></div>
@@ -487,6 +540,7 @@
                                 </select>
                             </div>
 
+
                             <div class="col-sm-6" id="service" style="display:none">
                                 <label>Servicio</label>
                                 <select id="servicio-hijos" class="form-control select2-multiple select2-hidden-accessible"
@@ -537,40 +591,7 @@
 
                     </div>
 
-                    {{-- <div class="card">
-                    <div class="col-sm-12 col-md-12 col-xl-12 card-header">
-                        <h4>GESTIONES ADEUDADAS</h4>
-                        <div class="row">
-                        
-                            <div class="col-sm-6 col-md-6 col-xl-6"> Regularizar Transaccion  &nbsp;&nbsp;&nbsp;  <input type="checkbox"
-                                    name="reg" id="reg" value="reg" style="width: 30px; height:30px"></div>
-                            <div class="col-sm-6 col-md-6 col-xl-6" id="fur_reg" style="display: none"> FUR <input
-                                    type="text" name="nrofur" id="nrofur" value=""></div>
-                        </div>
-                    </div>
-
-                    <div class="card-body" id="conservacion" style="display:none">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col"> Cuota</th>
-                                    <th scope="col"> GESTION</th>
-                                    <th scope="col"> MONTO</th>
-                                    <th scope="col"> SELECCIONAR</th>
-                                </tr>
-                            </thead>
-                            <tbody id="row-cuota">
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="3">Total</td>
-                                    <td id="total"></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div> --}}
-
+            
 
                     <div class="col-sm-12" style="text-align: center" id="print">
                         <button type="button" id="btn_guardar_pago" class="btn btn-success">Registrar servicio</button>
@@ -582,7 +603,11 @@
         </div>
     @stop
     @section('css')
+   
         <style>
+             .dropzone .dz-preview .dz-error-message {
+                  top: 150px!important;
+            }
             .select2-selection__rendered {
                 color: #333232;
             }
@@ -592,10 +617,81 @@
             }
 
         </style>
+  
+
+@stop
 
     @section('js')
         <script>
             $(document).ready(function() {
+                $("#cert-defuncion").dropzone({
+                dictDefaultMessage: "Arrastre y suelte aquí los archivos …<br>(o haga clic para seleccionar archivos)",
+                dictRemoveFile: 'Remover Archivo',
+                dictCancelUpload: 'Cancelar carga',
+                dictResponseError: 'Server responded with  code.',
+                dictCancelUploadConfirmation: '¿Estás seguro/a de que deseas cancelar esta carga?',
+                url: "{{ env('URL_FILE') }}/api/v1/repository/upload-files",
+                paramName: "documens_files[]",
+                addRemoveLinks: true,
+                acceptedFiles: 'image/jpeg, image/png, image/jpg, application/pdf',
+                parallelUploads: 1,
+                maxFiles: 1,
+                init: function() {
+                this.on("complete", function(file) {
+                    if(file.type != 'application/pdf' && file.type != 'image/png' && file.type != 'image/jpg' && file.type != 'image/jpeg') {
+                        this.removeFile(file);
+                        toastr["error"]('No se puede subir el archivo '+ file.name);
+                        return false;
+                    }
+                });
+
+                this.on("removedfile", function(file) {
+                    $.ajax({
+                                type: 'DELETE',
+                                headers: {
+                                    'Content-Type':'application/json'
+                                },
+                                url: "{{ env('URL_FILE') }}/api/v1/repository/remove-file",
+                                async: false,
+                                data: JSON.stringify({
+                                    'url':  JSON.parse(file.xhr.response).response[0].url_file
+                                }),
+                                success: function(data_response) {
+                                }
+                            })
+
+                });
+
+                this.on("maxfilesexceeded", function(file){
+                    file.previewElement.classList.add("dz-error");
+                    $('.dz-error-message').text('No se puede subir mas archivos!');
+                });
+
+                },
+                sending: function(file, xhr, formData){
+                            formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
+                            formData.append('collector', 'certificados de difuncion');
+                        
+                        },
+                success: function (file, response) {
+                    file.previewElement.classList.add("dz-success");
+                    $('#url-certification').val(response.response[0].url_file);
+                    // $(file._removeLink).attr('href', response.response[0].url_file);
+                    // $(file._removeLink).attr('id', 'btn-remove-file'); 
+                },
+                error: function (file, response) {
+                
+                    if(response == 'You can not upload any more files.'){
+                        toastr["error"]('No se puede subir mas archivos');
+                        this.removeFile(file);
+                    }
+                    file.previewElement.classList.add("dz-error");
+                    $('.dz-error-message').text('No se pudo subir el archivo '+ file.name);
+                }
+            });
+
+
+    //busqueda
 
                 $(document).on('keyup', '#bloque', function() {
                     habilitarBusqueda();
@@ -675,9 +771,6 @@
                                 if(value.cuenta == '15224301'){
                                         $('#precio_renov').val(value.monto1);
                                         $('#cuenta_renov').val(value.cuenta);
-
-                                    //   $('#ren').show();
-                                    //     Renov();
                                     }
 
                             });
@@ -737,9 +830,7 @@
                             {
                                  $('#ren').show();
                                  buscarUltimaRenovacion();
-                            //   //   Renov();
-                            //      calcularPrice();
-                               
+                         
                             }else{
                                 var v = (value.text).split('-');
                                 var costo = '<input type="hidden" name="costo" value="' + v[v.length - 2] +
@@ -828,26 +919,6 @@
 
 
 
-                // verificar si se esta solicitando renovacion de enterratorio
-
-                // $(document).on('click', '#renovacion', function() {
-
-                //         if ($(this).is(':checked')) {
-                //             $('#ren').show();
-                //           $('#renovacion').value("renovacion");                       
-                //         } else {
-                //             $('#ren').hide();
-
-                //             $('#renovacion').value(null); 
-                //             $('#renov').val("0");
-                //             $('#monto_renov').val("0");
-
-                //         }
-
-                // });
-
-
-
 
 
                 $(document).on('click', '#buscar', function() {
@@ -857,7 +928,7 @@
                     $('.clean').html("");
                     $('#pag_con').val();
                     $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
-                    $('#form').hide();
+                    $('#buscar').prop('disabled' , true);
                     var bloque = $('#bloque').val();
                     var nicho = $('#nro_nicho').val();
                     var fila = $('#fila').val();
@@ -923,15 +994,18 @@
                                 $('#pag_con').val(data.response.ultimo_pago);
                                 $('#renov_ant').val(data.response.nro_renovacion);
                                  $('#precio_renov_ant').val(data.response.monto_renovacion);
-                                $('#razon').html(data.response.nombrepago + " " + data.response.paternopago +
-                                    " " + data.response.maternopago);
+                                $('#razon').html(data.response.razon);
                                 $('#tiemp').html(data.response.tiempo);
-                               // $('#concepto').html("Conservación de nichos perpetuos de forma anual");
+                                $('#cant_cuerpos').val(data.response.cantidad_cuerpos);
+                                $('#cuerpos').html(data.response.cantidad_cuerpos);
                                 $('#fecha_p').html(data.response.fecha_pago);
                                 $('#gestiones').html(data.response.gestion);
                                 $('#monto_pagos').html(data.response.monto);
-                                $('#difunto_search').val(data.response.difunto_id);
-                                $('#responsable_search').val(data.response.responsable_id);
+                                $('#funeraria').html(data.response.funeraria);
+                                $('#url-certification').html(data.response.certificado_file);
+
+                                // $('#difunto_search').val(data.response.difunto_id);
+                                //$('#responsable_search').val(data.response.responsable_id);
                                 $('#comprob').html(data.response.fur);
                                 $('#fecha_p').html(data.response.fecha_pago);
                                 $('#monto_pagos').html(data.response.monto);
@@ -958,6 +1032,8 @@
                                     success: function(data) {
                                         $('#sp').empty();
                                         $('#form').show();
+                                       $('#buscar').prop('disabled' , false);
+
                                         $('#origen').val('tabla_antigua');
 
                                         if (data.codigo_ni) {
@@ -997,36 +1073,40 @@
                                                     .datos_difuntos[0].difunto);
                                                 var t = data.response.datos_difuntos[0]
                                                     .tiempo;
-                                                if ((data.response.datos_difuntos[0].pag_con ==
+                                            if ((data.response.datos_difuntos[0].pag_con ==
                                                         '' || data.response.datos_difuntos[0]
                                                         .pag_con ==
                                                         null) && (data.response.datos_difuntos[
                                                             0]
-                                                        .tiempo != "")) {
+                                                        .tiempo != ""))
+                                                         {
 
-                                                    if (!$.isNumeric(t)) {
-                                                        t = 0;
-                                                        $('#txt_tiempo').show();
-                                                    } else {
-                                                        $('#txt_tiempo').hide();
-                                                    }
-                                                    if (t == 2) {
-                                                        $('#tipo_dif').val('PARVULO')
-                                                    } else if (t == 5) {
-                                                        $('#tipo_dif').val('ADULTO')
-                                                    }
-                                                    $('#tiemp').html(t);
-                                                    $('#tiempo').val(t);
-                                                    $('#tipo_nicho').val('TEMPORAL');
-                                                    calcularPlazo(t, año, nuevaf);
+                                                                    if (!$.isNumeric(t)) {
+                                                                        t = 30;  
+                                                                        Swal.fire(
+                                                                            'Se autocompletará el tiempo de permanencia del difunto como 30 años, debido a la ausencia de la información!',
+                                                                            'Si no fuera correcto el dato por favor completar de manera manual',
+                                                                            'warning'
+                                                                        )  ;                                              
+                                                                    } else if(t=="") {
+                                                                    
+                                                                        seTime();
+                                                                    }
+                                                                    if (t == 2) {
+                                                                        $('#tipo_dif').val('PARVULO')
+                                                                    } else if (t == 5) {
+                                                                        $('#tipo_dif').val('ADULTO')
+                                                                    }
+                                                                    $('#tiemp').html(t);
+                                                                    $('#tiempo').val(t);
+                                                                    $('#tipo_nicho').val('TEMPORAL');
+                                                                    calcularPlazo(t, año, nuevaf);
                                                 } else if (data.response.datos_difuntos[0]
                                                     .pag_con > 0) {
 
 
                                                     $('#tiemp').html(t);
                                                     $('#tiempo').val(t);
-
-
 
                                                     $('#pago_cont').html(pg);
                                                     $('#pago_cont_ant').html(pg);
@@ -1187,7 +1267,7 @@
 
 
                 $(document).on('click', '#btn_guardar_pago', function() {
-
+                    if($('#tiempo').val()==""){   seTime();}
                     if ($('#person').is(':checked')) {
                         if ($('#name_pago').val() == "" || $('#paterno_pago').val() == "" || $('#ci').val() ==
                             "") {
@@ -1216,13 +1296,13 @@
                     if ($('#nrofur').val() != "") {
                         verificarfur();
                     }
-                    let cpago = [];
-                    $('.sel').each(function(index) {
-                        if ($(this).is(':checked')) {
-                            cpago.push($(this).val());
-                        }
-                    });
-
+                    // let cpago = [];
+                    // $('.sel').each(function(index) {
+                    //     if ($(this).is(':checked')) {
+                    //         cpago.push($(this).val());
+                    //     }
+                    // });
+                   
 
                     return $.ajax({
                         type: 'POST',
@@ -1241,7 +1321,7 @@
                             'tipo_nicho': $('#tipo_nicho').val(),
                             'anterior': $('#anterior').val(),
                             'ci_dif': $('#search_dif').val(),
-                            'id_difunto': $('#difunto_search').val(),
+                            // 'id_difunto': $('#difunto_search').val(),
                             'nombres_dif': $('#nombres_dif').val(),
                             'paterno_dif': $('#paterno_dif').val(),
                             'materno_dif': $('#materno_dif').val(),
@@ -1252,15 +1332,15 @@
                             'tipo_dif': $('#tipo_dif').val(),
                             'genero_dif': $('#genero_dif').val(),
                             'ci_resp': $('#search_resp').val(),
-                            'id_responsable': $('#responsable_search').val(),
+                           // 'id_responsable': $('#responsable_search').val(),
                             'nombres_resp': $('#nombres_resp').val(),
                             'paterno_resp': $('#paterno_resp').val(),
                             'materno_resp': $('#materno_resp').val(),
-                            'fechanac_resp': $('#fechanac_resp').val(),
+                           // 'fechanac_resp': $('#fechanac_resp').val(),
                             'telefono': $('#telefono').val(),
                             'celular': $('#celular').val(),
-                            'ecivil': $('#ecivil').val(),
-                            'email': $('#email').val(),
+                           // 'ecivil': $('#ecivil').val(),
+                           // 'email': $('#email').val(),
                             'domicilio': $('#domicilio').val(),
                             'genero_resp': $('#genero_resp').val(),
                             'pag_con': $('#pag_con').val(),
@@ -1276,8 +1356,8 @@
                             'person': $('#person').val(),
                             'ci': $('#ci').val(),
                             'sereci': $('#sereci').val(),
-                            'id_difunto': $('#difunto_search').val(),
-                            'id_responsable': $('#responsable_search').val(),
+                            // 'id_difunto': $('#difunto_search').val(),
+                           // 'id_responsable': $('#responsable_search').val(),
                             'observacion': $('#observacion').val(),
                             'cuenta_renov': $('#cuenta_renov').val(),
                             'renov': $('#renov').val(),
@@ -1286,7 +1366,12 @@
                             'totalservicios': $('#totalservicios').val(),
                             'reg': $('#reg').val(),
                             'nrofur': $('#nrofur').val(),
-                            'txttotal':$('#totalservicios').val(), //
+                            'txttotal':$('#totalservicios').val(), 
+                            'gratis':$('#gratis').val(), 
+                            'externo':$('#externo').val(), 
+                            'funeraria':$('#funeraria').val(), 
+                            'urlcertificacion':$('#url-certificacion').val(), 
+                            'cant':$('#cant_cuerpos').val()
                         }),
                         success: function(data_response) {
                             console.log(data_response);
@@ -1413,7 +1498,7 @@
                                 $('#sereci').val(data.response.certificado_defuncion);
                                 $('#causa').val(data.response.causa);
                                 $('#genero_dif').val(data.response.genero);
-                                $("#difunto_search").val(data.response.id);
+                                // $("#difunto_search").val(data.response.id);
 
                             }
                         },
@@ -1464,7 +1549,7 @@
 
                                 $('#domicilio').val(data.response.domicilio);
                                 $('#genero_resp').val(data.response.genero);
-                                $("#responsable_search").val(data.response.id);
+                               // $("#responsable_search").val(data.response.id);
                                 $('#email').val(data.response.email);
 
                             }
@@ -1655,67 +1740,7 @@
                 });
             });
 
-            // $(document).on('click', '#renovacion', function() {
-            //     if ($(this).is(':checked')) {
-            //         $('#renovacion').val("renovacion");
-            //         $('#ren').show();
-            //         $.ajax({
-            //             headers: {
-            //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            //                 'Content-Type': 'application/json'
-            //             },
-            //             url: "{{ route('precio.renovacion') }}",
-            //             method: 'GET',
-            //             dataType: 'json',
-            //             success: function(data) {
-            //                 console.log(data);
-            //                 if (data.status == true) {
-            //                     $('#precio_renov').val(data.precio);
-            //                     $('#cuenta_renov').val(data.cuenta);
-
-            //                 } else {
-            //                     $('#ren').hide();
-            //                     $('#renovacion').val("");
-            //                     $('#precio_renov').val(0);
-            //                     $('#cuenta_renov').val(0);
-            //                 }
-            //                 Renov();
-            //                 calcRenov();
-            //             }
-
-
-            //         });
-
-            //     } else {
-            //         $('#precio_renov').val(0);
-            //         $('#cuenta_renov').val(0);
-            //     }
-
-            // });
-
-
-            // function Renov() {
-            //     var renov_ant = $('#renov_ant').val();
-                       
-            //     if (renov_ant == 0) { 
-            //         renov_ant = 0;  
-            //         var precio = $('#precio_renov').val();
-            //         $('#precio_renov_ant').val(precio);
-            //         anios_ren = $('#aniosdeuda').val();
-            //         if (anios_ren <= 0 && anios_ren !="") {  
-            //             $('#renov').val(1);
-            //         } else if(anios_ren!=""){
-            //             $('#renov').val(anios_ren);  
-            //         }
-
-            //     }else if(renov_ant >0){
-            //         var rn=parseInt($('#renov_ant').val()) + parseInt(1);
-            //             $('#renov').val(rn);
-            //     }
-            //     calcRenov();
-
-            // }
-
+      
             $(document).on('keyup', '#renov_ant', function() {
               $('#totalServ').html(0);
               $('#totalservicios').val(0);
@@ -1783,9 +1808,10 @@
                     $('#totalServ').html(acum);
                     $('#totalservicios').val(acum);
                 }
-              
-               
-                // alert(totalgral);
+                if ($('#gratis').is(':checked')) {
+                    $('#totalServ').html(0);
+                    $('#totalservicios').val(0);
+                }
             }
 
             function buscarUltimaRenovacion(){
@@ -1804,7 +1830,7 @@
                                 "fila":$('#fila').val()
                         }),
                         success: function(data) {
-                            console.log(data);
+                           
                             if(data.status==true){
                                 $('#renov_ant').val(data.data.nro_renovacion);
                                  $('#precio_renov_ant').val(data.data.monto_renovacion);
@@ -1832,7 +1858,77 @@
                 });
 
             }
-             
+
+            $(document).on('click', '#externo', function() { 
+                if ($(this).is(':checked')) {
+                    $('#externo').val('externo');
+                    $('.externo').prop('disabled', false);
+                    $('.interno').hide();
+                    $('.interno').prop("disabled", true);
+                } else {
+                    $('.externo').prop('disabled', true);
+                    $('.interno').show();
+
+                    $('.interno').prop("disabled", false);
+                    $('#externo').val('');
+                }
+            });
+
+            $(document).on('click', '#gratis', function() { 
+                if ($(this).is(':checked')) {
+                    $('#gratis').val('gratis');
+                    $('#totalServ').html(0);
+                    $('#totalservicios').val(0);
+                }else{
+                    $('#gratis').val('');
+                    consolidado();
+                }
+            });
+           
+            
+             //causa
+             $("#causa").select2({
+                tags: true,
+                allowClear: true
+
+                });
+
+            $(document).on('click' ,  'button[aria-describedby="select2-causa-container"] span', function(){
+                   $('#causa option:selected').remove(); 
+            })
+
+           
+
+
+            //funeraria
+            $("#funeraria").select2({
+                tags: true,
+                allowClear: true
+
+                });
+            $(document).on('click' ,  'button[aria-describedby="select2-funeraria-container"] span', function(){
+                   $('#funeraria option:selected').remove(); 
+            })
+           
+            function seTime(){
+                if($('#tipo_nicho option:selected').val()=="TEMPORAL"){
+                      if($('#tipo_dif  option:selected').val()=='ADULTO' ){
+                            $('#tiempo').val('5')
+                        }else if($('#tipo_dif  option:selected').val()=='PARVULO' ){
+                            $('#tiempo').val('2')
+                        }
+                }
+                else if($('#tipo_nicho  option:selected').val()=="PERPETUO"){
+                    $('#tiempo').val('30')
+                }
+            }
+            $(document).on('change', '#tipo_dif', function(){
+                 seTime();
+            })
+
+            $(document).on('change', '#tipo_nicho', function(){
+                seTime();
+            })
         </script>
 
     @stop

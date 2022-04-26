@@ -12,15 +12,18 @@ class DifuntoController extends Controller
     //
     public function index(){
 
-        //$responsable= Responsable::select('responsable.*')
-                // ->orderBy('codigo', 'DESC')
-                // ->get();
+        $funeraria=DB::table('difunto')
+                    ->select('funeraria')
+                    ->whereNotNull('funeraria')
+                    ->distinct()->get();
 
         $difunto= DB::table('difunto') 
-                ->select('difunto.id','difunto.ci',DB::raw('CONCAT(difunto.nombres , \' \',difunto.primer_apellido, \' \', difunto.segundo_apellido ) AS nombre'),'difunto.fecha_nacimiento','difunto.fecha_defuncion','difunto.certificado_defuncion','difunto.causa','difunto.tipo','difunto.estado','difunto.genero')        
+                ->select('difunto.id','difunto.ci',DB::raw('CONCAT(difunto.nombres , \' \',difunto.primer_apellido, \' \', difunto.segundo_apellido ) AS nombre'),'difunto.fecha_nacimiento','difunto.fecha_defuncion','difunto.certificado_defuncion',
+                'difunto.causa','difunto.tipo','difunto.estado','difunto.genero','difunto.funeraria', 'difunto.certificado_file')        
+                ->orderBy('id','DESC')
                 ->get();
             
-        return view('difunto/index', compact('difunto'));
+        return view('difunto/index', compact('difunto', 'funeraria'));
     }
 
     public function createNewDifunto(Request $request){
@@ -28,11 +31,7 @@ class DifuntoController extends Controller
         if($request->isJson()){
             
             $this->validate($request, [
-                'ci' => 'required|unique:difunto'
-                // 'email' => 'required|unique:responsable',
-                // 'nombres'=> 'required',
-                // 'primer_apellido'=> 'required',
-                // 'celular'=> 'required'
+                'ci' => 'required|unique:difunto'             
             ], [
                 'nombres.required'  => 'El campo nombre de responsable es obligatorio!',
                 'ci.required'    => 'El campo cedula de identidad es obligatorio!',
@@ -51,6 +50,7 @@ class DifuntoController extends Controller
             'causa' => trim($request->causa),
             'tipo' => trim($request->tipo),
             'genero' => trim($request->genero),
+            'funeraria' => trim($request->funeraria),
             'user_id' => auth()->id(),
             'certificado_file' => $request->certificado_file,
             'estado' => 'ACTIVO',
@@ -105,7 +105,6 @@ class DifuntoController extends Controller
         }
 
     }
-
     public function getDifunto($id){
 
         $difunto =  Difunto::where('id', $id)->first();
@@ -134,6 +133,8 @@ class DifuntoController extends Controller
             'segundo_apellido' => $request->segundo_apellido,
             'fecha_nacimiento' => $request->fecha_nacimiento,
             'fecha_defuncion' => $request->fecha_defuncion,
+            'funeraria' => trim(mb_strtoupper($request->funeraria, 'UTF-8')),
+            'certificado_file' => trim($request->url_certificacion),
             'certificado_defuncion' => $request->certificado_defuncion,
             'causa' => $request->causa,
             'tipo' => $request->tipo,

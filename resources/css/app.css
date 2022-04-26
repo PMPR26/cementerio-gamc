@@ -1,4 +1,6 @@
-input[type="text"], textarea
+input[type="text"], textarea, .select2-results__option
+ .select2-results__option--selectable
+  .select2-results__option--highlighted
 {
     text-transform: uppercase;
 }

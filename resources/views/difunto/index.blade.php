@@ -1,11 +1,13 @@
 @extends('adminlte::page')
-@section('title', 'Cuartel')
+@section('title', 'Difunto')
 @section('plugins.Datatables', true)
 @section('plugins.Animation', true)
 @section('plugins.Toastr', true)
 @section('plugins.Sweetalert2', true)
 @section('plugins.Pace', true)
 @section('plugins.dropzone', true)
+@section('plugins.Select2', true)
+
 
 
 @section('content_header')
@@ -31,7 +33,9 @@
                 <th scope="col">Nombre</th>
                 <th scope="col">Fecha de defunción</th>  
                 <th scope="col">Causa</th>
-                <th scope="col">Tipo</th>       
+                <th scope="col">Tipo</th>   
+                <th scope="col">Funeraria</th>       
+                <th scope="col">Certificado Defunción</th> 
                 <th scope="col">Opciones</th>
             </tr>
         </thead>
@@ -48,7 +52,14 @@
                     <td>{{ $difunto->fecha_defuncion }}</td>
                     <td>{{ $difunto->causa }}</td>
                     <td>{{ $difunto->tipo }}</td>
-                   
+                    <td>{{ $difunto->funeraria }}</td>
+                    <td>@if(  $difunto->certificado_file!="")
+                        <a href="{{ $difunto->certificado_file ?? '' }}" target="blank">Certificado de defunción</a>
+                        @else
+                        @php( print_r( 'ARCHIVO AUSENTE'))
+                        @endif
+                     </td>     
+                                       
                     <td>
                         <button type="button" class="btn btn-info" value="{{ $difunto->id }}" id="btn-editar-difunto-value" title="Editar datos difunto"><i class="fas fa-edit"></i></button>
                         @if($difunto->estado =='ACTIVO')
@@ -123,7 +134,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>Certificado de defunción :</label>
+                                <label>SERECI:</label>
                                 <input  type="number" class="form-control" id="certificado_defuncion" autocomplete="off">
                             </div>
                         </div>
@@ -135,6 +146,8 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             </div>
                         </div>
 
+
+                       
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Tipo :</label>
@@ -160,13 +173,23 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             </div> 
                         </div>
                         <hr>
-                        <label>Adjuntar certificado de defunción :</label>
-                        <div class="col-sm-12">
-                            <div id="cert-defuncion" class="dropzone" style="text-align: center">
+
+                        <div class="col-sm-12 col-md-6 col-xl-6">
+                            <label>Funeraria</label>
+                            <select id="funeraria"
+                            class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
+                            <option value="">SELECIONAR FUNERARIA</option>
+                            @foreach ($funeraria as $fun)                                  
+                                    <option value="{{ $fun->funeraria }}">{{$fun->funeraria }}</option>                                   
+                            @endforeach
+                           </select>
                         </div>
-                        <hr>
-                        <input type="hidden" id="url-certification">
-                    </div>
+                        <div class="col-sm-12 col-md-6 col-xl-6">
+                            <label>Adjuntar certificado de defunción :</label>                        
+                            <div id="cert-defuncion" class="dropzone" style="text-align: center"> </div>
+                             <hr>
+                             <input type="hidden" id="url-certification">
+                        </div>
             
                    
                     <div class="col-sm-12" style="text-align: center">
@@ -244,9 +267,19 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>Certificado de defunción :</label>
+                                <label>SERECI :</label>
                                 <input  type="number" class="form-control" id="certificado_defuncion-edit" autocomplete="off">
                             </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-xl-6">
+                            <label>Funeraria</label>
+                            <select id="funeraria_edit"
+                            class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
+                            <option value="">SELECIONAR FUNERARIA</option>
+                            @foreach ($funeraria as $fune)                                  
+                                    <option value="{{ $fune->funeraria }}">{{$fune->funeraria }}</option>                                   
+                            @endforeach
+                           </select>
                         </div>
 
                         <div class="col-sm-6">
@@ -267,39 +300,31 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             </div>
                         </div>
 
-                        <div class="col-sm-6">
-                 
-                            <div class="form-group">
+                        <div class="form-group col-sm-12 col-md-6 col-xl-6">
                                 <label>Genero :</label>
-                                <select name="status" id="genero-edit" class="form-control">
-            
+                                <select name="status" id="genero-edit" class="form-control">            
                                     <option value="MASCULINO">MASCULINO</option>
-                                    <option value="FEMENINO">fEMENINO</option>
-        
+                                    <option value="FEMENINO">fEMENINO</option>        
                                 </select>
-                               
-                            </div> 
                         </div>
-                        <div class="form-group col-12">
+
+                        <div class="form-group col-sm-12 col-md-6 col-xl-6">
                             <label>Estado</label>
-                            <select name="status" id="estado-edit" class="form-control col-12" style="width: 100%">
-        
+                            <select name="status" id="estado-edit" class="form-control col-12" style="width: 100%">        
                                 <option value="ACTIVO">ACTIVO</option>
-                                <option value="INACTIVO">INACTIVO</option>
-    
-                            </select>
-                           
+                                <option value="INACTIVO">INACTIVO</option>    
+                            </select>                           
                         </div> 
+
                         <hr>
-                        <div class="col-sm-12" style="text-align: center" id="show-file">
-                           
+                        <div class="col-sm-12 col-md-12 col-xl-12">
+                                <label>Adjuntar certificado de defunción :</label>
+                                <div id="file_cert"></div>     
+                            <div class="col-sm-12" style="text-align: center" id="show-file"></div>                        
+                            <input type="hidden" id="url-certification-edit">
+                            
                         </div>
-                        <hr>
-                        <input type="hidden" id="url-certification-edit">
-                    </div>
             
-                    <hr>
-                   
                     <div class="col-sm-12" style="text-align: center">
                         <button type="button" id="btn_difunto-editar" class="btn btn-success">Guardar</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -356,9 +381,81 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
 @section('js')
     <script> 
     
-    $(document).ready(function () {
+$(document).ready(function ()
+ {
 
-        $("#cert-defuncion").dropzone({
+    $("#cert-defuncion").dropzone({
+        dictDefaultMessage: "Arrastre y suelte aquí los archivos …<br>(o haga clic para seleccionar archivos)",
+        dictRemoveFile: 'Remover Archivo',
+        dictCancelUpload: 'Cancelar carga',
+        dictResponseError: 'Server responded with  code.',
+        dictCancelUploadConfirmation: '¿Estás seguro/a de que deseas cancelar esta carga?',
+        url: "{{ env('URL_FILE') }}/api/v1/repository/upload-files",
+        paramName: "documens_files[]",
+        addRemoveLinks: true,
+        acceptedFiles: 'image/jpeg, image/png, image/jpg, application/pdf',
+        parallelUploads: 1,
+        maxFiles: 1,
+        init: function() 
+        {
+                this.on("complete", function(file) {
+                    if(file.type != 'application/pdf' && file.type != 'image/png' && file.type != 'image/jpg' && file.type != 'image/jpeg') {
+                        this.removeFile(file);
+                        toastr["error"]('No se puede subir el archivo '+ file.name);
+                        return false;
+                    }
+                });
+
+        
+
+                this.on("removedfile", function(file) {
+                    $.ajax({
+                                type: 'DELETE',
+                                headers: {
+                                    'Content-Type':'application/json'
+                                },
+                                url: "{{ env('URL_FILE') }}/api/v1/repository/remove-file",
+                                async: false,
+                                data: JSON.stringify({
+                                    'url':  JSON.parse(file.xhr.response).response[0].url_file
+                                }),
+                                success: function(data_response) {
+                                }
+                            })
+                });
+
+                this.on("maxfilesexceeded", function(file){
+                    file.previewElement.classList.add("dz-error");
+                    $('.dz-error-message').text('No se puede subir mas archivos!');
+                });
+
+        },
+        sending: function(file, xhr, formData){
+                    formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
+                    formData.append('collector', 'certificados de difuncion');
+                   
+                },
+        success: function (file, response) {
+            file.previewElement.classList.add("dz-success");
+            $('#url-certification').val(response.response[0].url_file);
+            // $(file._removeLink).attr('href', response.response[0].url_file);
+            // $(file._removeLink).attr('id', 'btn-remove-file'); 
+        },
+        error: function (file, response) {
+         
+            if(response == 'You can not upload any more files.'){
+                toastr["error"]('No se puede subir mas archivos');
+                this.removeFile(file);
+            }
+            file.previewElement.classList.add("dz-error");
+            $('.dz-error-message').text('No se pudo subir el archivo '+ file.name);
+        }
+
+
+    });
+
+
+    $("#cert-defuncion-edit").dropzone({
         dictDefaultMessage: "Arrastre y suelte aquí los archivos …<br>(o haga clic para seleccionar archivos)",
         dictRemoveFile: 'Remover Archivo',
         dictCancelUpload: 'Cancelar carga',
@@ -378,8 +475,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 return false;
             }
         });
-
-        this.on("removedfile", function(file) {
+           this.on("removedfile", function(file) {
             $.ajax({
                         type: 'DELETE',
                         headers: {
@@ -409,9 +505,8 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 },
         success: function (file, response) {
             file.previewElement.classList.add("dz-success");
-            $('#url-certification').val(response.response[0].url_file);
-            // $(file._removeLink).attr('href', response.response[0].url_file);
-            // $(file._removeLink).attr('id', 'btn-remove-file'); 
+            $('#url-certification-edit').val(response.response[0].url_file);
+          
         },
         error: function (file, response) {
          
@@ -422,13 +517,36 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
             file.previewElement.classList.add("dz-error");
             $('.dz-error-message').text('No se pudo subir el archivo '+ file.name);
         }
+
+        
     });
+
+
+    function openFile(file) {
+    var extension = file.substr( (file.lastIndexOf('.') +1) );
+    switch(extension) {
+        case 'jpg':
+        case 'png':
+            return 'image';  // There's was a typo in the example where
+        break;                         // the alert ended with pdf instead of gif.
+        case 'zip':
+        case 'rar':
+            alert('was zip rar');
+        break;
+        case 'pdf':
+            return 'pdf';
+        break;
+        default:
+           return 'desconocido';
+    }
+}
 
 
 
 
         //editar difunto
         $('#btn_difunto-editar').on('click', function(){
+       
             $.ajax({
                         type: 'PUT',
                         headers: {
@@ -447,6 +565,9 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             'certificado_defuncion':  $('#certificado_defuncion-edit').val(),
                             'causa':  $('#causa-edit').val(),
                             'tipo': $('#tipo-edit').val(),
+                            'funeraria': $('#funeraria_edit').val(),
+                            'url_certificacion': $('#url-certification-edit').val(),
+
                             'genero': $('#genero-edit').val(),
                             'status': $('#estado-edit').val(),
                             'id': $('#btn_difunto-editar').val()
@@ -535,7 +656,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         url: '/difunto/get-difunto/' + $(this).val(),
                         async: false,
                         success: function(data_response) {
-                         
+                         console.log(data_response);
                            $('#btn_difunto-editar').val(data_response.response.id);
                             $('#modal-update-difunto').modal('show');
 
@@ -548,15 +669,23 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             $('#certificado_defuncion-edit').val(data_response.response.certificado_defuncion);
                             $('#causa-edit').val(data_response.response.causa);
                             $('#tipo-edit').val(data_response.response.tipo);
+                            $('#funeraria_edit').val(data_response.response.funeraria).change();
+                            $('#url-certification-edit').val(data_response.response.certificado_file);
+
                             $("#genero-edit").val(data_response.response.genero).change();
                             $("#estado-edit").val(data_response.response.estado).change();
-                            
-                            if(openFile(data_response.response.certificado_file) == 'image'){
-                                $('#show-file').html('<img src="'+data_response.response.certificado_file+'" class="img-rounded img-fluid" alt="Responsive image" alt="Cinque Terre">')
-                            }else{
-                                $('#show-file').html('<iframe  style="border:1px solid #666CCC" src="'+data_response.response.certificado_file+'" frameborder="1" scrolling="auto" height="500" width="90%" ></iframe>');
-                            }
-                        }
+                           if(data_response.response.certificado_file != null){
+                                // console.log("image");
+                                if(openFile(data_response.response.certificado_file) == 'image'){
+                                    $('#show-file').html('<img src="'+data_response.response.certificado_file+'" class="img-rounded img-fluid" alt="Responsive image" alt="Cinque Terre">')
+                                }else{
+                                    $('#show-file').html('<iframe  style="border:1px solid #666CCC" src="'+data_response.response.certificado_file+'" frameborder="1" scrolling="auto" height="500" width="90%" ></iframe>');
+                                }
+                            }else{                               
+                                    var contenedor_file='<div id="cert-defuncion-edit" class="dropzone" style="text-align: center"> </div>';                             
+                                    $('#file_cert').append(contenedor_file);
+                                }
+                       }
                     })
         });
 
@@ -587,6 +716,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             'certificado_defuncion':  $('#certificado_defuncion').val(),
                             'causa':  $('#causa').val(),
                             'tipo': $('#tipo').val(),
+                            'funeraria': $('#funeraria').val(),
                             'genero': $('#genero').val(),
                             'certificado_file': $('#url-certification').val() //aqui
                         }),
@@ -665,23 +795,29 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
     });
 
 
-    function openFile(file) {
-    var extension = file.substr( (file.lastIndexOf('.') +1) );
-    switch(extension) {
-        case 'jpg':
-        case 'png':
-            return 'image';  // There's was a typo in the example where
-        break;                         // the alert ended with pdf instead of gif.
-        case 'zip':
-        case 'rar':
-            alert('was zip rar');
-        break;
-        case 'pdf':
-            return 'pdf';
-        break;
-        default:
-           return 'desconocido';
-    }
-};
-    </script>
+
+  //funeraria  { dropdownParent: "#modal-container" }
+  $("#funeraria").select2({
+                width: 'resolve', // need to override the changed default
+                dropdownParent: $('#modal-register-difunto'),                
+                tags: true,
+                allowClear: true
+                });
+  $("#funeraria_edit").select2({
+                width: 'resolve', // need to override the changed default
+                dropdownParent: $('#modal-update-difunto'), 
+                tags: true,
+                allowClear: true
+                });
+
+    $(document).on('click' ,  '.select2-selection__clear', function(){
+
+                   $('#funeraria option:selected').remove(); 
+                   $('#funeraria_edit option:selected').remove(); 
+    });
+
+    // $(document).on('click' ,  '#funeraria_edit .select2-selection__clear', function(){
+    //                $('#funeraria_edit option:selected').remove(); 
+    // })
+    // </script>
 @stop

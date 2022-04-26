@@ -61,8 +61,8 @@ class Difunto extends Model
         $dif->causa = $request->causa;
         $dif->tipo = $request->tipo_dif; 
         $dif->genero = $request->genero_dif;  
-       // $dif->certificado_file=$request->adjunto;               
-      //  $dif->tiempo = $request->tiempo;  
+        $dif->funeraria = trim($request->funeraria);
+        $dif->certificado_file = trim($request->certificado_file);   
         $dif->estado = 'ACTIVO';  
         $dif->user_id = auth()->id();
         $dif->save();
@@ -82,7 +82,10 @@ class Difunto extends Model
         $difunto->certificado_defuncion = $request->sereci;
         $difunto->causa = $request->causa;
         $difunto->tipo = $request->tipo_dif; 
-        $difunto->genero = $request->genero_dif;  
+        $difunto->genero = $request->genero_dif; 
+        $difunto->funeraria = trim($request->funeraria);
+        $difunto->certificado_file = trim($request->url_certificacion);
+
        // $difunto->certificado_file=$request->adjunto;       
       //  $difunto->tiempo = $request->tiempo;  
         $difunto->estado = 'ACTIVO';  

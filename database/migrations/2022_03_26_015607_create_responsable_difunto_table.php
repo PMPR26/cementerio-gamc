@@ -17,7 +17,7 @@ class CreateResponsableDifuntoTable extends Migration
             $table->bigIncrements('id');
             $table->integer('responsable_id'); 
             $table->integer('difunto_id');  
-            $table->string('codigo_nicho',20);           
+            $table->string('codigo_nicho',20)->nullable();           
             $table->date('fecha_adjudicacion')->nullable();    
             $table->string('tiempo',4)->nullable();
             $table->string('estado_nicho')->nullable();

@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-@section('title', 'Bloque')
+@section('title', 'Nichos')
 @section('plugins.Datatables', true)
 @section('plugins.Animation', true)
 @section('plugins.Toastr', true)
@@ -303,8 +303,7 @@
                             'bloque':  $('#bloque option:selected').val(),
                             'cuartel':  $('#cuartel').val(),
                             'fila':  $('#fila').val(),
-                            'tipo':  $('#tipo').val(),
-                         
+                            'tipo':  $('#tipo').val(),                         
                             'nro':  $('#nro').val(),
                             'cantidad':  $('#cant').val(),
                             'codigo_anterior':  $('#anterior').val(),
@@ -366,17 +365,14 @@
                             $('#edit-nicho').modal('show');
                             // $('#bloque_edit option[value="'+data_response.response.bloque_id+'"]').attr("selected", "selected");
                             $('#bloque_edit').val(data_response.response.bloque_id).trigger('change');
-                            $('#cuartel_edit').val(data_response.response.cuartel_id).trigger('change');
-                            
+                            $('#cuartel_edit').val(data_response.response.cuartel_id).trigger('change');                            
                             $('#code_edit').val(data_response.response.codigo);  
                             $('#fila_edit').val(data_response.response.fila);  
                             $('#col_edit').val(data_response.response.columna);  
                             $('#anterior_edit').val(data_response.response.codigo_anterior);  
                             $('#cant_edit').val(data_response.response.cantidad_cuerpos);  
-                            $('#tipo_edit option[value="'+data_response.response.tipo+'"]').attr("selected", "selected");
-                          
-                            $('#nro_edit').val(data_response.response.nro_nicho);  
-
+                            $('#tipo_edit option[value="'+data_response.response.tipo+'"]').attr("selected", "selected");                          
+                            $('#nro_edit').val(data_response.response.nro_nicho); 
                             $('#status_edit option[value="'+data_response.response.estado+'"]').attr("selected", "selected");
                         }
                     })
