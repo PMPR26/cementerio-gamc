@@ -264,6 +264,44 @@ class ServiciosController extends Controller
     {
 //   dd($request->gratis);
         if ($request->isJson()) {
+
+            if($request->externo == "externo" && $request->gratis == "gratis"){
+                $this->validate($request, [
+                  
+                    'ci_dif' => 'required',
+                    'nombres_dif' => 'required',
+                    'paterno_dif'=> 'required',
+                    'tipo_dif'=> 'required',
+                    'genero_dif'=> 'required',
+                    'ci_resp' => 'required',
+                    'nombres_resp' => 'required',
+                    'paterno_resp'=> 'required',                
+                    'domicilio'=> 'required',
+                    'genero_resp'=> 'required',
+                    'tipo_servicio' => 'required',
+                    'servicio_hijos' => 'required',
+    
+                    
+                ], [
+                    'ci_dif.required' => 'El campo ci del difunto es obligatorio, si no tiene documento presione el boton "generar carnet provisional  (icono lapiz)" para asignarle un numero provisional',
+                    'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
+                    'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
+                    'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
+                    'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
+                    'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
+                    'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
+                    'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',                  
+                    'domicilio.required'=> 'El campo domicilio es obligatorio',
+                    'genero_resp.required'=> 'El campo genero_resp es obligatorio',
+                    'tipo_servicio.required' => 'Debe seleccionar al menos un tipo de servicio',
+                    'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
+    
+                   
+                ]);
+            }
+            else{
+
+          
             $this->validate($request, [
                 'nro_nicho' => 'required',
                 'bloque' => 'required',
@@ -306,11 +344,12 @@ class ServiciosController extends Controller
                 // 'email.required'=> 'El campo email es obligatorio',
                  'domicilio.required'=> 'El campo domicilio es obligatorio',
                  'genero_resp.required'=> 'El campo genero_resp es obligatorio',
-                'tipo_servicio.required' => 'Debe seleccionar al menos un servicio a pagar',
-                'servicio_hijos.required' => 'Debe seleccionar al menos un servicio a pagar',
+                'tipo_servicio.required' => 'Debe seleccionar al menos un tipo servicio',
+                'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
 
                
             ]);
+        }
             if (!empty($request->servicio_hijos) && is_array($request->servicio_hijos)) {
              
               //  $count = count($request->servicio_hijos); 1980
