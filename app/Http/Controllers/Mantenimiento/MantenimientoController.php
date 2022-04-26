@@ -278,12 +278,12 @@ class MantenimientoController extends Controller
                                                 $mant->paternopago=$paterno_pago;
                                                 $mant->maternopago=$materno_pago;
                                                 $mant->ci=$ci;
+                                                $mant->glosa=$request->glosa;
                                                 $mant->pago_por=$pago_por;
                                                 $mant->id_usuario_caja = auth()->id();
                                                 $mant->ultimo_pago=$ultimo_pago;
                                                 $mant->estado='ACTIVO';
                                                 $mant->observacion=$request->observacion;
-
                                                 $mant->save();
                                                 return  $mant->id;
 
