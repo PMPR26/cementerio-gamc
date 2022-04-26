@@ -129,86 +129,93 @@
     <!-- Envuelva el contenido de su PDF dentro de una etiqueta principal -->
     <main>
         <pre>
-              {{-- @php(print_r($table)) 
+               {{-- @php(print_r($codigo_nicho)) 
                @php(die()) --}}
-            </pre>
+        </pre>
 
-        <!-- tabla encabezado boleta -->
-        <table width="100%">
-            <tr>
-                <th width="80%">
-                    <h4 align="center">BOLETA DE PRELIQUIDACION</h4>
-                </th>
-                <td width="20%">
-                    <span class="txtred">Nro. FUR:{{ $table->fur ?? '' }}</span><br>
-                    <span class="txtadd">Tasa por otros servicios</span>
-                </td>
+       
 
-            </tr>
-        </table>
-        <table>
-            <tr>
-                <td colspan="2"> <span class="rotulo"> IDENTIFICACION DEL CONTRIBUYENTE</span></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td width="80%" colspan="2">Nombre: {{ucwords($table->nombre??'' )}}  </td>
-                <td width="20%">C.I.:{{ $table->ci }} </td>
-            </tr>
-            <tr>
-                {{-- <td width="60%" colspan="2">Pago realizado por : {{ $table->pago_por }}</td> --}}
-                <td width="20%">Actividad: Preliquidación</td>
-            </tr>
+                <table width="100%">
+                    <tr>
+                        <th width="80%">
+                            <h4 align="center">BOLETA DE PRELIQUIDACION</h4>
+                        </th>
+                        <td width="20%">
+                            <span class="txtred">Nro. FUR:{{ $table->fur ?? '' }}</span><br>
+                            <span class="txtadd">Tasa por otros servicios</span>
+                        </td>
 
-        </table>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <td colspan="2"> <span class="rotulo"> IDENTIFICACION DEL CONTRIBUYENTE</span></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td width="80%" colspan="2">Nombre: {{ucwords($table->nombre??'' )}}  </td>
+                        <td width="20%">C.I.:{{ $table->ci ??'' }} </td>
+                    </tr>
+                    <tr>
+                        @if($table->fur==0)
+                        <td width="60%" colspan="2"><b>SERVICO GRATUITO</b></td>
+                        @endif
+                        <td width="20%">Actividad: Preliquidación</td>
+                    </tr>
+                    <tr>
+                        <td><b>Codigo Nicho:  {{ $codigo_nicho }}</b></td>
+                    </tr>
 
-        <table>
-            <tr>
-                <td colspan="4" width="380px">
-                    <h4 align="left">DETALLE LIQUIDACION</h4>
-                </td>
-            </tr>
-           
+                </table>
+         
+                    <table>
+                        <tr>
+                            <td colspan="4" width="380px">
+                                <h4 align="left">DETALLE LIQUIDACION</h4>
+                            </td>
+                        </tr>
+                    
 
-            <tr class="thead">
-                <td width="10%" align="left">NRO</td>
-                <td width="10%" align="left">CUENTA</td>
-                <td width="50%" align="center">CONCEPTO</td>
-                <td width="10%" align="right">P.U.</td>
-                <td width="10%" align="right">CANTIDAD</td>
-                <td width="10%" align="right">TOTAL</td>
-            </tr>
-            @php($count = 1)
-            @php($acum=0)
-            @foreach ($table->cobrosDetalles as $cobros)
-                <tr>
-                    <td scope="row">{{ $count++ }}</td>
+                        <tr class="thead">
+                            <td width="10%" align="left">NRO</td>
+                            <td width="10%" align="left">CUENTA</td>
+                            <td width="50%" align="center">CONCEPTO</td>
+                            <td width="10%" align="right">P.U.</td>
+                            <td width="10%" align="right">CANTIDAD</td>
+                            <td width="10%" align="right">TOTAL</td>
+                        </tr>
+                        @php($count = 1)
+                        @php($acum=0)
+                        @foreach ($table->cobrosDetalles as $cobros)
+                            <tr>
+                                <td scope="row">{{ $count++ }}</td>
 
-                    <td>{{ $cobros->cuenta  }}</td>
-                    <td width="50%" align="justify">{{ $cobros->detalle }}</td>
-                    <td width="15%" align="center">{{ $cobros->monto }} </td>
-                    <td width="5%" align="center"> 1 </td>
-                    <td width="10%" align="center">{{number_format(floatval($cobros->monto * 1), 2, ',', '.')  }}</td>
-                </tr>
-                     @php($acum=$acum+$cobros->monto)
-            @endforeach
-            <tr class="odd">
-                <td width="80%" align="left" colspan="5">Total </td>
-                <td width="10%" align="right">{{ $acum ?? '' }}</td>
-            </tr>
+                                <td>{{ $cobros->cuenta  }}</td>
+                                <td width="50%" align="justify">{{ $cobros->detalle }}</td>
+                                <td width="15%" align="center">{{ $cobros->monto }} </td>
+                                <td width="5%" align="center"> 1 </td>
+                                <td width="10%" align="center">{{number_format(floatval($cobros->monto * 1), 2, ',', '.')  }}</td>
+                            </tr>
+                                @php($acum=$acum+$cobros->monto)
+                        @endforeach
+                        <tr class="odd">
+                            <td width="80%" align="left" colspan="5">Total </td>
+                            <td width="10%" align="right">{{ $acum ?? '' }}</td>
+                        </tr>
 
 
-            <tr>
-                <td width='100%' colspan="5" height="80px">
-                    <?php $subt1 = round($acum, 3);
-                    $subtLit = number_format(floatval($subt1), 2, ',', '.');
-                    $lit = convertir($subtLit);
-                    $txt = 'SON: BOLIVIANOS  ' . $lit . ' ';
-                    ?>
-                    <b> {{ $txt }} </b>
-                </td>
-            </tr>
-        </table>
+                        <tr>
+                            <td width='100%' colspan="5" height="80px">
+                                <?php $subt1 = round($acum, 3);
+                                $subtLit = number_format(floatval($subt1), 2, ',', '.');
+                                $lit = convertir($subtLit);
+                                $txt = 'SON: BOLIVIANOS  ' . $lit . ' ';
+                                ?>
+                                <b> {{ $txt }} </b>
+                            </td>
+                        </tr>
+                    </table>
+ 
 
     </main>
 </body>

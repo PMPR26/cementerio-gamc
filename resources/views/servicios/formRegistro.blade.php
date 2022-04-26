@@ -168,23 +168,32 @@
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Fecha Nacimiento</label>
-                                <input style="text-transform:uppercase;"
-                                    onkeyup="javascript:this.value=this.value.toUpperCase();" type="date"
+                                <input type="date"
                                     class="form-control clear" id="fechanac_dif" autocomplete="off">
                             </div>
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Fecha Ingreso al nicho</label>
-                                <input style="text-transform:uppercase;"
-                                    onkeyup="javascript:this.value=this.value.toUpperCase();" type="date"
+                                <input type="date"
                                     class="form-control clear" id="fechadef_dif" autocomplete="off">
                             </div>
 
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+                            {{-- <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Causa</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
                                     class="form-control clear" id="causa" autocomplete="off">
+                            </div> --}}
+                            <div class="col-sm-12 col-md-3 col-xl-3">
+                                <label>Causa</label>
+                                <select id="causa" style="text-transform:uppercase; width: 100%"
+                                onkeyup="javascript:this.value=this.value.toUpperCase();"
+                                class="form-control select2-multiple select2-hidden-accessible">
+                                <option value="">SELECIONAR CAUSA FALLECIMIENTO</option>
+                                @foreach ($causa as $causa)                                  
+                                        <option value="{{ $causa->causa }}">{{$causa->causa }}</option>                                   
+                                @endforeach
+                            </select>
                             </div>
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
@@ -219,15 +228,19 @@
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Funeraria</label>
-                                <select id="funeraria"
-                                class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
+                                <select id="funeraria" style="text-transform:uppercase; width: 100%"
+                                onkeyup="javascript:this.value=this.value.toUpperCase();"
+                                class="form-control select2-multiple select2-hidden-accessible">
                                 <option value="">SELECIONAR FUNERARIA</option>
                                 @foreach ($funeraria as $fun)                                  
                                         <option value="{{ $fun->funeraria }}">{{$fun->funeraria }}</option>                                   
                                 @endforeach
                             </select>
                             </div>
-
+                            <div class="col-sm-12 col-md-3 col-xl-3">
+                                <label>Tiempo</label>
+                                <input type="text" name="tiempo" id="tiempo" class="form-control">
+                             </div>
                         </div>
 
 
@@ -300,12 +313,12 @@
 
                         <div class="row">
 
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+                            {{-- <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Fecha Nacimiento</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="date"
                                     class="form-control" id="fechanac_resp" autocomplete="off">
-                            </div>
+                            </div> --}}
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Teléfono</label>
@@ -317,14 +330,21 @@
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Celular</label>
-
-
                                 <input name="celular" id="celular"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     type="number" maxlength="8" class="form-control" />
                             </div>
 
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+                            <div class="col-sm-12 col-md-2 col-xl-2">
+                                <label>Genero</label>
+                                <select name="genero_resp" id="genero_resp" class="form-control">
+                                    <option value="">SELECCIONAR</option>
+                                    <option value="FEMENINO">FEMENINO</option>
+                                    <option value="MASCULINO">MASCULINO</option>
+                                </select>
+                            </div>
+
+                            {{-- <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Estado civil</label>
                                 <select name="ecivil" id="ecivil" class="form-control">
                                     <option value="">SELECCIONAR</option>
@@ -334,43 +354,36 @@
                                     <option value="SOLTERO">SOLTERO</option>
                                     <option value="VIUDO">VIUDO</option>
                                 </select>
-                            </div>
+                            </div> --}}
                         </div>
 
 
-                        <div class="row">
+                           {{-- <div class="row">
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>E-mail</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="email" size="50"
                                     class="form-control" id="email" autocomplete="off">
-                            </div>
+                            </div> --}}
 
 
-                            <div class="col-sm-12 col-md-7 col-xl-7">
+                            <div class="col-sm-12 col-md-12 col-xl-12">
                                 <label>Domicilio</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
                                     class="form-control" id="domicilio" autocomplete="off">
                             </div>
-                            <div class="col-sm-12 col-md-2 col-xl-2">
-                                <label>Genero</label>
-                                <select name="genero_resp" id="genero_resp" class="form-control">
-                                    <option value="">SELECCIONAR</option>
-                                    <option value="FEMENINO">FEMENINO</option>
-                                    <option value="MASCULINO">MASCULINO</option>
-                                </select>
-                            </div>
+                           
                         </div>
                     </div>
                 </div>
 
                 <input type="hidden" name="origen" id="origen">
                 <input type="hidden" name="pag_con" id="pag_con" value="">
-                <input type="hidden" name="tiempo" id="tiempo">
+               
                 <input type="hidden" name="vencido" id="vencido">
                 <input type="hidden" name="aniosdeuda" id="aniosdeuda">
-                <input type="hidden" name="cant_cuerpos" id="cant_cuerpos">
+                <input type="hidden" name="cant_cuerpos" id="cant_cuerpos" value="0">
 
 
 
@@ -611,74 +624,71 @@
     @section('js')
         <script>
             $(document).ready(function() {
-
-                //certificado defuncion adjunto
-
                 $("#cert-defuncion").dropzone({
-        dictDefaultMessage: "Arrastre y suelte aquí los archivos …<br>(o haga clic para seleccionar archivos)",
-        dictRemoveFile: 'Remover Archivo',
-        dictCancelUpload: 'Cancelar carga',
-        dictResponseError: 'Server responded with  code.',
-        dictCancelUploadConfirmation: '¿Estás seguro/a de que deseas cancelar esta carga?',
-        url: "{{ env('URL_FILE') }}/api/v1/repository/upload-files",
-        paramName: "documens_files[]",
-        addRemoveLinks: true,
-        acceptedFiles: 'image/jpeg, image/png, image/jpg, application/pdf',
-        parallelUploads: 1,
-        maxFiles: 1,
-        init: function() {
-        this.on("complete", function(file) {
-            if(file.type != 'application/pdf' && file.type != 'image/png' && file.type != 'image/jpg' && file.type != 'image/jpeg') {
-                this.removeFile(file);
-                toastr["error"]('No se puede subir el archivo '+ file.name);
-                return false;
-            }
-        });
+                dictDefaultMessage: "Arrastre y suelte aquí los archivos …<br>(o haga clic para seleccionar archivos)",
+                dictRemoveFile: 'Remover Archivo',
+                dictCancelUpload: 'Cancelar carga',
+                dictResponseError: 'Server responded with  code.',
+                dictCancelUploadConfirmation: '¿Estás seguro/a de que deseas cancelar esta carga?',
+                url: "{{ env('URL_FILE') }}/api/v1/repository/upload-files",
+                paramName: "documens_files[]",
+                addRemoveLinks: true,
+                acceptedFiles: 'image/jpeg, image/png, image/jpg, application/pdf',
+                parallelUploads: 1,
+                maxFiles: 1,
+                init: function() {
+                this.on("complete", function(file) {
+                    if(file.type != 'application/pdf' && file.type != 'image/png' && file.type != 'image/jpg' && file.type != 'image/jpeg') {
+                        this.removeFile(file);
+                        toastr["error"]('No se puede subir el archivo '+ file.name);
+                        return false;
+                    }
+                });
 
-        this.on("removedfile", function(file) {
-            $.ajax({
-                        type: 'DELETE',
-                        headers: {
-                            'Content-Type':'application/json'
-                        },
-                        url: "{{ env('URL_FILE') }}/api/v1/repository/remove-file",
-                        async: false,
-                        data: JSON.stringify({
-                            'url':  JSON.parse(file.xhr.response).response[0].url_file
-                        }),
-                        success: function(data_response) {
-                        }
-                    })
+                this.on("removedfile", function(file) {
+                    $.ajax({
+                                type: 'DELETE',
+                                headers: {
+                                    'Content-Type':'application/json'
+                                },
+                                url: "{{ env('URL_FILE') }}/api/v1/repository/remove-file",
+                                async: false,
+                                data: JSON.stringify({
+                                    'url':  JSON.parse(file.xhr.response).response[0].url_file
+                                }),
+                                success: function(data_response) {
+                                }
+                            })
 
-        });
+                });
 
-        this.on("maxfilesexceeded", function(file){
-            file.previewElement.classList.add("dz-error");
-            $('.dz-error-message').text('No se puede subir mas archivos!');
-        });
+                this.on("maxfilesexceeded", function(file){
+                    file.previewElement.classList.add("dz-error");
+                    $('.dz-error-message').text('No se puede subir mas archivos!');
+                });
 
-        },
-        sending: function(file, xhr, formData){
-                    formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
-                    formData.append('collector', 'certificados de difuncion');
-                   
                 },
-        success: function (file, response) {
-            file.previewElement.classList.add("dz-success");
-            $('#url-certification').val(response.response[0].url_file);
-            // $(file._removeLink).attr('href', response.response[0].url_file);
-            // $(file._removeLink).attr('id', 'btn-remove-file'); 
-        },
-        error: function (file, response) {
-         
-            if(response == 'You can not upload any more files.'){
-                toastr["error"]('No se puede subir mas archivos');
-                this.removeFile(file);
-            }
-            file.previewElement.classList.add("dz-error");
-            $('.dz-error-message').text('No se pudo subir el archivo '+ file.name);
-        }
-    });
+                sending: function(file, xhr, formData){
+                            formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
+                            formData.append('collector', 'certificados de difuncion');
+                        
+                        },
+                success: function (file, response) {
+                    file.previewElement.classList.add("dz-success");
+                    $('#url-certification').val(response.response[0].url_file);
+                    // $(file._removeLink).attr('href', response.response[0].url_file);
+                    // $(file._removeLink).attr('id', 'btn-remove-file'); 
+                },
+                error: function (file, response) {
+                
+                    if(response == 'You can not upload any more files.'){
+                        toastr["error"]('No se puede subir mas archivos');
+                        this.removeFile(file);
+                    }
+                    file.previewElement.classList.add("dz-error");
+                    $('.dz-error-message').text('No se pudo subir el archivo '+ file.name);
+                }
+            });
 
 
     //busqueda
@@ -761,9 +771,6 @@
                                 if(value.cuenta == '15224301'){
                                         $('#precio_renov').val(value.monto1);
                                         $('#cuenta_renov').val(value.cuenta);
-
-                                    //   $('#ren').show();
-                                    //     Renov();
                                     }
 
                             });
@@ -823,9 +830,7 @@
                             {
                                  $('#ren').show();
                                  buscarUltimaRenovacion();
-                            //   //   Renov();
-                            //      calcularPrice();
-                               
+                         
                             }else{
                                 var v = (value.text).split('-');
                                 var costo = '<input type="hidden" name="costo" value="' + v[v.length - 2] +
@@ -923,7 +928,7 @@
                     $('.clean').html("");
                     $('#pag_con').val();
                     $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
-                    $('#form').hide();
+                    $('#buscar').prop('disabled' , true);
                     var bloque = $('#bloque').val();
                     var nicho = $('#nro_nicho').val();
                     var fila = $('#fila').val();
@@ -1027,6 +1032,8 @@
                                     success: function(data) {
                                         $('#sp').empty();
                                         $('#form').show();
+                                       $('#buscar').prop('disabled' , false);
+
                                         $('#origen').val('tabla_antigua');
 
                                         if (data.codigo_ni) {
@@ -1066,36 +1073,40 @@
                                                     .datos_difuntos[0].difunto);
                                                 var t = data.response.datos_difuntos[0]
                                                     .tiempo;
-                                                if ((data.response.datos_difuntos[0].pag_con ==
+                                            if ((data.response.datos_difuntos[0].pag_con ==
                                                         '' || data.response.datos_difuntos[0]
                                                         .pag_con ==
                                                         null) && (data.response.datos_difuntos[
                                                             0]
-                                                        .tiempo != "")) {
+                                                        .tiempo != ""))
+                                                         {
 
-                                                    if (!$.isNumeric(t)) {
-                                                        t = 0;
-                                                        $('#txt_tiempo').show();
-                                                    } else {
-                                                        $('#txt_tiempo').hide();
-                                                    }
-                                                    if (t == 2) {
-                                                        $('#tipo_dif').val('PARVULO')
-                                                    } else if (t == 5) {
-                                                        $('#tipo_dif').val('ADULTO')
-                                                    }
-                                                    $('#tiemp').html(t);
-                                                    $('#tiempo').val(t);
-                                                    $('#tipo_nicho').val('TEMPORAL');
-                                                    calcularPlazo(t, año, nuevaf);
+                                                                    if (!$.isNumeric(t)) {
+                                                                        t = 30;  
+                                                                        Swal.fire(
+                                                                            'Se autocompletará el tiempo de permanencia del difunto como 30 años, debido a la ausencia de la información!',
+                                                                            'Si no fuera correcto el dato por favor completar de manera manual',
+                                                                            'warning'
+                                                                        )  ;                                              
+                                                                    } else if(t=="") {
+                                                                    
+                                                                        seTime();
+                                                                    }
+                                                                    if (t == 2) {
+                                                                        $('#tipo_dif').val('PARVULO')
+                                                                    } else if (t == 5) {
+                                                                        $('#tipo_dif').val('ADULTO')
+                                                                    }
+                                                                    $('#tiemp').html(t);
+                                                                    $('#tiempo').val(t);
+                                                                    $('#tipo_nicho').val('TEMPORAL');
+                                                                    calcularPlazo(t, año, nuevaf);
                                                 } else if (data.response.datos_difuntos[0]
                                                     .pag_con > 0) {
 
 
                                                     $('#tiemp').html(t);
                                                     $('#tiempo').val(t);
-
-
 
                                                     $('#pago_cont').html(pg);
                                                     $('#pago_cont_ant').html(pg);
@@ -1256,7 +1267,7 @@
 
 
                 $(document).on('click', '#btn_guardar_pago', function() {
-
+                    if($('#tiempo').val()==""){   seTime();}
                     if ($('#person').is(':checked')) {
                         if ($('#name_pago').val() == "" || $('#paterno_pago').val() == "" || $('#ci').val() ==
                             "") {
@@ -1325,11 +1336,11 @@
                             'nombres_resp': $('#nombres_resp').val(),
                             'paterno_resp': $('#paterno_resp').val(),
                             'materno_resp': $('#materno_resp').val(),
-                            'fechanac_resp': $('#fechanac_resp').val(),
+                           // 'fechanac_resp': $('#fechanac_resp').val(),
                             'telefono': $('#telefono').val(),
                             'celular': $('#celular').val(),
-                            'ecivil': $('#ecivil').val(),
-                            'email': $('#email').val(),
+                           // 'ecivil': $('#ecivil').val(),
+                           // 'email': $('#email').val(),
                             'domicilio': $('#domicilio').val(),
                             'genero_resp': $('#genero_resp').val(),
                             'pag_con': $('#pag_con').val(),
@@ -1356,10 +1367,11 @@
                             'reg': $('#reg').val(),
                             'nrofur': $('#nrofur').val(),
                             'txttotal':$('#totalservicios').val(), 
-                            'gratuito':$('#gratis').val(), 
+                            'gratis':$('#gratis').val(), 
                             'externo':$('#externo').val(), 
                             'funeraria':$('#funeraria').val(), 
                             'urlcertificacion':$('#url-certificacion').val(), 
+                            'cant':$('#cant_cuerpos').val()
                         }),
                         success: function(data_response) {
                             console.log(data_response);
@@ -1865,27 +1877,57 @@
             $(document).on('click', '#gratis', function() { 
                 if ($(this).is(':checked')) {
                     $('#gratis').val('gratis');
+                    $('#totalServ').html(0);
+                    $('#totalservicios').val(0);
                 }else{
                     $('#gratis').val('');
+                    consolidado();
                 }
             });
+           
+            
+             //causa
+             $("#causa").select2({
+                tags: true,
+                allowClear: true
 
-            $(document).on('click', '#gratis', function() { 
-                if ($(this).is(':checked')) {
-                    $('#gratis').val('gratis');
-                }else{
-                    $('#gratis').val('');
-                }
-            });
-             
+                });
+
+            $(document).on('click' ,  'button[aria-describedby="select2-causa-container"] span', function(){
+                   $('#causa option:selected').remove(); 
+            })
+
+           
+
+
             //funeraria
             $("#funeraria").select2({
                 tags: true,
                 allowClear: true
 
                 });
-            $(document).on('click' ,  '.select2-selection__clear', function(){
+            $(document).on('click' ,  'button[aria-describedby="select2-funeraria-container"] span', function(){
                    $('#funeraria option:selected').remove(); 
+            })
+           
+            function seTime(){
+                if($('#tipo_nicho option:selected').val()=="TEMPORAL"){
+                      if($('#tipo_dif  option:selected').val()=='ADULTO' ){
+                            $('#tiempo').val('5')
+                        }else if($('#tipo_dif  option:selected').val()=='PARVULO' ){
+                            $('#tiempo').val('2')
+                        }
+                }
+                else if($('#tipo_nicho  option:selected').val()=="PERPETUO"){
+                    $('#tiempo').val('30')
+                }
+            }
+            $(document).on('change', '#tipo_dif', function(){
+                 seTime();
+            })
+
+            $(document).on('change', '#tipo_nicho', function(){
+                seTime();
             })
         </script>
 

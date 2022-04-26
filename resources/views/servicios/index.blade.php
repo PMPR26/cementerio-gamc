@@ -53,12 +53,14 @@
                             @else
                             @php( print_r( 'PAGADO'))
                             @endif
-                        </td>     
-                            
+                        </td>                                 
                             <td>
                                 <form action="{{ route('serv.generatePDF') }}" method="GET" target="blank">
                                     @csrf
-                                    <input type="hidden" name="id" value={{ $serv->fur }}>
+                                    <input type="hidden" name="codigo_nicho" value={{ $serv->codigo_nicho }}>    
+                                    <input type="hidden" name="id" value={{ $serv->serv_id }}>                                   
+                                    <input type="hidden" name="fur" value={{ $serv->fur }}>
+                                  
                                     <button type='submit' class="btn btn-info "><i
                                             class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
                                 </form>
