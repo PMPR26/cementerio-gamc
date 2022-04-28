@@ -177,47 +177,47 @@ class ServiciosController extends Controller
 
 
 
-    public function generateFur(Request $request)
-    {
+    // public function generateFur(Request $request)
+    // {
 
-        $this->validate($request, [
-            'ci' => 'required',
-            'nombre' => 'required',
-            'primer_apellido' => 'required',
-            'ap_materno' => 'max:30',
-            'direccion' => 'max:200',
-            'telefono' => 'max:10',
-            'nombre_difunto' => 'required|max:50',
-            'codigo' => 'required',
-            'bloque' => 'required',
-            'nicho' => 'required',
-            'fila' => 'required',
-            'servicios_cementery' => 'required'
-        ]);
+    //     $this->validate($request, [
+    //         'ci' => 'required',
+    //         'nombre' => 'required',
+    //         'primer_apellido' => 'required',
+    //         'ap_materno' => 'max:30',
+    //         'direccion' => 'max:200',
+    //         'telefono' => 'max:10',
+    //         'nombre_difunto' => 'required|max:50',
+    //         'codigo' => 'required',
+    //         'bloque' => 'required',
+    //         'nicho' => 'required',
+    //         'fila' => 'required',
+    //         'servicios_cementery' => 'required'
+    //     ]);
 
-        $headers =  ['Content-Type' => 'application/json'];
-        $client = new Client();
-        $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementery', [
-            'json' => [
-                'ci' => $request->ci,
-                'nombre' => $request->nombre,
-                'primer_apellido' => $request->primer_apellido,
-                'ap_materno' => $request->ap_materno,
-                'direccion' => $request->direccion,
-                'telefono' => $request->telefono,
-                'nombre_difunto' => $request->nombre_difunto,
-                'codigo' => $request->codigo,
-                'bloque' => $request->bloque,
-                'fila' => $request->fila,
-                'nicho' => $request->nicho,
-                'servicios_cementery' => $request->servicios_cementery
-            ],
-            'headers' => $headers,
-        ]);
-        $fur_response = json_decode((string) $response->getBody(), true);
+    //     $headers =  ['Content-Type' => 'application/json'];
+    //     $client = new Client();
+    //     $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementery', [
+    //         'json' => [
+    //             'ci' => $request->ci,
+    //             'nombre' => $request->nombre,
+    //             'primer_apellido' => $request->primer_apellido,
+    //             'ap_materno' => $request->ap_materno,
+    //             'direccion' => $request->direccion,
+    //             'telefono' => $request->telefono,
+    //             'nombre_difunto' => $request->nombre_difunto,
+    //             'codigo' => $request->codigo,
+    //             'bloque' => $request->bloque,
+    //             'fila' => $request->fila,
+    //             'nicho' => $request->nicho,
+    //             'servicios_cementery' => $request->servicios_cementery
+    //         ],
+    //         'headers' => $headers,
+    //     ]);
+    //     $fur_response = json_decode((string) $response->getBody(), true);
 
-        return $fur_response;
-    }
+    //     return $fur_response;
+    // }
 
     //service update pay from sinot
     public function updatePay(Request $request)
@@ -351,8 +351,7 @@ class ServiciosController extends Controller
             ]);
         }
             if (!empty($request->servicio_hijos) && is_array($request->servicio_hijos)) {
-             
-              //  $count = count($request->servicio_hijos); 1980
+
 
                 foreach($request->servicio_hijos as $servi){
                     if($servi=='1979' || $servi=='1977' || $servi=='1978'  || $servi=='1981' || $servi=='1980' || $servi=='1982'){
@@ -550,7 +549,7 @@ class ServiciosController extends Controller
                                                 $serv->servicio= $request->servicio_hijos_txt;
                                                 $serv->responsable_difunto_id=$iddifuntoResp;
                                                 $serv->id_usuario_caja = auth()->id();
-                                              
+                                                $serv->id_usuario = auth()->id();
                                                 $serv->fur=$fur;
                                                 $serv->nro_renovacion= $request->renov ?? '0';
                                                 $serv->monto_renovacion= $request->monto_renov ?? '0';

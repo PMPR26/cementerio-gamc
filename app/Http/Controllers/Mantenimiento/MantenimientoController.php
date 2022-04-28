@@ -240,7 +240,7 @@ class MantenimientoController extends Controller
                                }
                              // dd($request);
                              $codigo_nicho=$request->cuartel.".".$request->bloque.".".$request->nicho.".".$request->fila;
-                             $servicio=['525'];
+                             $servicio_cementery=['525'];
                             if (!empty($request->sel) && is_array($request->sel))
                              {
                                 $count = count($request->sel);
@@ -254,7 +254,7 @@ class MantenimientoController extends Controller
                                                             $obj= new ServicioNicho;
                                                             $response=$obj->GenerarFur($ci, $nombre_pago, $paterno_pago,
                                                             $materno_pago, $domicilio,  $nombre_difunto, $codigo_nicho,
-                                                            $request->bloque, $request->nro_nicho, $request->fila, $servicio );
+                                                            $request->bloque, $request->nro_nicho, $request->fila, $servicio_cementery );
                                                         
                                                             if($response['status']==true){
                                                                 $fur = $response['response'];

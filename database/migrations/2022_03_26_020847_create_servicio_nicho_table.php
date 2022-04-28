@@ -24,7 +24,8 @@ class CreateServicioNichoTable extends Migration
             $table->unsignedBigInteger('responsable_difunto_id');
             $table->integer('fur');
             $table->timestamp('fecha_pago')->nullable();
-            $table->integer('id_usuario_caja')->nullable(); 
+            $table->string('id_usuario_caja')->nullable();
+            $table->integer('id_usuario')->nullable(); 
             $table->integer('nro_renovacion')->nullable();
             $table->string('monto_renovacion')->nullable();
             $table->string('monto'); 
