@@ -557,6 +557,7 @@
                 $('.clean').html("");
                 $('#pag_con').val();
                 $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
+                $('#buscar').prop('disabled' , true);
                 $('#form').hide();
                 var bloque = $('#bloque').val();
                 var nicho = $('#nro_nicho').val();
@@ -653,6 +654,7 @@
                                 success: function(data) {
                                     $('#sp').empty();
                                     $('#form').show();
+                                    $('#buscar').prop('disabled' , false);
                                     $('#origen').val('tabla_antigua');
 
                                     if (data.codigo_ni) {
@@ -951,7 +953,7 @@
                         cpago.push($(this).val());
                     }
                 });
-                var codigo_nicho=$('#cuartel').val()+"."+$('#bloque').val()+"."+$('#nicho').val()+"."+$('#fila').val();
+                var codigo_nicho=$('#cuartel').val()+"."+$('#bloque').val()+"."+$('#nro_nicho').val()+"."+$('#fila').val();
                 var difunto=$('#nombres_dif').val()+" "+$('#paterno_dif').val()+" "+$('#materno_dif').val();
                 var glosa="Pago por Conservación de nichos perpetuos de forma anual, Codigo nicho :"+codigo_nicho +"  Bloque: "+$('#bloque').val()+" Nicho: "+$('#nicho').val()+ " Fila:"+ $('#fila').val()+"  Difunto: "+ difunto;
 

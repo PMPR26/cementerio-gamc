@@ -24,6 +24,7 @@ class CreateMantenimientoNichoTable extends Migration
             $table->integer('cantidad_gestiones');
             $table->float('precio_sinot', 12, 2);           
             $table->string('monto');
+            $table->text('glosa');
             $table->string('ultimo_pago');
             $table->string('nombrepago')->nullable();
             $table->string('paternopago')->nullable();
@@ -33,7 +34,6 @@ class CreateMantenimientoNichoTable extends Migration
             $table->string('id_usuario_caja')->nullable();
             $table->string('estado');
             $table->string('observacion')->nullable();
-
             $table->timestamps();
 
             $table->foreign('respdifunto_id')->references('id')->on('responsable_difunto');
