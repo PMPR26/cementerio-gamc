@@ -32,12 +32,12 @@
                     <div class="row">
                         <div class="col-sm-6 col-md-6 col-xl-6">
                             <label for="">EXTERNO</label>
-                            <input type="checkbox" name="externo" id="externo" class="form-control">
+                            <input type="checkbox" name="externo" id="externo" style="width: 30px; height:30px" >
                         </div>
 
                         <div class="col-sm-6 col-md-6 col-xl-6">
                             <label for="">GRATUITO</label>
-                            <input type="checkbox" name="gratis" id="gratis" class="form-control">
+                            <input type="checkbox" name="gratis" id="gratis"  style="width: 30px; height:30px"  >
                         </div>
                     </div>
                     
@@ -932,6 +932,9 @@
                     var bloque = $('#bloque').val();
                     var nicho = $('#nro_nicho').val();
                     var fila = $('#fila').val();
+                     bloque = $('#bloque').prop('disable',true);
+                     nicho = $('#nro_nicho').prop('disable',true);
+                     fila = $('#fila').prop('disable',true);
 
                     cuartel = buscarCuartel(bloque, nicho, fila);
 
@@ -1033,6 +1036,9 @@
                                         $('#sp').empty();
                                         $('#form').show();
                                        $('#buscar').prop('disabled' , false);
+                                       bloque = $('#bloque').prop('disable',false);
+                                       nicho = $('#nro_nicho').prop('disable',false);
+                                       fila = $('#fila').prop('disable',false);
 
                                         $('#origen').val('tabla_antigua');
 
