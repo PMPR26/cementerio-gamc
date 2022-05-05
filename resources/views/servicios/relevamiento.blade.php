@@ -23,26 +23,7 @@
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <h2> SELECCIONAR ANTES DE INICIAR </h2>
-                    <P>Seleccione "EXTERNO" si solicitará algun servicio que no este relacionado a un nicho, seleccione "GRATIS" si el cervicio será gratuito</P>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-6 col-md-6 col-xl-6">
-                            <label for="">EXTERNO</label>
-                            <input type="checkbox" name="externo" id="externo" style="width: 30px; height:30px" >
-                        </div>
-
-                        <div class="col-sm-6 col-md-6 col-xl-6">
-                            <label for="">GRATUITO</label>
-                            <input type="checkbox" name="gratis" id="gratis"  style="width: 30px; height:30px"  >
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
+           
 
         <div class="col-12 interno" >   
             {{-- datos busqueda --}}
@@ -434,167 +415,14 @@
                     </div>
                 </div>
 
-                <div class="card interno">
-                    <div class="card-header">
-                        <div class="col-sm-6 col-md-12 col-xl-12">PAGO POR TERCERA PERSONA &nbsp;&nbsp;&nbsp; <input
-                                type="checkbox" name="person" id="person" value="responsable"
-                                style="width: 30px; height:30px"></div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row form-group-lg" id="infoperson" style="display: none">
+              
+               
 
-
-                            <div class="col-sm-6 col-md-2 col-xl-2">
-                                <label>Nombres</label> <input type="text" name="name_pago" id="name_pago" value=""
-                                    class="form-control">
-                            </div>
-                            <div class="col-sm-6 col-md-3 col-xl-3">
-                                <label>Primer apellido</label> <input type="text" name="paterno_pago" id="paterno_pago"
-                                    value="" class="form-control">
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xl-3">
-                                <label>Segundo apellido</label> <input type="text" name="materno_pago" id="materno_pago"
-                                    value="" class="form-control">
-                            </div>
-
-                            <div class="col-sm-6 col-md-4 col-xl-4">
-                                <label> C.I.:</label> <input type="text" name="ci" id="ci" value="" class="form-control">
-                            </div>
-
-
-                        </div>
-
-                        <div class="row">
-                            <div class="col-12">
-                                <label for="obs">Observaciones</label>
-                                <textarea name="observacion" id="observacion" class="form-control" cols="30" rows="3"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card interno">
-                    <div class="row">
-                        <div class="col-sm-6 col-md-6 col-xl-6"> Regularizar Transaccion &nbsp;&nbsp;&nbsp; <input
-                                type="checkbox" name="reg" id="reg" style="width: 30px; height:30px"></div>
-                        <div class="col-sm-6 col-md-6 col-xl-6" id="fur_reg" style="display: none"> FUR <input type="text"
-                                name="nrofur" id="nrofur" value=""></div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h4>ASIGNACION SERVICIOS</h4>
-                    </div>
-
-                    <div class="card-body">
-                    
-                        <div class="form-row " id="ren" style="display: none">
-                            <div class="col-sm-12 col-md-12 col-xl-12">
-                                <h2>Calcular monto renovacion de enterratorio</h2>
-                                <input type="hidden" name="precio_renov" id="precio_renov" class="form-control precio_renov"
-                                value="0">
-                                 <input type="hidden" name="cuenta_renov" id="cuenta_renov" class="form-control cuenta_renov"
-                                value="0">
-                            </div>
-
-                            <div class="col-sm-12 col-md-3 col-xl-3">
-                                <label for=""># de renovacion anterior</label>
-                                <input type="number" name="renov_ant" id="renov_ant" class="form-control renov"
-                                    onkeyup="calcRenov()" value="0">
-                            </div>
-
-                            <div class="col-sm-12 col-md-3 col-xl-3">
-                                <label for="">Ultimo cobro renovacion</label>
-                                <input type="number" name="precio_renov_ant" id="precio_renov_ant"
-                                    class="form-control precio_renov_ant" value="0">
-
-                            </div>
-
-                            <div class="col-sm-12 col-md-3 col-xl-3">
-                                <label for=""># de renovacion </label>
-
-                                <input type="number" name="renov" id="renov" class="form-control renov"
-                                    onkeyup="calcRenov()">
-                            </div>
-                            <div class="col-sm-12 col-md-3 col-xl-3">
-                                <label for="">Monto renovacion </label>
-
-                                <input type="number" name="monto_renov" id="monto_renov" class="form-control monto_renov"
-                                    value="0">
-                            </div>
-
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <label>Tipo Servicio</label>
-                                <select id="tipo_servicio_value"
-                                    class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
-                                    @foreach ($tipo_service as $value)
-                                        @if ($value['cuenta'] == '15224150' || $value['cuenta'] == '15224350' )
-                                        @else
-                                            <option value="{{ $value['cuenta'] }}">{{ $value['descripcion'] }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
-
-
-                            <div class="col-sm-6" id="service" style="display:none">
-                                <label>Servicio</label>
-                                <select id="servicio-hijos" class="form-control select2-multiple select2-hidden-accessible"
-                                    style="width: 100%"></select>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>DETALLE DE SERVICIOS SOLICITADOS</h4>
-                        </div>
-
-                        <div class="row" style="padding-top: 15px;">
-                            <div class="col-sm-6">
-                                <div class="card">
-                                    <div class="card-body" id="servicios-data">
-                                        Ningun dato seleccionado.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="card">
-                                    <div class="card-body" id="servicios-hijos">
-                                        Ningun dato seleccionado.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="cal_price" style="text-align: center">
-                            <div class="card">
-                                <div class="card-body" id="servicios-hijos-price" style="text-align: center">
-
-
-
-                                </div>
-                                <h1><span id="totalServ"> 0 </span> Bs</h1>
-                                <input type="hidden" name="totalservicios" id="totalservicios" value="0"
-                                    class="form-control">
-                            </div>
-                        </div>
-
-
-
-
-                    </div>
-
+               
             
 
                     <div class="col-sm-12" style="text-align: center" id="print">
-                        <button type="button" id="btn_guardar_pago" class="btn btn-success">Registrar servicio</button>
+                        <button type="button" id="btn_guardar_pago" class="btn btn-success">Registrar Datos</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal"
                             id="cancelar">Cancelar</button>
                     </div>
@@ -713,196 +541,8 @@
 
                 }
 
-                //code selected select2 services
-                $('#tipo_servicio_value').select2({
-                    multiple: true,
-                    width: 'resolve',
-                    placeholder: 'Servicios Cementerio',
-                    theme: "classic",
-                    allowClear: true,
-                    "language": {
-                        "noResults": function(e) {
-                            return "Nada Encontrado";
-                        }
-                    }
-                });
+              
 
-
-
-
-                //select event foreach
-                $('#tipo_servicio_value').on('select2:select', function (e) {
-                        var data_request = $(this).val();
-                    
-                        $('#service').show(1000);
-                        $parrafos = '';
-                        $('#servicios-data').empty();
-                        $.each($(this).select2('data'), function( index, value ) {
-                            
-                            $parrafos = '<p id="'+value.id+'">' + $parrafos + (index + 1) + '.- '+ value.text+'</p>';
-                            $('#servicios-data').html($parrafos);
-                });
-
-                    //carga select servicios hijos
-                    $.ajax({
-                        type: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        url: '{{ env('URL_MULTISERVICE') }}/api/v1/cementerio/generate-all-servicios-nicho',
-                        async: false,
-                        data: JSON.stringify({
-                            'data': data_request
-                        }),
-                        success: function(data_response) {
-                            console.log(data_response.response);
-                            $('#servicio-hijos').empty();
-                            $.each(data_response.response, function(index, value) {
-                                //alert(value.num_sec)
-                                if (value.num_sec == '630' || value.num_sec == '628' ||
-                                    value.num_sec == '526' || value.num_sec == '1995' ||
-                                    value.num_sec == '525') {} else {
-                                  
-                                    $('#servicio-hijos').append('<option value="' + value
-                                        .num_sec + '">' + value.cuenta + ' - ' + value
-                                        .descripcion + ' - ' + value.monto1 +
-                                        '- Bs.</option>')
-                                }
-                                if(value.cuenta == '15224301'){
-                                        $('#precio_renov').val(value.monto1);
-                                        $('#cuenta_renov').val(value.cuenta);
-                                    }
-
-                            });
-                        }
-                    });
-                });
-
-                //unselect event forech  //hacer que busque y limpie el html
-                $('#tipo_servicio_value').on('select2:unselect', function(e) {
-                    if ($(this).select2('data').length == 0) {
-                        $('#servicio-hijos').empty();
-                    }
-                    $parrafos = '';
-                    $('#servicios-data').empty();
-                    $.each($("#tipo_servicio_value").select2("data"), function(index, value) {
-                        $parrafos = '<p id="' + value.id + '">' + $parrafos + (index + 1) + '.- ' +
-                            value.text + '</p>';
-                        $('#servicios-data').html($parrafos);
-                    });
-                });
-
-                setTimeout(function() {
-                    $("#tipo_servicio_value").val(null).trigger('change');
-                }, 100);
-
-
-                //--------------------------------------------------------------------
-
-                $('#servicio-hijos').select2({
-                    multiple: true,
-                    width: 'resolve',
-                    placeholder: 'Servicios Cementerio',
-                    theme: "classic",
-                    allowClear: true,
-                    "language": {
-                        "noResults": function(e) {
-                            return "Nada Encontrado";
-                        }
-                    }
-                });
-
-
-                //select event forech services hijo
-                $('#servicio-hijos').on('select2:select', function(e) {
-                    $("#tipo_servicio_value").prop("disabled", true);
-                    var data_request = $(this).val();
-
-                    $parrafos = '';
-                    $('#servicios-hijos').empty();
-                    $('#servicios-hijos-price').empty();
-                    $.each($(this).select2('data'), function(index, value) {
-                      
-                        $parrafos = '<p id="' + value.id + '">' + $parrafos + (index + 1) + ' - ' +
-                            value.text + '</p>';
-                        $('#servicios-hijos').html($parrafos);
-                        if(value.id == '642')
-                            {
-                                 $('#ren').show();
-                                 buscarUltimaRenovacion();
-                         
-                            }else{
-                                var v = (value.text).split('-');
-                                var costo = '<input type="hidden" name="costo" value="' + v[v.length - 2] +
-                                    '" class="costo" id="txt-' + value.id + '" />';
-                                $('#servicios-hijos-price').append(costo);
-                               
-                            }
-                            // calcularPrice();
-                            consolidado();
-                    });
-
-
-                });
-
-
-                //unselect event forech services hijos
-                $('#servicio-hijos').on('select2:unselect', function(e) {
-
-                   var existe=0;
-                    if ($("#servicio-hijos").select2("data").length == 0) {
-                        $("#tipo_servicio_value").prop("disabled", false);
-                    }
-                    $parrafos = '';
-                    $('#servicios-hijos').empty();
-                    $('#servicios-hijos-price').empty();
-                    $('#totalServ').html("0");
-
-                    $.each($("#servicio-hijos").select2("data"), function(index, value) {
-                            $parrafos = '<p id="' + value.id + '">' + $parrafos + (index + 1) + ' - ' +
-                            value.text + '</p>';
-                        $('#servicios-hijos').html($parrafos);
-                        var v = (value.text).split('-'); 
-                        console.log(v);
-                        if(v[0]=='15224401 '){ existe=1;
-                        }
-                        if(existe==0){
-                            $('#cuenta_renov').val("0");
-                            $('#monto_renov').val("0");
-                            $('#renov').val("0");
-                            var costo = '<input type="hidden" name="costo" value="' + v[v.length - 2] +
-                            '" class="costo" id="txt-' + value.id + '" />';
-                            $('#servicios-hijos-price').append(costo);
-                            // calcularPrice();
-                            consolidado();
-                            $('#ren').hide();
-                           
-                        }
-                    });
-                    if(existe==1){
-                       
-                            $('#ren').show();
-                            //  Renov();
-                            buscarUltimaRenovacion();
-                            //   calcularPrice();
-                            consolidado();
-                       
-                    }else{
-                        $('#ren').hide();
-                        $('#cuenta_renov').val("0");
-                            $('#monto_renov').val("0");
-                            $('#renov').val("0");
-                            // calcularPrice();
-                            consolidado();
-
-                    }
-
-
-                   
-                });
-
-
-                //  });
 
                 function calcularPrice() {
                     var acum = 0;
@@ -927,15 +567,18 @@
                     $('.clean').val("");
                     $('.clean').html("");
                     $('#pag_con').val();
-                    $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
                   
+                    $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
+                 
                     var bloque = $('#bloque').val();
                     var nicho = $('#nro_nicho').val();
                     var fila = $('#fila').val();
                   
 
                     cuartel = buscarCuartel(bloque, nicho, fila);
-
+                    console.log(bloque);
+                    console.log(nicho);
+                    console.log(fila);
                     if (bloque && nicho && fila) {
                         dats = buscar_datos(bloque, nicho, fila);
                     }
@@ -950,12 +593,15 @@
                 function buscar_datos(bloque, nicho, fila) {
                     var datos = "";
                     $('#contenido').show();
+
+                 
+
                     $.ajax({
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                             'Content-Type': 'application/json'
                         },
-                        url: "{{ route('buscar.nicho') }}",
+                        url: "{{ route('buscar.nicho.rel') }}",
                         method: 'POST',
                         dataType: 'json',
                         data: JSON.stringify({
@@ -994,26 +640,18 @@
                                 $('#email').val(data.response.email_resp);
                                 $('#domicilio').val(data.response.domicilio_resp);
                                 $('#genero_resp').val(data.response.genero_resp);
-                                $('#pago_cont').html(data.response.ultimo_pago);
-                                $('#pago_con').val(data.response.ultimo_pago);
-                                $('#pag_con').val(data.response.ultimo_pago);
-                                $('#renov_ant').val(data.response.nro_renovacion);
-                                 $('#precio_renov_ant').val(data.response.monto_renovacion);
+                               
+                              
                                 $('#razon').html(data.response.razon);
                                 $('#tiemp').html(data.response.tiempo);
                                 $('#cant_cuerpos').val(data.response.cantidad_cuerpos);
                                 $('#cuerpos').html(data.response.cantidad_cuerpos);
-                                $('#fecha_p').html(data.response.fecha_pago);
-                                $('#gestiones').html(data.response.gestion);
-                                $('#monto_pagos').html(data.response.monto);
+                               
+                            
                                 $('#funeraria').html(data.response.funeraria);
                                 $('#url-certification').html(data.response.certificado_file);
 
-                                // $('#difunto_search').val(data.response.difunto_id);
-                                //$('#responsable_search').val(data.response.responsable_id);
-                                $('#comprob').html(data.response.fur);
-                                $('#fecha_p').html(data.response.fecha_pago);
-                                $('#monto_pagos').html(data.response.monto);
+                              
                                                     if (data.response.tiempo == 2) {
                                                         $('#tipo_dif').val('PARVULO')
                                                     } else if (data.response.tiempo == 5) {
@@ -1318,7 +956,7 @@
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
                         },
-                        url: "{{ route('new.servicio') }}",
+                        url: "{{ route('new.relevamiento') }}",
                         async: false,
                         data: JSON.stringify({
 
@@ -1353,33 +991,33 @@
                             'genero_resp': $('#genero_resp').val(),
                             'pag_con': $('#pag_con').val(),
                             'tiempo': $('#tiempo').val(),
-                            'tipo_servicio': $('#tipo_servicio_value').val(),
-                            'servicio_hijos': $('#servicio-hijos').val(),
-                            'tipo_servicio_txt': $('#tipo_servicio_value option:selected').text(),
-                            'servicio_hijos_txt': $('#servicio-hijos option:selected').text(),
+                            // 'tipo_servicio': $('#tipo_servicio_value').val(),
+                            // 'servicio_hijos': $('#servicio-hijos').val(),
+                            // 'tipo_servicio_txt': $('#tipo_servicio_value option:selected').text(),
+                            // 'servicio_hijos_txt': $('#servicio-hijos option:selected').text(),
 
-                            'name_pago': $('#name_pago').val(),
-                            'paterno_pago': $('#paterno_pago').val(),
-                            'materno_pago': $('#materno_pago').val(),
+                            // 'name_pago': $('#name_pago').val(),
+                            // 'paterno_pago': $('#paterno_pago').val(),
+                            // 'materno_pago': $('#materno_pago').val(),
                             'person': $('#person').val(),
-                            'ci': $('#ci').val(),
+                            // 'ci': $('#ci').val(),
                             'sereci': $('#sereci').val(),
                             // 'id_difunto': $('#difunto_search').val(),
                            // 'id_responsable': $('#responsable_search').val(),
                             'observacion': $('#observacion').val(),
-                            'cuenta_renov': $('#cuenta_renov').val(),
-                            'renov': $('#renov').val(),
-                            'monto_renov': $('#monto_renov').val(),
-                            'cuenta_renov': $('#cuenta_renov').val(),
-                            'totalservicios': $('#totalservicios').val(),
-                            'reg': $('#reg').val(),
-                            'nrofur': $('#nrofur').val(),
-                            'txttotal':$('#totalservicios').val(), 
-                            'gratis':$('#gratis').val(), 
-                            'externo':$('#externo').val(), 
+                            // 'cuenta_renov': $('#cuenta_renov').val(),
+                            // 'renov': $('#renov').val(),
+                            // 'monto_renov': $('#monto_renov').val(),
+                            // 'cuenta_renov': $('#cuenta_renov').val(),
+                            // 'totalservicios': $('#totalservicios').val(),
+                            // 'reg': $('#reg').val(),
+                            // 'nrofur': $('#nrofur').val(),
+                            // 'txttotal':$('#totalservicios').val(), 
+                            // 'gratis':$('#gratis').val(), 
+                            // 'externo':$('#externo').val(), 
                             'funeraria':$('#funeraria').val(), 
                             'urlcertificacion':$('#url-certificacion').val(), 
-                            'cant':$('#cant_cuerpos').val()
+                            // 'cant':$('#cant_cuerpos').val()
                         }),
                         success: function(data_response) {
                             console.log(data_response);
@@ -1867,32 +1505,9 @@
 
             }
 
-            $(document).on('click', '#externo', function() { 
-                if ($(this).is(':checked')) {
-                    $('#externo').val('externo');
-                    $('.externo').prop('disabled', false);
-                    $('.interno').hide();
-                    $('.interno').prop("disabled", true);
-                } else {
-                    $('.externo').prop('disabled', true);
-                    $('.interno').show();
-
-                    $('.interno').prop("disabled", false);
-                    $('#externo').val('');
-                }
-            });
-
-            $(document).on('click', '#gratis', function() { 
-                if ($(this).is(':checked')) {
-                    $('#gratis').val('gratis');
-                    $('#totalServ').html(0);
-                    $('#totalservicios').val(0);
-                }else{
-                    $('#gratis').val('');
-                    consolidado();
-                }
-            });
            
+
+          
             
              //causa
              $("#causa").select2({

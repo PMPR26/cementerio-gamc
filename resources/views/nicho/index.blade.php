@@ -45,7 +45,7 @@
                         <th scope="col">Cantidad</th>
                         <th scope="col">Tipo</th>
                         <th scope="col">Código Antiguo</th>
-                        <th scope="col">Estado</th>   
+                        <th scope="col">Estado nicho</th>   
                         <th scope="col">Opciones</th>
                     </tr>
                 </thead>
@@ -61,13 +61,11 @@
                             <td>{{ $nicho->cuartel_cod }}</td> 
                             <td>{{ $nicho->bloque_id }}</td>
                             <td>{{ $nicho->nro_nicho }}</td>
-                            <td>{{ $nicho->fila }}</td>
-                          
+                            <td>{{ $nicho->fila }}</td>                          
                             <td>{{ $nicho->cantidad_cuerpos }}</td>
                             <td>{{ $nicho->tipo }}</td>
-                            <td>{{ $nicho->codigo_anterior }}</td>
-                            
-                            <td>{{ $nicho->estado }}</td>  
+                            <td>{{ $nicho->codigo_anterior }}</td>                            
+                            <td>{{ $nicho->estado_nicho }}</td>  
                             <td>
                                 <button type="button" class="btn btn-info" value="{{ $nicho->id }}" id="btn-editar" title="Editar nicho"><i class="fas fa-edit"></i></button>
                                                               
@@ -160,14 +158,14 @@
 
 
             <div class="row" >
-                <div class="col-md-4 col-xl-4">
+                <div class="col-md-3 col-xl-3">
                     <div class="form-group">
                         <label>Cantidad de  cuerpos:</label>
                         <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="cant_edit" autocomplete="off">
                     </div>
                 </div>    
                 
-                <div class="col-md-4 col-xl-4">
+                <div class="col-md-3 col-xl-3">
                     <div class="form-group">
                         <label>Tipo de  nicho:</label>
                         <select name="tipo" id="tipo_edit" class="form-control">
@@ -179,7 +177,20 @@
                     </div>
                 </div>   
 
-                <div class="form-group col-md-4 col-xl-4">
+                <div class="col-md-3 col-xl-3">
+                    <div class="form-group">
+                        <label>Estado  nicho:</label>
+                        <select name="estado_nicho" id="estado_nicho_edit" class="form-control">
+                            <option value="">SELECCIONAR</option>
+                            <option value="LIBRE">LIBRE</option>
+                            <option value="OCUPADO">OCUPADO</option>
+
+                        </select>
+                        
+                    </div>
+                </div>   
+
+                <div class="form-group col-md-3 col-xl-3">
                     <label>Estado:</label>
                     <select name="status" id="status_edit" class="form-control">        
                         <option value="ACTIVO"> ACTIVO</option>
@@ -243,6 +254,7 @@
                             'anterior':  $('#anterior_edit').val(),
                             'cantidad':  $('#cant_edit').val(),
                             'tipo':  $('#tipo_edit').val(),
+                            'estado_nicho': $('#estado_nicho_edit').val(),
 
                             'estado': $('#status_edit').val(),
                             'id': $('#btn-editar-va').val()
@@ -363,15 +375,18 @@
                         success: function(data_response) {
                            
                             $('#edit-nicho').modal('show');
-                            // $('#bloque_edit option[value="'+data_response.response.bloque_id+'"]').attr("selected", "selected");
-                            $('#bloque_edit').val(data_response.response.bloque_id).trigger('change');
-                            $('#cuartel_edit').val(data_response.response.cuartel_id).trigger('change');                            
+                          alert(data_response.response.bloque_id);
+                           
+                            $('#cuartel_edit').val(data_response.response.cuartel_id).trigger('change');
+                            $('#bloque_edit').val(data_response.response.bloque_id).trigger('change');            
                             $('#code_edit').val(data_response.response.codigo);  
                             $('#fila_edit').val(data_response.response.fila);  
                             $('#col_edit').val(data_response.response.columna);  
                             $('#anterior_edit').val(data_response.response.codigo_anterior);  
                             $('#cant_edit').val(data_response.response.cantidad_cuerpos);  
-                            $('#tipo_edit option[value="'+data_response.response.tipo+'"]').attr("selected", "selected");                          
+                            $('#tipo_edit option[value="'+data_response.response.tipo+'"]').attr("selected", "selected");      
+                            $('#estado_nicho_edit option[value="'+data_response.response.estado_nicho+'"]').attr("selected", "selected");                          
+
                             $('#nro_edit').val(data_response.response.nro_nicho); 
                             $('#status_edit option[value="'+data_response.response.estado+'"]').attr("selected", "selected");
                         }
