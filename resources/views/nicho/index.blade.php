@@ -375,8 +375,6 @@
                         success: function(data_response) {
                            
                             $('#edit-nicho').modal('show');
-                          alert(data_response.response.bloque_id);
-                           
                             $('#cuartel_edit').val(data_response.response.cuartel_id).trigger('change');
                             $('#bloque_edit').val(data_response.response.bloque_id).trigger('change');            
                             $('#code_edit').val(data_response.response.codigo);  

@@ -322,7 +322,7 @@ return [
         [
             'text' => 'RELEVAMIENTO',
             'route'  => 'relev',
-            'icon' => 'fas fa-procedures',
+            'icon' => 'fas fa-edit',
         ],
 
         // [
