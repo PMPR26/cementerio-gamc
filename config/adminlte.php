@@ -319,6 +319,12 @@ return [
             'icon' => 'fas fa-procedures',
         ],
 
+        [
+            'text' => 'RELEVAMIENTO',
+            'route'  => 'relev',
+            'icon' => 'fas fa-procedures',
+        ],
+
         // [
         //     'text'    => 'multilevel',
         //     'icon'    => 'fas fa-fw fa-share',

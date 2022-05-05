@@ -557,7 +557,7 @@
                 $('.clean').html("");
                 $('#pag_con').val();
                 $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
-                $('#buscar').prop('disabled' , true);
+             
                 $('#form').hide();
                 var bloque = $('#bloque').val();
                 var nicho = $('#nro_nicho').val();
@@ -568,6 +568,10 @@
                 if (bloque && nicho && fila) {
                     dats = buscar_datos(bloque, nicho, fila);
                 }
+                bloque = $('#bloque').prop('readonly',true);
+                     nicho = $('#nro_nicho').prop('readonly',true);
+                     fila = $('#fila').prop('readonly',true);
+                     $('#buscar').prop('disabled' , true);
             });
 
 
@@ -656,6 +660,9 @@
                                     $('#form').show();
                                     $('#buscar').prop('disabled' , false);
                                     $('#origen').val('tabla_antigua');
+                                    bloque = $('#bloque').prop('readonly',false);
+                                       nicho = $('#nro_nicho').prop('readonly',false);
+                                       fila = $('#fila').prop('readonly',false);
 
                                     if (data.codigo_ni) {
                                         $('#anterior').val(data.codigo_ni);

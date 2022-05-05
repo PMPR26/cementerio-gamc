@@ -99,7 +99,12 @@ class NichoController extends Controller
 
     public function getNicho($id){ 
 
-        $nicho =  Nicho::where('id', $id)->first();
+        $nicho =  Nicho::where('nicho.id', $id)
+        ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id')
+        ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
+        ->select('nicho.*', 'bloque.codigo as bloque', 'cuartel.codigo as cuartel')
+        ->first();
+      
 
                return response([
                 'status'=> true,
@@ -145,6 +150,8 @@ class NichoController extends Controller
             'codigo_anterior' => $request->anterior,
             'codigo' => $request->codigo,
             'tipo' => $request->tipo,
+            'tipo' => $request->tipo,
+            'estado_nicho'=>$request->estado_nicho,
             'user_id' => auth()->id(),
             'estado' => $request->estado,
             'updated_at' => date("Y-m-d H:i:s")
