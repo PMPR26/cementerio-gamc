@@ -33,7 +33,9 @@
                         <th scope="col">BLOQUE</th> 
                         <th scope="col">CUARTEL</th> 
                         <th scope="col">RESPONSABLE</th>  
-                        <th scope="col">DIFUNTO</th>                                             
+                        <th scope="col">DIFUNTO</th>   
+                        <th scope="col">TIEMPO</th>                                             
+
                        
                     </tr>
                 </thead>
@@ -51,6 +53,7 @@
                             <td>{{ $serv->cuartel??'' }}</td>   
                             <td>{{ $serv->nombre_resp??'' }} {{ $serv->primerap_resp??'' }}{{ $serv->segap_resp??'' }}</td>                          
                             <td>{{ $serv->nombre_dif??'' }} {{ $serv->primerap_dif??'' }}{{ $serv->segap_dif??'' }}</td>                           
+                            <td>{{ $serv->tiempó??'' }} </td>                           
                             
                         </tr>
                     @endforeach

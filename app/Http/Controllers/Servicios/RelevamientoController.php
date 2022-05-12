@@ -43,6 +43,8 @@ class RelevamientoController extends Controller
                 'difunto.segundo_apellido as segap_dif',
                 'nicho.*',
                 'bloque.codigo as bloque',
+                'responsable_difunto.tiempo as tiempo',
+
                 'cuartel.codigo as cuartel'                
             )
             ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
