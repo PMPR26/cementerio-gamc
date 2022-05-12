@@ -1053,7 +1053,7 @@
                             });
                             setTimeout(function() {
 
-                                window.location.href = "{{ route('serv') }}";
+                                window.location.href = "{{ route('relev') }}";
 
 
                             }, 2000);

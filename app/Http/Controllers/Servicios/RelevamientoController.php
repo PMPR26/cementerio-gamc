@@ -44,6 +44,9 @@ class RelevamientoController extends Controller
                 'nicho.*',
                 'bloque.codigo as bloque',
                 'responsable_difunto.tiempo as tiempo',
+                'responsable_difunto.nro_renovacion as nro_renovacion',
+                'responsable_difunto.monto_ultima_renov as monto_renov',
+                'responsable_difunto.gestion_renov as gestion_renov',
 
                 'cuartel.codigo as cuartel'                
             )
@@ -463,10 +466,8 @@ class RelevamientoController extends Controller
         $dif->codigo_nicho = $codigo_n;       
         $dif->fecha_adjudicacion = $request->fechadef_dif;       
         $dif->tiempo = $request->tiempo;  
-        if($estado_nicho=="LIBRE"){ 
-            $dif->estado_nicho = $estado_nicho;   
-            $dif->fecha_liberacion= date("Y-m-d H:i:s");   
-            } 
+       
+            $dif->estado_nicho = 'OCUPADO';             
       
         $dif->estado = 'ACTIVO';  
         $dif->nro_renovacion = $request->nro_renovacion ?? '';       

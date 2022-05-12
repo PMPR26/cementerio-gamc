@@ -34,9 +34,10 @@
                         <th scope="col">CUARTEL</th> 
                         <th scope="col">RESPONSABLE</th>  
                         <th scope="col">DIFUNTO</th>   
-                        <th scope="col">TIEMPO</th>                                             
-
-                       
+                        <th scope="col">TIEMPO</th>   
+                        <th scope="col">RENOVACION</th>  
+                        <th scope="col">MONTO</th>   
+                        <th scope="col">GESTION RENOV</th>                          
                     </tr>
                 </thead>
 
@@ -53,7 +54,10 @@
                             <td>{{ $serv->cuartel??'' }}</td>   
                             <td>{{ $serv->nombre_resp??'' }} {{ $serv->primerap_resp??'' }}{{ $serv->segap_resp??'' }}</td>                          
                             <td>{{ $serv->nombre_dif??'' }} {{ $serv->primerap_dif??'' }}{{ $serv->segap_dif??'' }}</td>                           
-                            <td>{{ $serv->tiempo??'' }} </td>                           
+                            <td>{{ $serv->tiempo??'' }} </td> 
+                            <th>{{ $serv->nro_renovacion??'' }}</th>  
+                            <th>{{ $serv->monto_renov??'' }}</th>   
+                            <th>{{ $serv->gestion_renov ??'' }}</th>                            
                             
                         </tr>
                     @endforeach
