@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-@section('title', 'Register Servicio')
+@section('title', 'Register Informacion')
 @section('plugins.Toastr', true)
 @section('plugins.Sweetalert2', true)
 @section('plugins.Select2', true)
@@ -7,7 +7,7 @@
 @section('plugins.dropzone', true)
 
 @section('content_header')
-    <h1>Cobro de servicios nichos cementerio</h1>
+    <h1>FORMULARIO RELEVAMIENTO</h1>
 @stop
 
 @section('content')
@@ -220,8 +220,27 @@
                             </div>
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Tiempo</label>
-                                <input type="number" name="tiempo" id="tiempo" class="form-control">
+                                <select name="tiempo" id="tiempo" class="form-control">
+                                    <option value="2">2</option>
+                                    <option value="5">5</option>
+                                   
+                                </select>
+                               
                              </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-3 col-xl-3">
+                                <label>Nro de renovacion</label>
+                                <input type="number" name="nro_renovacion" id="nro_renovacion" class="form-control">
+                            </div>
+                            <div class="col-sm-12 col-md-3 col-xl-3">
+                                <label>Ultimo importe pagado</label>
+                                <input type="text" name="monto_ultima_renov" id="monto_ultima_renov" class="form-control">
+                            </div>
+                            <div class="col-sm-12 col-md-3 col-xl-3">
+                                <label>Gestion en la que se realizo el pago del renovatorio</label>
+                                <input type="number" name="gestion_renov" id="gestion_renov" class="form-control">
+                            </div>
                         </div>
 
 
@@ -991,6 +1010,9 @@
                             'genero_resp': $('#genero_resp').val(),
                             'pag_con': $('#pag_con').val(),
                             'tiempo': $('#tiempo').val(),
+                            'nro_renovacion' : $('#nro_renovacion').val();       
+                            'monto_ultima_renov' :  $('#monto_ultima_renov').val();       
+                            'gestion_renov' : $('#gestion_renov').val()   ;  
                             // 'tipo_servicio': $('#tipo_servicio_value').val(),
                             // 'servicio_hijos': $('#servicio-hijos').val(),
                             // 'tipo_servicio_txt': $('#tipo_servicio_value option:selected').text(),

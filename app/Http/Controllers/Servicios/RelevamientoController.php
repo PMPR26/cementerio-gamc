@@ -469,6 +469,10 @@ class RelevamientoController extends Controller
             } 
       
         $dif->estado = 'ACTIVO';  
+        $dif->nro_renovacion = $request->nro_renovacion ?? '';       
+        $dif->monto_ultima_renov = $request->monto_ultima_renov ??'';       
+        $dif->gestion_renov = $request->gestion_renov  ?? ''   ;  
+
         $dif->user_id = auth()->id();
         $dif->save();
         $dif->id;
@@ -491,6 +495,9 @@ class RelevamientoController extends Controller
                 } 
             $dif->estado = 'ACTIVO';  
             $dif->user_id = auth()->id();
+            $dif->nro_renovacion = $request->nro_renovacion ?? '';       
+            $dif->monto_ultima_renov = $request->monto_ultima_renov ??'';       
+            $dif->gestion_renov = $request->gestion_renov  ?? ''   ;  
             $dif->save();
             $dif->id;
             return  $dif->id;
