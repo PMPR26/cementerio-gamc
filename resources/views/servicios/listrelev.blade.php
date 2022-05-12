@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-@section('title', 'Servicios')
+@section('title', 'Relevamiento')
 @section('plugins.Datatables', true)
 @section('plugins.Animation', true)
 @section('plugins.Toastr', true)
@@ -9,7 +9,7 @@
 
 
 @section('content_header')
-    <h1>Listado de servicios</h1>
+    <h1>RELEVAMIENTO DE INFORMACION</h1>
 @stop
 
 @section('content')
