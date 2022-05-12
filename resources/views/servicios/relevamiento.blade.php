@@ -1010,9 +1010,9 @@
                             'genero_resp': $('#genero_resp').val(),
                             'pag_con': $('#pag_con').val(),
                             'tiempo': $('#tiempo').val(),
-                            'nro_renovacion' : $('#nro_renovacion').val();       
-                            'monto_ultima_renov' :  $('#monto_ultima_renov').val();       
-                            'gestion_renov' : $('#gestion_renov').val()   ;  
+                            'nro_renovacion' : $('#nro_renovacion').val(),      
+                            'monto_ultima_renov' :  $('#monto_ultima_renov').val(),       
+                            'gestion_renov' : $('#gestion_renov').val()  ,  
                             // 'tipo_servicio': $('#tipo_servicio_value').val(),
                             // 'servicio_hijos': $('#servicio-hijos').val(),
                             // 'tipo_servicio_txt': $('#tipo_servicio_value option:selected').text(),
