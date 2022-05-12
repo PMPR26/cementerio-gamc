@@ -237,7 +237,7 @@
                                 <label>Ultimo importe pagado</label>
                                 <input type="text" name="monto_ultima_renov" id="monto_ultima_renov" class="form-control">
                             </div>
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+                            <div class="col-sm-12 col-md-6 col-xl-6">
                                 <label>Gestion en la que se realizo el pago del renovatorio</label>
                                 <input type="number" name="gestion_renov" id="gestion_renov" class="form-control">
                             </div>
