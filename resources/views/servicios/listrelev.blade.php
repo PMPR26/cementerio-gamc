@@ -53,7 +53,7 @@
                             <td>{{ $serv->cuartel??'' }}</td>   
                             <td>{{ $serv->nombre_resp??'' }} {{ $serv->primerap_resp??'' }}{{ $serv->segap_resp??'' }}</td>                          
                             <td>{{ $serv->nombre_dif??'' }} {{ $serv->primerap_dif??'' }}{{ $serv->segap_dif??'' }}</td>                           
-                            <td>{{ $serv->tiempó??'' }} </td>                           
+                            <td>{{ $serv->tiempo??'' }} </td>                           
                             
                         </tr>
                     @endforeach
