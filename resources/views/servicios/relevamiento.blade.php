@@ -95,9 +95,10 @@
              </div>
             <div id="contenido">
                 {{-- datos difunto --}}
-                <div class="card">
+                <div class="card difunto">
                     <div class="card-header">
                         <h4>DATOS DIFUNTOS</h4>
+                        <button type="button" name="addDif" id="addDif" style="display: none"><i class="fas fa-user-plus"> Adicionar difunto</i></button>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -249,15 +250,12 @@
                         <div class="col-sm-12 col-md-12 col-xl-12">
                             <div class="col-sm-12">
                                 <label for=""> Certificado de defunción</label>
-                                <div id="cert-defuncion" class="dropzone" style="text-align: center">
+                                <div id="cert-defuncion" class="dropzone" style="text-align: center"></div>
+                                    <hr>    
+                                    <input type="hidden" id="url-certification">                           
                             </div>
-                            <hr>
-    
-                            <input type="hidden" id="url-certification">
-                           
                         </div>
                     </div>
-                </div>
                 {{-- datos responsables --}}
                 <div class="card">
                     <div class="card-header">
@@ -1562,9 +1560,12 @@
                         }else if($('#tipo_dif  option:selected').val()=='PARVULO' ){
                             $('#tiempo').val('2')
                         }
+                    // $('#addDif').hide();
+
                 }
-                else if($('#tipo_nicho  option:selected').val()=="PERPETUO"){
+                else if($('#tipo_nicho  option:selected').val()=="PERPETUO"){ 
                     $('#tiempo').val('30')
+                    // $('#addDif').show();
                 }
             }
             $(document).on('change', '#tipo_dif', function(){
@@ -1574,6 +1575,20 @@
             $(document).on('change', '#tipo_nicho', function(){
                 seTime();
             })
+
+
+
+            $(document).on('click', '#addDif', function(e){
+                var divsDif = document.getElementsByClassName("difunto").length;
+                    console.log("Hay " + divs + " elementos");
+                const div = document.getElementById('difunto')
+                const clone = div.cloneNode(true);
+                clone.id = "difunto-"+divsDif;
+                document.body.appendChild(clone);
+            });
+
+            
+
         </script>
 
     @stop

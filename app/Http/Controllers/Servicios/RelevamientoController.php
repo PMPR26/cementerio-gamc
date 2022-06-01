@@ -266,11 +266,11 @@ class RelevamientoController extends Controller
                     'tipo_dif'=> 'required',
                     'genero_dif'=> 'required',
                     'ci_resp' => 'required',
-                    'nombres_resp' => 'required',
-                    'paterno_resp'=> 'required',                
-                    'domicilio'=> 'required',
-                    'genero_resp'=> 'required',
-                    'tipo_servicio' => 'required',
+                    // 'nombres_resp' => 'required',
+                    // 'paterno_resp'=> 'required',                
+                    // 'domicilio'=> 'required',
+                    // 'genero_resp'=> 'required',
+                    // 'tipo_servicio' => 'required',
                     //'servicio_hijos' => 'required',
     
                     
@@ -281,11 +281,11 @@ class RelevamientoController extends Controller
                     'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
                     'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
                     'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
-                    'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
-                    'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',                  
-                    'domicilio.required'=> 'El campo domicilio es obligatorio',
-                    'genero_resp.required'=> 'El campo genero_resp es obligatorio',
-                    'tipo_servicio.required' => 'Debe seleccionar al menos un tipo de servicio',
+                    // 'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
+                    // 'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',                  
+                    // 'domicilio.required'=> 'El campo domicilio es obligatorio',
+                    // 'genero_resp.required'=> 'El campo genero_resp es obligatorio',
+                    // 'tipo_servicio.required' => 'Debe seleccionar al menos un tipo de servicio',
                   //  'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
     
                    
@@ -305,14 +305,14 @@ class RelevamientoController extends Controller
                 'paterno_dif'=> 'required',
                 'tipo_dif'=> 'required',
                 'genero_dif'=> 'required',
-                'ci_resp' => 'required',
-                'nombres_resp' => 'required',
-                'paterno_resp'=> 'required',
-               // 'celular'=> 'required',
-               // 'ecivil'=> 'required',
-               // 'email'=> 'required',
-                'domicilio'=> 'required',
-                'genero_resp'=> 'required',
+            //     'ci_resp' => 'required',
+            //     'nombres_resp' => 'required',
+            //     'paterno_resp'=> 'required',
+            //    // 'celular'=> 'required',
+            //    // 'ecivil'=> 'required',
+            //    // 'email'=> 'required',
+            //     'domicilio'=> 'required',
+            //     'genero_resp'=> 'required',
              //   'tipo_servicio' => 'required',
               //  'servicio_hijos' => 'required',
 
@@ -328,14 +328,14 @@ class RelevamientoController extends Controller
                 'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
                 'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
                  'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
-                'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
-                'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
-                 'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
-               //  'celular.required'=> 'El campo celular es obligatorio',
-                // 'ecivil.required'=> 'El campo estado civil  es obligatorio',
-                // 'email.required'=> 'El campo email es obligatorio',
-                 'domicilio.required'=> 'El campo domicilio es obligatorio',
-                 'genero_resp.required'=> 'El campo genero_resp es obligatorio',
+            //     'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
+            //     'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
+            //      'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
+            //    //  'celular.required'=> 'El campo celular es obligatorio',
+            //     // 'ecivil.required'=> 'El campo estado civil  es obligatorio',
+            //     // 'email.required'=> 'El campo email es obligatorio',
+            //      'domicilio.required'=> 'El campo domicilio es obligatorio',
+            //      'genero_resp.required'=> 'El campo genero_resp es obligatorio',
                // 'tipo_servicio.required' => 'Debe seleccionar al menos un tipo servicio',
                // 'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
 
@@ -436,7 +436,14 @@ class RelevamientoController extends Controller
             $existeResponsable = Responsable::where('ci', $request->ci_resp)->first();
             if (!$existeResponsable) {
                 //insertar difunto
-                $idresp = $this->insertResponsable($request);
+                if($request->ci_resp!=null || $request->ci_resp!="" || $request->nombres_resp!=null || $request->nombres_resp!=""){
+                    $idresp = $this->insertResponsable($request);
+                }
+                else{
+                    $idresp = 28;
+                }
+                
+               
             } else {
                 $idresp = $existeResponsable->id;
                 $this->updateResponsable($request, $idresp);
@@ -549,6 +556,28 @@ class RelevamientoController extends Controller
     }
 
     public function insertResponsable($request){
+
+        $responsable = new Responsable;
+        $responsable->ci = $request->ci_resp;
+        $responsable->nombres = $request->nombres_resp;
+        $responsable->primer_apellido = $request->paterno_resp;
+        $responsable->segundo_apellido = $request->materno_resp;
+        //$responsable->fecha_nacimiento = $request->fechanac_resp;
+        $responsable->genero = $request->genero_resp;  
+        $responsable->telefono = $request->telefono;  
+        $responsable->celular = $request->celular;  
+        //$responsable->estado_civil = $request->ecivil;  
+        $responsable->domicilio = $request->domicilio; 
+        //$responsable->email = $request->email;  
+        $responsable->estado = 'ACTIVO';  
+        $responsable->user_id = auth()->id();
+        $responsable->save();
+        $responsable->id;
+        return  $responsable->id;
+
+    }
+
+    public function insertResponsableGenerico($request){
 
         $responsable = new Responsable;
         $responsable->ci = $request->ci_resp;
