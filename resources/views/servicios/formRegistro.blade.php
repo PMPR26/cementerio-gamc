@@ -26,7 +26,7 @@
             <div class="card">
                 <div class="card-header">
                     <h2> SELECCIONAR ANTES DE INICIAR </h2>
-                    <P>Seleccione "EXTERNO" si solicitará algun servicio que no este relacionado a un nicho, seleccione "GRATIS" si el cervicio será gratuito</P>
+                    <P>Seleccione "EXTERNO" si solicitará algun servicio que no este relacionado a un nicho, seleccione "GRATIS" si el Servicio será gratuito</P>
                 </div>
                 <div class="card-body">
                     <div class="row">
