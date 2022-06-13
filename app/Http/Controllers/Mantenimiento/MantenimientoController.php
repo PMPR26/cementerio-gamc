@@ -501,11 +501,12 @@ class MantenimientoController extends Controller
 
             
     public function updatePayMant(Request $request){
-          
+         
         if($request->isJson()){
             $this->validate($request,[
                 "fur"=> 'required',
-               //  "id_usuario_caja" => 'required'
+                 "id_usuario_caja" => 'required'
+                 
             ]);
 
             $pago = Mantenimiento::select('id', 'fur')
