@@ -29,7 +29,7 @@ class MantenimientoController extends Controller
     public function index(){
         $mant= Mantenimiento::select('mantenimiento_nicho.*',  DB::raw('CONCAT(mantenimiento_nicho.nombrepago , \' \',mantenimiento_nicho.paternopago, \' \', mantenimiento_nicho.maternopago ) AS nombre'))
                 ->leftJoin('responsable', 'responsable.id', '=', 'mantenimiento_nicho.respdifunto_id')
-                ->where('pagado', false)
+                ->where('mantenimiento_nicho.estado', 'ACTIVO')
                 ->orderBy('id', 'DESC')
                  ->get();
 

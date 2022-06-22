@@ -58,6 +58,7 @@ class ServiciosController extends Controller
             ->join('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
             ->join('nicho', 'nicho.codigo', '=', 'responsable_difunto.codigo_nicho')
             ->join('servicio_nicho', 'servicio_nicho.responsable_difunto_id', '=', 'responsable_difunto.id')
+            ->where('servicio_nicho.estado','ACTIVO')
             ->orderBy('servicio_nicho.id', 'DESC')
             ->get();
 
