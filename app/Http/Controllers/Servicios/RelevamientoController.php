@@ -218,7 +218,7 @@ class RelevamientoController extends Controller
         if ($request->isJson()) {
             $this->validate($request, [
                 "fur" => 'required',
-                "id_usuario_caja" => 'required'
+                "id_usuario_caja" => 'required',               
             ]);
 
             $servicio = ServicioNicho::select('id', 'fur')

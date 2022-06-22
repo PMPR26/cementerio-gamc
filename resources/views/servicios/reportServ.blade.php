@@ -153,7 +153,7 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td width="80%" colspan="2">Nombre: {{ucwords($table->nombre??'' )}}  </td>
+                        <td width="80%" colspan="2">Nombre: {{ucwords($table->nombre ?? '' )}}  </td>
                         <td width="20%">C.I.:{{ $table->ci ??'' }} </td>
                     </tr>
                     <tr>
