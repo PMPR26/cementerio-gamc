@@ -95,12 +95,12 @@
              </div>
             <div id="contenido">
                 {{-- datos difunto --}}
-                <div class="card difunto">
+                <div class="card ">
                     <div class="card-header">
                         <h4>DATOS DIFUNTOS</h4>
                         <button type="button" name="addDif" id="addDif" style="display: none"><i class="fas fa-user-plus"> Adicionar difunto</i></button>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body difunto" id="difunto0">
                         <div class="row">
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Carnet de Identidad</label>
@@ -245,17 +245,20 @@
                         </div>
 
 
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12 col-md-12 col-xl-12">
-                            <div class="col-sm-12">
-                                <label for=""> Certificado de defunción</label>
-                                <div id="cert-defuncion" class="dropzone" style="text-align: center"></div>
-                                    <hr>    
-                                    <input type="hidden" id="url-certification">                           
+                    
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-xl-12">
+                                    <div class="col-sm-12">
+                                        <label for=""> Certificado de defunción</label>
+                                        <div id="cert-defuncion" class="dropzone" style="text-align: center">
+                                        </div>
+                                            <hr>    
+                                            <input type="hidden" id="url-certification">                           
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                   </div>
+                </div>
                 {{-- datos responsables --}}
                 <div class="card">
                     <div class="card-header">
@@ -385,7 +388,7 @@
 
 
 
-                <div class="card interno">
+                {{-- <div class="card interno">
                     <div class="card-header">
                         <h4>INFORMACION ULTIMO PAGO</h4>
                     </div>
@@ -430,7 +433,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
               
                
@@ -1560,12 +1563,12 @@
                         }else if($('#tipo_dif  option:selected').val()=='PARVULO' ){
                             $('#tiempo').val('2')
                         }
-                    // $('#addDif').hide();
+                    $('#addDif').hide();
 
                 }
                 else if($('#tipo_nicho  option:selected').val()=="PERPETUO"){ 
                     $('#tiempo').val('30')
-                    // $('#addDif').show();
+                    $('#addDif').show();
                 }
             }
             $(document).on('change', '#tipo_dif', function(){
@@ -1580,14 +1583,25 @@
 
             $(document).on('click', '#addDif', function(e){
                 var divsDif = document.getElementsByClassName("difunto").length;
-                    console.log("Hay " + divs + " elementos");
-                const div = document.getElementById('difunto')
-                const clone = div.cloneNode(true);
+                    console.log("Hay " + divsDif + " elementos");
+                var index=parseInt(divsDif)+1;
+                const div = document.getElementsByClassName("difunto");
+                // window.addEventListener('DOMContentLoaded', (event) => {
+                //         console.log('DOM fully loaded and parsed');
+                //     });
+                const clone = div[index].cloneNode(true);
                 clone.id = "difunto-"+divsDif;
                 document.body.appendChild(clone);
+
+                $('#difunto').length ;  // continuar clonacion
+                 clone.find('#difunto0').prop('id', 'difunto'+$('.clonerow').length);
             });
 
-            
+            function Clone() {
+                 var original = $('#divRow0')
+                 var clone = $(original).clone(true, true);
+                $('#container').append(clone);
+                }
 
         </script>
 

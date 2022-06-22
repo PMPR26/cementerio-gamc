@@ -1124,8 +1124,8 @@
                     method: 'POST',
                     dataType: 'json',
                     data: JSON.stringify({
-                        "ci": ci,
-                        "type": type
+                        "ci": $.trim(ci) ,
+                        "type": $.trim(type)
                     }),
                     success: function(data) {
                         if (data.response == null) {

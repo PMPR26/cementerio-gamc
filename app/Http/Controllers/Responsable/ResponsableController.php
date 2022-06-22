@@ -161,26 +161,27 @@ class ResponsableController extends Controller
     }
 
     public function searchResponsableAndDifunt(Request $request){
-        
+      
         if($request->isJson()){
             $this->validate($request, [
                 'ci' => 'required',
-                'type' => 'required' // responsable
+                'type' => 'required' // responsable deceased
             ]);
 
             if(trim($request->type) == 'deceased'){
-                $person = Difunto::select()
-                            ->where(['ci' => trim($request->ci)])
-                            ->first();
-
+             
+                $person= Difunto::select()                
+                         ->where(['ci' => trim($request->ci)])                          
+                         ->first();
+                         
                 return response([
                        'status'=> true,
                        'response'=> $person
                                 ],200);
             }else if(trim($request->type) == 'responsable'){
                 $person = Responsable::select()
-                            ->where(['ci' => trim($request->ci)])
-                            ->first();
+                         ->where(['ci' => trim($request->ci)])
+                         ->first();
 
                 return response([
                        'status'=> true,

@@ -39,13 +39,14 @@ class ServicioNicho extends Model
    
     public function GenerarFur($ci, $nombre, $primer_apellido,
     $ap_materno, $direccion, $nombre_difunto, $codigo,
-     $bloque, $nicho, $fila, $servicios_cementery )
+     $bloque, $nicho, $fila, $servicios_cementery , $cantidades, $cajero)
       {
-        
- 
+      
           $headers =  ['Content-Type' => 'application/json'];
           $client = new Client();
-          $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementery', [
+        //  $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementery', [
+        $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementery', [
+
               'json' => [
                   'ci' => $ci,
                   'nombre' => $nombre,
@@ -58,7 +59,10 @@ class ServicioNicho extends Model
                   'bloque' => $bloque,
                   'fila' => $fila,
                   'nicho' => $nicho,
-                  'servicios_cementery' => $servicios_cementery  
+                  'servicios_cementery' => $servicios_cementery ,
+                   'cantidad' => $cantidades  ,
+                   'cajero'=>$cajero
+
               ],
               'headers' => $headers,
           ]);
