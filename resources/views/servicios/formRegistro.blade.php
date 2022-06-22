@@ -749,7 +749,7 @@
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        url: '{{ env('URL_MULTISERVICE') }}/api/v1/cementerio/generate-all-servicios-nicho',
+                        url: "{{ env('URL_MULTISERVICE') }}/api/v1/cementerio/generate-all-servicios-nicho",
                         async: false,
                         data: JSON.stringify({
                             'data': data_request
