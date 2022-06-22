@@ -160,6 +160,14 @@
                 <td width="60%" colspan="2">Pago realizado por : {{ $table->pago_por }}</td>
                 <td width="20%">Actividad: Preliquidación</td>
             </tr>
+            <tr>
+                <td colspan="2"> <span class="rotulo"> DATOS DEL DIFUNTO</span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td width="60%" colspan="2">C.I. o Codigo : {{ $table->codigo_dif }}</td>
+                <td width="20%">Nombre:  {{ $table->nombres }} {{ $table->primer_apellido }} {{ $table->segundo_apellido }} </td>
+            </tr>
 
         </table>
 

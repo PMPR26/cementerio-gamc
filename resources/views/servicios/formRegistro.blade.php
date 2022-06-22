@@ -1381,8 +1381,21 @@
                             'urlcertificacion':$('#url-certificacion').val(), 
                             'cant':$('#cant_cuerpos').val()
                         }),
-                        success: function(data_response) {
+                        success: function(data_response) { //alert(data_response['status']);
                             console.log(data_response);
+                            if(data_response['status']==false){
+                                swal.fire({
+                                    title: "Nicho ocupado, debe liberar el nicho primero!",
+                                    text: "!Transacción rechazada!",
+                                    type: "error",
+                                    timer: 3000,
+                                    showCancelButton: false,
+                                    showConfirmButton: false
+                                });
+                            }
+                            else{
+
+                         
                             swal.fire({
                                 title: "Guardado!",
                                 text: "!Registro realizado con éxito!",
@@ -1397,7 +1410,7 @@
 
 
                             }, 2000);
-                            //toastr["success"]("Registro realizado con éxito!");
+                          }
                         },
                         error: function(error) {
 

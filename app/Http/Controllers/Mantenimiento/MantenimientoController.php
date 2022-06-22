@@ -9,6 +9,7 @@ use App\Models\Servicios\ServicioNicho;
 use App\Models\Difunto;
 use App\Models\Responsable;
 use App\Models\ResponsableDifunto;
+use App\Models\User;
 
 use App\Models\Mantenimiento;
 use App\Http\Controllers\Controller;
@@ -121,7 +122,12 @@ class MantenimientoController extends Controller
                
             ]);
 
-          //  dd($request);
+            print_r(auth()->id());
+           $datos_cajero=User::select()
+           ->where('id',auth()->id())
+           ->first();
+           $cajero= $datos_cajero->user_sinot;
+           
             //step1: nicho buscar si existe registrado el nicho recuperar el id  sino existe registrarlo
             $codigo_n=$request->cuartel.".".$request->bloque.".".$request->nro_nicho.".".$request->fila;
             $existeNicho= Nicho::where('codigo', $codigo_n)->first();
@@ -206,6 +212,7 @@ class MantenimientoController extends Controller
 
                                 $rf=new ResponsableDifunto();
                                $existeRespDif= $rf->searchResponsableDifunt($request);
+                            
                                 if($existeRespDif!= null ){
                                     $iddifuntoResp= $this->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n);
                                 }else{
@@ -250,11 +257,15 @@ class MantenimientoController extends Controller
                                                 }
                                            else{
                                                         /** generar fur */
-                                                            $nombre_difunto=$request->nombres_dif." ".$request->primerap_dif." ".$request->segap_dif;
+                                                        $cant_gestiones=count($request->sel);
+                                                     $cantgestiones=[$cant_gestiones];
+                                                      
+                                                        $nombre_difunto=$request->nombres_dif." ".$request->paterno_dif." ".$request->materno_dif;
                                                             $obj= new ServicioNicho;
+                                                        
                                                             $response=$obj->GenerarFur($ci, $nombre_pago, $paterno_pago,
                                                             $materno_pago, $domicilio,  $nombre_difunto, $codigo_nicho,
-                                                            $request->bloque, $request->nro_nicho, $request->fila, $servicio_cementery );
+                                                            $request->bloque, $request->nro_nicho, $request->fila, $servicio_cementery, $cantgestiones, $cajero );
                                                         
                                                             if($response['status']==true){
                                                                 $fur = $response['response'];
@@ -319,9 +330,11 @@ class MantenimientoController extends Controller
     }
 
         public function updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n){
+           
             $dif= ResponsableDifunto::where('responsable_id', $idresp)
                                ->where('difunto_id', $difuntoid)
                                ->where('codigo_nicho', $codigo_n)->first();   
+           
             $dif->responsable_id = $idresp;
             $dif->difunto_id = $difuntoid;
             $dif->codigo_nicho = $codigo_n;       
@@ -426,10 +439,12 @@ class MantenimientoController extends Controller
           $table = DB::table('mantenimiento_nicho')
           ->where('mantenimiento_nicho.id', $request->id)
           ->Join('responsable_difunto' , 'responsable_difunto.id','=', 'mantenimiento_nicho.respdifunto_id')
-          ->select('mantenimiento_nicho.*', 'responsable_difunto.codigo_nicho')       
+          ->Join('difunto' , 'difunto.id','=', 'responsable_difunto.difunto_id')
+
+          ->select('mantenimiento_nicho.*', 'responsable_difunto.codigo_nicho','difunto.ci as codigo_dif','difunto.nombres','difunto.primer_apellido','difunto.segundo_apellido')       
           ->first();
 
-         //dd($table);
+        //  dd($table);
                 //     $td=$table->getOriginal();
                     
               

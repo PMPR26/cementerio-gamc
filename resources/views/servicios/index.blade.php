@@ -44,7 +44,7 @@
                         <tr>
                             <td scope="row">{{ $count++ }}</td>
                             <td>{{ $serv->codigo_nicho??'' }}</td>                            
-                            <td>{{ $serv->nombre_resp??'' }} {{ $serv->primerap_resp??'' }}{{ $serv->segap_resp??'' }}</td>                          
+                            <td>{{ $serv->nombre_resp??' '   }} {{   $serv->primerap_resp??''    }}   {{    $serv->segap_resp??'' }}</td>                          
                             <td>{{ $serv->servicio?? '' }}</td>
                             <td>{{ $serv->monto ?? '0' }}</td>
                             <td>{{ $serv->fur }}</td>
