@@ -1026,7 +1026,7 @@
                                             'content'),
                                         'Content-Type': 'application/json'
                                     },
-                                    url: "https://multiservdev.cochabamba.bo/api/v1/cementerio/get-data",
+                                    url: "https://multiserv.cochabamba.bo/api/v1/cementerio/get-data",
                                     method: 'POST',
                                     dataType: 'json',
                                     data: JSON.stringify({

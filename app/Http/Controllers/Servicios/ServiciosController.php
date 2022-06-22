@@ -73,7 +73,7 @@ class ServiciosController extends Controller
         ];
         try {
             $client = new Client();
-            $response = $client->get('https://multiservdev.cochabamba.bo/api/v1/cementerio/get-services', [
+            $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/get-services', [
                 'json' => [],
                 'headers' => $headers
             ]);
@@ -549,7 +549,7 @@ class ServiciosController extends Controller
                                                 $serv->servicio= $request->servicio_hijos_txt;
                                                 $serv->responsable_difunto_id=$iddifuntoResp;
                                                 $serv->id_usuario_caja = auth()->id();
-                                                $serv->id_usuario = auth()->id();
+                                                // $serv->id_usuario = auth()->id();
                                                 $serv->fur=$fur;
                                                 $serv->nro_renovacion= $request->renov ?? '0';
                                                 $serv->monto_renovacion= $request->monto_renov ?? '0';
@@ -763,7 +763,7 @@ class ServiciosController extends Controller
                                     $arrayBusqueda[] = (string)2;
                                     $arrayBusqueda[] = (string)$request->fur;
                                     $arrayBusquedaString = json_encode($arrayBusqueda);
-                                    $response = Http::asForm()->post('http://192.168.220.107:8080/cobrosnotributarios/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+                                    $response = Http::asForm()->post('http://192.168.104.117/cobrosnotributarios/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
                                         'buscar' => $arrayBusquedaString
                                     ]);
                                     if ($response->successful()) {
