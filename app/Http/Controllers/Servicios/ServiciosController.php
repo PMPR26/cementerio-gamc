@@ -707,17 +707,17 @@ class ServiciosController extends Controller
 
         $dif = new Difunto;
         $dif->ci = $request->ci_dif;
-        $dif->nombres = $request->nombres_dif;
-        $dif->primer_apellido = $request->paterno_dif;
-        $dif->segundo_apellido = $request->materno_dif;
+        $dif->nombres = trim(mb_strtoupper($request->nombres_dif, 'UTF-8'));
+        $dif->primer_apellido = trim(mb_strtoupper($request->paterno_dif, 'UTF-8'));
+        $dif->segundo_apellido =trim(mb_strtoupper( $request->materno_dif, 'UTF-8'));
         $dif->fecha_nacimiento = $request->fechanac_dif;
         $dif->fecha_defuncion = $request->fechadef_dif;
         $dif->certificado_defuncion = $request->sereci;
-        $dif->causa = $request->causa;
+        $dif->causa = trim(mb_strtoupper($request->causa, 'UTF-8'));
         $dif->tipo = $request->tipo_dif; 
         $dif->genero = $request->genero_dif;  
         $dif->certificado_file = $request->urlcertificacion;           
-        $dif->funeraria = $request->funeraria;  
+        $dif->funeraria =trim(mb_strtoupper($request->funeraria, 'UTF-8'));  
         $dif->estado = 'ACTIVO';  
         $dif->user_id = auth()->id();
         $dif->save();
@@ -729,17 +729,17 @@ class ServiciosController extends Controller
     public function updateDifunto($request, $difuntoid){
         $difunto= Difunto::where('id', $difuntoid)->first();
         $difunto->ci = $request->ci_dif;
-        $difunto->nombres = $request->nombres_dif;
-        $difunto->primer_apellido = $request->paterno_dif;
-        $difunto->segundo_apellido = $request->materno_dif;
+        $difunto->nombres = trim(mb_strtoupper($request->nombres_dif, 'UTF-8'));
+        $difunto->primer_apellido = trim(mb_strtoupper($request->paterno_dif, 'UTF-8'));
+        $difunto->segundo_apellido =trim(mb_strtoupper( $request->materno_dif, 'UTF-8'));
         $difunto->fecha_nacimiento = $request->fechanac_dif;
         $difunto->fecha_defuncion = $request->fechadef_dif;
         $difunto->certificado_defuncion = $request->sereci;
-        $difunto->causa = $request->causa;
+        $difunto->causa =  trim(mb_strtoupper($request->causa, 'UTF-8'));
         $difunto->tipo = $request->tipo_dif; 
         $difunto->genero = $request->genero_dif;  
         $difunto->certificado_file = $request->urlcertificacion;           
-        $difunto->funeraria = $request->funeraria;  
+        $difunto->funeraria = trim(mb_strtoupper($request->funeraria, 'UTF-8'));
         $difunto->estado = 'ACTIVO';  
         $difunto->user_id = auth()->id();
         $difunto->save();
@@ -750,9 +750,9 @@ class ServiciosController extends Controller
 
         $responsable = new Responsable;
         $responsable->ci = $request->ci_resp;
-        $responsable->nombres = $request->nombres_resp;
-        $responsable->primer_apellido = $request->paterno_resp;
-        $responsable->segundo_apellido = $request->materno_resp;
+        $responsable->nombres =  trim(mb_strtoupper($request->nombres_resp, 'UTF-8'));
+        $responsable->primer_apellido = trim(mb_strtoupper($request->paterno_resp, 'UTF-8'));
+        $responsable->segundo_apellido =  trim(mb_strtoupper($request->materno_resp, 'UTF-8'));
         //$responsable->fecha_nacimiento = $request->fechanac_resp;
         $responsable->genero = $request->genero_resp;  
         $responsable->telefono = $request->telefono;  
@@ -771,9 +771,9 @@ class ServiciosController extends Controller
     public function updateResponsable($request, $difuntoid){
         $responsable= Responsable::where('id', $difuntoid)->first();
         $responsable->ci = $request->ci_resp;
-        $responsable->nombres = $request->nombres_resp;
-        $responsable->primer_apellido = $request->paterno_resp;
-        $responsable->segundo_apellido = $request->materno_resp;
+        $responsable->nombres =  trim(mb_strtoupper($request->nombres_resp, 'UTF-8'));
+        $responsable->primer_apellido = trim(mb_strtoupper($request->paterno_resp, 'UTF-8'));
+        $responsable->segundo_apellido =  trim(mb_strtoupper($request->materno_resp, 'UTF-8'));
         //$responsable->fecha_nacimiento = $request->fechanac_resp ?? '';
         $responsable->genero = $request->genero_resp;  
         $responsable->telefono = $request->telefono;  
@@ -790,8 +790,7 @@ class ServiciosController extends Controller
     public function generatePDF(Request $request) {
         //    return($request->codigo_nicho); die();
                    $codigo_nicho=$request->codigo_nicho;
-                    if(($request->fur=="0" ||$request->fur==0 ) &&  $request->id!=null )
-                    {
+                  
 
                       $tab=[];
                         $tablelocal=DB::table('servicio_nicho')
@@ -799,11 +798,15 @@ class ServiciosController extends Controller
                         ->where('id','=',$request->id)
                         ->orderBy('id','DESC')
                         ->first();
-                   
+
+                        
+                        if(($request->fur=="0" ||$request->fur==0 ) &&  $request->id!=null )
+                        {
                             if ($tablelocal) {     
                                 $tab['fur']= $tablelocal->fur;
                                 $tab['nombre']= $tablelocal->nombrepago." ". $tablelocal->paternopago." ".$tablelocal->maternopago??'';
                                 $tab['ci']= $tablelocal->ci;
+                                $observacion= $tablelocal->observacion;
                                 $tab['cobrosDetalles']= [];
 
                                             
@@ -835,7 +838,7 @@ class ServiciosController extends Controller
                                     $table = json_decode(json_encode($tab));
                                  
                                 $pdf = PDF::setPaper('A4', 'landscape');
-                                $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho'));
+                                $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion'));
                                 return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));    
                             }
                         
@@ -852,9 +855,10 @@ class ServiciosController extends Controller
                                     if ($response->successful()) {
                                         if($response->object()->status == true) {
                                             $table = $response->object()->data->cobrosVarios[0];                
+                                            $observacion= $tablelocal->observacion;
                                        
                                             $pdf = PDF::setPaper('A4', 'landscape');
-                                            $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho'));
+                                            $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion'));
                                             return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                                         }
                                 }      

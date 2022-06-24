@@ -49,9 +49,9 @@ class ResponsableController extends Controller
 
            $new_responsable =  Responsable::create([
             'ci' => trim($request->ci),
-            'nombres' => trim($request->nombres),
-            'primer_apellido' => trim($request->primer_apellido),
-            'segundo_apellido' => trim($request->segundo_apellido),
+            'nombres' => trim(mb_strtoupper($request->nombres,'UTF-8')),
+            'primer_apellido' => trim(mb_strtoupper($request->primer_apellido,'UTF-8')),
+            'segundo_apellido' => trim(mb_strtoupper($request->segundo_apellido,'UTF-8')),
             'fecha_nacimiento' => trim($request->fecha_nacimiento),
             'telefono' => trim($request->telefono),
             'celular' => trim($request->celular),
@@ -138,9 +138,9 @@ class ResponsableController extends Controller
         $disable_responsable =  Responsable::where('id', $request->id)
         ->update([
             'ci' => $request->ci,
-            'nombres' => $request->nombres,
-            'primer_apellido' => $request->primer_apellido,
-            'segundo_apellido' => $request->segundo_apellido,
+            'nombres' => trim(mb_strtoupper($request->nombres,'UTF-8')),
+            'primer_apellido' => trim(mb_strtoupper($request->primer_apellido,'UTF-8')),
+            'segundo_apellido' => trim(mb_strtoupper($request->segundo_apellido,'UTF-8')),
             'fecha_nacimiento' => $request->fecha_nacimiento,
             'genero' => $request->genero,
             'telefono' => $request->telefono,

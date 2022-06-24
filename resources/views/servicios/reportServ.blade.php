@@ -214,6 +214,12 @@
                                 <b> {{ $txt }} </b>
                             </td>
                         </tr>
+
+                        @if(isset($observacion) || $observacion!= null)
+                                <tr>
+                                    <td colspan="5">OBSERVACION: {{ $observacion ?? '' }}</td>
+                                </tr>
+                        @endif
                     </table>
  
 
