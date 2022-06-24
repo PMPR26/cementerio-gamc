@@ -434,7 +434,7 @@ class ServiciosController extends Controller
                             $est_nicho="EXHUMADO";
                             $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // . 
                         }
-                        dd($cantidadEnNicho);
+                     
 
                                 if( $cantidadEnNicho == 1 ){
                                     $estado_nicho="LIBRE";
