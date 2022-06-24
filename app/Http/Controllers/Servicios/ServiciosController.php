@@ -424,17 +424,17 @@ class ServiciosController extends Controller
                     }else if($servi == '645' || $servi =='644'){    
                         if($difuntoEnNicho==false)
                         {
-                            $est_nicho="EXHUMADO";
+                            $est_nicho="EXHUMADO";                            
                             $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // . 
                         }
                         else{
                            
                             $responsable_id=$difuntoEnNicho->responsable_id;
                             $difunto_id=$difuntoEnNicho->difunto_id;
-
                             $est_nicho="EXHUMADO";
                             $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // . 
                         }
+                     
 
                                 if( $cantidadEnNicho == 1 ){
                                     $estado_nicho="LIBRE";
@@ -443,7 +443,11 @@ class ServiciosController extends Controller
                                 else if( $cantidadEnNicho >= 1){
                                     $estado_nicho="OCUPADO";
                                     $cant = $cantidadEnNicho -1;
-                                }                         
+                                } 
+                                else if( $cantidadEnNicho == 0){
+                                    $estado_nicho="LIBRE";
+                                    $cant= 0;
+                                }                                
                             }
                     else{
                         $estado_nicho="OCUPADO";
