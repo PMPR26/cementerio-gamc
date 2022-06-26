@@ -497,7 +497,10 @@ class ServiciosController extends Controller
                                         }
 
                                         //buscar bloque si existe recuperar id sino insertar
-                                        $existeBloque = Bloque::where('codigo', $request->bloque)->first();
+                                        $existeBloque = Bloque::where('codigo', $request->bloque)
+                                        ->where('cuartel_id', $id_cuartel)
+                                        ->first();
+                                      
                                         if ($existeBloque != null) {
                                             $id_bloque = $existeBloque->id;
                                         } else {
@@ -510,6 +513,7 @@ class ServiciosController extends Controller
                                             $bloq->save();
                                             $bloq->id;
                                             $id_bloque = $bloq->id;
+                                            
                                         }
 
                                         // insertar nicho
