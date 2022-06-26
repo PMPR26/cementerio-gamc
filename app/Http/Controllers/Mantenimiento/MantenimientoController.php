@@ -153,7 +153,9 @@ class MantenimientoController extends Controller
                         }
 
                          //buscar bloque si existe recuperar id sino insertar
-                            $existeBloque= Bloque::where('codigo', $request->bloque)->first();
+                         $existeBloque = Bloque::where('codigo', $request->bloque)
+                         ->where('cuartel_id', $id_cuartel)
+                         ->first();
                                     if($existeBloque!=null){
                                         $id_bloque=$existeBloque->id;
                                     }else{
