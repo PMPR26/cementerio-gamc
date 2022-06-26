@@ -41,9 +41,9 @@ class DifuntoController extends Controller
 
            $new_difunto =  Difunto::create([
             'ci' => trim($request->ci),
-            'nombres' => trim($request->nombres),
-            'primer_apellido' => trim($request->primer_apellido),
-            'segundo_apellido' => trim($request->segundo_apellido),
+            'nombres' => trim(mb_strtoupper($request->nombres, 'UTF-8')),
+            'primer_apellido' => trim(mb_strtoupper($request->primer_apellido ,'UTF-8')),
+            'segundo_apellido' => trim(mb_strtoupper($request->segundo_apellido ,'UTF-8')),
             'fecha_nacimiento' => trim($request->fecha_nacimiento),
             'fecha_defuncion' => trim($request->fecha_defuncion),
             'certificado_defuncion' => trim($request->certificado_defuncion),
@@ -128,9 +128,9 @@ class DifuntoController extends Controller
         $disable_difunto =  Difunto::where('id', $request->id)
         ->update([
             'ci' => $request->ci,
-            'nombres' => $request->nombres,
-            'primer_apellido' => $request->primer_apellido,
-            'segundo_apellido' => $request->segundo_apellido,
+            'nombres' => trim(mb_strtoupper($request->nombres,'UTF-8')),
+            'primer_apellido' => trim(mb_strtoupper($request->primer_apellido,'UTF-8')),
+            'segundo_apellido' => trim(mb_strtoupper($request->segundo_apellido,'UTF-8')),
             'fecha_nacimiento' => $request->fecha_nacimiento,
             'fecha_defuncion' => $request->fecha_defuncion,
             'funeraria' => trim(mb_strtoupper($request->funeraria, 'UTF-8')),
