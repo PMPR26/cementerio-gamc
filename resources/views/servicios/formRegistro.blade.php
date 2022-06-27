@@ -727,7 +727,9 @@
                     }
                 });
 
-
+            //   $(document).on('load','#tipo_servicio_value', function(e){
+                    $("#tipo_servicio_value option[value='15224330']").remove();
+                // })
 
 
                 //select event foreach
@@ -738,6 +740,7 @@
                         $parrafos = '';
                         $('#servicios-data').empty();
                         $.each($(this).select2('data'), function( index, value ) {
+                            
                             
                             $parrafos = '<p id="'+value.id+'">' + $parrafos + (index + 1) + '.- '+ value.text+'</p>';
                             $('#servicios-data').html($parrafos);
