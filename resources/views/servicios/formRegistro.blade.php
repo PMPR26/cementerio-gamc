@@ -727,7 +727,9 @@
                     }
                 });
 
-
+            //   $(document).on('load','#tipo_servicio_value', function(e){
+                    $("#tipo_servicio_value option[value='15224330']").remove();
+                // })
 
 
                 //select event foreach
@@ -739,6 +741,7 @@
                         $('#servicios-data').empty();
                         $.each($(this).select2('data'), function( index, value ) {
                             
+                            
                             $parrafos = '<p id="'+value.id+'">' + $parrafos + (index + 1) + '.- '+ value.text+'</p>';
                             $('#servicios-data').html($parrafos);
                 });
@@ -749,7 +752,7 @@
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        url: '{{ env('URL_MULTISERVICE') }}/api/v1/cementerio/generate-all-servicios-nicho',
+                        url: "{{ env('URL_MULTISERVICE') }}/api/v1/cementerio/generate-all-servicios-nicho",
                         async: false,
                         data: JSON.stringify({
                             'data': data_request
