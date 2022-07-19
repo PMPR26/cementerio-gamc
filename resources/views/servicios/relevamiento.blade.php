@@ -923,7 +923,7 @@
 
 
                 $(document).on('click', '#btn_guardar_pago', function() {
-                    alert( $('#search_dif').val());
+                  
                     if($('#tiempo').val()==""){   seTime();}
                     if ($('#person').is(':checked')) {
                         if ($('#name_pago').val() == "" || $('#paterno_pago').val() == "" || $('#ci').val() ==
@@ -1377,7 +1377,7 @@
                         console.log(data);
                         if (data.status == true) {
                             $('#cuartel').val(data.resp.codigo);
-                            alert(data.resp.codigo);
+                         
                         } else {
                             $('#cuartel').val("NN");
                         }
