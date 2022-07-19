@@ -37,8 +37,9 @@ class Responsable extends Model
     public function generateCiResponsable(){
 
         $ci = Responsable::select('ci')
-                ->where('ci', 'ilike', "%SCR-0%")
-                ->orderBy('ci', 'DESC')
+        ->whereRaw('id = (select max(id) from responsable)') 
+                // ->where('ci', 'ilike', "%SCR-0%")
+                // ->orderBy('ci', 'DESC')
                 ->first();
 
          if($ci){

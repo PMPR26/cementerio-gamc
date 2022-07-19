@@ -96,10 +96,10 @@
             <div id="contenido">
                 {{-- datos difunto --}}
                 <div class="card ">
-                    <div class="card-header">
+                    {{-- <div class="card-header">
                         <h4>DATOS DIFUNTOS</h4>
                         <button type="button" name="addDif" id="addDif" style="display: none"><i class="fas fa-user-plus"> Adicionar difunto</i></button>
-                    </div>
+                    </div> --}}
                     <div class="card-body difunto" id="difunto0">
                         <div class="row">
                             <div class="col-sm-12 col-md-3 col-xl-3">
@@ -589,16 +589,16 @@
                     $('#pag_con').val();
                   
                     $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
-                 
+                
                     var bloque = $('#bloque').val();
                     var nicho = $('#nro_nicho').val();
                     var fila = $('#fila').val();
                   
 
                     cuartel = buscarCuartel(bloque, nicho, fila);
-                    console.log(bloque);
-                    console.log(nicho);
-                    console.log(fila);
+                    // console.log(bloque);
+                    // console.log(nicho);
+                    // console.log(fila);
                     if (bloque && nicho && fila) {
                         dats = buscar_datos(bloque, nicho, fila);
                     }
@@ -610,246 +610,236 @@
 
 
 
-                function buscar_datos(bloque, nicho, fila) {
+                function buscar_datos(bloque, nicho, fila)
+                {
                     var datos = "";
                     $('#contenido').show();
 
                  
 
-                    $.ajax({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                            'Content-Type': 'application/json'
-                        },
-                        url: "{{ route('buscar.nicho.rel') }}",
-                        method: 'POST',
-                        dataType: 'json',
-                        data: JSON.stringify({
-                            "bloque": bloque,
-                            "nicho": nicho,
-                            "fila": fila
-                        }),
-                        success: function(data) {
-
-                            if (data.mensaje) {
-                                $('#sp').empty();
-                                $('#origen').val('tabla_nueva');
-                                console.log(data);
-                                // cargar campos del los forms
-                                $('#cuartel').val(data.response.cuartel);
-                                $('#anterior').val(data.response.anterior);
-                                $('#tipo_nicho').val(data.response.tipo_nicho);
-                                $('#search_dif').val(data.response.ci_dif);
-                                $('#nombres_dif').val(data.response.nombre_dif);
-                                $('#paterno_dif').val(data.response.primerap_dif);
-                                $('#materno_dif').val(data.response.segap_dif);
-                                $('#fechanac_dif').val(data.response.nacimiento_dif);
-                                $('#fechadef_dif').val(data.response.fecha_def_dif);
-                                $('#causa').val(data.response.causa_dif);
-                                $('#sereci').val(data.response.certificado_defuncion);
-                                $('#tipo_dif').val(data.response.tipo_dif);
-                                $('#genero_dif').val(data.response.genero_dif);
-                                $('#search_resp').val(data.response.ci_resp);
-                                $('#nombres_resp').val(data.response.nombre_resp);
-                                $('#paterno_resp').val(data.response.paterno_resp);
-                                $('#materno_resp').val(data.response.segap_resp);
-                                $('#fechanac_resp').val(data.response.nacimiento_resp);
-                                $('#telefono').val(data.response.telefono);
-                                $('#celular').val(data.response.celular);
-                                $('#ecivil').val(data.response.ecivil_resp);
-                                $('#email').val(data.response.email_resp);
-                                $('#domicilio').val(data.response.domicilio_resp);
-                                $('#genero_resp').val(data.response.genero_resp);
-                               
-                              
-                                $('#razon').html(data.response.razon);
-                                $('#tiemp').html(data.response.tiempo);
-                                $('#cant_cuerpos').val(data.response.cantidad_cuerpos);
-                                $('#cuerpos').html(data.response.cantidad_cuerpos);
-                               
-                            
-                                $('#funeraria').html(data.response.funeraria);
-                                $('#url-certification').html(data.response.certificado_file);
-
-                              
-                                                    if (data.response.tiempo == 2) {
-                                                        $('#tipo_dif').val('PARVULO')
-                                                    } else if (data.response.tiempo == 5) {
-                                                        $('#tipo_dif').val('ADULTO')
-                                                    }
-                            } else {
-                                $.ajax({
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                            'content'),
-                                        'Content-Type': 'application/json'
-                                    },
-                                    url: "https://multiserv.cochabamba.bo/api/v1/cementerio/get-data",
-                                    method: 'POST',
-                                    dataType: 'json',
-                                    data: JSON.stringify({
-                                        "bloque": bloque,
-                                        "nicho": nicho,
-                                        "fila": fila
-                                    }),
-                                    success: function(data) {
+                            $.ajax({
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                    'Content-Type': 'application/json'
+                                },
+                                url: "{{ route('buscar.nicho.rel') }}",
+                                method: 'POST',
+                                dataType: 'json',
+                                data: JSON.stringify({
+                                    "bloque": bloque,
+                                    "nicho": nicho,
+                                    "fila": fila
+                                }),
+                                success: function(data) 
+                                {
+                                    if (data.mensaje) {
                                         $('#sp').empty();
-                                        $('#form').show();
-                                       $('#buscar').prop('disabled' , false);
-                                       bloque = $('#bloque').prop('readonly',false);
-                                       nicho = $('#nro_nicho').prop('readonly',false);
-                                       fila = $('#fila').prop('readonly',false);
+                                        $('#origen').val('tabla_nueva');
+                                        console.log(data);
+                                        // cargar campos del los forms
+                                        $('#cuartel').val(data.response.cuartel);
+                                        $('#anterior').val(data.response.anterior);
+                                        $('#tipo_nicho').val(data.response.tipo_nicho);
+                                        $('#search_dif').val(data.response.ci_dif);
+                                        $('#nombres_dif').val(data.response.nombre_dif);
+                                        $('#paterno_dif').val(data.response.primerap_dif);
+                                        $('#materno_dif').val(data.response.segap_dif);
+                                        $('#fechanac_dif').val(data.response.nacimiento_dif);
+                                        $('#fechadef_dif').val(data.response.fecha_def_dif);
+                                        $('#causa').val(data.response.causa_dif);
+                                        $('#sereci').val(data.response.certificado_defuncion);
+                                        $('#tipo_dif').val(data.response.tipo_dif);
+                                        $('#genero_dif').val(data.response.genero_dif);
+                                        $('#search_resp').val(data.response.ci_resp);
+                                        $('#nombres_resp').val(data.response.nombre_resp);
+                                        $('#paterno_resp').val(data.response.paterno_resp);
+                                        $('#materno_resp').val(data.response.segap_resp);
+                                        $('#fechanac_resp').val(data.response.nacimiento_resp);
+                                        $('#telefono').val(data.response.telefono);
+                                        $('#celular').val(data.response.celular);
+                                        $('#ecivil').val(data.response.ecivil_resp);
+                                        $('#email').val(data.response.email_resp);
+                                        $('#domicilio').val(data.response.domicilio_resp);
+                                        $('#genero_resp').val(data.response.genero_resp);      
+                                        $('#razon').html(data.response.razon);
+                                        $('#tiemp').html(data.response.tiempo);
+                                        $('#cant_cuerpos').val(data.response.cantidad_cuerpos);
+                                        $('#cuerpos').html(data.response.cantidad_cuerpos);
+                                        $('#funeraria').html(data.response.funeraria);
+                                        $('#url-certification').html(data.response.certificado_file);
+                                    
+                                                            if (data.response.tiempo == 2) {
+                                                                $('#tipo_dif').val('PARVULO')
+                                                            } else if (data.response.tiempo == 5) {
+                                                                $('#tipo_dif').val('ADULTO')
+                                                            }
+                                    } else {
+                                        $.ajax({
+                                            headers: {
+                                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                                    'content'),
+                                                'Content-Type': 'application/json'
+                                            },
+                                            url: "https://multiservdev.cochabamba.bo/api/v1/cementerio/get-data",
+                                            method: 'POST',
+                                            dataType: 'json',
+                                            data: JSON.stringify({
+                                                "bloque": bloque,
+                                                "nicho": nicho,
+                                                "fila": fila
+                                            }),
+                                            success: function(data) {
+                                                $('#sp').empty();
+                                                $('#form').show();
+                                            $('#buscar').prop('disabled' , false);
+                                            bloque = $('#bloque').prop('readonly',false);
+                                            nicho = $('#nro_nicho').prop('readonly',false);
+                                            fila = $('#fila').prop('readonly',false);
 
-                                        $('#origen').val('tabla_antigua');
+                                                $('#origen').val('tabla_antigua');
 
-                                        if (data.codigo_ni) {
-                                            $('#anterior').val(data.codigo_ni);
-                                        }
-
-
-                                        if (data.response.datos_difuntos != "") {
-                                            // datos difunto       
-                                            var pg = data.response.datos_difuntos[0]
-                                                .pag_con;
-
-                                            if (pg > 10 && pg < 1000 && pg != 1999) {
-                                                pg = '20' + pg;
-                                            } else if (pg < 10) {
-                                                pg = '200' + pg;
-                                            }
-                                            if (data.response.datos_difuntos != "") {
-                                                var fecha = data.response.datos_difuntos[0]
-                                                    .fecha;
-                                                var año = fecha.substr(0, 4);
-                                                var mes = fecha.substr(4, 2);
-                                                var dia = fecha.substr(6, 2);
-                                                var nuevaf = año + "-" + mes + "-" + dia;
-                                                $('#fechadef_dif').val(nuevaf);
-                                                $('#comprob').html(data.response.datos_difuntos[
-                                                        0]
-                                                    .comprob);
-                                                $('#razon').html(data.response.datos_difuntos[0]
-                                                    .razon);
-
-
-                                                $('#pag_con').val(pg);
-                                                $('#causa').val(data.response.datos_difuntos[0]
-                                                    .causa_fall);
-                                                $('#nombres_dif').val(data.response
-                                                    .datos_difuntos[0].difunto);
-                                                var t = data.response.datos_difuntos[0]
-                                                    .tiempo;
-                                            if ((data.response.datos_difuntos[0].pag_con ==
-                                                        '' || data.response.datos_difuntos[0]
-                                                        .pag_con ==
-                                                        null) && (data.response.datos_difuntos[
-                                                            0]
-                                                        .tiempo != ""))
-                                                         {
-
-                                                                    if (!$.isNumeric(t)) {
-                                                                        t = 30;  
-                                                                        Swal.fire(
-                                                                            'Se autocompletará el tiempo de permanencia del difunto como 30 años, debido a la ausencia de la información!',
-                                                                            'Si no fuera correcto el dato por favor completar de manera manual',
-                                                                            'warning'
-                                                                        )  ;                                              
-                                                                    } else if(t=="") {
-                                                                    
-                                                                        seTime();
-                                                                    }
-                                                                    if (t == 2) {
-                                                                        $('#tipo_dif').val('PARVULO')
-                                                                    } else if (t == 5) {
-                                                                        $('#tipo_dif').val('ADULTO')
-                                                                    }
-                                                                    $('#tiemp').html(t);
-                                                                    $('#tiempo').val(t);
-                                                                    $('#tipo_nicho').val('TEMPORAL');
-                                                                    calcularPlazo(t, año, nuevaf);
-                                                } else if (data.response.datos_difuntos[0]
-                                                    .pag_con > 0) {
-
-
-                                                    $('#tiemp').html(t);
-                                                    $('#tiempo').val(t);
-
-                                                    $('#pago_cont').html(pg);
-                                                    $('#pago_cont_ant').html(pg);
-
-                                                    $('#tipo_nicho').val('PERPETUO');
+                                                if (data.codigo_ni) {
+                                                    $('#anterior').val(data.codigo_ni);
                                                 }
 
-                                                var genero = "";
 
-                                                if (data.response.datos_difuntos[0].sexo ==
-                                                    "M") {
-                                                    genero = "MASCULINO";
+                                                if (data.response.datos_difuntos != "") {
+                                                    // datos difunto       
+                                                    var pg = data.response.datos_difuntos[0]
+                                                        .pag_con;
+
+                                                    if (pg > 10 && pg < 1000 && pg != 1999) {
+                                                        pg = '20' + pg;
+                                                    } else if (pg < 10) {
+                                                        pg = '200' + pg;
+                                                    }
+                                                    if (data.response.datos_difuntos != "") {
+                                                        var fecha = data.response.datos_difuntos[0]
+                                                            .fecha;
+                                                        var año = fecha.substr(0, 4);
+                                                        var mes = fecha.substr(4, 2);
+                                                        var dia = fecha.substr(6, 2);
+                                                        var nuevaf = año + "-" + mes + "-" + dia;
+                                                        $('#fechadef_dif').val(nuevaf);
+                                                        $('#comprob').html(data.response.datos_difuntos[
+                                                                0]
+                                                            .comprob);
+                                                        $('#razon').html(data.response.datos_difuntos[0]
+                                                            .razon);
+                                                        $('#pag_con').val(pg);
+                                                        $('#causa').val(data.response.datos_difuntos[0]
+                                                            .causa_fall);
+                                                        $('#nombres_dif').val(data.response
+                                                            .datos_difuntos[0].difunto);
+                                                        var t = data.response.datos_difuntos[0]
+                                                            .tiempo;
+                                                    if ((data.response.datos_difuntos[0].pag_con ==
+                                                                '' || data.response.datos_difuntos[0]
+                                                                .pag_con ==
+                                                                null) && (data.response.datos_difuntos[
+                                                                    0]
+                                                                .tiempo != ""))
+                                                                {
+                                                                            if (!$.isNumeric(t)) {
+                                                                                t = 30;  
+                                                                                Swal.fire(
+                                                                                    'Se autocompletará el tiempo de permanencia del difunto como 30 años, debido a la ausencia de la información!',
+                                                                                    'Si no fuera correcto el dato por favor completar de manera manual',
+                                                                                    'warning'
+                                                                                )  ;                                              
+                                                                            } else if(t=="") {
+                                                                            
+                                                                                seTime();
+                                                                            }
+                                                                            if (t == 2) {
+                                                                                $('#tipo_dif').val('PARVULO')
+                                                                            } else if (t == 5) {
+                                                                                $('#tipo_dif').val('ADULTO')
+                                                                            }
+                                                                            $('#tiemp').html(t);
+                                                                            $('#tiempo').val(t);
+                                                                            $('#tipo_nicho').val('TEMPORAL');
+                                                                            calcularPlazo(t, año, nuevaf);
+                                                        } else if (data.response.datos_difuntos[0]
+                                                            .pag_con > 0) {
+
+
+                                                            $('#tiemp').html(t);
+                                                            $('#tiempo').val(t);
+
+                                                            $('#pago_cont').html(pg);
+                                                            $('#pago_cont_ant').html(pg);
+
+                                                            $('#tipo_nicho').val('PERPETUO');
+                                                        }
+
+                                                        var genero = "";
+
+                                                        if (data.response.datos_difuntos[0].sexo ==
+                                                            "M") {
+                                                            genero = "MASCULINO";
+                                                        } else {
+                                                            genero = "FEMENINO";
+                                                        }
+                                                        $('#genero_dif').val(genero);
+
+                                                    }
+                                                    // datos responsable
+
+                                                    if (data.response.responsable != "") {
+                                                        $('#search_resp').val(data.response.responsable[
+                                                            0].carnet);
+                                                        $('#telefono').val(data.response.responsable[0]
+                                                            .telef);
+                                                        $('#domicilio').val(data.response.responsable[0]
+                                                            .direccion);
+                                                        $('#nombres_resp').val(data.response
+                                                            .responsable[0].razon);
+                                                    }
+                                                    if (data.response.pagos != "") {
+                                                        $('#razon').html(data.response.pagos[0].razon);
+                                                        $('#comprob').html(data.response.pagos[0]
+                                                            .comprob);
+                                                        $('#concepto').html(data.response.pagos[0]
+                                                            .concepto);
+                                                        $('#gestiones').html(data.response.pagos[0]
+                                                            .gestiones);
+                                                        $('#monto_pagos').html(data.response.pagos[0]
+                                                            .monto);
+
+                                                        if (data.response.pagos[0].fecha) {
+                                                            var ult = data.response.pagos[0].fecha;
+                                                            var ultaño = fecha.substr(0, 4);
+                                                            var ultmes = fecha.substr(4, 2);
+                                                            var ultdia = fecha.substr(6, 2);
+                                                            var ultimof = ultaño + "-" + ultmes + "-" +
+                                                                ultdia;
+                                                            $('#fecha_p').html(ultimof);
+                                                        }
+
+                                                    }                                                   
+
                                                 } else {
-                                                    genero = "FEMENINO";
-                                                }
-                                                $('#genero_dif').val(genero);
-
-                                            }
-                                            // datos responsable
-
-                                            if (data.response.responsable != "") {
-                                                $('#search_resp').val(data.response.responsable[
-                                                    0].carnet);
-                                                $('#telefono').val(data.response.responsable[0]
-                                                    .telef);
-                                                $('#domicilio').val(data.response.responsable[0]
-                                                    .direccion);
-                                                $('#nombres_resp').val(data.response
-                                                    .responsable[0].razon);
-                                            }
-                                            if (data.response.pagos != "") {
-                                                $('#razon').html(data.response.pagos[0].razon);
-                                                $('#comprob').html(data.response.pagos[0]
-                                                    .comprob);
-                                                $('#concepto').html(data.response.pagos[0]
-                                                    .concepto);
-                                                $('#gestiones').html(data.response.pagos[0]
-                                                    .gestiones);
-                                                $('#monto_pagos').html(data.response.pagos[0]
-                                                    .monto);
-
-                                                if (data.response.pagos[0].fecha) {
-                                                    var ult = data.response.pagos[0].fecha;
-                                                    var ultaño = fecha.substr(0, 4);
-                                                    var ultmes = fecha.substr(4, 2);
-                                                    var ultdia = fecha.substr(6, 2);
-                                                    var ultimof = ultaño + "-" + ultmes + "-" +
-                                                        ultdia;
-                                                    $('#fecha_p').html(ultimof);
+                                                    $('#sp').empty();
+                                                    Swal.fire(
+                                                        'Busqueda finalizada!',
+                                                        'El registro no ha  sido encontrado o no existe.',
+                                                        'error'
+                                                    )
+                                                    // $('.clear').val("");
+                                                    $('#form').hide();
+                                                
                                                 }
 
                                             }
-
-                                        } else {
-                                            $('#sp').empty();
-                                            Swal.fire(
-                                                'Busqueda finalizada!',
-                                                'El registro no ha  sido encontrado o no existe .',
-                                                'error'
-                                            )
-
-                                            $('.clear').val("");
-                                            $('#form').hide();
-                                        }
-
-
-
-
-
+                                        });
 
                                     }
-                                });
-
-                            }
-                        }
-                    });
-
+                                
+                                }
+                            });
+                    // 01210
+                    buscarCuartel($('#bloque').val(), $('#nro_nicho').val(), $('#fila').val());
                 }
 
 
@@ -933,6 +923,7 @@
 
 
                 $(document).on('click', '#btn_guardar_pago', function() {
+                    alert( $('#search_dif').val());
                     if($('#tiempo').val()==""){   seTime();}
                     if ($('#person').is(':checked')) {
                         if ($('#name_pago').val() == "" || $('#paterno_pago').val() == "" || $('#ci').val() ==
@@ -962,14 +953,6 @@
                     if ($('#nrofur').val() != "") {
                         verificarfur();
                     }
-                    // let cpago = [];
-                    // $('.sel').each(function(index) {
-                    //     if ($(this).is(':checked')) {
-                    //         cpago.push($(this).val());
-                    //     }
-                    // });
-                   
-
                     return $.ajax({
                         type: 'POST',
                         headers: {
@@ -979,7 +962,6 @@
                         url: "{{ route('new.relevamiento') }}",
                         async: false,
                         data: JSON.stringify({
-
                             'nro_nicho': $('#nro_nicho').val(),
                             'bloque': $('#bloque').val(),
                             'cuartel': $('#cuartel').val(),
@@ -1044,7 +1026,19 @@
                         }),
                         success: function(data_response) {
                             console.log(data_response);
-                            swal.fire({
+                            if(data_response.status==false){
+                                    swal.fire({
+                                    title: "Precaución!",
+                                    text: "El difunto ya se encuentra registrado en otro nicho",
+                                    type: "warning",
+                                    timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: false
+                                });
+                                return false;
+                            }
+                            else{
+                                swal.fire({
                                 title: "Guardado!",
                                 text: "!Registro realizado con éxito!",
                                 type: "success",
@@ -1058,6 +1052,8 @@
 
 
                             }, 2000);
+                            }
+                           
                             //toastr["success"]("Registro realizado con éxito!");
                         },
                         error: function(error) {
@@ -1377,8 +1373,11 @@
 
                     }),
                     success: function(data) {
+
+                        console.log(data);
                         if (data.status == true) {
                             $('#cuartel').val(data.resp.codigo);
+                            alert(data.resp.codigo);
                         } else {
                             $('#cuartel').val("NN");
                         }
@@ -1563,12 +1562,12 @@
                         }else if($('#tipo_dif  option:selected').val()=='PARVULO' ){
                             $('#tiempo').val('2')
                         }
-                    $('#addDif').hide();
+                    // $('#addDif').hide();
 
                 }
                 else if($('#tipo_nicho  option:selected').val()=="PERPETUO"){ 
                     $('#tiempo').val('30')
-                    $('#addDif').show();
+                    // $('#addDif').show();
                 }
             }
             $(document).on('change', '#tipo_dif', function(){
@@ -1581,21 +1580,21 @@
 
 
 
-            $(document).on('click', '#addDif', function(e){
-                var divsDif = document.getElementsByClassName("difunto").length;
-                    console.log("Hay " + divsDif + " elementos");
-                var index=parseInt(divsDif)+1;
-                const div = document.getElementsByClassName("difunto");
-                // window.addEventListener('DOMContentLoaded', (event) => {
-                //         console.log('DOM fully loaded and parsed');
-                //     });
-                const clone = div[index].cloneNode(true);
-                clone.id = "difunto-"+divsDif;
-                document.body.appendChild(clone);
+            // $(document).on('click', '#addDif', function(e){
+            //     var divsDif = document.getElementsByClassName("difunto").length;
+            //         console.log("Hay " + divsDif + " elementos");
+            //     var index=parseInt(divsDif)+1;
+            //     const div = document.getElementsByClassName("difunto");
+            //     // window.addEventListener('DOMContentLoaded', (event) => {
+            //     //         console.log('DOM fully loaded and parsed');
+            //     //     });
+            //     const clone = div[index].cloneNode(true);
+            //     clone.id = "difunto-"+divsDif;
+            //     document.body.appendChild(clone);
 
-                $('#difunto').length ;  // continuar clonacion
-                 clone.find('#difunto0').prop('id', 'difunto'+$('.clonerow').length);
-            });
+            //     $('#difunto').length ;  // continuar clonacion
+            //      clone.find('#difunto0').prop('id', 'difunto'+$('.clonerow').length);
+            // });
 
             function Clone() {
                  var original = $('#divRow0')
