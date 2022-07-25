@@ -143,33 +143,50 @@
 
                         <div class="row">
 
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+                            <div class="col-sm-12 col-md-2 col-xl-2">
                                 <label>Fecha Nacimiento</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="date"
                                     class="form-control clear" id="fechanac_dif" autocomplete="off">
                             </div>
+                            <div class="col-sm-12 col-md-2 col-xl-2">
+                                <label>Fecha Defunción</label>
+                                <input type="date"
+                                    class="form-control clear" id="fecha_def_dif" autocomplete="off">
+                            </div>
 
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+
+                            <div class="col-sm-12 col-md-2 col-xl-2">
                                 <label>Fecha Ingreso al nicho</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="date"
                                     class="form-control clear" id="fechadef_dif" autocomplete="off">
                             </div>
 
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+                            {{-- <div class="col-sm-12 col-md-4 col-xl-4">
                                 <label>Causa</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
                                     class="form-control clear" id="causa" autocomplete="off">
+                            </div> --}}
+
+                            <div class="col-sm-12 col-md-4 col-xl-4">
+                                <label>Causa</label>
+                                <select id="causa" style="text-transform:uppercase; width: 100%"
+                                onkeyup="javascript:this.value=this.value.toUpperCase();"
+                                class="form-control select2-multiple select2-hidden-accessible">
+                                <option value="">SELECIONAR CAUSA FALLECIMIENTO</option>
+                                @foreach ($causa as $causa)                                  
+                                        <option value="{{ $causa->causa }}">{{$causa->causa }}</option>                                   
+                                @endforeach
+                               </select>
                             </div>
 
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+                            <div class="col-sm-12 col-md-2 col-xl-2">
                                 <label>SERECI</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
                                     class="form-control clear" id="sereci" autocomplete="off">
-
                             </div>
                         </div>
 
@@ -272,41 +289,9 @@
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Celular</label>
-
-
                                 <input name="celular" id="celular"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     type="number" maxlength="8"  class="form-control" />
-                            </div>
-
-                            <div class="col-sm-12 col-md-3 col-xl-3">
-                                <label>Estado civil</label>
-                                <select name="ecivil" id="ecivil" class="form-control">
-                                    <option value="">SELECCIONAR</option>
-                                    <option value="CASADO">CASADO</option>
-                                    <option value="CONCUBINADO">CONCUBINADO</option>
-                                    <option value="DIVORCIADO">DIVORCIADO</option>
-                                    <option value="SOLTERO">SOLTERO</option>
-                                    <option value="VIUDO">VIUDO</option>
-                                </select>
-                            </div>
-                        </div>
-
-
-                        <div class="row">
-                            <div class="col-sm-12 col-md-3 col-xl-3">
-                                <label>E-mail</label>
-                                <input style="text-transform:uppercase;"
-                                    onkeyup="javascript:this.value=this.value.toUpperCase();" type="email" size="50"
-                                    class="form-control" id="email" autocomplete="off">
-                            </div>
-
-
-                            <div class="col-sm-12 col-md-7 col-xl-7">
-                                <label>Domicilio</label>
-                                <input style="text-transform:uppercase;"
-                                    onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
-                                    class="form-control" id="domicilio" autocomplete="off">
                             </div>
                             <div class="col-sm-12 col-md-2 col-xl-2">
                                 <label>Genero</label>
@@ -316,6 +301,37 @@
                                     <option value="MASCULINO">MASCULINO</option>
                                 </select>
                             </div>
+
+                            {{-- <div class="col-sm-12 col-md-3 col-xl-3">
+                                <label>Estado civil</label>
+                                <select name="ecivil" id="ecivil" class="form-control">
+                                    <option value="">SELECCIONAR</option>
+                                    <option value="CASADO">CASADO</option>
+                                    <option value="CONCUBINADO">CONCUBINADO</option>
+                                    <option value="DIVORCIADO">DIVORCIADO</option>
+                                    <option value="SOLTERO">SOLTERO</option>
+                                    <option value="VIUDO">VIUDO</option>
+                                </select>
+                            </div> --}}
+                        </div>
+
+
+                        <div class="row">
+                            {{-- <div class="col-sm-12 col-md-3 col-xl-3">
+                                <label>E-mail</label>
+                                <input style="text-transform:uppercase;"
+                                    onkeyup="javascript:this.value=this.value.toUpperCase();" type="email" size="50"
+                                    class="form-control" id="email" autocomplete="off">
+                            </div> --}}
+
+
+                            <div class="col-sm-12 col-md-7 col-xl-7">
+                                <label>Domicilio</label>
+                                <input style="text-transform:uppercase;"
+                                    onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
+                                    class="form-control" id="domicilio" autocomplete="off">
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -433,7 +449,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th scope="col"> Cuota</th>
+                                    <th scope="col"> CUOTA</th>
                                     <th scope="col"> GESTION</th>
                                     <th scope="col"> MONTO</th>
                                     <th scope="col"> SELECCIONAR</th>
@@ -607,7 +623,8 @@
                             $('#paterno_dif').val(data.datos.paterno_dif);
                             $('#materno_dif').val(data.datos.materno_dif);
                             $('#fechanac_dif').val(data.datos.nacimiento_dif);
-                            $('#fechadef_dif').val(data.datos.fecha_defuncion);
+                            $('#fecha_def_dif').val(data.response.fecha_def_dif);
+                            $('#fechadef_dif').val(data.datos.fecha_adjudicacion);
                             $('#causa').val(data.datos.causa);
                             $('#sereci').val(data.datos.certificado_defuncion);
                             $('#tipo_dif').val(data.datos.tipo_dif);
@@ -619,8 +636,8 @@
                             $('#fechanac_resp').val(data.datos.nacimiento_resp);
                             $('#telefono').val(data.datos.telefono);
                             $('#celular').val(data.datos.celular);
-                            $('#ecivil').val(data.datos.estado_civil);
-                            $('#email').val(data.datos.email);
+                            // $('#ecivil').val(data.datos.estado_civil);
+                            // $('#email').val(data.datos.email);
                             $('#domicilio').val(data.datos.dir_resp);
                             $('#genero_resp').val(data.datos.genero_resp);
                             $('#pago_cont').html(data.datos.ultimo_pago);
@@ -766,7 +783,7 @@
                                             }
 
                                         }
-
+                                        autocompletar();
                                     } else {
                                         $('#sp').empty();
                                         Swal.fire(
@@ -778,19 +795,17 @@
                                         $('.clear').val("");
                                         $('#form').hide();
                                     }
-
-
-
-
-
-
+                                    autocompletar();
                                 }
                             });
-
+                           
                         }
+                       
+                      
                     }
+                   
                 });
-
+                autocompletar();
             }
 
 
@@ -986,9 +1001,10 @@
                         'paterno_dif': $('#paterno_dif').val(),
                         'materno_dif': $('#materno_dif').val(),
                         'fechanac_dif': $('#fechanac_dif').val(),
+                        'fecha_def_dif': $('#fecha_def_dif').val(),
                         'fechadef_dif': $('#fechadef_dif').val(),
                         'causa': $('#causa').val(),
-                        'ecivil_dif': $('#ecivil_dif').val(),
+                        // 'ecivil_dif': $('#ecivil_dif').val(),
                         'tipo_dif': $('#tipo_dif').val(),
                         'genero_dif': $('#genero_dif').val(),
                         'ci_resp': $('#search_resp').val(),
@@ -999,8 +1015,8 @@
                         'fechanac_resp': $('#fechanac_resp').val(),
                         'telefono': $('#telefono').val(),
                         'celular': $('#celular').val(),
-                        'ecivil': $('#ecivil').val(),
-                        'email': $('#email').val(),
+                        // 'ecivil': $('#ecivil').val(),
+                        // 'email': $('#email').val(),
                         'domicilio': $('#domicilio').val(),
                         'genero_resp': $('#genero_resp').val(),
                         'pag_con': $('#pag_con').val(),
@@ -1193,12 +1209,12 @@
                             $('#fechanac_resp').val(data.response.fecha_nacimiento);
                             $('#telefono').val(data.response.telefono);
                             $('#celular').val(data.response.celular);
-                            $('#ecivil').val(data.response.estado_civil);
+                            // $('#ecivil').val(data.response.estado_civil);
                          
                             $('#domicilio').val(data.response.domicilio);
                             $('#genero_resp').val(data.response.genero);
                             $("#responsable_search").val(data.response.id);
-                            $('#email').val(data.response.email);
+                            // $('#email').val(data.response.email);
 
                         }
 
@@ -1384,6 +1400,74 @@
                                 });
                             });
             });
+
+            function autocompletar(){
+                var datos="";
+                $.ajax({
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                            'content'),
+                                        'Content-Type': 'application/json'
+                                    },
+                                    url: "{{route('completar.datos')}}",
+                                    method: 'POST',
+                                    dataType: 'json',
+                                    data: JSON.stringify({
+                                        "bloque": $('#bloque').val(),
+                                        "nicho": $('#nro_nicho').val(),
+                                        "fila": $('#fila').val()
+                                    }),
+                                    success: function(data) 
+                                    {     
+                                    //    console.log(data);
+                                          // data difunto
+                                        //   alert(data['response'].fecha_adjudicacion);
+                                        //   var adj=(data['response'].fecha_adjudicacion).split(" ");
+                                        //   var f_adj=adj[0];
+                                        //   alert(f_adj);
+                                            if(data.response!=null)
+                                            {  
+                                                $('#search_dif').val(data['response'].ci_dif);
+                                                $('#nombres_dif').val(data['response'].nombre_dif);
+                                                $('#paterno_dif').val(data['response'].primerap_dif);
+                                                $('#materno_dif').val(data['response'].segap_dif);
+                                                $('#fechanac_dif').val(data['response'].nacimiento_dif);
+                                                $('#fecha_def_dif').val(data['response'].fecha_defuncion);
+                                                $('#fechadef_dif').val(data['response'].fecha_adjudicacion);
+                                                $('#tipo_dif').val(data['response'].tipo_dif);
+                                                $('#genero_dif').val(data['response'].genero_dif);
+                                                $('#tiempo').val(data['response'].tiempo);
+                                                $('#sereci').val(data['response'].certificado_defuncion);
+                                                $('#funeraria').val(data['response'].funeraria).trigger('change');
+                                                $('#causa').val(data['response'].causa_dif).trigger('change');
+                                                // data responsable
+                                                $('#search_resp').val(data['response'].ci_resp);
+                                                $('#nombres_resp').val(data['response'].nombre_resp);
+                                                $('#paterno_resp').val(data['response'].paterno_resp);
+                                                $('#materno_resp').val(data['response'].segap_resp);
+                                                $('#telefono').val(data['response'].telefono);
+                                                $('#celular').val(data['response'].celular);
+                                                $('#genero_resp').val(data['response'].genero_resp);
+                                                $('#domicilio').val(data['response'].domicilio_resp);
+                                            } 
+                                           
+                                    }  
+                                                   
+                     });
+                   return false;
+            }
+
+             //causa
+             $("#causa").select2({
+                tags: true,
+                allowClear: true
+
+                });
+
+            $(document).on('click' ,  'button[aria-describedby="select2-causa-container"] span', function(){
+                   $('#causa option:selected').remove(); 
+            })
+
     </script>
 
 @stop

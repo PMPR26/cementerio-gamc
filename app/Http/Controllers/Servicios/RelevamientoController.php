@@ -254,7 +254,7 @@ class RelevamientoController extends Controller
 
     public function createNewRelev(Request $request)
     {
-//   dd($request->gratis);
+        // return ($request->ci_dif);
         if ($request->isJson()) {
 
             if($request->externo == "externo" && $request->gratis == "gratis"){
@@ -266,13 +266,6 @@ class RelevamientoController extends Controller
                     'tipo_dif'=> 'required',
                     'genero_dif'=> 'required',
                     'ci_resp' => 'required',
-                    // 'nombres_resp' => 'required',
-                    // 'paterno_resp'=> 'required',                
-                    // 'domicilio'=> 'required',
-                    // 'genero_resp'=> 'required',
-                    // 'tipo_servicio' => 'required',
-                    //'servicio_hijos' => 'required',
-    
                     
                 ], [
                     'ci_dif.required' => 'El campo ci del difunto es obligatorio, si no tiene documento presione el boton "generar carnet provisional  (icono lapiz)" para asignarle un numero provisional',
@@ -281,19 +274,10 @@ class RelevamientoController extends Controller
                     'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
                     'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
                     'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
-                    // 'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
-                    // 'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',                  
-                    // 'domicilio.required'=> 'El campo domicilio es obligatorio',
-                    // 'genero_resp.required'=> 'El campo genero_resp es obligatorio',
-                    // 'tipo_servicio.required' => 'Debe seleccionar al menos un tipo de servicio',
-                  //  'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
-    
-                   
+                                    
                 ]);
             }
-            else{
-
-          
+            else{          
             $this->validate($request, [
                 'nro_nicho' => 'required',
                 'bloque' => 'required',
@@ -305,18 +289,7 @@ class RelevamientoController extends Controller
                 'paterno_dif'=> 'required',
                 'tipo_dif'=> 'required',
                 'genero_dif'=> 'required',
-            //     'ci_resp' => 'required',
-            //     'nombres_resp' => 'required',
-            //     'paterno_resp'=> 'required',
-            //    // 'celular'=> 'required',
-            //    // 'ecivil'=> 'required',
-            //    // 'email'=> 'required',
-            //     'domicilio'=> 'required',
-            //     'genero_resp'=> 'required',
-             //   'tipo_servicio' => 'required',
-              //  'servicio_hijos' => 'required',
-
-                
+           
             ], [
                 'nro_nicho.required' => 'El campo nicho es obligatorio',
                 'bloque.required' => 'El campo bloque es obligatorio',
@@ -328,30 +301,13 @@ class RelevamientoController extends Controller
                 'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
                 'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
                  'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
-            //     'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
-            //     'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
-            //      'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
-            //    //  'celular.required'=> 'El campo celular es obligatorio',
-            //     // 'ecivil.required'=> 'El campo estado civil  es obligatorio',
-            //     // 'email.required'=> 'El campo email es obligatorio',
-            //      'domicilio.required'=> 'El campo domicilio es obligatorio',
-            //      'genero_resp.required'=> 'El campo genero_resp es obligatorio',
-               // 'tipo_servicio.required' => 'Debe seleccionar al menos un tipo servicio',
-               // 'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
-
-               
+                        
             ]);
         }
            // if (!empty($request->servicio_hijos) && is_array($request->servicio_hijos)) {
-
-
               
-                      $estado_nicho="OCUPADO";
-                    
-                        $cant=1;
-                  
-            
-          
+                        $estado_nicho="OCUPADO";                    
+                        $cant=1;    
                         $codigo_n = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
                         $existeNicho = Nicho::where('codigo', $codigo_n)->first();
 
@@ -419,7 +375,6 @@ class RelevamientoController extends Controller
             // end nicho
 
             $codigo_nicho = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
-
             }
             //step1: nicho buscar si existe registrado el nicho recuperar el id  sino existe registrarlo
             
@@ -452,15 +407,30 @@ class RelevamientoController extends Controller
             }
             //end responsable
             //insertar tbl responsable_difunto
-            if (isset($difuntoid) && isset($idresp)) {
+            //verificar que el difunto no este en otro nicho activo
+            // dd($request->ci_dif);
+             $existeDifuntoResp=$this->buscarDifuntoResp($request->ci_dif);
+            //  print_r("asdasd");
+            //  dd($existeDifuntoResp);
+     
+            // $existeDifuntoResp = ResponsableDifunto::where('ci', $request->ci_dif)->first();
 
-                $rf = new ResponsableDifunto();
-                $existeRespDif = $rf->searchResponsableDifunt($request);
-                if ($existeRespDif != null) {
-                    $iddifuntoResp = $this->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
-                } else {
-                    $iddifuntoResp = $this->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
+            if (isset($difuntoid) && isset($idresp)) {
+                if( $existeDifuntoResp==true){
+                    return response([
+                        'status' => false,
+                        'message' => 'El difunto se encuentra registrado en otro nicho'
+                    ], 201);
+                }else{
+                    $rf = new ResponsableDifunto();
+                    $existeRespDif = $rf->searchResponsableDifunt($request);
+                    if ($existeRespDif != null) {
+                        $iddifuntoResp = $this->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
+                    } else {
+                        $iddifuntoResp = $this->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
+                    }
                 }
+              
             }
 
 
@@ -522,7 +492,7 @@ class RelevamientoController extends Controller
         $dif->primer_apellido = $request->paterno_dif;
         $dif->segundo_apellido = $request->materno_dif;
         $dif->fecha_nacimiento = $request->fechanac_dif;
-        $dif->fecha_defuncion = $request->fechadef_dif;
+        $dif->fecha_defuncion = $request->fecha_def_dif;
         $dif->certificado_defuncion = $request->sereci;
         $dif->causa = $request->causa;
         $dif->tipo = $request->tipo_dif; 
@@ -544,7 +514,7 @@ class RelevamientoController extends Controller
         $difunto->primer_apellido = $request->paterno_dif;
         $difunto->segundo_apellido = $request->materno_dif;
         $difunto->fecha_nacimiento = $request->fechanac_dif;
-        $difunto->fecha_defuncion = $request->fechadef_dif;
+        $difunto->fecha_defuncion = $request->fecha_def_dif;
         $difunto->certificado_defuncion = $request->sereci;
         $difunto->causa = $request->causa;
         $difunto->tipo = $request->tipo_dif; 
@@ -832,6 +802,20 @@ class RelevamientoController extends Controller
               
                if($sql){ return true;}
                else{ return false;}
+    }
+
+    public function buscarDifuntoResp($ci_dif){
+      
+        $sql=DB::table('responsable_difunto')
+        ->Join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
+        ->Join('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')       
+        ->where('difunto.ci','=', ''.$ci_dif.'')
+        // ->where('responsable_difunto.difunto_id','=', ''.$ci_dif.'')
+
+        ->first();
+       
+        if($sql){ return true;}
+        else{ return false;}
     }
 
 }

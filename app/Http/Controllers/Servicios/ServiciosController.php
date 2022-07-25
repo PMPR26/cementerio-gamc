@@ -69,7 +69,7 @@ class ServiciosController extends Controller
 
     public function cargarForm()
     {
-
+// env('URL_MULTISERVICE')
         $headers = [
             'Content-Type' => 'application/json'
         ];
@@ -80,10 +80,10 @@ class ServiciosController extends Controller
                 'headers' => $headers
             ]);
         } catch (RequestException $re) {
-            // return response([
-            //     'status' => false,
-            //     'message' => 'Error al procesar su solicitud'
-            // ], 200);
+            return response([
+                'status' => false,
+                'message' => 'Error al procesar su solicitud'
+            ], 200);
         }
 
         $tipo_service = json_decode((string) $response->getBody(), true);
@@ -106,8 +106,7 @@ class ServiciosController extends Controller
     {
 
         $sql = DB::table('responsable_difunto')
-            ->select(DB::raw('
-            
+            ->select(DB::raw('            
                responsable_difunto.*,
                responsable.segundo_apellido as segap_resp,
                responsable.fecha_nacimiento as nacimiento_resp,
@@ -148,7 +147,6 @@ class ServiciosController extends Controller
                cuartel.codigo as cuartel,
                nicho.nro_nicho,
                nicho.cantidad_cuerpos
-
                 ') )
             ->join('servicio_nicho', 'servicio_nicho.codigo_nicho', '=', 'responsable_difunto.codigo_nicho')
             ->leftJoin('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
@@ -161,6 +159,7 @@ class ServiciosController extends Controller
             ->where('nicho.fila', '=', $request->fila)
             ->orderBy('servicio_nicho.id', 'DESC')
             ->first();
+       
             if($sql){
                 $mensaje=true;
             }
@@ -264,7 +263,12 @@ class ServiciosController extends Controller
 
     public function createNewServicios(Request $request)
     {
-//  dd($request->fechanac_dif);
+        // dd($request->servicio_hijos_txt);
+         $explode_txt=explode("Bs.",$request->servicio_hijos_txt);
+// dd($explode_txt);
+        
+        //  $explode=explode("=>",$request->descripcion_exhumacion);
+        //  dd($explode);
         if ($request->isJson()) 
         {
 
@@ -386,7 +390,14 @@ class ServiciosController extends Controller
                 $cod_n = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
                 $cantidadEnNicho=$this->contarDifuntoEnNicho($cod_n);
                 $difuntoEnNicho=$this->buscarDifuntoEnNicho($request->ci_dif);
-                foreach($request->servicio_hijos as $servi){
+                $explode_txt=explode("Bs.",$request->servicio_hijos_txt);
+                $texto_servicio="";
+                $separador=" ";
+                foreach($request->servicio_hijos as $key=>$servi)
+                {
+                //  dd($explode_txt[$key]);
+                  
+                  
                     if($servi=='1979' || $servi=='1977' || $servi=='1978'  || $servi=='1981' || $servi=='1980' || $servi=='1982')
                     {
                                 $estado_nicho="OCUPADO";
@@ -421,20 +432,22 @@ class ServiciosController extends Controller
                                     
                                     }
                                 }
-                    }else if($servi == '645' || $servi =='644'){    
-                        if($difuntoEnNicho==false)
-                        {
-                            $est_nicho="EXHUMADO";                            
-                            $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // . 
-                        }
-                        else{
-                           
-                            $responsable_id=$difuntoEnNicho->responsable_id;
-                            $difunto_id=$difuntoEnNicho->difunto_id;
-                            $est_nicho="EXHUMADO";
-                            $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // . 
-                        }
-                     
+                                $texto_servicio= $texto_servicio.$separador.$explode_txt[$key]." Bs.";
+                    }else if($servi == '645' || $servi =='644')
+                    {    
+                                if($difuntoEnNicho==false)
+                                {
+                                    $est_nicho="EXHUMADO";                            
+                                    $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // . 
+                                }
+                                else{
+                                
+                                    $responsable_id=$difuntoEnNicho->responsable_id;
+                                    $difunto_id=$difuntoEnNicho->difunto_id;
+                                    $est_nicho="EXHUMADO";
+                                    $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // . 
+                                }
+                            
 
                                 if( $cantidadEnNicho == 1 ){
                                     $estado_nicho="LIBRE";
@@ -447,9 +460,21 @@ class ServiciosController extends Controller
                                 else if( $cantidadEnNicho == 0){
                                     $estado_nicho="LIBRE";
                                     $cant= 0;
-                                }                                
-                            }
+                                }    
+                                $texto_servicio= $texto_servicio.$separador.$explode_txt[$key]." Bs.";
+                        }
                     else{
+                        $desc_ex=explode('=>',$request->descripcion_exhumacion);
+
+                        if($servi==$desc_ex[1] and isset($request->descripcion_exhumacion)){
+                            $ntexto= explode('-',$explode_txt[$key]);
+                            // dd( $ntexto);
+                            $txt_replace=$ntexto[0]."-".$desc_ex[0]."-".$ntexto[2]." Bs.";
+                            $texto_servicio= $texto_servicio.$separador.  $txt_replace;
+                            // dd( $texto_servicio);
+                        }else{
+                            $texto_servicio= $texto_servicio.$separador. $explode_txt[$key]." Bs.";
+                        }
                         $estado_nicho="OCUPADO";
                         if($cantidadEnNicho >0){
                             $cant=$cantidadEnNicho;
@@ -459,7 +484,7 @@ class ServiciosController extends Controller
                     }
                     
                 }
-            
+            //   dd( $texto_servicio);
             if($request->externo=="externo"){
                 $codigo_n="00000" ;
                 $estado_nicho="EXTERNO";
@@ -605,7 +630,9 @@ class ServiciosController extends Controller
 
                                                                     $response=$obj->GenerarFur($ci, $nombre_pago, $paterno_pago,
                                                                     $materno_pago, $domicilio,  $nombre_difunto, $codigo_nicho,
-                                                                    $request->bloque, $request->nro_nicho, $request->fila, $request->servicio_hijos, $cantidades, $cajero );
+                                                                    $request->bloque, $request->nro_nicho, $request->fila, 
+                                                                    $request->servicio_hijos,
+                                                                    $cantidades, $cajero, $request->descripcion_exhumacion );
                                                               
                                                                     if($response['status']==true){
                                                                         $fur = $response['response'];
@@ -619,7 +646,7 @@ class ServiciosController extends Controller
                                                 $serv->tipo_servicio_id=implode(', ',  $request->tipo_servicio);
                                                 $serv->tipo_servicio=$request->tipo_servicio_txt;
                                                 $serv->servicio_id=implode(', ', $request->servicio_hijos);
-                                                $serv->servicio= $request->servicio_hijos_txt;
+                                                $serv->servicio= $texto_servicio;   //$request->servicio_hijos_txt;
                                                 $serv->responsable_difunto_id=$iddifuntoResp;
                                                 $serv->id_usuario_caja = auth()->id();
                                                 // $serv->id_usuario = auth()->id();
@@ -718,8 +745,8 @@ class ServiciosController extends Controller
         $dif->nombres = trim(mb_strtoupper($request->nombres_dif, 'UTF-8'));
         $dif->primer_apellido = trim(mb_strtoupper($request->paterno_dif, 'UTF-8'));
         $dif->segundo_apellido =trim(mb_strtoupper( $request->materno_dif, 'UTF-8'));
-        $dif->fecha_nacimiento = $request->fechanac_dif;
-        $dif->fecha_defuncion = $request->fechadef_dif;
+        $dif->fecha_nacimiento = $request->fechanac_dif;              
+        $dif->fecha_defuncion = $request->fecha_def_dif;
         $dif->certificado_defuncion = $request->sereci;
         $dif->causa = trim(mb_strtoupper($request->causa, 'UTF-8'));
         $dif->tipo = $request->tipo_dif; 
@@ -735,13 +762,14 @@ class ServiciosController extends Controller
     }
 
     public function updateDifunto($request, $difuntoid){
+       
         $difunto= Difunto::where('id', $difuntoid)->first();
         $difunto->ci = $request->ci_dif;
         $difunto->nombres = trim(mb_strtoupper($request->nombres_dif, 'UTF-8'));
         $difunto->primer_apellido = trim(mb_strtoupper($request->paterno_dif, 'UTF-8'));
         $difunto->segundo_apellido =trim(mb_strtoupper( $request->materno_dif, 'UTF-8'));
         $difunto->fecha_nacimiento = $request->fechanac_dif;
-        $difunto->fecha_defuncion = $request->fechadef_dif;
+        $difunto->fecha_defuncion = $request->fecha_def_dif;
         $difunto->certificado_defuncion = $request->sereci;
         $difunto->causa =  trim(mb_strtoupper($request->causa, 'UTF-8'));
         $difunto->tipo = $request->tipo_dif; 
@@ -820,7 +848,7 @@ class ServiciosController extends Controller
                                             
                                   $id_s=explode(',', $tablelocal->servicio_id );
                                 foreach( $id_s as  $key => $value ){
-                                                   print_r($id_s[$key]);
+                                                 
                                       
                                             $headers =  ['Content-Type' => 'application/json'];
                                             $client = new Client();
@@ -1022,5 +1050,13 @@ class ServiciosController extends Controller
               
                if(!empty($sql) || $sql!=null){ return $cc=$sql->cantidad_cuerpos;}
                else{ return $cc=0;}
+    }
+
+    public function autocompletar(Request $request){
+        $cod=$request->bloque.".".$request->nicho.".".$request->fila;
+        $rd= New ResponsableDifunto;
+        $datos = $rd->info($cod,$request->bloque ,$request->nicho, $request->fila);
+        return $datos;
+
     }
 }

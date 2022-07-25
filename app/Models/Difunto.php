@@ -33,10 +33,10 @@ class Difunto extends Model
     ];
 
     public function generateCiDifunto(){
-        $ci = Difunto::select('ci')
-        ->where('ci', 'ilike', "%SCD-0%")
-        ->orderBy('ci', 'DESC')
-        ->first();
+        // $ci = Difunto::select('ci')
+        // ->where('ci', 'ilike', "%SCD-0%")
+        // ->orderBy('ci', 'DESC')
+        // ->first();
 
         $ci = Difunto::select('ci')
                ->whereRaw('id = (select max(id) from difunto)')
