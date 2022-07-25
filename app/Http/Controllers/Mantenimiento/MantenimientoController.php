@@ -323,7 +323,7 @@ class MantenimientoController extends Controller
         $dif->responsable_id = $idresp;
         $dif->difunto_id = $difuntoid;
         $dif->codigo_nicho = $codigo_n;       
-        $dif->fecha_adjudicacion = $request->fechadef_dif;       
+        $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;       
         $dif->tiempo = $request->tiempo;       
         $dif->estado = 'ACTIVO';  
         $dif->user_id = auth()->id();
@@ -342,7 +342,7 @@ class MantenimientoController extends Controller
             $dif->responsable_id = $idresp;
             $dif->difunto_id = $difuntoid;
             $dif->codigo_nicho = $codigo_n;       
-            $dif->fecha_adjudicacion = $request->fechadef_dif;       
+            $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;       
             $dif->tiempo = $request->tiempo;       
             $dif->estado = 'ACTIVO';  
             $dif->user_id = auth()->id();
@@ -359,8 +359,8 @@ class MantenimientoController extends Controller
             $dif->nombres = trim(mb_strtoupper($request->nombres_dif, 'UTF-8'));
             $dif->primer_apellido = trim(mb_strtoupper($request->paterno_dif, 'UTF-8'));
             $dif->segundo_apellido =trim(mb_strtoupper( $request->materno_dif, 'UTF-8'));
-            $dif->fecha_nacimiento = $request->fechanac_dif;
-            $dif->fecha_defuncion = $request->fecha_def_dif;
+            $dif->fecha_nacimiento = $request->fechanac_dif ?? null;
+            $dif->fecha_defuncion = $request->fecha_def_dif ?? null;
             $dif->certificado_defuncion = $request->sereci;
             $dif->causa = trim(mb_strtoupper($request->causa, 'UTF-8'));
             $dif->tipo = $request->tipo_dif; 
@@ -381,8 +381,8 @@ class MantenimientoController extends Controller
             $difunto->nombres = trim(mb_strtoupper($request->nombres_dif, 'UTF-8'));
             $difunto->primer_apellido = trim(mb_strtoupper($request->paterno_dif, 'UTF-8'));
             $difunto->segundo_apellido =trim(mb_strtoupper( $request->materno_dif, 'UTF-8'));
-            $difunto->fecha_nacimiento = $request->fechanac_dif;           
-            $difunto->fecha_defuncion = $request->fecha_def_dif;
+            $difunto->fecha_nacimiento = $request->fechanac_dif ?? null;           
+            $difunto->fecha_defuncion = $request->fecha_def_dif ?? null;
             $difunto->certificado_defuncion = $request->sereci;
             $difunto->causa =  trim(mb_strtoupper($request->causa, 'UTF-8'));
             $difunto->tipo = $request->tipo_dif; 
