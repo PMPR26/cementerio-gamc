@@ -883,11 +883,11 @@
                             value.text + '</p>';
                         $('#servicios-hijos').html($parrafos);
                         var v = (value.text).split('-'); 
-                        console.log(v);
+                        // console.log(v);
                         if(v[0]=='15224401 '){ existe=1;
                         }
                         if(v[0]=='15224201 '){
-                            alert("existeeee");
+                           
                             existe_ex=1;
                         }
                         if( existe_ex==0){
@@ -1099,7 +1099,7 @@
                                                                         var mes = fecha.substr(4, 2);
                                                                         var dia = fecha.substr(6, 2);
                                                                         var nuevaf = año + "-" + mes + "-" + dia;
-                                                                        $('#fechadef_dif').val(nuevaf); alert(nuevaf);
+                                                                        $('#fechadef_dif').val(nuevaf); 
                                                                         $('#comprob').html(data.response.datos_difuntos[
                                                                                 0]
                                                                             .comprob);
@@ -1427,7 +1427,7 @@
                             'descripcion_exhumacion':$('#descripcion_exhumacion').val()+"=>"+$('#descripcion_exhumacion').data("id")
                         }),
                         success: function(data_response) { //alert(data_response['status']);
-                            console.log(data_response);
+                            // console.log(data_response);
                             if(data_response['status']==false){
                                 swal.fire({
                                     title: "Nicho ocupado, debe liberar el nicho primero!",
