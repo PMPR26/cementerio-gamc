@@ -148,13 +148,18 @@
 
                         <div class="row">
 
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+                            <div class="col-sm-12 col-md-2 col-xl-2">
                                 <label>Fecha Nacimiento</label>
                                 <input type="date"
                                     class="form-control clear" id="fechanac_dif" autocomplete="off">
                             </div>
+                            <div class="col-sm-12 col-md-2 col-xl-2">
+                                <label>Fecha Defunción</label>
+                                <input type="date"
+                                    class="form-control clear" id="fecha_def_dif" autocomplete="off">
+                            </div>
 
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+                            <div class="col-sm-12 col-md-2 col-xl-2">
                                 <label>Fecha Ingreso al nicho</label>
                                 <input type="date"
                                     class="form-control clear" id="fechadef_dif" autocomplete="off">
@@ -166,7 +171,7 @@
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
                                     class="form-control clear" id="causa" autocomplete="off">
                             </div> --}}
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+                            <div class="col-sm-12 col-md-4 col-xl-4">
                                 <label>Causa</label>
                                 <select id="causa" style="text-transform:uppercase; width: 100%"
                                 onkeyup="javascript:this.value=this.value.toUpperCase();"
@@ -178,7 +183,7 @@
                             </select>
                             </div>
 
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+                            <div class="col-sm-12 col-md-2 col-xl-2">
                                 <label>SERECI</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
@@ -645,7 +650,8 @@
                                         $('#paterno_dif').val(data.response.primerap_dif);
                                         $('#materno_dif').val(data.response.segap_dif);
                                         $('#fechanac_dif').val(data.response.nacimiento_dif);
-                                        $('#fechadef_dif').val(data.response.fecha_def_dif);
+                                        $('#fecha_def_dif').val(data.response.fecha_def_dif);                                        
+                                        $('#fechadef_dif').val(data.response.fechadef_dif);
                                         $('#causa').val(data.response.causa_dif);
                                         $('#sereci').val(data.response.certificado_defuncion);
                                         $('#tipo_dif').val(data.response.tipo_dif);
@@ -975,6 +981,7 @@
                             'materno_dif': $('#materno_dif').val(),
                             'fechanac_dif': $('#fechanac_dif').val(),
                             'fechadef_dif': $('#fechadef_dif').val(),
+                            'fecha_def_dif': $('#fecha_def_dif').val(),
                             'causa': $('#causa').val(),
                             'ecivil_dif': $('#ecivil_dif').val(),
                             'tipo_dif': $('#tipo_dif').val(),

@@ -272,8 +272,13 @@ return [
             //'label_color' => 'success',
         ],
         [
-            'text' => 'SERVICIOS',
+            'text' => 'SERVICIOS NICHOS',
             'route'  => 'serv',
+            'icon' => 'fas fa-laptop-medical',
+        ],
+        [
+            'text' => 'SERVICIOS CRIPTA/MAUSOLEOS',
+            'route'  => 'servcm',
             'icon' => 'fas fa-laptop-medical',
         ],
         [
@@ -282,7 +287,7 @@ return [
             'icon' => 'fas fa-laptop-medical',
         ],
 
-        ['header' => 'opciones'],
+        ['header' => 'REGISTROS'],
         [
             'text' => 'CUARTEL',
             'url'  => 'cuartel/index',
@@ -325,26 +330,38 @@ return [
             'icon' => 'fas fa-edit',
         ],
 
-        
+        // ['header' => 'REPORTES'],
 
         // [
-        //     'text'    => 'multilevel',
+        //     'text'    => 'NICHOS',
         //     'icon'    => 'fas fa-fw fa-share',
         //     'submenu' => [
         //         [
-        //             'text' => 'level_one',
+        //             'text' => 'NICHOS POR TIEMPO',
         //             'url'  => '#',
         //         ],
         //         [
-        //             'text'    => 'level_one',
+        //             'text' => 'RENOVATORIOS',
+        //             'url'  => '#',
+        //         ],
+        //         [
+        //             'text'    => 'INHUMACION',
         //             'url'     => '#',
         //             'submenu' => [
         //                 [
-        //                     'text' => 'level_two',
+        //                     'text' => 'POR FECHA',
         //                     'url'  => '#',
         //                 ],
         //                 [
-        //                     'text'    => 'level_two',
+        //                     'text' => 'POR BLOQUE',
+        //                     'url'  => '#',
+        //                 ],
+        //                 [
+        //                     'text' => 'POR EDAD',
+        //                     'url'  => '#',
+        //                 ],
+        //                 [
+        //                     'text'    => 'POR BLOQUE',
         //                     'url'     => '#',
         //                     'submenu' => [
         //                         [
@@ -360,10 +377,31 @@ return [
         //             ],
         //         ],
         //         [
-        //             'text' => 'level_one',
+        //             'text' => 'BUSQUEDAS',
         //             'url'  => '#',
         //         ],
         //     ],
+        // ],
+
+       
+        // ['header' => 'BUSQUEDAS'],
+        // [
+        //     'text' => 'NICHOS',  // POR BLOQUE NICHO FILA
+        //     'route'  => 'relev',
+        //     'icon' => 'fas fa-edit',
+        // ],
+
+        // [
+        //     'text' => 'DIFUNTO',  // POR NOMBRE POR CI POR FUNERARIA, FECHA DE ENTIERRO O CREMACION O TRASLADO
+        //     'route'  => 'relev',
+        //     'icon' => 'fas fa-edit',
+        // ],
+
+
+        // [
+        //     'text' => 'RESPONSABLE DE CERTIFICADO',  
+        //     'route'  => 'relev',
+        //     'icon' => 'fas fa-edit',
         // ],
         // ['header' => 'labels'],
         // [
