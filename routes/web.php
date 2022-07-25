@@ -73,7 +73,9 @@ Route::group(['prefix' => 'cripta', 'middleware' => 'auth'], function () {
     Route::post('/save', [App\Http\Controllers\Cripta\CriptaController::class,'saveCripta'])->name('cripta.save');
     Route::get('/get-cripta/{id}', [App\Http\Controllers\Cripta\CriptaController::class,'getCripta'])->name('cripta.get');
     Route::put('/update-cripta', [App\Http\Controllers\Cripta\CriptaController::class,'updateCripta'])->name('cripta.update');
-    
+     // servicios criptas mausoleos
+     Route::get('/servicios-cripta-mausoleo', [App\Http\Controllers\Cripta\ServiciosCMController::class,'index'])->name('servcm'); 
+
 });
 
 
@@ -110,7 +112,7 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
 
 
 // asignacion de servicios
-Route::group(['prefix' => 'servicios', 'middleware' => 'auth'], function () {
+    Route::group(['prefix' => 'servicios', 'middleware' => 'auth'], function () {
     Route::get('/servicios', [App\Http\Controllers\Servicios\ServiciosController::class,'index'])->name('serv'); 
     Route::post('/new-servicio', [App\Http\Controllers\Servicios\ServiciosController::class,'createNewServicios'])->name('new.servicio');
     Route::post('/buscar_nicho', [App\Http\Controllers\Servicios\ServiciosController::class, 'buscar_nicho'])->name('buscar.nicho');
@@ -118,6 +120,7 @@ Route::group(['prefix' => 'servicios', 'middleware' => 'auth'], function () {
     Route::get('/cargarMantenimiento', [App\Http\Controllers\Servicios\ServiciosController::class,'cargarMantenimiento'])->name('load.mant'); 
     Route::get('/renovacion', [App\Http\Controllers\Servicios\ServiciosController::class,'precioRenov'])->name('precio.renovacion'); 
     Route::get('generate-pdf', [App\Http\Controllers\Servicios\ServiciosController::class, 'generatePDF'])->name('serv.generatePDF')->middleware('auth');
+   
    
  
     //generate fur from sinot
@@ -166,21 +169,11 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
       Route::post('/verificar-fur', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'buscarFurLiquidacion'])->name('verificarFur'); 
       Route::post('/buscarCuartel', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'buscarCuartel'])->name('buscar.cuartel');
 
-      
-
 });
 
 
-// // asignacion de servicios
-// Route::group(['prefix' => 'relevamiento', 'middleware' => 'auth'], function () {
-   
-//     Route::post('/buscar_nicho', [App\Http\Controllers\Servicios\ServiciosController::class, 'buscar_nicho'])->name('buscar.nicho');
-//     Route::get('/cargarForm', [App\Http\Controllers\Servicios\ServiciosController::class,'cargarForm'])->name('load.form'); 
-//     Route::get('/cargarMantenimiento', [App\Http\Controllers\Servicios\ServiciosController::class,'cargarMantenimiento'])->name('load.mant'); 
-//     Route::get('/renovacion', [App\Http\Controllers\Servicios\ServiciosController::class,'precioRenov'])->name('precio.renovacion'); 
-//     Route::get('generate-pdf', [App\Http\Controllers\Servicios\ServiciosController::class, 'generatePDF'])->name('serv.generatePDF')->middleware('auth');
-   
- 
-// });
+// // responsable difuntos
+Route::group(['prefix' => 'relevamiento', 'middleware' => 'auth'], function () {   
+    Route::post('/completar', [App\Http\Controllers\Servicios\ServiciosController::class, 'autocompletar'])->name('completar.datos');      
+});
 
-//http://192.168.220.120:8000/api/updat-pay
