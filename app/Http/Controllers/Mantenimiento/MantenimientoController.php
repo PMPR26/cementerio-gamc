@@ -32,9 +32,7 @@ class MantenimientoController extends Controller
                 ->where('mantenimiento_nicho.estado', 'ACTIVO')
                 ->orderBy('id', 'DESC')
                  ->get();
-
-                
-
+   
         return view('mantenimiento/index', compact('mant'));
     }
 
@@ -61,8 +59,12 @@ class MantenimientoController extends Controller
             $precio =0;
         }
         
+        $causa=DB::table('difunto')
+        ->select('causa')
+        ->whereNotNull('causa')
+        ->distinct()->get();
 
-        return view('mantenimiento/nuevoPago', ['precio' =>$precio, 'cuenta' =>$cuenta, 'descrip' =>$descrip]);
+        return view('mantenimiento/nuevoPago', ['precio' =>$precio, 'cuenta' =>$cuenta, 'descrip' =>$descrip, 'causa' => $causa]);
     }
 
 
@@ -267,7 +269,7 @@ class MantenimientoController extends Controller
                                                         
                                                             $response=$obj->GenerarFur($ci, $nombre_pago, $paterno_pago,
                                                             $materno_pago, $domicilio,  $nombre_difunto, $codigo_nicho,
-                                                            $request->bloque, $request->nro_nicho, $request->fila, $servicio_cementery, $cantgestiones, $cajero );
+                                                            $request->bloque, $request->nro_nicho, $request->fila, $servicio_cementery, $cantgestiones, $cajero, null );
                                                         
                                                             if($response['status']==true){
                                                                 $fur = $response['response'];
@@ -358,7 +360,7 @@ class MantenimientoController extends Controller
             $dif->primer_apellido = trim(mb_strtoupper($request->paterno_dif, 'UTF-8'));
             $dif->segundo_apellido =trim(mb_strtoupper( $request->materno_dif, 'UTF-8'));
             $dif->fecha_nacimiento = $request->fechanac_dif;
-            $dif->fecha_defuncion = $request->fechadef_dif;
+            $dif->fecha_defuncion = $request->fecha_def_dif;
             $dif->certificado_defuncion = $request->sereci;
             $dif->causa = trim(mb_strtoupper($request->causa, 'UTF-8'));
             $dif->tipo = $request->tipo_dif; 
@@ -379,8 +381,8 @@ class MantenimientoController extends Controller
             $difunto->nombres = trim(mb_strtoupper($request->nombres_dif, 'UTF-8'));
             $difunto->primer_apellido = trim(mb_strtoupper($request->paterno_dif, 'UTF-8'));
             $difunto->segundo_apellido =trim(mb_strtoupper( $request->materno_dif, 'UTF-8'));
-            $difunto->fecha_nacimiento = $request->fechanac_dif;
-            $difunto->fecha_defuncion = $request->fechadef_dif;
+            $difunto->fecha_nacimiento = $request->fechanac_dif;           
+            $difunto->fecha_defuncion = $request->fecha_def_dif;
             $difunto->certificado_defuncion = $request->sereci;
             $difunto->causa =  trim(mb_strtoupper($request->causa, 'UTF-8'));
             $difunto->tipo = $request->tipo_dif; 
@@ -579,6 +581,7 @@ class MantenimientoController extends Controller
    
 
    public function buscarCuartel(Request $request){
+    //    dd($request);
     $sql= DB::table('nicho')
     ->Where('nicho.fila', $request->fila)
     ->Where('bloque.codigo', $request->bloque)
