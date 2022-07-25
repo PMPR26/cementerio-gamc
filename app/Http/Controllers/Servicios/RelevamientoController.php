@@ -443,7 +443,7 @@ class RelevamientoController extends Controller
         $dif->responsable_id = $idresp;
         $dif->difunto_id = $difuntoid;
         $dif->codigo_nicho = $codigo_n;       
-        $dif->fecha_adjudicacion = $request->fechadef_dif;       
+        $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;       
         $dif->tiempo = $request->tiempo;  
        
             $dif->estado_nicho = 'OCUPADO';             
@@ -467,7 +467,7 @@ class RelevamientoController extends Controller
             $dif->responsable_id = $idresp;
             $dif->difunto_id = $difuntoid;
             $dif->codigo_nicho = $codigo_n;       
-            $dif->fecha_adjudicacion = $request->fechadef_dif ?? '';       
+            $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;       
             $dif->tiempo = $request->tiempo;  
             if($estado_nicho=="LIBRE"){ 
                 $dif->estado_nicho = $estado_nicho;   
@@ -491,8 +491,8 @@ class RelevamientoController extends Controller
         $dif->nombres = $request->nombres_dif;
         $dif->primer_apellido = $request->paterno_dif;
         $dif->segundo_apellido = $request->materno_dif;
-        $dif->fecha_nacimiento = $request->fechanac_dif;
-        $dif->fecha_defuncion = $request->fecha_def_dif;
+        $dif->fecha_nacimiento = $request->fechanac_dif ?? null;
+        $dif->fecha_defuncion = $request->fecha_def_dif ?? null;
         $dif->certificado_defuncion = $request->sereci;
         $dif->causa = $request->causa;
         $dif->tipo = $request->tipo_dif; 
@@ -513,8 +513,8 @@ class RelevamientoController extends Controller
         $difunto->nombres = $request->nombres_dif;
         $difunto->primer_apellido = $request->paterno_dif;
         $difunto->segundo_apellido = $request->materno_dif;
-        $difunto->fecha_nacimiento = $request->fechanac_dif;
-        $difunto->fecha_defuncion = $request->fecha_def_dif;
+        $difunto->fecha_nacimiento = $request->fechanac_dif ?? null;
+        $difunto->fecha_defuncion = $request->fecha_def_dif ?? null;
         $difunto->certificado_defuncion = $request->sereci;
         $difunto->causa = $request->causa;
         $difunto->tipo = $request->tipo_dif; 
