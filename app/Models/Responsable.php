@@ -54,20 +54,19 @@ class Responsable extends Model
         $responsable->ci = $request->ci_resp;
         $responsable->nombres = $request->nombres_resp;
         $responsable->primer_apellido = $request->paterno_resp;
-        $responsable->segundo_apellido = $request->materno_resp;
-        $responsable->fecha_nacimiento = $request->fechanac_resp;
-        $responsable->genero = $request->genero_resp;  
-        $responsable->telefono = $request->telefono;  
-        $responsable->celular = $request->celular;  
-        $responsable->estado_civil = $request->ecivil;  
+        $responsable->segundo_apellido = $request->materno_resp ?? null;
+        $responsable->fecha_nacimiento = $request->fechanac_resp ?? null;
+        $responsable->genero = $request->genero_resp ?? null;  
+        $responsable->telefono = $request->telefono ?? null;  
+        $responsable->celular = $request->celular ?? null;  
+        $responsable->estado_civil = $request->ecivil ?? null;  
         $responsable->domicilio = $request->domicilio; 
-        $responsable->email = $request->email;  
+        $responsable->email = $request->email ?? null;  
         $responsable->estado = 'ACTIVO';  
         $responsable->user_id = auth()->id();
         $responsable->save();
         $responsable->id;
         return  $responsable->id;
-
     }
 
     public function updateResponsable($request, $difuntoid){
@@ -75,14 +74,14 @@ class Responsable extends Model
         $responsable->ci = $request->ci_resp;
         $responsable->nombres = $request->nombres_resp;
         $responsable->primer_apellido = $request->paterno_resp;
-        $responsable->segundo_apellido = $request->materno_resp;
-        $responsable->fecha_nacimiento = $request->fechanac_resp;
+        $responsable->segundo_apellido = $request->materno_resp?? null;
+        $responsable->fecha_nacimiento = $request->fechanac_resp ?? null;
         $responsable->genero = $request->genero_resp;  
-        $responsable->telefono = $request->telefono;  
-        $responsable->celular = $request->celular;  
-        $responsable->estado_civil = $request->ecivil;  
-        $responsable->domicilio = $request->domicilio;  
-        $responsable->email = $request->email;  
+        $responsable->telefono = $request->telefono ?? null;  
+        $responsable->celular = $request->celular ?? null;  
+        $responsable->estado_civil = $request->ecivil ?? null;  
+        $responsable->domicilio = $request->domicilio ?? null;  
+        $responsable->email = $request->email ?? null;  
         $responsable->estado = 'ACTIVO';  
         $responsable->user_id = auth()->id();
         $responsable->save();

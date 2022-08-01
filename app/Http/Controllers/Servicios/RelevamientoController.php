@@ -571,8 +571,8 @@ class RelevamientoController extends Controller
 
     }
 
-    public function updateResponsable($request, $difuntoid){
-        $responsable= Responsable::where('id', $difuntoid)->first();
+    public function updateResponsable($request, $idresp){
+        $responsable= Responsable::where('id', $idresp)->first();
         $responsable->ci = $request->ci_resp;
         $responsable->nombres = $request->nombres_resp;
         $responsable->primer_apellido = $request->paterno_resp;

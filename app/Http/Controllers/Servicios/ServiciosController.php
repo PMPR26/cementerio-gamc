@@ -825,15 +825,12 @@ class ServiciosController extends Controller
     public function generatePDF(Request $request) {
         //    return($request->codigo_nicho); die();
                    $codigo_nicho=$request->codigo_nicho;
-                  
-
-                      $tab=[];
+                        $tab=[];
                         $tablelocal=DB::table('servicio_nicho')
                         ->select('servicio_nicho.*')
                         ->where('id','=',$request->id)
                         ->orderBy('id','DESC')
                         ->first();
-
                         
                         if(($request->fur=="0" ||$request->fur==0 ) &&  $request->id!=null )
                         {
@@ -842,13 +839,10 @@ class ServiciosController extends Controller
                                 $tab['nombre']= $tablelocal->nombrepago." ". $tablelocal->paternopago." ".$tablelocal->maternopago??'';
                                 $tab['ci']= $tablelocal->ci;
                                 $observacion= $tablelocal->observacion;
-                                $tab['cobrosDetalles']= [];
-
-                                            
-                                  $id_s=explode(',', $tablelocal->servicio_id );
-                                foreach( $id_s as  $key => $value ){
-                                                 
-                                      
+                                $tab['cobrosDetalles']= [];                                            
+                                $id_s=explode(',', $tablelocal->servicio_id );
+                                foreach( $id_s as  $key => $value ){                                               
+                                     
                                             $headers =  ['Content-Type' => 'application/json'];
                                             $client = new Client();
                                         

@@ -9,14 +9,16 @@ class Cripta extends Model
 {
     use HasFactory;
 
-    protected $table = 'cripta';
+    protected $table = 'cripta_mausoleo';
     protected $fillable = [
         'cuartel_id',
         'bloque_id',
+        'sitio',
         'codigo',
         'nombre',
         'superficie',
         'estado',
+        'tipo_registro',
         'user_id',
         'created_at'
     ];

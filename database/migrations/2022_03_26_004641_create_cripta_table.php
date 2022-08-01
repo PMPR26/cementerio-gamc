@@ -13,18 +13,29 @@ class CreateCriptaTable extends Migration
      */
     public function up()
     {
-        Schema::create('cripta', function (Blueprint $table) {
+        Schema::create('cripta_mausoleo', function (Blueprint $table)
+         {
             $table->bigIncrements('id');
-            $table->integer('cuartel_id');                   
+            $table->integer('cuartel_id');
+            $table->integer('bloque_id')->nullable(); 
+            $table->string('sitio'); 
             $table->string('codigo',10);
-            $table->string('nombre',100);
             $table->decimal('superficie', 8, 2);
+            // $table->integer('responsable_id',150)->nullable();
+            // $table->string('paterno',150);
+            // $table->string('materno',150)->nullable();
+            // $table->string('dni',150)->nullable();
+            $table->text('foto')->nullable();
+            $table->integer('ocupados')->nullable();
+            $table->integer('total_cajones')->nullable();
+            $table->string('estado_construccion')->nullable();
+            $table->text('observaciones')->nullable();       
             $table->string('estado',10)->default('ACTIVO');
+            $table->string('tipo_registro'); 
             $table->integer('user_id');
             $table->timestamps();
-
-            $table->foreign('cuartel_id')->references('id')->on('cuartel');
-         
+            $table->foreign('bloque_id')->references('id')->on('bloque');   
+                  
         });
     }
 
@@ -35,6 +46,6 @@ class CreateCriptaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cripta');
+        Schema::dropIfExists('cripta_mausoleo');
     }
 }
