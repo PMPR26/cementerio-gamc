@@ -122,9 +122,12 @@
                     <input id="superficie" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off" onblur="generarCodigo()" required>
                 </div>
 
-              <div class="col-sm-3">
-                <label>Codigo:</label>
-                <input id="cod-cripta" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off"  onblur="generarCodigo()" readonly>
+            
+
+             <div class="col-sm-3">
+                <label>Codigo Anterior:</label>
+                <input id="cod_cripta_ant" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off"  >
+                <input id="cod-cripta" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="hidden" class="form-control" autocomplete="off"  onblur="generarCodigo()" readonly>
              </div>
 
              <div class="col-sm-4">
@@ -197,7 +200,7 @@
                 <label>Genero :</label>
                 <select name="genero" id="genero" class="form-control">            
                     <option value="MASCULINO">MASCULINO</option>
-                    <option value="FEMENINO">fEMENINO</option>        
+                    <option value="FEMENINO">FEMENINO</option>        
                 </select>
                 </div>
         {{-- <div class="col-3">
@@ -309,6 +312,7 @@
                             'id_cripta':  $('#btn-cripta-editar').val(),
                             'id_cuartel':  $('.select-cuartel').val(),
                             'codigo': $('#cod-cripta').val(),
+                            'codigo_ant': $('#cod_cripta_ant').val(),
                             'bloque':bloq,
                             'sitio':$('#cod-sitio').val(),
                             'tipo_reg':$('#tipo_reg').val(),
@@ -389,6 +393,7 @@
                             $('#btn-cripta').hide(300);
                             $(".select-cuartel").val(data_response.response.cuartel_id).trigger('change');
                             $('#cod-cripta').val(data_response.response.codigo);
+                            $('#cod_cripta_ant').val(data_response.response.codigo_antiguo); 
                             $('#cod-sitio').val(data_response.response.sitio);
                             $('#bloque').val(data_response.response.bloque_id);
                             $('#tipo_reg').val(data_response.response.tipo_registro);
@@ -418,6 +423,7 @@
                 
                 $(".select-cuartel").val('').trigger('change');
                 $('#cod-cripta').val('');
+                $('#cod_cripta_ant').val('');
                 $('#cripta-name').val('');                
                 $('#bloque').val('');
                 $('#cod-sitio').val('');
@@ -461,6 +467,7 @@
                         data: JSON.stringify({
                             'id_cuartel':  $('.select-cuartel').val(),
                             'codigo': $('#cod-cripta').val(),
+                            'codigo_ant': $('#cod_cripta_ant').val(),
                             'bloque':bloq,
                             'sitio':$('#cod-sitio').val(),
                             'tipo_reg':$('#tipo_reg').val(),
@@ -625,7 +632,7 @@
         var sup=$('#superficie').val();
         if($('#bloque :selected').text()=="" || $('#bloque :selected').text()=="SELECCIONAR" ){ var bloq="0";}
         else{var bloq=$('#bloque :selected').text();}
-        var cod=$('#cuartel :selected').text()+bloq+$('#cod-sitio').val()+$('#letra').val()+parseInt(sup);
+        var cod=($('#cuartel :selected').text()).toUpperCase()+bloq+$('#cod-sitio').val()+($('#letra').val()).toUpperCase()+parseInt(sup);
         $('#cod-cripta').val(cod);
     }
 

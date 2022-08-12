@@ -18,36 +18,33 @@
         <div class="col-sm-12 col-md-12 col-xl-12 card m-auto">
 
             <div class="card">
-                <div class="card-header">
-                    <h2 id="infoPlazo" class="clean"></h2>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h2> SELECCIONAR ANTES DE INICIAR </h2>
-                    <P>Seleccione "EXTERNO" si solicitará algun servicio que no este relacionado a un nicho, seleccione "GRATIS" si el Servicio será gratuito</P>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-6 col-md-6 col-xl-6">
-                            <label for="">EXTERNO</label>
-                            <input type="checkbox" name="externo" id="externo" style="width: 30px; height:30px" >
-                        </div>
-
-                        <div class="col-sm-6 col-md-6 col-xl-6">
-                            <label for="">GRATUITO</label>
-                            <input type="checkbox" name="gratis" id="gratis"  style="width: 30px; height:30px"  >
-                        </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-xl-12">
+                        <h6>Seleccione una opcion habilitar los criterios de busqueda</h6>
                     </div>
+                    <div class="col-sm-6 col-md-6 col-xl-6 form-check">
+                        <input type="radio"  name="tipo_servicio" id="tipo_servicio_cripta" value="cod_ant" class="form-check-input">
+                        <label class="form-check-label" for="tipo_servicio_cripta">Servicio Cripta/Mausoleo</label> 
+                     </div> 
                     
+                     <div class="col-sm-6 col-md-6 col-xl-6 form-check">
+                        <input type="radio"   name="tipo_servicio" id="tipo_servicio_nicho" value="tipo_servicio_nicho" class="form-check-input">
+                        <label class="form-check-label" for="tipo_servicio_nicho">Servicio Nicho</label> 
+                     </div>                    
                 </div>
             </div>
+            <div id="busquedas_criptas" style="display: none">
+                    @include('servicios.buscarCriptaMausoleo')
+            </div>
+
+           
+
+            <div class="card" id="busquedas_nichos" style="display: none; background: rgb(106, 119, 134);">
 
         <div class="col-12 interno" >   
             {{-- datos busqueda --}}
 
-            <div class="card">
+          
                 <div class="card-header">
                     <h4>BUSCAR REGISTRO</h4>
                 </div>
@@ -81,9 +78,34 @@
                         </div>
                     </div>
                 </div>
+        
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 id="infoPlazo" class="clean"></h2>
+                </div>
             </div>
 
-           
+            <div class="card" id="tipo_pago" style="display: none">
+                <div class="card-header">
+                    <h2> SELECCIONAR ANTES DE INICIAR </h2>
+                    <P>Seleccione "EXTERNO" si solicitará algun servicio que no este relacionado a un nicho, seleccione "GRATIS" si el Servicio será gratuito</P>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6 col-xl-6">
+                            <label for="">EXTERNO</label>
+                            <input type="checkbox" name="externo" id="externo" style="width: 30px; height:30px" >
+                        </div>
+
+                        <div class="col-sm-6 col-md-6 col-xl-6">
+                            <label for="">GRATUITO</label>
+                            <input type="checkbox" name="gratis" id="gratis"  style="width: 30px; height:30px"  >
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
                 <div class="card">
                     <div class="row">
                         <div class="col-sm-12 col-md-3 col-xl-3">
@@ -391,8 +413,8 @@
                 <input type="hidden" name="aniosdeuda" id="aniosdeuda">
                 <input type="hidden" name="cant_cuerpos" id="cant_cuerpos" value="0">
 
-
-
+        </div>
+            </div>
                 <div class="card interno">
                     <div class="card-header">
                         <h4>INFORMACION ULTIMO PAGO</h4>
@@ -603,11 +625,20 @@
                     </div>
                    
 
-                    <div class="col-sm-12" style="text-align: center" id="print">
+                    <div class="col-sm-12" style="text-align: center" id="save_nichos" style="display: none">
                         <button type="button" id="btn_guardar_pago" class="btn btn-success">Registrar servicio</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal"
                             id="cancelar">Cancelar</button>
                     </div>
+
+                    <div class="row" id="save_cm" style="display: none">
+                        <div class="col-sm-12" style="text-align: center">
+                            <button type="button" id="btn-cripta" class="btn btn-success btn-editar">Guardar</button>
+                            {{-- <button type="button" style="display:none" id="btn-cripta-editar" class="btn btn-success btn-editar">Guardar</button> --}}
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        </div> 
+                    </div>
+                
                 </div>
             </div>
         </div>
@@ -772,14 +803,14 @@
                             $('#servicio-hijos').empty();
                             $.each(data_response.response, function(index, value) {
                                 //alert(value.num_sec)
-                                if (value.num_sec == '526' || value.num_sec == '1995' ||
-                                    value.num_sec == '525') {} else {
+                             /*   if (value.num_sec == '526' || value.num_sec == '1995' ||
+                                    value.num_sec == '525') {} else {*/
                                   
                                     $('#servicio-hijos').append('<option value="' + value
                                         .num_sec + '">' + value.cuenta + ' - ' + value
                                         .descripcion + ' - ' + value.monto1 +
                                         '- Bs.</option>')
-                                }
+                             //   }
                                 if(value.cuenta == '15224301'){
                                         $('#precio_renov').val(value.monto1);
                                         $('#cuenta_renov').val(value.cuenta);
@@ -2054,9 +2085,137 @@
                    return false;
             }
 
+            $(document).on('click' , '#tipo_servicio_nicho', function(){
+               $('#tipo_pago').show();
+               $('#busquedas_nichos').show();
+               $('#busquedas_nichos').prop('disabled', false);
+               $('#save_nichos').show();
+
+               $('#busquedas_criptas').prop('disabled', true);
+               $('#busquedas_criptas').hide();           
+               $('#save_cm').hide();
+
+            });
+            $(document).on('click' , '#tipo_servicio_cripta', function(){
+               $('#tipo_pago').hide();
+               $('#busquedas_nichos').prop('disabled', true);
+               $('#busquedas_nichos').hide();
+               $('#save_nichos').hide();
+               $('#busquedas_criptas').show();
+               $('#busquedas_criptas').prop('disabled', false);
+               $('#save_cm').show();
+            });
             // $(document).on('keyup', '#descripcion_exhumacion', function(){
             //     $('#select2-servicio-hijos-container-choice-4fa8-630').html($('#descripcion_exhumacion').val());
             // });
+
+
+            /******************************************************/
+            /******para criptas o mausoleos ******************************/
+            /*********************************************************/
+            $(document).on('click','#btn_search_field', function(){
+                buscar($('input[name=buscar_cm]:checked').val());
+            });
+
+
+            //habilitar caja de busqueda de cripta o mausoleo
+            $(document).on('click','input[name=buscar_cm]', function(){
+                $('#search_field').val();
+                if( $("input[name=buscar_cm]:radio").is(':checked'))
+                {
+                    $('#search_field').prop('disabled', false);                  
+                }else{
+                    $('#search_field').prop('disabled', true);
+                }
+            });
+
+            function buscar(criterio){
+               
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Content-Type': 'application/json'
+                    },
+                    url: "{{ route('buscar.cripta') }}",
+                    method: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        "tipo_busqueda": criterio,
+                        "search_field":$('#search_field').val()
+                      
+                    }),
+                    success: function(data) {
+                        console.log(data);
+                        $('#codigo_antiguocm').val(data.codigo_antiguo);
+                        $('#codigo_nuevocm').val(data.codigo);
+                        $('#tipo_cm').val(data.tipo_registro);
+                        $('#cuartel_cm').val(data.cuartel_id).trigger('change');
+                        $('#bloque_cm').val(data.bloque_id).trigger('change');
+                        $('#sitio_cm').val(data.sitio);
+                        $('#superficie_cm').val(data.superficie);
+                        $('#ocupados_cm').val(data.ocupados);
+                        $('#total_cm').val(data.total_cajones);
+                        $('#construccion_cm').val(data.estado_construccion);
+                        $('#observaciones').val(data.observaciones);
+                        $('#dni').val(data.ci_resp);
+                        $('#nombres_prop').val(data.nombre_resp);
+                        $('#paterno_prop').val(data.paterno_resp);
+                        $('#materno_prop').val(data.materno_resp);
+                        $('#domicilio').val(data.domicilio);
+                        $('#genero_prop').val(data.genero_resp);
+                        $('#razon').html(data.nombrepago+" "+data.paternopago+" "+data.maternopago);
+                        $('#comprob').html(data.fur);
+                       // $('#tiemp').html(data.codigo_antiguo);
+                        // $('#pago_cont').html(data.fecha_pago);
+                        $('#cuerpos').html(data.ocupados);
+                        $('#concepto').html(data.servicio);
+                        $('#fecha_p').html(data.fecha_pago);
+                        // $('#gestiones').html(data.codigo_antiguo);
+                        $('#monto_pagos').html(data.monto);
+                    }
+                });
+            }
+
+            $(".select-cuartel").select2({
+                width: 'resolve', // need to override the changed default
+               // dropdownParent: $('#modal-cripta')
+            });
+            $("#bloque_cm").select2({
+                width: 'resolve', // need to override the changed default
+              //  dropdownParent: $('#modal-cripta')
+              });
+
+              
+          
+    $(document).on('change', '#cuartel_cm', function(){
+        $('#bloque_cm').empty();
+        var sel_cuartel=$('#cuartel_cm').val();
+              $('#bloque_cm').prop('disabled', false);
+                $.ajax({
+                    type: 'POST',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: "{{ route('bloqueid.get') }}",
+                        async: false,
+                        data: JSON.stringify({
+                            'cuartel': $('#cuartel_cm').val(),
+                        }),
+                        success: function(data_bloque) {
+                           var op1='<option >SELECCIONAR</option>';
+                            $('#bloque_cm').append(op1);
+                           $.each( data_bloque.response, function( key, value ) {                               
+                                 opt2='<option value="'+ value.id +'">'+value.codigo +'</option>';
+                                 $('#bloque_cm').append(opt2);
+                            });                                                    
+                        }
+                });
+    });
+
+
+        // guardar servicio para cripta/mausoleo y mausoleo
+
         </script>
 
     @stop

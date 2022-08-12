@@ -60,7 +60,8 @@ class CriptaController extends Controller
             $cripta->cuartel_id = trim($request->id_cuartel);
             $cripta->bloque_id = trim(strtoupper($request->bloque));
             $cripta->sitio = trim($request->sitio);
-            $cripta->codigo = trim($request->codigo);
+            $cripta->codigo = trim( strtoupper($request->codigo));
+            $cripta->codigo_antiguo = trim( strtoupper($request->codigo_ant));
             // $cripta->nombre = trim($request->nombres_resp)." ".trim($request->paterno_resp)." ".trim($request->materno_resp);
             $cripta->superficie = trim($request->superficie);
             $cripta->ocupados = trim($request->ocupados);
@@ -156,6 +157,7 @@ class CriptaController extends Controller
                         'bloque_id' => trim(strtoupper($request->bloque))??'',
                         'sitio' => trim($request->sitio),
                         'codigo' => trim($request->codigo),
+                        'codigo_antiguo' => trim($request->codigo_ant),
                         // 'nombre' => trim($request->name),
                         'superficie' => trim($request->superficie),
                         'estado' => $request->status,
@@ -167,8 +169,8 @@ class CriptaController extends Controller
                         'foto' => trim($request->foto),                           
                         'updated_at' => date("Y-m-d H:i:s")     
                     ]);
-                    $ex_resp=DB::table('responsable')->where('ci', ''. $request->ci_resp.'')
-                    ->first();
+                         $ex_resp=DB::table('responsable')->where('ci', ''. $request->ci_resp.'')
+                        ->first();
                       
                         // si se envian datos del propietario del mausoleo o cripta entonces se busca en la tabla responsable para actualizar datos y no duplicar
                         // caso contrario se insterta
@@ -232,4 +234,81 @@ class CriptaController extends Controller
 
       
     }
+
+    public function buscarCriptaM(Request $request){
+       
+        if($request->tipo_busqueda=="cod_ant"){
+           
+            $sql= DB::table('cripta_mausoleo')->where('codigo_antiguo', ''.$request->search_field.'')
+            ->leftjoin('cripta_mausoleo_responsable',  'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
+            ->leftjoin('responsable',  'responsable.id','=','cripta_mausoleo_responsable.responsable_id' )
+            ->leftjoin('cripta_mausoleo_difunto',  'cripta_mausoleo_difunto.cripta_mausoleo_id','=','cripta_mausoleo.id' )
+            ->leftjoin('difunto',  'difunto.id','=','cripta_mausoleo_difunto.difunto_id' )
+            ->leftjoin('servicio_nicho',  'servicio_nicho.codigo_nicho','=','cripta_mausoleo.codigo' )
+
+            ->select('cripta_mausoleo.*', 'responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 
+            'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp', 'responsable.domicilio', 
+            'responsable.genero as genero_resp',
+             'difunto.nombres as nombre_dif', 'difunto.primer_apellido as paterno_dif', 'difunto.segundo_apellido as materno_dif',
+             'cripta_mausoleo_difunto.fecha_ingreso',
+             'servicio_nicho.fur', 
+             'servicio_nicho.fecha_pago', 
+             'servicio_nicho.monto', 'servicio_nicho.nombrepago', 'servicio_nicho.paternopago', 'servicio_nicho.maternopago', 'servicio_nicho.servicio')
+             ->get()->last();
+
+
+        }
+        else if($request->tipo_busqueda=="cod_nuevo"){
+
+            $sql= DB::table('cripta_mausoleo')->where('codigo', ''.$request->search_field.'')
+            ->leftjoin('cripta_mausoleo_responsable',  'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
+            ->leftjoin('responsable',  'responsable.id','=','cripta_mausoleo_responsable.responsable_id' )
+            ->leftjoin('cripta_mausoleo_difunto',  'cripta_mausoleo_difunto.cripta_mausoleo_id','=','cripta_mausoleo.id' )
+            ->leftjoin('difunto',  'difunto.id','=','cripta_mausoleo_difunto.difunto_id' )
+            ->leftjoin('servicio_nicho',  'servicio_nicho.codigo_nicho','=','cripta_mausoleo.codigo' )
+
+            ->select('cripta_mausoleo.*', 'responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 
+            'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp', 'responsable.domicilio', 'responsable.genero as genero_resp',
+             'difunto.nombres as nombre_dif', 'difunto.primer_apellido as paterno_dif', 'difunto.segundo_apellido as materno_dif','cripta_mausoleo_difunto.fecha_ingreso',
+             'servicio_nicho.fecha_pago', 
+             'servicio_nicho.fur', 
+             'servicio_nicho.monto', 'servicio_nicho.nombrepago', 'servicio_nicho.paternopago', 'servicio_nicho.maternopago', 'servicio_nicho.servicio' 
+             )
+             ->get()->last();
+
+
+        }
+        else if($request->tipo_busqueda=="propietario"){
+            $sql= DB::table('cripta_mausoleo')->where('codigo', ''.$request->search_field.'')
+            ->leftjoin('cripta_mausoleo_responsable',  'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
+            ->leftjoin('responsable',  'responsable.id','=','cripta_mausoleo_responsable.responsable_id' )
+            ->leftjoin('cripta_mausoleo_difunto',  'cripta_mausoleo_difunto.cripta_mausoleo_id','=','cripta_mausoleo.id' )
+            ->leftjoin('difunto',  'difunto.id','=','cripta_mausoleo_difunto.difunto_id' )
+            ->leftjoin('servicio_nicho',  'servicio_nicho.codigo_nicho','=','cripta_mausoleo.codigo' )
+
+            ->select('cripta_mausoleo.*', 'responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 
+            'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp', 'responsable.domicilio', 'responsable.genero as genero_resp',
+             'difunto.nombres as nombre_dif', 'difunto.primer_apellido as paterno_dif', 'difunto.segundo_apellido as materno_dif','cripta_mausoleo_difunto.fecha_ingreso' ,
+             'servicio_nicho.fur', 
+             'servicio_nicho.fecha_pago', 
+             'servicio_nicho.monto', 'servicio_nicho.nombrepago', 'servicio_nicho.paternopago', 'servicio_nicho.maternopago', 'servicio_nicho.servicio'
+             )
+            ->get()->last();
+        }    
+        
+        // if(!empty($sql)){
+        //     $ult_pago=DB::table('servicio_nicho')
+        //     ->where('codigo_nicho', $sql->codigo)
+        //     ->get()->last();
+        // }
+        
+        return $sql;
+    }
 }
+
+
+// select * from "cripta_mausoleo1" 
+// left join "cripta_mausoleo_responsable" on "cripta_mausoleo_responsable"."cripta_mausole_id" = "cripta_mausoleo"."id" 
+// left join "responsable" on "responsable"."id" = "cripta_mausoleo_responsable"."responsable_id" 
+// left join "cripta_mausoleo_difunto" on "cripta_mausoleo_difunto"."cripta_mausoleo_id" = "cripta_mausoleo"."id" 
+// left join "difunto" on "difunto"."id" = "cripta_mausoleo_difunto"."difunto_id" where "codigo_antiguo" = cod_ant limit 1

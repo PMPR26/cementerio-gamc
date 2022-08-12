@@ -98,7 +98,12 @@ class ServiciosController extends Controller
         ->whereNotNull('causa')
         ->distinct()->get();
 
-        return view('servicios/formRegistro', ['tipo_service' => $tipo_service['response'], 'funeraria' => $funeraria, 'causa' => $causa]);
+        $cuarteles=DB::table('cuartel')
+        ->select('id', 'codigo')
+        ->where('estado', 'ACTIVO')
+        ->distinct()->get();
+
+        return view('servicios/formRegistro', ['tipo_service' => $tipo_service['response'], 'funeraria' => $funeraria, 'causa' => $causa, 'cuarteles'=>$cuarteles]);
     }
  
 
@@ -265,7 +270,7 @@ class ServiciosController extends Controller
     {
         // dd($request->servicio_hijos_txt);
          $explode_txt=explode("Bs.",$request->servicio_hijos_txt);
-// dd($explode_txt);
+        // dd($explode_txt);
         
         //  $explode=explode("=>",$request->descripcion_exhumacion);
         //  dd($explode);
