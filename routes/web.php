@@ -121,6 +121,7 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::get('/cargarMantenimiento', [App\Http\Controllers\Servicios\ServiciosController::class,'cargarMantenimiento'])->name('load.mant'); 
     Route::get('/renovacion', [App\Http\Controllers\Servicios\ServiciosController::class,'precioRenov'])->name('precio.renovacion'); 
     Route::get('generate-pdf', [App\Http\Controllers\Servicios\ServiciosController::class, 'generatePDF'])->name('serv.generatePDF')->middleware('auth');
+    Route::post('/new-serviciocm', [App\Http\Controllers\Servicios\ServiciosController::class,'createNewServicioscm'])->name('new.serviciocm');
    
    
  

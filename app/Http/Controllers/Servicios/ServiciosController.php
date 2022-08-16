@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Servicios;
 
-use App\Models\Nicho;
+use App\Models\Cripta;
 use App\Models\Cuartel;
 use App\Models\Bloque;
 use App\Models\Servicios\ServicioNicho;
 use App\Models\Difunto;
 use App\Models\Responsable;
 use App\Models\ResponsableDifunto;
+use App\Models\CMDifunto;
 use App\Models\User;
 
 use App\Models\Mantenimiento;
@@ -1056,5 +1057,424 @@ class ServiciosController extends Controller
         $datos = $rd->info($cod,$request->bloque ,$request->nicho, $request->fila);
         return $datos;
 
+    }
+
+
+
+    //insertar servicio cripta mausoleo
+    
+    public function createNewServicioscm(Request $request)
+    {
+        //  dd($request->bloque);
+         $explode_txt=explode("Bs.",$request->servicio_hijos_txt);
+        // dd($explode_txt);
+        
+        //  $explode=explode("=>",$request->descripcion_exhumacion);
+        //  dd($explode);
+        if ($request->isJson()) 
+        {
+
+            if($request->externo == "externo" && $request->gratis == "gratis"){
+
+                
+                $this->validate($request, [
+                  
+                    'ci_dif' => 'required',
+                    'nombres_dif' => 'required',
+                    'paterno_dif'=> 'required',
+                    'tipo_dif'=> 'required',
+                    'genero_dif'=> 'required',
+                    'ci_resp' => 'required',
+                    'nombres_resp' => 'required',
+                    'paterno_resp'=> 'required',                
+                    'domicilio'=> 'required',
+                    'genero_resp'=> 'required',
+                    'tipo_servicio' => 'required',
+                    'servicio_hijos' => 'required',   
+                    
+                ], [
+                    'ci_dif.required' => 'El campo ci del difunto es obligatorio, si no tiene documento presione el boton "generar carnet provisional  (icono lapiz)" para asignarle un numero provisional',
+                    'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
+                    'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
+                    'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
+                    'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
+                    'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
+                    'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
+                    'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',                  
+                    'domicilio.required'=> 'El campo domicilio es obligatorio',
+                    'genero_resp.required'=> 'El campo genero_resp es obligatorio',
+                    'tipo_servicio.required' => 'Debe seleccionar al menos un tipo de servicio',
+                    'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',                    
+                ]);
+            }
+            else{
+
+          
+            $this->validate($request, [
+                'sitio' => 'required',
+                // 'bloque' => 'required',
+                'cuartel' => 'required',
+                'superficie' => 'required',
+                'tipo_cm' => 'required',
+                'ci_dif' => 'required',
+                'nombres_dif' => 'required',
+                'paterno_dif'=> 'required',
+                'tipo_dif'=> 'required',
+                'genero_dif'=> 'required',
+                'ci_resp' => 'required',
+                'nombres_resp' => 'required',
+                'paterno_resp'=> 'required',
+               // 'celular'=> 'required',
+               // 'ecivil'=> 'required',
+               // 'email'=> 'required',
+                'domicilio'=> 'required',
+                'genero_resp'=> 'required',
+                'tipo_servicio' => 'required',
+                'servicio_hijos' => 'required',
+
+                
+            ], [
+                'sitio.required' => 'El campo nicho es obligatorio',
+                // 'bloque.required' => 'El campo bloque es obligatorio',
+                'cuartel.required' => 'El campo cuartel es obligatorio',
+                'superficie.required' => 'El fila nicho es obligatorio',
+                'tipo_cm.required' => 'El campo tipo de registro  es obligatorio, especifique si es mausoleo o cripta',
+                'ci_dif.required' => 'El campo ci del difunto es obligatorio, si no tiene documento presione el boton "generar carnet provisional  (icono lapiz)" para asignarle un numero provisional',
+                'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
+                'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
+                'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
+                 'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
+                'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
+                'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
+                 'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
+               //  'celular.required'=> 'El campo celular es obligatorio',
+                // 'ecivil.required'=> 'El campo estado civil  es obligatorio',
+                // 'email.required'=> 'El campo email es obligatorio',
+                 'domicilio.required'=> 'El campo domicilio es obligatorio',
+                 'genero_resp.required'=> 'El campo genero_resp es obligatorio',
+                'tipo_servicio.required' => 'Debe seleccionar al menos un tipo servicio',
+                'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
+
+               
+            ]);
+            }  
+             $datos_cajero=User::select()
+            ->where('id',auth()->id())
+            ->first();
+            $cajero= $datos_cajero->user_sinot;
+
+            $codigo_cm=$this->generarCodigo($request);
+            // dd($codigo_cm);
+            if ($request->person != "responsable") {
+                $pago_por = "Tercera persona";
+                $nombre_pago = $request->name_pago;
+                $paterno_pago = $request->paterno_pago;
+                $materno_pago = $request->materno_pago;
+                $ci = $request->ci;
+                $domicilio = "SIN ESPECIFICACION";
+            } else {
+                        $pago_por = "Titular responsable";
+                        $nombre_pago = $request->nombres_resp;
+                        if ($request->paterno_resp == "") {
+                            $paterno_pago = "NO DEFINIDO";
+                        } else {
+                            $paterno_pago = $request->paterno_resp;
+                        }
+                        if ($request->domicilio == "") {
+                            $domicilio = "NO DEFINIDO";
+                        } else {
+                            $domicilio = $request->domicilio;
+                        }
+
+                        $materno_pago = $request->materno_resp ?? '';
+                        $ci = $request->ci_resp;
+            }
+
+            // dd($request->servicio_hijos);
+
+            if (!empty($request->servicio_hijos) && is_array($request->servicio_hijos)) 
+            {              
+                
+                // $cantidadDifCM=$this->contarDifuntoEnCM($cod_n);
+               
+                $explode_txt=explode("Bs.",$request->servicio_hijos_txt);
+                $texto_servicio="";
+                $separador=" ";
+                    foreach($request->servicio_hijos as $key=>$servi)
+                    {
+                            $texto_servicio= $texto_servicio.$separador.$explode_txt[$key]." Bs.";                  // restos
+                                    if($servi=='622' || $servi=='623' || $servi=='630' || $servi=='631')
+                                {                       
+                                            $nicho_ocupado=$request->ocupados +1;     
+                                            $total_cm=$request->total_cm -1;
+                                }else if($servi == '629' || $servi =='628')
+                                {        
+                                                $responsable_id=$difuntoEnNicho->responsable_id;
+                                                $difunto_id=$difuntoEnNicho->difunto_id;
+                                                $est_nicho="EXHUMADO";
+                                                $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // . 
+                                                $nicho_ocupado=$request->ocupados -1;
+                                                $total_cm=$request->total_cm +1;
+                              
+                                        $desc_ex=explode('=>',$request->descripcion_exhumacion);
+
+                                        if($servi==$desc_ex[1] and isset($request->descripcion_exhumacion)){
+                                            $ntexto= explode('-',$explode_txt[$key]);
+                                            // dd( $ntexto);
+                                            $txt_replace=$ntexto[0]."-".$desc_ex[0]."-".$ntexto[2]." Bs.";
+                                            $texto_servicio= $texto_servicio.$separador.  $txt_replace;
+                                            // dd( $texto_servicio);
+                                        }else{
+                                            $texto_servicio= $texto_servicio.$separador. $explode_txt[$key]." Bs.";
+                                        }                                       
+                                }  else{
+                                    $nicho_ocupado=$request->ocupados;
+                                    $total_cm=$request->total_cm;
+
+                                }                  
+                    // }
+         
+                                 $existeCripta = Cripta::where('codigo', $codigo_cm)->first();
+
+                                    if ($existeCripta != null) {
+                                        $id_cm = $existeCripta->id;
+                                        $upCripta= Cripta::where('id',  $id_cm)->first();                          
+                                        $upCripta->ocupados=$nicho_ocupado;
+                                        $upCripta->total_cajones=$total_cm;
+                                        $upCripta->save();
+                                        $upCripta->id;
+
+                                    } else {      // buscar cuartel si existe recuperar id sino insertar
+                                        $existeCuartel = Cuartel::where('codigo', $request->cuartel)->first();
+                                        if ($existeCuartel != null) {
+                                            $id_cuartel = $existeCuartel->id;
+                                        } else {
+                                            $cuart = new Cuartel;
+                                            $cuart->codigo = trim($request->cuartel);
+                                            $cuart->nombre = trim($request->cuartel);
+                                            $cuart->estado = 'ACTIVO';
+                                            $cuart->user_id = auth()->id();
+                                            $cuart->save();
+                                            $cuart->id;
+                                            $id_cuartel = $cuart->id;
+                                        }
+
+                                        //buscar bloque si existe recuperar id sino insertar
+                                        if( $request->bloque == null){
+                                            $id_bloque=0;
+                                        }
+                                        else{
+
+                                       
+                                                $existeBloque = Bloque::where('codigo', $request->bloque)
+                                                ->where('cuartel_id', $id_cuartel)
+                                                ->first();
+                                            
+                                                if ($existeBloque != null ) {
+                                                    $id_bloque = $existeBloque->id;
+                                                } else {
+                                                    $bloq = new Bloque;
+                                                    $bloq->cuartel_id = $id_cuartel;
+                                                    $bloq->codigo = trim($request->bloque);
+                                                    $bloq->nombre = trim($request->bloque);
+                                                    $bloq->estado = 'ACTIVO';
+                                                    $bloq->user_id = auth()->id();
+                                                    $bloq->save();
+                                                    $bloq->id;
+                                                    $id_bloque = $bloq->id;
+                                                    
+                                                }
+                                            }
+                                        // insertar nicho
+                                        $cripta = new Cripta;
+                                        $cripta->cuartel_id = $id_cuartel;
+                                        $cripta->bloque_id = $id_bloque;
+                                        $cripta->sitio = $request->sitio;
+                                        $nicho->codigo = $codigo;
+                                        $nicho->superficie = $request->superficie;
+                                        $nicho->ocupados = $nicho_ocupado;
+                                        $nicho->total_cajones = $total_cm;
+                                        $nicho->estado ='ACTIVO';
+                                        $nicho->estado_construccion =$request->construccion_cm;
+                                        $nicho->observaciones =$request->obs_cm;
+                                        $nicho->tipo_registro =$request->obs_cm;
+
+                                        $nicho->user_id = auth()->id();
+                                        $nicho->save();
+                                        $nicho->id;
+                                        $id_nicho = $nicho->id;
+                                    }
+            // end nicho
+
+            $codigo_nicho = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
+
+            }
+            //step1: nicho buscar si existe registrado el nicho recuperar el id  sino existe registrarlo
+            
+
+           
+            // step4: register responsable -- si el responsable  
+            $existeResponsable = Responsable::where('ci', $request->ci_resp)->first();
+            if (!$existeResponsable) {
+                //insertar difunto
+                $idresp = $this->insertResponsable($request);
+            } else {
+                $idresp = $existeResponsable->id;
+                $this->updateResponsable($request, $idresp);
+            }
+            //end responsable
+        //     if($request->ci_dif !=null || $request->ci_dif !=""){
+        //         $difuntoEnCM=$this->buscarDifuntoEnCM($request->ci_dif, $codigo);
+        //         if($difuntoEnCM!=null){
+        //            $id_difunto=$this->UpdateDifunto($request);
+
+        //         }else{
+        //            $id_difunto=$this->insertDifunto($request);
+        //            $cmd=$this->insertDifuntoCM($idresp,);
+        //         }
+        //    }
+           
+
+            //insert pago 
+         
+          
+
+                                                if($request->reg=="reg"){
+                                                    $fur=$request->nrofur;
+                                                    $estado_pago=true;
+                                                    $fecha_pago=$request->fecha_pago;
+                                                }
+                                                elseif($request->gratis=="gratis"){
+                                                    $fur=0;
+                                                    $estado_pago=true;
+                                                    $fecha_pago= date("Y-m-d h:i:s");  
+
+                                                }
+                                                else{
+                                                    $estado_pago=false;  
+                                                    $fecha_pago=null   ;
+                                                    /** generar fur */
+                                                   
+                                                                    $nombre_difunto=$request->nombres_dif." ".$request->paterno_dif." ".$request->materno_dif;
+
+                                                                   
+                                                                    $obj= new ServicioNicho;
+                                                                    $cant_serv=count($request->servicio_hijos);
+                                                                    for($cont=0; $cont<$cant_serv; $cont++){
+                                                                        $cantidades[$cont]=1;
+                                                                    }
+
+                                                                    $response=$obj->GenerarFur($ci, $nombre_pago, $paterno_pago,
+                                                                    $materno_pago, $domicilio,  $nombre_difunto, $codigo_nicho,
+                                                                    $request->bloque, $request->nro_nicho, $request->fila, 
+                                                                    $request->servicio_hijos,
+                                                                    $cantidades, $cajero, $request->descripcion_exhumacion );
+                                                              
+                                                                    if($response['status']==true){
+                                                                        $fur = $response['response'];
+                                                                        //dd($fur);
+                                                                    }  
+                                                        }
+
+                                                $serv = new ServicioNicho; 
+                                                $serv->codigo_nicho=$codigo_nicho ?? '';
+                                                $serv->fecha_registro = date("Y-m-d");
+                                                $serv->tipo_servicio_id=implode(', ',  $request->tipo_servicio);
+                                                $serv->tipo_servicio=$request->tipo_servicio_txt;
+                                                $serv->servicio_id=implode(', ', $request->servicio_hijos);
+                                                $serv->servicio= $texto_servicio;   //$request->servicio_hijos_txt;
+                                                $serv->responsable_difunto_id=$iddifuntoResp;
+                                                $serv->id_usuario_caja = auth()->id();
+                                                // $serv->id_usuario = auth()->id();
+                                                $serv->fur=$fur;
+                                                $serv->nro_renovacion= $request->renov ?? '0';
+                                                $serv->monto_renovacion= $request->monto_renov ?? '0';
+                                              
+                                                $serv->monto=$request->txttotal;
+                                                $serv->nombrepago=$nombre_pago;
+                                                $serv->paternopago=$paterno_pago;
+                                                $serv->maternopago=$materno_pago;
+                                                $serv->ci=$ci;
+                                                $serv->pago_por=$pago_por;
+                                                $serv->estado_pago=$estado_pago;
+                                                $serv->fecha_pago=$fecha_pago;
+
+                                             
+                                                $serv->estado='ACTIVO';
+                                                $serv->observacion=$request->observacion;
+                                                $serv->det_exhum=$observacion?? '';                                               
+                                                $serv->save();
+                                                // return  $serv->id;
+                                                // return $fur;
+                                                if(isset($responsable_id) ){
+                                                    $difres= ResponsableDifunto::where('responsable_id', $responsable_id)
+                                                    ->where('difunto_id', $difunto_id)
+                                                   ->first();   
+                                                     $difres->estado_nicho = $est_nicho ?? '';
+                                                     $difres->save();
+                                                }
+                                            //  return  $serv->id;
+
+                             }
+            
+           
+            return response([
+                    'status'=> true,
+                    'response'=> $serv->id
+                ],201);
+
+            }else{
+
+                return response([
+                    'status'=> false,
+                    'message'=> 'Error 401 (Unauthorized)'
+                ],401);
+            }
+    }
+
+
+    public function generarCodigo(Request $request){
+//  dd($request->cuartel);
+
+            if($request->tipo_reg=="CRIPTA"){$letra="C";}else{
+                $letra="M";
+            }
+        $cuartel=DB::table('cuartel')->where('id', $request->cuartel)        
+        ->select('codigo')
+        ->first();
+    //    dd( $cuartel);
+        if(!isset($request->bloque ) || $request->bloque==null || $request->bloque=='SELECCIONAR' ){ $bloq="000";}
+        
+        else{ 
+            $b=DB::table('bloque')->where('cuartel_id', $request->cuartel)
+            ->where('id', $request->bloque)
+            ->select('codigo')
+            ->first();
+            $bloq=$b->codigo;
+        } 
+        $cod=strtoupper($cuartel->codigo).$bloq.$request->sitio.$letra.$request->superficie;
+       return $cod;
+    }
+
+     // contarDifuntoEnNicho
+     public function buscarDifuntoEnCM($ci){
+        // $idCM=DB::table('cripta_mausoleo')->where('codigo', $codigo)->select('id')->first();
+        $sql=DB::table('difunto')               
+               ->where('ci','=',  $ci)
+               ->first();
+              
+               if(!empty($sql) || $sql!=null){ return $resp=$sql;}
+               else{ return $resp=null;}
+    }
+
+    public function insertDifuntoCM( $responsable_id, $cripta_mausoleo_id, $ultima_gestion_pagada){
+        $dif = new CMDifunto;
+        $dif->responsable_id = $responsable_id;
+        $dif->ultima_gestion_pagada = $ultima_gestion_pagada;      
+        $dif->estado = 'ACTIVO';  
+        $dif->user_id = auth()->id();
+        $dif->save();
+        $dif->id;
+        return  $dif->id;
     }
 }

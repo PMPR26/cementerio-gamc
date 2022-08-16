@@ -159,8 +159,177 @@
             <h4>Datos Difuntos</h4>
         </div>
         <div class="col-sm-12 col-md-12 col-xl-12">
+            <label for="">Ingrese la cantidad de difuntos a adicionar</label>
+            <input type="number" name="cantidad_dif_cm" id="cantidad_dif_cm">
+        </div>
+
+      
+      
+        <div class="col-sm-12 col-md-12 col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>DATOS DIFUNTOS</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-3 col-xl-3">
+                            <label>Carnet de Identidad</label>
+                            <div class="input-group input-group-lg">
+                                <input style="text-transform:uppercase;"
+                                    onkeyup="javascript:this.value=this.value.toUpperCase();" type="search"
+                                    class="form-control clear" id="search_dif" autocomplete="off">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-lg btn-default" id="buscarDifunto">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-lg btn-default" id="generarcidif"
+                                        title="generar carnet provisional">
+
+                                        <i class="fa fa-pen"></i>
+                                    </button>
+                                    <input type="hidden" name="difunto_search" id="difunto_search">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-3 col-xl-3">
+                            <label>Nombres</label>
+                            <input style="text-transform:uppercase;"
+                                onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
+                                class="form-control clear soloLetras" id="nombres_dif" autocomplete="off">
+                        </div>
+
+                        <div class="col-sm-12 col-md-3 col-xl-3">
+                            <label>Primer apellido</label>
+                            <input style="text-transform:uppercase;"
+                                onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
+                                class="form-control clear soloLetras" id="paterno_dif" autocomplete="off">
+                        </div>
+
+                        <div class="col-sm-12 col-md-3 col-xl-3">
+                            <label>Segundo apellido</label>
+                            <input style="text-transform:uppercase;"
+                                onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
+                                class="form-control clear soloLetras" id="materno_dif" autocomplete="off">
+                        </div>
+
+                    {{-- </div>
+
+
+                    <div class="row"> --}}
+
+                        <div class="col-sm-12 col-md-2 col-xl-2">
+                            <label>Fecha Nacimiento</label>
+                            <input type="date"
+                                class="form-control clear" id="fechanac_dif" autocomplete="off">
+                        </div>
+                        <div class="col-sm-12 col-md-2 col-xl-2">
+                            <label>Fecha Defunción</label>
+                            <input type="date"
+                                class="form-control clear" id="fecha_def_dif" autocomplete="off">
+                        </div>
+
+
+                        <div class="col-sm-12 col-md2 col-xl-2">
+                            <label>Fecha Ingreso al nicho</label>
+                            <input type="date"
+                                class="form-control clear" id="fechadef_dif" autocomplete="off">
+                        </div>
+
+                        {{-- <div class="col-sm-12 col-md-3 col-xl-3">
+                            <label>Causa</label>
+                            <input style="text-transform:uppercase;"
+                                onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
+                                class="form-control clear" id="causa" autocomplete="off">
+                        </div> --}}
+                        <div class="col-sm-12 col-md-4 col-xl-4">
+                            <label>Causa</label>
+                            <select id="causa" style="text-transform:uppercase; width: 100%"
+                            onkeyup="javascript:this.value=this.value.toUpperCase();"
+                            class="form-control select2-multiple select2-hidden-accessible">
+                            <option value="">SELECIONAR CAUSA FALLECIMIENTO</option>
+                            @foreach ($causa as $causa)                                  
+                                    <option value="{{ $causa->causa }}">{{$causa->causa }}</option>                                   
+                            @endforeach
+                           </select>
+                        </div>
+
+                        <div class="col-sm-12 col-md-2 col-xl-2">
+                            <label>SERECI</label>
+                            <input style="text-transform:uppercase;"
+                                onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
+                                class="form-control clear" id="sereci" autocomplete="off">
+
+                        </div>
+                    {{-- </div>
+
+
+                    <div class="row"> --}}
+
+                        <div class="col-sm-12 col-md-3 col-xl-3">
+                            <label>Tipo Difunto</label>
+                            <select name="tipo_dif" id="tipo_dif" class="form-control">
+                                <option value="">SELECIONAR</option>
+                                <option value="ADULTO">ADULTO</option>
+                                <option value="PARVULO">PARVULO</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 col-md-3 col-xl-3">
+                            <label>Genero</label>
+                            <select name="genero" id="genero_dif" class="form-control">
+                                <option value="">SELECIONAR</option>
+                                <option value="FEMENINO">FEMENINO</option>
+                                <option value="MASCULINO">MASCULINO</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 col-md-3 col-xl-3">
+                            <label>Funeraria</label>
+                            <select id="funeraria" style="text-transform:uppercase; width: 100%"
+                            onkeyup="javascript:this.value=this.value.toUpperCase();"
+                            class="form-control select2-multiple select2-hidden-accessible">
+                            <option value="">SELECIONAR FUNERARIA</option>
+                            @foreach ($funeraria as $fun)                                  
+                                    <option value="{{ $fun->funeraria }}">{{$fun->funeraria }}</option>                                   
+                            @endforeach
+                        </select>
+                        </div>
+                        <div class="col-sm-12 col-md-3 col-xl-3">
+                            <label>Tiempo</label>
+                            <input type="number" name="tiempo" id="tiempo" class="form-control">
+                         </div>
+                    </div>
+
+
+                {{-- </div>
+                <div class="row"> --}}
+                    <div class="col-sm-12 col-md-12 col-xl-12">
+                        <div class="col-sm-12">
+                            <label for=""> Certificado de defunción</label>
+                            <div id="cert-defuncion" class="dropzone" style="text-align: center">
+                        </div>
+                        <hr>
+
+                        <input type="hidden" id="url-certification">
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+{{--  lista de difuntos existentes --}}
+
+        <div class="col-sm-12 col-md-12 col-xl-12">
+            <h4>Listado de Difuntos en la cripta</h4>
+        </div>
+        <div class="col-sm-12 col-md-12 col-xl-12">
             <p id="container_difunto">Actualización de datos pendientes</p>
         </div>
+
+      
+
     </div>
 
    </div>

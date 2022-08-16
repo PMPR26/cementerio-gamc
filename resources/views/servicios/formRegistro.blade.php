@@ -560,10 +560,10 @@
                                 <select id="tipo_servicio_value"
                                     class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
                                     @foreach ($tipo_service as $value)
-                                        @if ($value['cuenta'] == '15224150' || $value['cuenta'] == '15224350' )
-                                        @else
+                                        {{-- @if ($value['cuenta'] == '15224150' || $value['cuenta'] == '15224350' )
+                                        @else --}}
                                             <option value="{{ $value['cuenta'] }}">{{ $value['descripcion'] }}</option>
-                                        @endif
+                                        {{-- @endif --}}
                                     @endforeach
                                 </select>
                             </div>
@@ -633,7 +633,7 @@
 
                     <div class="row" id="save_cm" style="display: none">
                         <div class="col-sm-12" style="text-align: center">
-                            <button type="button" id="btn-cripta" class="btn btn-success btn-editar">Guardar</button>
+                            <button type="button" id="btn_guardar_cm" class="btn btn-success btn-editar">Guardar</button>
                             {{-- <button type="button" style="display:none" id="btn-cripta-editar" class="btn btn-success btn-editar">Guardar</button> --}}
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                         </div> 
@@ -1398,7 +1398,7 @@
 
                             'nro_nicho': $('#nro_nicho').val(),
                             'bloque': $('#bloque').val(),
-                            'cuartel': $('#cuartel').val(),
+                            'cuartel': $('#cuartel :selected').val(),
                             'fila': $('#fila').val(),
                             'tipo_nicho': $('#tipo_nicho').val(),
                             'anterior': $('#anterior').val(),
@@ -2176,10 +2176,22 @@
                 });
             }
 
+            // $(".select-cuartel").select2({
+            //     width: 'resolve', // need to override the changed default
+            //    // dropdownParent: $('#modal-cripta')
+            // });
+
             $(".select-cuartel").select2({
-                width: 'resolve', // need to override the changed default
-               // dropdownParent: $('#modal-cripta')
-            });
+                tags: true,
+                allowClear: true
+
+                });
+            $(document).on('click' ,  'button[aria-describedby="select2-cuartel_cm-container"] span', function(){
+                $('button[aria-describedby="select2-cuartel_cm-container"] span').toUpperCase();
+                   $('#cuartel_cm option:selected').remove(); 
+            })
+
+
             $("#bloque_cm").select2({
                 width: 'resolve', // need to override the changed default
               //  dropdownParent: $('#modal-cripta')
@@ -2215,6 +2227,153 @@
 
 
         // guardar servicio para cripta/mausoleo y mausoleo
+        $(document).on('click', '#btn_guardar_cm', function() {
+            // alert( $('#cuartel_cm :selected').val());
+                    if ($('#person').is(':checked')) {
+                        if ($('#name_pago').val() == "" || $('#paterno_pago').val() == "" || $('#ci').val() ==
+                            "") {
+                            swal.fire({
+                                title: "Completar los datos de la persona que esta realizando el pago!",
+                                type: "warning",
+                                timer: 2000,
+                                showCancelButton: false,
+                                showConfirmButton: false
+                            });
+                        }
+                    }
+                    if($('#bloque_cm :selected').val()=="SELECCIONAR"){ 
+                        var b=null;
+
+                    }else{
+                        var b=$('#bloque_cm :selected').val();
+                    }
+                  
+                        return $.ajax({
+                        type: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+                        url: "{{ route('new.serviciocm') }}",
+                        async: false,
+                        data: JSON.stringify({
+                            'tipo_cm': $('#tipo_cm').val(),
+                            'bloque': b,
+                            'cuartel': ($('#cuartel_cm :selected').val()).toUpperCase(),
+                            'sitio': $('#sitio_cm').val(),
+                            'superficie': $('#superficie_cm').val(),
+                            'ocupados': $('#ocupados_cm').val(),
+                            'total_cm': $('#total_cm').val(),
+                            'construccion_cm': $('#construccion_cm').val(),
+                            'obs_cm': $('#obs_cm').val(),
+
+                            
+                            'ci_dif': $('#search_dif').val(),
+                            'nombres_dif': $('#nombres_dif').val(),
+                            'paterno_dif': $('#paterno_dif').val(),
+                            'materno_dif': $('#materno_dif').val(),
+                            'fechanac_dif': $('#fechanac_dif').val(),
+                            'fecha_def_dif': $('#fecha_def_dif').val(),
+                            'fechadef_dif': $('#fechadef_dif').val(),
+                            'causa': $('#causa').val(),
+                            'ecivil_dif': $('#ecivil_dif').val(),
+                            'tipo_dif': $('#tipo_dif').val(),
+                            'genero_dif': $('#genero_dif').val(),
+
+
+                            'ci_resp': $('#dni').val(),
+                           // 'id_responsable': $('#responsable_search').val(),
+                            'nombres_resp': $('#nombres_prop').val(),
+                            'paterno_resp': $('#paterno_prop').val(),
+                            'materno_resp': $('#materno_prop').val(),
+                            'domicilio': $('#domicilio').val(),
+                            'genero_resp': $('#genero_prop').val(),
+                            'pag_con': $('#pag_con').val(),
+                            'tiempo': $('#tiempo').val(),
+                            'tipo_servicio': $('#tipo_servicio_value').val(),
+                            'servicio_hijos': $('#servicio-hijos').val(),
+                            'tipo_servicio_txt': $('#tipo_servicio_value option:selected').text(),
+                            'servicio_hijos_txt': $('#servicio-hijos option:selected').text(),
+
+                            'name_pago': $('#name_pago').val(),
+                            'paterno_pago': $('#paterno_pago').val(),
+                            'materno_pago': $('#materno_pago').val(),
+                            'person': $('#person').val(),
+                            'ci': $('#ci').val(),
+                            'sereci': $('#sereci').val(),
+                            // 'id_difunto': $('#difunto_search').val(),
+                           // 'id_responsable': $('#responsable_search').val(),
+                            'observacion': $('#observacion').val(),
+                            'cuenta_renov': $('#cuenta_renov').val(),
+                            'renov': $('#renov').val(),
+                            'monto_renov': $('#monto_renov').val(),
+                            'cuenta_renov': $('#cuenta_renov').val(),
+                            'totalservicios': $('#totalservicios').val(),
+                            'reg': $('#reg').val(),
+                            'nrofur': $('#nrofur').val(),
+                            'txttotal':$('#totalservicios').val(), 
+                            'gratis':$('#gratis').val(), 
+                            'externo':$('#externo').val(), 
+                            'funeraria':$('#funeraria').val(), 
+                            'urlcertificacion':$('#url-certificacion').val(), 
+                            'cant':$('#cant_cuerpos').val(),
+                            'descripcion_exhumacion':$('#descripcion_exhumacion').val()+"=>"+$('#descripcion_exhumacion').data("id")
+                        }),
+                        success: function(data_response) { //alert(data_response['status']);
+                            // console.log(data_response);
+                            if(data_response['status']==false){
+                                swal.fire({
+                                    title: "Nicho ocupado, debe liberar el nicho primero!",
+                                    text: "!Transacción rechazada!",
+                                    type: "error",
+                                    timer: 3000,
+                                    showCancelButton: false,
+                                    showConfirmButton: false
+                                });
+                            }
+                            else{
+
+                         
+                            swal.fire({
+                                title: "Guardado!",
+                                text: "!Registro realizado con éxito!",
+                                type: "success",
+                                timer: 2000,
+                                showCancelButton: false,
+                                showConfirmButton: false
+                            });
+                            setTimeout(function() {
+
+                                window.location.href = "{{ route('serv') }}";
+
+
+                            }, 2000);
+                          }
+                        },
+                        error: function(error) {
+
+                            if (error.status == 422) {
+                                Object.keys(error.responseJSON.errors).forEach(function(k) {
+                                    toastr["error"](error.responseJSON.errors[k]);
+                                    //console.log(k + ' - ' + error.responseJSON.errors[k]);
+                                });
+                            } else if (error.status == 400) {
+                                swal.fire({
+                                    title: "Registro Duplicado!",
+                                    text: "!Transacción rechazada!",
+                                    type: "error",
+                                    timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: false
+                                });
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 2000);
+                            }
+
+                        }
+                    });
+                });
 
         </script>
 
