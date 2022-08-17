@@ -52,7 +52,7 @@
                     <td scope="row">{{ $count++ }}</td>
                     <td>{{ $cripta->tipo_registro }}</td>                     
                     <td>{{ $cripta->codigo }}</td>  
-                    <td>{{ $cripta->nombre }}</td>
+                    <td>{{ $cripta->Propietario }}</td>
                     <td>{{ $cripta->superficie }}</td>                  
                     <td>{{ $cripta->estado }}</td>
 
