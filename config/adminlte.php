@@ -238,7 +238,7 @@ return [
         ],
         [
             'type'         => 'navbar-notification',
-            'id'           => 'my-notification',      // An ID attribute (required).
+            // 'id'           => 'my-notification',      // An ID attribute (required).
             'icon'         => 'fas fa-bell',          // A font awesome icon (required).
             'icon_color'   => 'warning',              // The initial icon color (optional).
             'label'        => 0,                      // The initial label for the badge (optional).
