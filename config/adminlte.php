@@ -299,15 +299,11 @@ return [
             'icon' => 'fab fa-docker',
         ],
         [
-            'text' => 'CRIPTA',
+            'text' => 'CRIPTA-MAUSOLEO',
             'url'  => 'cripta/index',
             'icon' => 'fas fa-igloo',
         ],
-        [
-            'text' => 'MAUSOLEOS',
-            'url'  => 'mausoleo/index',
-            'icon' => 'fas fa-church',
-        ],
+       
         [
             'text' => 'NICHOS',
             'url'  => 'nicho/nicho',
