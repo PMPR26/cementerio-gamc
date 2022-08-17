@@ -17,6 +17,7 @@ class CreateCriptaMausoleoResponsableTable extends Migration
             $table->bigIncrements('id');
             $table->integer('responsable_id');
             $table->integer('cripta_mausole_id');
+            $table->integer('ultima_gestion_pagada')->nullable();
             $table->string('estado')->default('ACTIVO');
             $table->timestamps();
             $table->foreign('responsable_id')->references('id')->on('responsable');   

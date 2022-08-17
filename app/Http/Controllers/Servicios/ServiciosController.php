@@ -10,6 +10,7 @@ use App\Models\Difunto;
 use App\Models\Responsable;
 use App\Models\ResponsableDifunto;
 use App\Models\CMDifunto;
+use App\Models\CriptaMausoleoResp;
 use App\Models\User;
 
 use App\Models\Mantenimiento;
@@ -1290,26 +1291,25 @@ class ServiciosController extends Controller
                                         $cripta->cuartel_id = $id_cuartel;
                                         $cripta->bloque_id = $id_bloque;
                                         $cripta->sitio = $request->sitio;
-                                        $nicho->codigo = $codigo;
-                                        $nicho->superficie = $request->superficie;
-                                        $nicho->ocupados = $nicho_ocupado;
-                                        $nicho->total_cajones = $total_cm;
-                                        $nicho->estado ='ACTIVO';
-                                        $nicho->estado_construccion =$request->construccion_cm;
-                                        $nicho->observaciones =$request->obs_cm;
-                                        $nicho->tipo_registro =$request->obs_cm;
-
-                                        $nicho->user_id = auth()->id();
-                                        $nicho->save();
-                                        $nicho->id;
-                                        $id_nicho = $nicho->id;
+                                        $cripta->codigo = $codigo;
+                                        $cripta->superficie = $request->superficie;
+                                        $cripta->ocupados = $nicho_ocupado;
+                                        $cripta->total_cajones = $total_cm;
+                                        $cripta->estado ='ACTIVO';
+                                        $cripta->estado_construccion =$request->construccion_cm;
+                                        $cripta->observaciones =$request->obs_cm;
+                                        $cripta->tipo_registro =$request->tipo_cm;
+                                        $cripta->user_id = auth()->id();
+                                        $cripta->save();
+                                        $cripta->id;
+                                        $id_cripta = $cripta->id;
                                     }
             // end nicho
 
-            $codigo_nicho = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
+          
 
             }
-            //step1: nicho buscar si existe registrado el nicho recuperar el id  sino existe registrarlo
+            //step1: nicho buscar si existe registrado la cripta recuperar el id  sino existe registrarlo
             
 
            
@@ -1321,18 +1321,21 @@ class ServiciosController extends Controller
             } else {
                 $idresp = $existeResponsable->id;
                 $this->updateResponsable($request, $idresp);
+                $cmResp=$this->insertResponsableCM( $idresp, $id_cripta, $ultima_gestion_pagada);
             }
             //end responsable
-        //     if($request->ci_dif !=null || $request->ci_dif !=""){
-        //         $difuntoEnCM=$this->buscarDifuntoEnCM($request->ci_dif, $codigo);
-        //         if($difuntoEnCM!=null){
-        //            $id_difunto=$this->UpdateDifunto($request);
 
-        //         }else{
-        //            $id_difunto=$this->insertDifunto($request);
-        //            $cmd=$this->insertDifuntoCM($idresp,);
-        //         }
-        //    }
+            // si existe difunto
+            if($request->ci_dif !=null || $request->ci_dif !=""){
+                $difuntoEnCM=$this->buscarDifuntoEnCM($request->ci_dif, $codigo);
+                if($difuntoEnCM!=null){
+                   $id_difunto=$this->UpdateDifunto($request);
+
+                }else{
+                   $id_difunto=$this->insertDifunto($request);
+                   $cmd=$this->insertDifuntoCM( $idresp, $id_cripta);
+                }
+           }
            
 
             //insert pago 
@@ -1364,11 +1367,11 @@ class ServiciosController extends Controller
                                                                         $cantidades[$cont]=1;
                                                                     }
 
-                                                                    $response=$obj->GenerarFur($ci, $nombre_pago, $paterno_pago,
-                                                                    $materno_pago, $domicilio,  $nombre_difunto, $codigo_nicho,
-                                                                    $request->bloque, $request->nro_nicho, $request->fila, 
+                                                                    $response=$obj->GenerarFurCM($ci, $nombre_pago, $paterno_pago,
+                                                                    $materno_pago, $domicilio, $codigo,
                                                                     $request->servicio_hijos,
                                                                     $cantidades, $cajero, $request->descripcion_exhumacion );
+                                                                   
                                                               
                                                                     if($response['status']==true){
                                                                         $fur = $response['response'];
@@ -1377,13 +1380,13 @@ class ServiciosController extends Controller
                                                         }
 
                                                 $serv = new ServicioNicho; 
-                                                $serv->codigo_nicho=$codigo_nicho ?? '';
+                                                $serv->codigo_nicho=$codigo ?? '';
                                                 $serv->fecha_registro = date("Y-m-d");
                                                 $serv->tipo_servicio_id=implode(', ',  $request->tipo_servicio);
                                                 $serv->tipo_servicio=$request->tipo_servicio_txt;
                                                 $serv->servicio_id=implode(', ', $request->servicio_hijos);
                                                 $serv->servicio= $texto_servicio;   //$request->servicio_hijos_txt;
-                                                $serv->responsable_difunto_id=$iddifuntoResp;
+                                                $serv->responsable_difunto_id=null;
                                                 $serv->id_usuario_caja = auth()->id();
                                                 // $serv->id_usuario = auth()->id();
                                                 $serv->fur=$fur;
@@ -1402,18 +1405,9 @@ class ServiciosController extends Controller
                                              
                                                 $serv->estado='ACTIVO';
                                                 $serv->observacion=$request->observacion;
-                                                $serv->det_exhum=$observacion?? '';                                               
-                                                $serv->save();
-                                                // return  $serv->id;
-                                                // return $fur;
-                                                if(isset($responsable_id) ){
-                                                    $difres= ResponsableDifunto::where('responsable_id', $responsable_id)
-                                                    ->where('difunto_id', $difunto_id)
-                                                   ->first();   
-                                                     $difres->estado_nicho = $est_nicho ?? '';
-                                                     $difres->save();
-                                                }
-                                            //  return  $serv->id;
+                                                $serv->tipo=$request->tipo_cm?? '';  
+                                                $serv->cripta_mausoleo_responsable_id=$id_cripta?? '';                                              
+                                                $serv->save();                                               
 
                              }
             
@@ -1467,14 +1461,25 @@ class ServiciosController extends Controller
                else{ return $resp=null;}
     }
 
-    public function insertDifuntoCM( $responsable_id, $cripta_mausoleo_id, $ultima_gestion_pagada){
+    public function insertDifuntoCM( $responsable_id, $cripta_mausoleo_id){
         $dif = new CMDifunto;
         $dif->responsable_id = $responsable_id;
-        $dif->ultima_gestion_pagada = $ultima_gestion_pagada;      
+         
         $dif->estado = 'ACTIVO';  
         $dif->user_id = auth()->id();
         $dif->save();
         $dif->id;
         return  $dif->id;
+    }
+
+    public function insertResponsableCM( $responsable_id, $cripta_mausoleo_id,$ultima_gestion_pagada){
+        $cmr = new CriptaMausoleoResp;
+        $cmr->responsable_id = $responsable_id;
+        $cmr->ultima_gestion_pagada=$ultima_gestion_pagada;
+        $cmr->estado = 'ACTIVO';  
+        $cmr->user_id = auth()->id();
+        $cmr->save();
+        $cmr->id;
+        return  $cmr->id;
     }
 }

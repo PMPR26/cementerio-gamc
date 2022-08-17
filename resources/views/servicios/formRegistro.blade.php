@@ -2266,7 +2266,7 @@
                             'total_cm': $('#total_cm').val(),
                             'construccion_cm': $('#construccion_cm').val(),
                             'obs_cm': $('#obs_cm').val(),
-
+                            
                             
                             'ci_dif': $('#search_dif').val(),
                             'nombres_dif': $('#nombres_dif').val(),
