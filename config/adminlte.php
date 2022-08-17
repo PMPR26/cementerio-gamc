@@ -272,15 +272,15 @@ return [
             //'label_color' => 'success',
         ],
         [
-            'text' => 'SERVICIOS NICHOS',
+            'text' => 'SERVICIOS',
             'route'  => 'serv',
             'icon' => 'fas fa-laptop-medical',
         ],
-        [
-            'text' => 'SERVICIOS CRIPTA/MAUSOLEOS',
-            'route'  => 'servcm',
-            'icon' => 'fas fa-laptop-medical',
-        ],
+        // [
+        //     'text' => 'SERVICIOS CRIPTA/MAUSOLEOS',
+        //     'route'  => 'servcm',
+        //     'icon' => 'fas fa-laptop-medical',
+        // ],
         [
             'text' => 'MANTENIMIENTO NICHO',
             'route'  => 'mant',

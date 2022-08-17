@@ -5,21 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Cripta extends Model
+class CMDifunto extends Model
 {
     use HasFactory;
 
-    protected $table = 'cripta_mausoleo';
+    protected $table = 'cripta_mausoleo_difunto';
     protected $fillable = [
-        'cuartel_id',
-        'bloque_id',
-        'sitio',
-        'codigo',
-        'nombre',
-        'superficie',
+        'responsable_id',
+        'cripta_mausole_id',
         'estado',
-        'tipo_registro',
-        'user_id',
+        'ultima_gestion_pagada',       
         'created_at'
     ];
 
@@ -27,5 +22,4 @@ class Cripta extends Model
         'id',
         'updated_at'
     ];
-
 }

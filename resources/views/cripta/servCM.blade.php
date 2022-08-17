@@ -18,33 +18,36 @@
         <div class="col-sm-12 col-md-12 col-xl-12 card m-auto">
 
             <div class="card">
-                <div class="row">
-                    <div class="col-sm-12 col-md-12 col-xl-12">
-                        <h6>Seleccione una opcion habilitar los criterios de busqueda</h6>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-xl-6 form-check">
-                        <input type="radio"  name="tipo_servicio" id="tipo_servicio_cripta" value="cod_ant" class="form-check-input">
-                        <label class="form-check-label" for="tipo_servicio_cripta">Servicio Cripta/Mausoleo</label> 
-                     </div> 
-                    
-                     <div class="col-sm-6 col-md-6 col-xl-6 form-check">
-                        <input type="radio"   name="tipo_servicio" id="tipo_servicio_nicho" value="tipo_servicio_nicho" class="form-check-input">
-                        <label class="form-check-label" for="tipo_servicio_nicho">Servicio Nicho</label> 
-                     </div>                    
+                <div class="card-header">
+                    <h2 id="infoPlazo" class="clean"></h2>
                 </div>
             </div>
-            <div id="busquedas_criptas" style="display: none">
-                    @include('servicios.buscarCriptaMausoleo')
+
+            <div class="card">
+                <div class="card-header">
+                    <h2> SELECCIONAR ANTES DE INICIAR </h2>
+                    <P>Seleccione "EXTERNO" si solicitará algun servicio que no este relacionado a un nicho, seleccione "GRATIS" si el Servicio será gratuito</P>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6 col-xl-6">
+                            <label for="">EXTERNO</label>
+                            <input type="checkbox" name="externo" id="externo" style="width: 30px; height:30px" >
+                        </div>
+
+                        <div class="col-sm-6 col-md-6 col-xl-6">
+                            <label for="">GRATUITO</label>
+                            <input type="checkbox" name="gratis" id="gratis"  style="width: 30px; height:30px"  >
+                        </div>
+                    </div>
+                    
+                </div>
             </div>
-
-           
-
-            <div class="card" id="busquedas_nichos" style="display: none; background: rgb(106, 119, 134);">
 
         <div class="col-12 interno" >   
             {{-- datos busqueda --}}
 
-          
+            <div class="card">
                 <div class="card-header">
                     <h4>BUSCAR REGISTRO</h4>
                 </div>
@@ -78,34 +81,9 @@
                         </div>
                     </div>
                 </div>
-        
-
-            <div class="card">
-                <div class="card-header">
-                    <h2 id="infoPlazo" class="clean"></h2>
-                </div>
             </div>
 
-            <div class="card" id="tipo_pago" style="display: none">
-                <div class="card-header">
-                    <h2> SELECCIONAR ANTES DE INICIAR </h2>
-                    <P>Seleccione "EXTERNO" si solicitará algun servicio que no este relacionado a un nicho, seleccione "GRATIS" si el Servicio será gratuito</P>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-6 col-md-6 col-xl-6">
-                            <label for="">EXTERNO</label>
-                            <input type="checkbox" name="externo" id="externo" style="width: 30px; height:30px" >
-                        </div>
-
-                        <div class="col-sm-6 col-md-6 col-xl-6">
-                            <label for="">GRATUITO</label>
-                            <input type="checkbox" name="gratis" id="gratis"  style="width: 30px; height:30px"  >
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
+           
                 <div class="card">
                     <div class="row">
                         <div class="col-sm-12 col-md-3 col-xl-3">
@@ -188,19 +166,13 @@
 
                         <div class="row">
 
-                            <div class="col-sm-12 col-md-2 col-xl-2">
+                            <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Fecha Nacimiento</label>
                                 <input type="date"
                                     class="form-control clear" id="fechanac_dif" autocomplete="off">
                             </div>
-                            <div class="col-sm-12 col-md-2 col-xl-2">
-                                <label>Fecha Defunción</label>
-                                <input type="date"
-                                    class="form-control clear" id="fecha_def_dif" autocomplete="off">
-                            </div>
 
-
-                            <div class="col-sm-12 col-md2 col-xl-2">
+                            <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Fecha Ingreso al nicho</label>
                                 <input type="date"
                                     class="form-control clear" id="fechadef_dif" autocomplete="off">
@@ -212,7 +184,7 @@
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
                                     class="form-control clear" id="causa" autocomplete="off">
                             </div> --}}
-                            <div class="col-sm-12 col-md-4 col-xl-4">
+                            <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Causa</label>
                                 <select id="causa" style="text-transform:uppercase; width: 100%"
                                 onkeyup="javascript:this.value=this.value.toUpperCase();"
@@ -221,10 +193,10 @@
                                 @foreach ($causa as $causa)                                  
                                         <option value="{{ $causa->causa }}">{{$causa->causa }}</option>                                   
                                 @endforeach
-                               </select>
+                            </select>
                             </div>
 
-                            <div class="col-sm-12 col-md-2 col-xl-2">
+                            <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>SERECI</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
@@ -413,8 +385,8 @@
                 <input type="hidden" name="aniosdeuda" id="aniosdeuda">
                 <input type="hidden" name="cant_cuerpos" id="cant_cuerpos" value="0">
 
-        </div>
-            </div>
+
+
                 <div class="card interno">
                     <div class="card-header">
                         <h4>INFORMACION ULTIMO PAGO</h4>
@@ -560,10 +532,10 @@
                                 <select id="tipo_servicio_value"
                                     class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
                                     @foreach ($tipo_service as $value)
-                                        {{-- @if ($value['cuenta'] == '15224150' || $value['cuenta'] == '15224350' )
-                                        @else --}}
+                                        @if ($value['cuenta'] == '15224150' || $value['cuenta'] == '15224350' )
+                                        @else
                                             <option value="{{ $value['cuenta'] }}">{{ $value['descripcion'] }}</option>
-                                        {{-- @endif --}}
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -618,27 +590,14 @@
 
 
                     </div>
-                    <div class="row p-4" id="section_exhum" style="display: none">
-                        <div class="col-12 pl-4"></div>
-                        <label for="desc"> Detalle de la exhumacion</label>
-                        <input type="text" name="descripcion_exhumacion" value="" id="descripcion_exhumacion" class="form-control pl-4" >
-                    </div>
-                   
 
-                    <div class="col-sm-12" style="text-align: center" id="save_nichos" style="display: none">
+            
+
+                    <div class="col-sm-12" style="text-align: center" id="print">
                         <button type="button" id="btn_guardar_pago" class="btn btn-success">Registrar servicio</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal"
                             id="cancelar">Cancelar</button>
                     </div>
-
-                    <div class="row" id="save_cm" style="display: none">
-                        <div class="col-sm-12" style="text-align: center">
-                            <button type="button" id="btn_guardar_cm" class="btn btn-success btn-editar">Guardar</button>
-                            {{-- <button type="button" style="display:none" id="btn-cripta-editar" class="btn btn-success btn-editar">Guardar</button> --}}
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        </div> 
-                    </div>
-                
                 </div>
             </div>
         </div>
@@ -793,7 +752,7 @@
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        url: "https://multiserv.cochabamba.bo/api/v1/cementerio/generate-all-servicios-nicho",
+                        url: "{{ env('URL_MULTISERVICE') }}/api/v1/cementerio/generate-all-servicios-nicho",
                         async: false,
                         data: JSON.stringify({
                             'data': data_request
@@ -803,14 +762,15 @@
                             $('#servicio-hijos').empty();
                             $.each(data_response.response, function(index, value) {
                                 //alert(value.num_sec)
-                             /*   if (value.num_sec == '526' || value.num_sec == '1995' ||
-                                    value.num_sec == '525') {} else {*/
+                                if (value.num_sec == '630' || value.num_sec == '628' ||
+                                    value.num_sec == '526' || value.num_sec == '1995' ||
+                                    value.num_sec == '525') {} else {
                                   
                                     $('#servicio-hijos').append('<option value="' + value
                                         .num_sec + '">' + value.cuenta + ' - ' + value
                                         .descripcion + ' - ' + value.monto1 +
                                         '- Bs.</option>')
-                             //   }
+                                }
                                 if(value.cuenta == '15224301'){
                                         $('#precio_renov').val(value.monto1);
                                         $('#cuenta_renov').val(value.cuenta);
@@ -868,13 +828,7 @@
                       
                         $parrafos = '<p id="' + value.id + '">' + $parrafos + (index + 1) + ' - ' +
                             value.text + '</p>';
-
                         $('#servicios-hijos').html($parrafos);
-                        if(value.id == '630' || value.id == '628' ){
-                            $('#descripcion_exhumacion').attr('data-id', value.id);
-                            $('#section_exhum').show();
-                            
-                        }
                         if(value.id == '642')
                             {
                                  $('#ren').show();
@@ -899,8 +853,6 @@
                 $('#servicio-hijos').on('select2:unselect', function(e) {
 
                    var existe=0;
-                   var existe_ex=0;
-
                     if ($("#servicio-hijos").select2("data").length == 0) {
                         $("#tipo_servicio_value").prop("disabled", false);
                     }
@@ -914,17 +866,8 @@
                             value.text + '</p>';
                         $('#servicios-hijos').html($parrafos);
                         var v = (value.text).split('-'); 
-                        // console.log(v);
+                        console.log(v);
                         if(v[0]=='15224401 '){ existe=1;
-                        }
-                        if(v[0]=='15224201 '){
-                           
-                            existe_ex=1;
-                        }
-                        if( existe_ex==0){
-                            $('#descripcion_exhumacion').val("");
-                            $('#section_exhum').hide();
-                            consolidado();
                         }
                         if(existe==0){
                             $('#cuenta_renov').val("0");
@@ -954,7 +897,11 @@
                             $('#renov').val("0");
                             // calcularPrice();
                             consolidado();
-                    }                  
+
+                    }
+
+
+                   
                 });
 
 
@@ -1035,8 +982,7 @@
                                 $('#paterno_dif').val(data.response.primerap_dif);
                                 $('#materno_dif').val(data.response.segap_dif);
                                 $('#fechanac_dif').val(data.response.nacimiento_dif);
-                                $('#fecha_def_dif').val(data.response.fecha_def_dif);
-                                $('#fechadef_dif').val(data.response.fecha_adjudicacion);
+                                $('#fechadef_dif').val(data.response.fecha_def_dif);
                                 $('#causa').val(data.response.causa_dif);
                                 $('#sereci').val(data.response.certificado_defuncion);
                                 $('#tipo_dif').val(data.response.tipo_dif);
@@ -1130,7 +1076,7 @@
                                                                         var mes = fecha.substr(4, 2);
                                                                         var dia = fecha.substr(6, 2);
                                                                         var nuevaf = año + "-" + mes + "-" + dia;
-                                                                        $('#fechadef_dif').val(nuevaf); 
+                                                                        $('#fechadef_dif').val(nuevaf);
                                                                         $('#comprob').html(data.response.datos_difuntos[
                                                                                 0]
                                                                             .comprob);
@@ -1227,7 +1173,7 @@
                                                         }
 
                                             }
-                                            autocompletar();
+                                          
 
                                         } else {
                                             $('#sp').empty();
@@ -1398,7 +1344,7 @@
 
                             'nro_nicho': $('#nro_nicho').val(),
                             'bloque': $('#bloque').val(),
-                            'cuartel': $('#cuartel :selected').val(),
+                            'cuartel': $('#cuartel').val(),
                             'fila': $('#fila').val(),
                             'tipo_nicho': $('#tipo_nicho').val(),
                             'anterior': $('#anterior').val(),
@@ -1408,7 +1354,6 @@
                             'paterno_dif': $('#paterno_dif').val(),
                             'materno_dif': $('#materno_dif').val(),
                             'fechanac_dif': $('#fechanac_dif').val(),
-                            'fecha_def_dif': $('#fecha_def_dif').val(),
                             'fechadef_dif': $('#fechadef_dif').val(),
                             'causa': $('#causa').val(),
                             'ecivil_dif': $('#ecivil_dif').val(),
@@ -1454,11 +1399,10 @@
                             'externo':$('#externo').val(), 
                             'funeraria':$('#funeraria').val(), 
                             'urlcertificacion':$('#url-certificacion').val(), 
-                            'cant':$('#cant_cuerpos').val(),
-                            'descripcion_exhumacion':$('#descripcion_exhumacion').val()+"=>"+$('#descripcion_exhumacion').data("id")
+                            'cant':$('#cant_cuerpos').val()
                         }),
                         success: function(data_response) { //alert(data_response['status']);
-                            // console.log(data_response);
+                            console.log(data_response);
                             if(data_response['status']==false){
                                 swal.fire({
                                     title: "Nicho ocupado, debe liberar el nicho primero!",
@@ -1590,7 +1534,7 @@
                                 $('#paterno_dif').val(data.response.primer_apellido);
                                 $('#materno_dif').val(data.response.segundo_apellido);
                                 $('#fechanac_dif').val(data.response.fecha_nacimiento);
-                                $('#fecha_def_dif').val(data.response.fecha_defuncion);
+                                $('#fechadef_dif').val(data.response.fecha_defuncion);
                                 $('#tipo_dif').val(data.response.tipo);
                                 $('#sereci').val(data.response.certificado_defuncion);
                                 $('#causa').val(data.response.causa);
@@ -2047,20 +1991,15 @@
                                     }),
                                     success: function(data) 
                                     {     
-                                    //    console.log(data);
+                                       console.log(data);
                                           // data difunto
-                                        //   alert(data['response'].fecha_adjudicacion);
-                                        //   var adj=(data['response'].fecha_adjudicacion).split(" ");
-                                        //   var f_adj=adj[0];
-                                        //   alert(f_adj);
                                             if(data.response!=null)
-                                            {  
+                                            {  alert ("entraaaa");
                                                 $('#search_dif').val(data['response'].ci_dif);
                                                 $('#nombres_dif').val(data['response'].nombre_dif);
                                                 $('#paterno_dif').val(data['response'].primerap_dif);
                                                 $('#materno_dif').val(data['response'].segap_dif);
                                                 $('#fechanac_dif').val(data['response'].nacimiento_dif);
-                                                $('#fecha_def_dif').val(data['response'].fecha_defuncion);
                                                 $('#fechadef_dif').val(data['response'].fecha_adjudicacion);
                                                 $('#tipo_dif').val(data['response'].tipo_dif);
                                                 $('#genero_dif').val(data['response'].genero_dif);
@@ -2076,7 +2015,7 @@
                                                 $('#telefono').val(data['response'].telefono);
                                                 $('#celular').val(data['response'].celular);
                                                 $('#genero_resp').val(data['response'].genero_resp);
-                                                $('#domicilio').val(data['response'].domicilio_resp);
+                                                $('#domicilio').val(data['response'].domicilio);
                                             } 
                                            
                                     }  
@@ -2084,297 +2023,6 @@
                      });
                    return false;
             }
-
-            $(document).on('click' , '#tipo_servicio_nicho', function(){
-               $('#tipo_pago').show();
-               $('#busquedas_nichos').show();
-               $('#busquedas_nichos').prop('disabled', false);
-               $('#save_nichos').show();
-
-               $('#busquedas_criptas').prop('disabled', true);
-               $('#busquedas_criptas').hide();           
-               $('#save_cm').hide();
-
-            });
-            $(document).on('click' , '#tipo_servicio_cripta', function(){
-               $('#tipo_pago').hide();
-               $('#busquedas_nichos').prop('disabled', true);
-               $('#busquedas_nichos').hide();
-               $('#save_nichos').hide();
-               $('#busquedas_criptas').show();
-               $('#busquedas_criptas').prop('disabled', false);
-               $('#save_cm').show();
-            });
-            // $(document).on('keyup', '#descripcion_exhumacion', function(){
-            //     $('#select2-servicio-hijos-container-choice-4fa8-630').html($('#descripcion_exhumacion').val());
-            // });
-
-
-            /******************************************************/
-            /******para criptas o mausoleos ******************************/
-            /*********************************************************/
-            $(document).on('click','#btn_search_field', function(){
-                buscar($('input[name=buscar_cm]:checked').val());
-            });
-
-
-            //habilitar caja de busqueda de cripta o mausoleo
-            $(document).on('click','input[name=buscar_cm]', function(){
-                $('#search_field').val();
-                if( $("input[name=buscar_cm]:radio").is(':checked'))
-                {
-                    $('#search_field').prop('disabled', false);                  
-                }else{
-                    $('#search_field').prop('disabled', true);
-                }
-            });
-
-            function buscar(criterio){
-               
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                        'Content-Type': 'application/json'
-                    },
-                    url: "{{ route('buscar.cripta') }}",
-                    method: 'POST',
-                    dataType: 'json',
-                    data: JSON.stringify({
-                        "tipo_busqueda": criterio,
-                        "search_field":$('#search_field').val()
-                      
-                    }),
-                    success: function(data) {
-                        console.log(data);
-                        $('#codigo_antiguocm').val(data.codigo_antiguo);
-                        $('#codigo_nuevocm').val(data.codigo);
-                        $('#tipo_cm').val(data.tipo_registro);
-                        $('#cuartel_cm').val(data.cuartel_id).trigger('change');
-                        $('#bloque_cm').val(data.bloque_id).trigger('change');
-                        $('#sitio_cm').val(data.sitio);
-                        $('#superficie_cm').val(data.superficie);
-                        $('#ocupados_cm').val(data.ocupados);
-                        $('#total_cm').val(data.total_cajones);
-                        $('#construccion_cm').val(data.estado_construccion);
-                        $('#observaciones').val(data.observaciones);
-                        $('#dni').val(data.ci_resp);
-                        $('#nombres_prop').val(data.nombre_resp);
-                        $('#paterno_prop').val(data.paterno_resp);
-                        $('#materno_prop').val(data.materno_resp);
-                        $('#domicilio').val(data.domicilio);
-                        $('#genero_prop').val(data.genero_resp);
-                        $('#razon').html(data.nombrepago+" "+data.paternopago+" "+data.maternopago);
-                        $('#comprob').html(data.fur);
-                       // $('#tiemp').html(data.codigo_antiguo);
-                        // $('#pago_cont').html(data.fecha_pago);
-                        $('#cuerpos').html(data.ocupados);
-                        $('#concepto').html(data.servicio);
-                        $('#fecha_p').html(data.fecha_pago);
-                        // $('#gestiones').html(data.codigo_antiguo);
-                        $('#monto_pagos').html(data.monto);
-                    }
-                });
-            }
-
-            // $(".select-cuartel").select2({
-            //     width: 'resolve', // need to override the changed default
-            //    // dropdownParent: $('#modal-cripta')
-            // });
-
-            $(".select-cuartel").select2({
-                tags: true,
-                allowClear: true
-
-                });
-            $(document).on('click' ,  'button[aria-describedby="select2-cuartel_cm-container"] span', function(){
-                $('button[aria-describedby="select2-cuartel_cm-container"] span').toUpperCase();
-                   $('#cuartel_cm option:selected').remove(); 
-            })
-
-
-            $("#bloque_cm").select2({
-                width: 'resolve', // need to override the changed default
-              //  dropdownParent: $('#modal-cripta')
-              });
-
-              
-          
-    $(document).on('change', '#cuartel_cm', function(){
-        $('#bloque_cm').empty();
-        var sel_cuartel=$('#cuartel_cm').val();
-              $('#bloque_cm').prop('disabled', false);
-                $.ajax({
-                    type: 'POST',
-                        headers: {
-                            'Content-Type':'application/json',
-                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
-                        },
-                        url: "{{ route('bloqueid.get') }}",
-                        async: false,
-                        data: JSON.stringify({
-                            'cuartel': $('#cuartel_cm').val(),
-                        }),
-                        success: function(data_bloque) {
-                           var op1='<option >SELECCIONAR</option>';
-                            $('#bloque_cm').append(op1);
-                           $.each( data_bloque.response, function( key, value ) {                               
-                                 opt2='<option value="'+ value.id +'">'+value.codigo +'</option>';
-                                 $('#bloque_cm').append(opt2);
-                            });                                                    
-                        }
-                });
-    });
-
-
-        // guardar servicio para cripta/mausoleo y mausoleo
-        $(document).on('click', '#btn_guardar_cm', function() {
-            // alert( $('#cuartel_cm :selected').val());
-                    if ($('#person').is(':checked')) {
-                        if ($('#name_pago').val() == "" || $('#paterno_pago').val() == "" || $('#ci').val() ==
-                            "") {
-                            swal.fire({
-                                title: "Completar los datos de la persona que esta realizando el pago!",
-                                type: "warning",
-                                timer: 2000,
-                                showCancelButton: false,
-                                showConfirmButton: false
-                            });
-                        }
-                    }
-                    if($('#bloque_cm :selected').val()=="SELECCIONAR"){ 
-                        var b=null;
-
-                    }else{
-                        var b=$('#bloque_cm :selected').val();
-                    }
-                  
-                        return $.ajax({
-                        type: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        },
-                        url: "{{ route('new.serviciocm') }}",
-                        async: false,
-                        data: JSON.stringify({
-                            'tipo_cm': $('#tipo_cm').val(),
-                            'bloque': b,
-                            'cuartel': ($('#cuartel_cm :selected').val()).toUpperCase(),
-                            'sitio': $('#sitio_cm').val(),
-                            'superficie': $('#superficie_cm').val(),
-                            'ocupados': $('#ocupados_cm').val(),
-                            'total_cm': $('#total_cm').val(),
-                            'construccion_cm': $('#construccion_cm').val(),
-                            'obs_cm': $('#obs_cm').val(),
-
-                            
-                            'ci_dif': $('#search_dif').val(),
-                            'nombres_dif': $('#nombres_dif').val(),
-                            'paterno_dif': $('#paterno_dif').val(),
-                            'materno_dif': $('#materno_dif').val(),
-                            'fechanac_dif': $('#fechanac_dif').val(),
-                            'fecha_def_dif': $('#fecha_def_dif').val(),
-                            'fechadef_dif': $('#fechadef_dif').val(),
-                            'causa': $('#causa').val(),
-                            'ecivil_dif': $('#ecivil_dif').val(),
-                            'tipo_dif': $('#tipo_dif').val(),
-                            'genero_dif': $('#genero_dif').val(),
-
-
-                            'ci_resp': $('#dni').val(),
-                           // 'id_responsable': $('#responsable_search').val(),
-                            'nombres_resp': $('#nombres_prop').val(),
-                            'paterno_resp': $('#paterno_prop').val(),
-                            'materno_resp': $('#materno_prop').val(),
-                            'domicilio': $('#domicilio').val(),
-                            'genero_resp': $('#genero_prop').val(),
-                            'pag_con': $('#pag_con').val(),
-                            'tiempo': $('#tiempo').val(),
-                            'tipo_servicio': $('#tipo_servicio_value').val(),
-                            'servicio_hijos': $('#servicio-hijos').val(),
-                            'tipo_servicio_txt': $('#tipo_servicio_value option:selected').text(),
-                            'servicio_hijos_txt': $('#servicio-hijos option:selected').text(),
-
-                            'name_pago': $('#name_pago').val(),
-                            'paterno_pago': $('#paterno_pago').val(),
-                            'materno_pago': $('#materno_pago').val(),
-                            'person': $('#person').val(),
-                            'ci': $('#ci').val(),
-                            'sereci': $('#sereci').val(),
-                            // 'id_difunto': $('#difunto_search').val(),
-                           // 'id_responsable': $('#responsable_search').val(),
-                            'observacion': $('#observacion').val(),
-                            'cuenta_renov': $('#cuenta_renov').val(),
-                            'renov': $('#renov').val(),
-                            'monto_renov': $('#monto_renov').val(),
-                            'cuenta_renov': $('#cuenta_renov').val(),
-                            'totalservicios': $('#totalservicios').val(),
-                            'reg': $('#reg').val(),
-                            'nrofur': $('#nrofur').val(),
-                            'txttotal':$('#totalservicios').val(), 
-                            'gratis':$('#gratis').val(), 
-                            'externo':$('#externo').val(), 
-                            'funeraria':$('#funeraria').val(), 
-                            'urlcertificacion':$('#url-certificacion').val(), 
-                            'cant':$('#cant_cuerpos').val(),
-                            'descripcion_exhumacion':$('#descripcion_exhumacion').val()+"=>"+$('#descripcion_exhumacion').data("id")
-                        }),
-                        success: function(data_response) { //alert(data_response['status']);
-                            // console.log(data_response);
-                            if(data_response['status']==false){
-                                swal.fire({
-                                    title: "Nicho ocupado, debe liberar el nicho primero!",
-                                    text: "!Transacción rechazada!",
-                                    type: "error",
-                                    timer: 3000,
-                                    showCancelButton: false,
-                                    showConfirmButton: false
-                                });
-                            }
-                            else{
-
-                         
-                            swal.fire({
-                                title: "Guardado!",
-                                text: "!Registro realizado con éxito!",
-                                type: "success",
-                                timer: 2000,
-                                showCancelButton: false,
-                                showConfirmButton: false
-                            });
-                            setTimeout(function() {
-
-                                window.location.href = "{{ route('serv') }}";
-
-
-                            }, 2000);
-                          }
-                        },
-                        error: function(error) {
-
-                            if (error.status == 422) {
-                                Object.keys(error.responseJSON.errors).forEach(function(k) {
-                                    toastr["error"](error.responseJSON.errors[k]);
-                                    //console.log(k + ' - ' + error.responseJSON.errors[k]);
-                                });
-                            } else if (error.status == 400) {
-                                swal.fire({
-                                    title: "Registro Duplicado!",
-                                    text: "!Transacción rechazada!",
-                                    type: "error",
-                                    timer: 2000,
-                                    showCancelButton: false,
-                                    showConfirmButton: false
-                                });
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 2000);
-                            }
-
-                        }
-                    });
-                });
-
         </script>
 
     @stop

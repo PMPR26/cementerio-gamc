@@ -75,6 +75,7 @@ Route::group(['prefix' => 'cripta', 'middleware' => 'auth'], function () {
     Route::put('/update-cripta', [App\Http\Controllers\Cripta\CriptaController::class,'updateCripta'])->name('cripta.update');
      // servicios criptas mausoleos
      Route::get('/servicios-cripta-mausoleo', [App\Http\Controllers\Cripta\ServiciosCMController::class,'index'])->name('servcm'); 
+     Route::post('/load_cm', [App\Http\Controllers\Cripta\CriptaController::class,'buscarCriptaM'])->name('buscar.cripta');
 
 });
 
@@ -120,6 +121,7 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::get('/cargarMantenimiento', [App\Http\Controllers\Servicios\ServiciosController::class,'cargarMantenimiento'])->name('load.mant'); 
     Route::get('/renovacion', [App\Http\Controllers\Servicios\ServiciosController::class,'precioRenov'])->name('precio.renovacion'); 
     Route::get('generate-pdf', [App\Http\Controllers\Servicios\ServiciosController::class, 'generatePDF'])->name('serv.generatePDF')->middleware('auth');
+    Route::post('/new-serviciocm', [App\Http\Controllers\Servicios\ServiciosController::class,'createNewServicioscm'])->name('new.serviciocm');
    
    
  
