@@ -32,6 +32,7 @@ class CreateCriptaTable extends Migration
             $table->text('observaciones')->nullable();       
             $table->string('estado',10)->default('ACTIVO');
             $table->string('tipo_registro'); 
+            $table->string('codigo_antiguo')->nullable(); 
             $table->integer('user_id');
             $table->timestamps();
             $table->foreign('bloque_id')->references('id')->on('bloque');   
