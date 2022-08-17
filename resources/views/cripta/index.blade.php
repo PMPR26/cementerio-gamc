@@ -37,7 +37,7 @@
                 <th scope="col">#</th>       
                 <th scope="col">Tipo</th>  
                 <th scope="col">Código</th>  
-                <th scope="col">Nombre</th>             
+                <th scope="col">Propietario</th>             
                 <th scope="col">Superficie</th>             
                 <th scope="col">Estado</th>
                 <th scope="col">Operaciones</th>
@@ -52,7 +52,7 @@
                     <td scope="row">{{ $count++ }}</td>
                     <td>{{ $cripta->tipo_registro }}</td>                     
                     <td>{{ $cripta->codigo }}</td>  
-                    <td>{{ $cripta->Propietario }}</td>
+                    <td>{{ $cripta->nombre }}</td>
                     <td>{{ $cripta->superficie }}</td>                  
                     <td>{{ $cripta->estado }}</td>
 
