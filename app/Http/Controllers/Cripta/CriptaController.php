@@ -16,7 +16,10 @@ class CriptaController extends Controller
 {
     public function index(){
 
-        $cripta = Cripta::select('id', 'codigo',  'superficie','estado', 'tipo_registro')     
+        $cripta = Cripta::select('cripta_mausoleo.id', 'codigo',  'superficie','cripta_mausoleo.estado', 'tipo_registro', DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre')) 
+        ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )   
+        ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )    
+
         ->orderBy('tipo_registro', 'DESC')  
         // ->orderBy('nombre', 'DESC')
         ->get();
