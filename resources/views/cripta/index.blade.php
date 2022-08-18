@@ -130,21 +130,30 @@
                 <input id="cod-cripta" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="hidden" class="form-control" autocomplete="off"  onblur="generarCodigo()" readonly>
              </div>
 
-             <div class="col-sm-4">
+             <div class="col-sm-2">
                 <label>Estado de construcción:</label>
                 <select name="construido" id="construido" class="form-control">                  
                     <option value="CONSTRUIDO">CONSTRUIDO</option>
                     <option value="LOTE">LOTE</option>
-                </select>
-              
+                </select>              
              </div>
-             <div class="col-sm-4">
-                <label>Cajones Ocupados:</label>
+
+             <div class="col-sm-3">
+                <label>Cantidad Ocupados:</label>
                 <input id="ocupados" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
              </div>
 
-             <div class="col-sm-4">
-                <label>Total Cajones:</label>
+             <div class="col-sm-2">
+                <label>Cantidad Perpetuos:</label>
+                <input id="perpetuos" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
+             </div>
+             <div class="col-sm-2">
+                <label>Cantidad de Osarios:</label>
+                <input id="osarios" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
+             </div>
+
+             <div class="col-sm-3">
+                <label>Total Nichos:</label>
                 <input id="total_cajones" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
              </div>
 
@@ -324,7 +333,10 @@
                             'genero_resp' :  $('#genero').val(), 
                             'superficie': $('#superficie').val(),   
                             'nro_cripta' :  $('#nro-cripta').val(), 
-                            'ocupados' :  $('#ocupados').val(),                       
+                            'ocupados' :  $('#ocupados').val(),  
+                            'perpetuos' :  $('#perpetuos').val(),                       
+                            'osarios' :  $('#osarios').val(),                       
+
                             'total_cajones' :  $('#total_cajones').val(),  
                             'observaciones' :  $('#observaciones').val(), 
                             'estado_construccion' :  $('#construido').val(),  
@@ -406,8 +418,10 @@
                             $('#dni').val(data_response.response.ci),  
                             $('#domicilio').val(data_response.response.domicilio),  
                             $('#genero_resp').val(data_response.response.genero),  
-                            $('#construido').val(data_response.response.construido), 
-                            $('#ocupados').val(data_response.response.ocupados),                       
+                            $('#construido').val(data_response.response.estado_construccion), 
+                            $('#ocupados').val(data_response.response.ocupados), 
+                            $('#perpetuos').val(data_response.response.perpetuos),                       
+                            $('#osarios').val(data_response.response.osarios),                        
                             $('#total_cajones').val(data_response.response.total_cajones),  
                             $('#observaciones').html(data_response.response.observaciones), 
                             $('#url-foto').val(data_response.response.foto)  
@@ -429,7 +443,10 @@
                 $('#cod-sitio').val('');
                 $('#superficie').val('');
                 $('#construido').val(''), 
-                $('#ocupados').val(''),                       
+                $('#ocupados').val(''),  
+                $('#perpetuos').val(''),  
+                $('#osarios').val(''),  
+
                 $('#total_cajones').val(''),  
                 $('#observaciones').val(''),  
                 $('#url-foto').val(''),     
@@ -481,7 +498,10 @@
                            
                             'superficie': $('#superficie').val(),   
                             'estado_construccion' :  $('#construido').val(), 
-                            'ocupados' :  $('#ocupados').val(),                       
+                            'ocupados' :  $('#ocupados').val(), 
+                            'perpetuos' :  $('#perpetuos').val(),                       
+                            'osarios' :  $('#osarios').val(),                       
+
                             'total_cajones' :  $('#total_cajones').val(),  
                             'observaciones' :  $('#observaciones').val(),  
                             'foto' :  $('#url-foto').val(),     
