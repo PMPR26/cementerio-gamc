@@ -19,7 +19,7 @@ class CreateCriptaTable extends Migration
             $table->integer('cuartel_id');
             $table->integer('bloque_id')->nullable(); 
             $table->string('sitio'); 
-            $table->string('codigo',10);
+            $table->string('codigo',30);
             $table->decimal('superficie', 8, 2);
             // $table->integer('responsable_id',150)->nullable();
             // $table->string('paterno',150);
@@ -27,9 +27,10 @@ class CreateCriptaTable extends Migration
             // $table->string('dni',150)->nullable();
             $table->text('foto')->nullable();
             $table->integer('ocupados')->nullable();
-            $table->integer('perpetuos')->nullable();
-            $table->integer('osarios')->nullable();
             $table->integer('total_cajones')->nullable();
+            $table->integer('perpetuos_ocupados')->nullable();
+            $table->integer('total_perpetuos')->nullable();
+            $table->integer('osarios')->nullable();
             $table->string('estado_construccion')->nullable();
             $table->text('observaciones')->nullable();       
             $table->string('estado',10)->default('ACTIVO');
@@ -37,7 +38,7 @@ class CreateCriptaTable extends Migration
             $table->string('codigo_antiguo')->nullable(); 
             $table->integer('user_id');
             $table->timestamps();
-            $table->foreign('bloque_id')->references('id')->on('bloque');                     
+      //  $table->foreign('bloque_id')->references('id')->on('bloque');                     
         });
     }
 

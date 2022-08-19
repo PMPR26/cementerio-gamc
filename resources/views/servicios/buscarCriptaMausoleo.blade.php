@@ -13,8 +13,16 @@
        <input type="radio" name="buscar_cm" id="propietario" value="propietario" class="form-check-input"><label class="form-check-label" for="propietario"> Propietario</label> 
     </div> 
     
-    <div class="col-sm-8 col-md-8 col-xl-8">
-        <input type="text" name="search_field" id="search_field" class="form-control" placeholder="Ingrese aqui el dato a buscar" disabled>
+    <div class="col-sm-8 col-md-8 col-xl-8" id="propiet_txt" style="display:none" >
+        <input type="text" name="search_field" class="form-control" placeholder="Ingrese aqui el dato a buscar" disabled>
+    </div>
+    <div class="col-sm-8 col-md-8 col-xl-8" id="propiet_select" style="display:none" >
+        <select  class="form-control list_resp" id="list_resp" style="width: 100%;" disabled>
+            <option selected disabled>Seleccione</option>
+                    @foreach ($list_responsable as $value)
+                    <option value="{{ $value->id }}">{{ $value->nombre }}</option>
+                    @endforeach
+        </select>
     </div>
 
     <div class="col-sm-4 col-md-4 col-xl-4">

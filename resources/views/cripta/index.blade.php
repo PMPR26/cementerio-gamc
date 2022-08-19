@@ -38,7 +38,14 @@
                 <th scope="col">Tipo</th>  
                 <th scope="col">Código</th>  
                 <th scope="col">Propietario</th>             
-                <th scope="col">Superficie</th>             
+                <th scope="col">Superficie</th> 
+                <th scope="col">Nichos Ocupados</th>             
+                <th scope="col">Total Nichos</th> 
+                <th scope="col">Nichos Perpetuos</th>            
+                <th scope="col">Total Perpetuos</th>             
+
+                <th scope="col">Osarios</th>             
+
                 <th scope="col">Estado</th>
                 <th scope="col">Operaciones</th>
             </tr>
@@ -54,6 +61,12 @@
                     <td>{{ $cripta->codigo }}</td>  
                     <td>{{ $cripta->nombre }}</td>
                     <td>{{ $cripta->superficie }}</td>                  
+                    <td>{{ $cripta->ocupados }}</td>   
+                    <td>{{ $cripta->total_cajones }}</td>                  
+                    <td>{{ $cripta->perpetuos }}</td>                  
+                    <td>{{ $cripta->total_perpetuos }}</td>                  
+                    <td>{{ $cripta->osarios }}</td>                  
+
                     <td>{{ $cripta->estado }}</td>
 
                     <td>
@@ -138,24 +151,32 @@
                 </select>              
              </div>
 
-             <div class="col-sm-3">
-                <label>Cantidad Ocupados:</label>
+             <div class="col-sm-2">
+                <label>Nichos Ocupados:</label>
                 <input id="ocupados" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
              </div>
 
              <div class="col-sm-2">
-                <label>Cantidad Perpetuos:</label>
-                <input id="perpetuos" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
-             </div>
-             <div class="col-sm-2">
-                <label>Cantidad de Osarios:</label>
-                <input id="osarios" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
-             </div>
-
-             <div class="col-sm-3">
                 <label>Total Nichos:</label>
                 <input id="total_cajones" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
              </div>
+
+             <div class="col-sm-2">
+                <label>Nichos Perpetuos:</label>
+                <input id="perpetuos" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
+             </div>
+
+             <div class="col-sm-2">
+                <label>Total Perpetuos:</label>
+                <input id="total_perpetuos" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
+             </div>
+
+             <div class="col-sm-2">
+                <label>Total Osarios:</label>
+                <input id="osarios" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
+             </div>
+
+            
 
              <div class="col-sm-12 col-md-6 col-xl-6">
                 <label>Foto de la Cripta o Mausoleo:</label>                        
@@ -182,9 +203,23 @@
                
                 <div class="col-3">
                     <label>Documento de Identidad:</label>
-                    <input id="dni" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
-                </div>
+                    <div class="input-group input-group-lg">
+                    <input id="dni" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="search" class="form-control" autocomplete="off">
 
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-lg btn-default" id="buscarResp">
+                        <i class="fa fa-search"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-lg btn-default" id="generarciresp"
+                    title="generar carnet provisional">
+                    <i class="fa fa-pen"></i>
+                   </button>
+                </div>
+            </div>
+        </div>
+
+                
                <div class="col-3">
                 <label>Nombre:</label>
                 <input id="cripta-name" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
@@ -308,7 +343,7 @@
         $(document).ready(function(){
             $('#btn-cripta-editar').on('click', function(){
                     if($('#bloque :selected').text()=="" || $('#bloque :selected').text()=="SELECCIONAR" ){ var bloq="0";}
-                    else{var bloq=$('#bloque :selected').text();}
+                    else{var bloq=$('#bloque :selected').val();}
                 $.ajax({
                         type: 'PUT',
                         headers: {
@@ -334,7 +369,8 @@
                             'superficie': $('#superficie').val(),   
                             'nro_cripta' :  $('#nro-cripta').val(), 
                             'ocupados' :  $('#ocupados').val(),  
-                            'perpetuos' :  $('#perpetuos').val(),                       
+                            'perpetuos' :  $('#perpetuos').val(), 
+                            'total_perpetuos':$('#total_perpetuos').val(),                     
                             'osarios' :  $('#osarios').val(),                       
 
                             'total_cajones' :  $('#total_cajones').val(),  
@@ -420,7 +456,9 @@
                             $('#genero_resp').val(data_response.response.genero),  
                             $('#construido').val(data_response.response.estado_construccion), 
                             $('#ocupados').val(data_response.response.ocupados), 
-                            $('#perpetuos').val(data_response.response.perpetuos),                       
+                            $('#perpetuos').val(data_response.response.perpetuos),   
+                            $('#total_perpetuos').val(data_response.response.total_perpetuos),                      
+
                             $('#osarios').val(data_response.response.osarios),                        
                             $('#total_cajones').val(data_response.response.total_cajones),  
                             $('#observaciones').html(data_response.response.observaciones), 
@@ -444,7 +482,9 @@
                 $('#superficie').val('');
                 $('#construido').val(''), 
                 $('#ocupados').val(''),  
-                $('#perpetuos').val(''),  
+                $('#perpetuos').val(''), 
+                $('#total_perpetuos').val(''),  
+
                 $('#osarios').val(''),  
 
                 $('#total_cajones').val(''),  
@@ -472,7 +512,7 @@
             $('#btn-cripta').on('click', function()
             {
                 if($('#bloque :selected').text()=="" || $('#bloque :selected').text()=="SELECCIONAR" ){ var bloq="0";}
-                else{var bloq=$('#bloque :selected').text();}
+                else{var bloq=$('#bloque :selected').val();}
                 $.ajax({
                         type: 'POST',
                         headers: {
@@ -499,7 +539,9 @@
                             'superficie': $('#superficie').val(),   
                             'estado_construccion' :  $('#construido').val(), 
                             'ocupados' :  $('#ocupados').val(), 
-                            'perpetuos' :  $('#perpetuos').val(),                       
+                            'perpetuos' :  $('#perpetuos').val(),   
+                            'total_perpetuos' :  $('#total_perpetuos').val(),   
+                                                
                             'osarios' :  $('#osarios').val(),                       
 
                             'total_cajones' :  $('#total_cajones').val(),  
@@ -816,6 +858,93 @@ $(document).ready(function ()
                 }
             }
         });
+
+        $(document).on('click', '#generarciresp', function() {
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Content-Type': 'application/json'
+                },
+                url: "{{ route('generateCiResp') }}",
+                method: 'GET',
+                dataType: 'json',
+                success: function(ciresp) {
+                    console.log(ciresp);
+                    $('#dni').val(ciresp);
+
+                }
+            })
+
+})
+
+$(document).on('click', '#buscarResp', function() {
+                var ci = $('#dni').val();
+
+
+                if (ci.length < 1) {
+
+                    Swal.fire(
+                        'Busqueda finalizada!',
+                        'El campo C.I. esta vacio .',
+                        'warning'
+                    )
+
+                } else {
+                    var type = "responsable";
+                    dats = buscar_ci_resp(ci, type);
+
+                }
+            });
+
+            function buscar_ci_resp(ci, type) {
+                var datos = "";
+
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Content-Type': 'application/json'
+                    },
+                    url: "{{ route('search.difunto.responsable') }}",
+                    method: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        "ci": ci,
+                        "type": type
+                    }),
+                    success: function(data) {
+                        if (data.response == null) {
+                            Swal.fire(
+                                'Busqueda finalizada!',
+                                'El C.I. ingresado no esta registrado .',
+                                'warning'
+                            )
+                        } else {
+
+                            $('#cripta-name').val(data.response.nombres);
+                            $('#paterno').val(data.response.primer_apellido);
+                            $('#materno').val(data.response.segundo_apellido);
+                            $('#domicilio').val(data.response.domicilio);
+                            $('#genero').val(data.response.genero);
+                          
+
+                        }
+
+                    },
+                    error: function(xhr, status) {
+
+                        Swal.fire(
+                            'Busqueda finalizada!',
+                            'El registro no ha  sido encontrado o no existe .',
+                            'error'
+                        )
+                    },
+
+
+
+                });
+                // return datos;
+            }
 
     </script>
     @stop
