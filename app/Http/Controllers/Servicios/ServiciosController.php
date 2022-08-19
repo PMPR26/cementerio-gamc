@@ -95,6 +95,12 @@ class ServiciosController extends Controller
         ->whereNotNull('funeraria')
         ->distinct()->get();
 
+        $responsable=DB::table('responsable')
+        ->select('id', DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'))
+        ->where( 'estado' ,'ACTIVO')
+        ->distinct()->get();
+        // dd( $responsable) ;
+
         $causa=DB::table('difunto')
         ->select('causa')
         ->whereNotNull('causa')
@@ -105,7 +111,7 @@ class ServiciosController extends Controller
         ->where('estado', 'ACTIVO')
         ->distinct()->get();
 
-        return view('servicios/formRegistro', ['tipo_service' => $tipo_service['response'], 'funeraria' => $funeraria, 'causa' => $causa, 'cuarteles'=>$cuarteles]);
+        return view('servicios/formRegistro', ['tipo_service' => $tipo_service['response'], 'funeraria' => $funeraria, 'causa' => $causa, 'cuarteles'=>$cuarteles, 'list_responsable'=>$responsable]);
     }
  
 

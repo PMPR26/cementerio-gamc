@@ -16,11 +16,15 @@ class CriptaController extends Controller
 {
     public function index(){
 
-        $cripta = Cripta::select('cripta_mausoleo.id', 'codigo',  'superficie','cripta_mausoleo.estado', 'tipo_registro', DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre')) 
+        $cripta = Cripta::select('cripta_mausoleo.id', 'codigo',  'superficie','cripta_mausoleo.estado',
+         'tipo_registro','ocupados','total_cajones','perpetuos', 'total_perpetuos','osarios',
+         DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre')) 
         ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )   
         ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )    
+        ->orderBy('cripta_mausoleo.id', 'DESC') 
+        ->orderBy('tipo_registro', 'DESC') 
+        ->orderBy('cripta_mausoleo.codigo', 'DESC')  
 
-        ->orderBy('tipo_registro', 'DESC')  
         // ->orderBy('nombre', 'DESC')
         ->get();
 
@@ -69,6 +73,8 @@ class CriptaController extends Controller
             $cripta->superficie = trim($request->superficie);
             $cripta->ocupados = trim($request->ocupados);
             $cripta->perpetuos = trim($request->perpetuos);
+            $cripta->total_perpetuos = trim($request->total_perpetuos);
+
             $cripta->osarios = trim($request->osarios);
             $cripta->total_cajones = trim($request->total_cajones);
             $cripta->estado_construccion = trim($request->estado_construccion);
@@ -169,6 +175,8 @@ class CriptaController extends Controller
                         'tipo_registro' => $request->tipo_reg,                      
                         'ocupados' => trim($request->ocupados),
                         'perpetuos' => trim($request->perpetuos),
+                        'total_perpetuos' => trim($request->total_perpetuos),
+
                         'osarios' => trim($request->osarios),
                         'total_cajones' => trim($request->total_cajones),
                         'estado_construccion' => trim($request->estado_construccion),
@@ -287,7 +295,7 @@ class CriptaController extends Controller
 
         }
         else if($request->tipo_busqueda=="propietario"){
-            $sql= DB::table('cripta_mausoleo')->where('codigo', ''.$request->search_field.'')
+            $sql= DB::table('cripta_mausoleo')->where('cripta_mausoleo_responsable.responsable_id', ''.$request->search_field.'')
             ->leftjoin('cripta_mausoleo_responsable',  'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
             ->leftjoin('responsable',  'responsable.id','=','cripta_mausoleo_responsable.responsable_id' )
             ->leftjoin('cripta_mausoleo_difunto',  'cripta_mausoleo_difunto.cripta_mausoleo_id','=','cripta_mausoleo.id' )
