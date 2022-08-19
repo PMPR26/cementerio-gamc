@@ -162,7 +162,7 @@
              </div>
 
              <div class="col-sm-2">
-                <label>Nichos Perpetuos:</label>
+                <label>Perpetuos Ocupados:</label>
                 <input id="perpetuos" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
              </div>
 
