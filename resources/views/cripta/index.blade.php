@@ -39,13 +39,12 @@
                 <th scope="col">Código</th>  
                 <th scope="col">Propietario</th>             
                 <th scope="col">Superficie</th> 
-                <th scope="col">Nichos Ocupados</th>             
-                <th scope="col">Total Nichos</th> 
-                <th scope="col">Nichos Perpetuos</th>            
-                <th scope="col">Total Perpetuos</th>             
-
-                <th scope="col">Osarios</th>             
-
+                <th scope="col">Enterratorio Ocupados</th>             
+                <th scope="col">Total Enterratorio</th> 
+                <th scope="col">Osarios Ocupados</th>            
+                <th scope="col">Total Osarios</th>
+                <th scope="col">Cenisario</th> 
+                <th scope="col">Documentos Recibidos</th> 
                 <th scope="col">Estado</th>
                 <th scope="col">Operaciones</th>
             </tr>
@@ -61,11 +60,15 @@
                     <td>{{ $cripta->codigo }}</td>  
                     <td>{{ $cripta->nombre }}</td>
                     <td>{{ $cripta->superficie }}</td>                  
-                    <td>{{ $cripta->ocupados }}</td>   
-                    <td>{{ $cripta->total_cajones }}</td>                  
-                    <td>{{ $cripta->perpetuos }}</td>                  
-                    <td>{{ $cripta->total_perpetuos }}</td>                  
+                    <td>{{ $cripta->enterratorios_ocupados }}</td>   
+                    <td>{{ $cripta->total_enterratorios }}</td>                  
                     <td>{{ $cripta->osarios }}</td>                  
+                    <td>{{ $cripta->total_osarios; }}</td>                  
+                    <td>{{ $cripta->cenisarios }}</td>                  
+                    <td> 
+                        {{ $cripta->documentos_recibidos }}
+                    
+                    </td>                  
 
                     <td>{{ $cripta->estado }}</td>
 
@@ -102,10 +105,30 @@
             </div>
         <div id="section_data" style="display: none">
             <br>
-            <h6 class="section_divider">
+            <h6 class="section_divider card text-white bg-info mb-3 p-4">
                 DATOS DEL MAUSOLEO O CRIPTA
             </h6>
             <br>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-xl-6">
+                <label>Familia</label>
+                <input id="familia" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" required>
+            </div>
+            <div class="col-sm-12 col-md-3 col-xl-3" id="box_tipo_cripta" style="display: none">
+                <label>Tipo de Cripta</label>
+                <select  class="form-control select_tipo_cripta" id="tipo_cripta" style="width: 100%">
+                    <option selected disabled>Seleccionar</option>                          
+                            <option value="ENTERRADA">ENTERRADA</option>  
+                            <option value="ELEVADA">ELEVADA</option>  
+                    </select>
+            </div>
+            <div class="col-sm-12 col-md-3 col-xl-3">
+                <label>Ultima Gestion Pagada</label>
+                <input id="ultima_gestion_pagada"  onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  maxlength="4" ></div>
+
+            </div>
+        </div>
           <div class="row">
                 <div class="col-sm-2">
                             <label>Cuartel</label>
@@ -126,9 +149,8 @@
                 </div>
 
                 <div class="col-sm-2">
-                    <label>Sitio:</label>                      
-                    <input id="cod-sitio" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off"  maxlength="15" onblur="generarCodigo()" required>
-                </div>
+                    <label>Nro Sitio:</label>                      
+                    <input id="cod-sitio" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off"  maxlength="15" onblur="generarCodigo()" required>                </div>
               
                 <div class="col-sm-3">
                     <label>Superficie m2:</label>
@@ -145,35 +167,41 @@
 
              <div class="col-sm-2">
                 <label>Estado de construcción:</label>
-                <select name="construido" id="construido" class="form-control">                  
-                    <option value="CONSTRUIDO">CONSTRUIDO</option>
+                <select name="construido" id="construido" class="form-control"> 
+                    <option value="ABANDONADA">ABANDONADA</option>
+                    <option value="COMO_MAUSOLEO_PEQ">CONST. COMO MAUSOLEO PEQ.</option>
+                    <option value="COMO_MAUSOLEO_GRANDE">CONST. COMO MAUSOLEO GRANDE.</option>
+                    <option value="DETERIORO">DETERIORO</option>
+                    <option value="EN_CONSTRUCCION">EN CONSTRUCCION</option>
                     <option value="LOTE">LOTE</option>
+                    <option value="OBRA_FINA">OBRA_FINA</option>
+                    <option value="OBRA_GRUESA">OBRA_GRUESA</option>
                 </select>              
              </div>
 
              <div class="col-sm-2">
-                <label>Nichos Ocupados:</label>
-                <input id="ocupados" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
+                <label>Enterratorios Ocupados:</label>
+                <input id="enterratorios_ocupados" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
              </div>
 
              <div class="col-sm-2">
-                <label>Total Nichos:</label>
-                <input id="total_cajones" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
+                <label>Total Enterratorios:</label>
+                <input id="total_enterratorios" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
              </div>
 
              <div class="col-sm-2">
-                <label>Perpetuos Ocupados:</label>
-                <input id="perpetuos" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
-             </div>
-
-             <div class="col-sm-2">
-                <label>Total Perpetuos:</label>
-                <input id="total_perpetuos" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
+                <label>Osarios Ocupados:</label>
+                <input id="osarios" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
              </div>
 
              <div class="col-sm-2">
                 <label>Total Osarios:</label>
-                <input id="osarios" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
+                <input id="total_osarios" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
+             </div>
+
+             <div class="col-sm-2">
+                <label>Total Osarios:</label>
+                <input id="cenisarios" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
              </div>
 
             
@@ -183,7 +211,10 @@
                 <div id="foto" class="dropzone" style="text-align: center"> </div>
                  <hr>
                  <input type="hidden" id="url-foto">
+                 <br>
+                 <p id="foto_actual"></p>
             </div>
+           
             <div class="col-sm-12 col-md-6 col-xl-6">
                 <label>Observaciones:</label>                        
                 <textarea id="observaciones" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" rows="6"> </textarea>
@@ -193,7 +224,7 @@
        
         </div>
         <hr>
-        <h6>
+        <h6 class="section_divider card text-white bg-info mb-3 p-4">
             DATOS DEL PROPIETARIO DEL MAUSOLEO O CRIPTA 
         </h6>
             <p><b>* No llenar esta sección en caso de que el mausoleo o cripta no tenga propietario</b></p>
@@ -201,70 +232,112 @@
 
         <div class="row"> 
                
-                <div class="col-3">
+                <div class="col-sm-12 col-md-4 col-xl-4">
                     <label>Documento de Identidad:</label>
                     <div class="input-group input-group-lg">
                     <input id="dni" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="search" class="form-control" autocomplete="off">
 
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-lg btn-default" id="buscarResp">
-                        <i class="fa fa-search"></i>
-                    </button>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-lg btn-default" id="buscarResp">
+                                <i class="fa fa-search"></i>
+                            </button>
 
-                    <button type="button" class="btn btn-lg btn-default" id="generarciresp"
-                    title="generar carnet provisional">
-                    <i class="fa fa-pen"></i>
-                   </button>
+                            <button type="button" class="btn btn-lg btn-default" id="generarciresp"
+                            title="generar carnet provisional">
+                            <i class="fa fa-pen"></i>
+                        </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
+                   <div class="col-sm-12 col-md-4 col-xl-4">
+                    <label>Telefono:</label>
+                    <input id="telefono" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" maxlength="8">
+                   </div>
+    
+                   <div class="col-sm-12 col-md-4 col-xl-4">
+                    <label>Genero :</label>
+                        <select name="genero" id="genero" class="form-control">            
+                            <option value="MASCULINO">MASCULINO</option>
+                            <option value="FEMENINO">FEMENINO</option>        
+                        </select>
+                    </div>
+           </div>
+        <div class="row"> 
                 
-               <div class="col-3">
+               <div class="col-sm-12 col-md-4 col-xl-4">
                 <label>Nombre:</label>
                 <input id="cripta-name" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
                </div>
 
-               <div class="col-3">
+               <div class="col-sm-12 col-md-4 col-xl-4">
                 <label>Paterno:</label>
                 <input id="paterno" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
                </div>
 
-               <div class="col-3">
+               <div class="col-sm-12 col-md-4 col-xl-4">
                 <label>Materno:</label>
                 <input id="materno" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
-               </div>
-
-               <div class="col-8">
-                <label>Domicilio:</label>
-                <input id="domicilio" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
-               </div>
-
-               <div class="form-group col-sm-6 col-md-2 col-xl-2">
-                <label>Genero :</label>
-                <select name="genero" id="genero" class="form-control">            
-                    <option value="MASCULINO">MASCULINO</option>
-                    <option value="FEMENINO">FEMENINO</option>        
-                </select>
+               </div>            
+        </div>
+        <div class="row pb-4"> 
+                <div class="col-sm-12 col-md-10 col-xl-10">
+                    <label>Domicilio:</label>
+                    <input id="domicilio" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
                 </div>
-        {{-- <div class="col-3">
-            <label>Superficie Real en m2:</label>
-            <input id="superficie_real" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
-        </div> --}}
-           
-            <div class="col-sm-6 col-md-2 col-xl-2" id="estado" style="display: none">
+                <div class="col-sm-6 col-md-2 col-xl-2" id="estado" style="display: none">
                     <label>Estado:</label>
                     <select  id="estado" class="form-control">
                         <option value="ACTIVO">ACTIVO</option>
                         <option value="INACTIVO">INACTIVO</option>
                     </select>
+                </div>
+        </div>
+        <div class="row"> 
+            <div class="col-sm-12 col-md-12 col-xl-12"><h6 class="section_divider card text-white bg-info mb-3 p-4">DOCUMENTOS RECIBIDOS</h6></div>
+
+            <div class="col-sm-4 col-md-3 col-xl-3">
+                <label for="">Fecha Adjudicacion</label>
+                <input type="date" name="adjudicacion" id="adjudicacion" class="form-control">
             </div>
+            
+            <div class="col-sm-8 col-md-9 col-xl-9">
+                <div class="row pl-4">
+                    <p><b>Seleccionar los documentos presentados por el/los propietarios</b></p>
+                </div>
+                <div class="row pl-lg-4">
+                    <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="resolucion" value="resolucion" >
+                        <label for="resolucion" class="custom-control-label">Nro Resolución / Nro Testimonio</label>
+                        <br>
+                        <input type="text" name="nro_resolucion" id="nro_resolucion"  style="display: none">
+                    </div>
+        
+                    <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="bienes_m" value="bienes_m" >
+                        <label for="bienes_m" class="custom-control-label">Bienes Municipales</label>
+                    </div>
+        
+                    <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="ci" value="ci"  >
+                        <label for="ci" class="custom-control-label">Carnet de Identidad</label>
+                        <br>
+                        <input type="text" name="nro_ci" id="nro_ci"  style="display: none">
+                    </div>
+        
+                    <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="planos_aprobados" value="planos_aprobados"  >
+                        <label for="planos_aprobados" class="custom-control-label">Planos Aprobados</label>
+                    </div>
+               
+                </div>
+            </div> 
         </div>
 
        <hr>
        <div class="col-sm-12" style="text-align: center">
             <button type="button" id="btn-cripta" class="btn btn-success btn-editar">Guardar</button>
-            <button type="button" style="display:none" id="btn-cripta-editar" class="btn btn-success btn-editar">Guardar</button>
+            <button type="button" style="display:none" id="btn-cripta-editar" class="btn btn-success btn-editar">Guardar Modificación</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         </div> 
     </div>     
@@ -326,12 +399,15 @@
                             $('#section_data').hide();
                     }else if(val=="CRIPTA"){
                          $('#letra').val("C");
-                        $('#section_data').show();
+                         $('#section_data').show();
+                         $('#box_tipo_cripta').show();
+                         $('#box_tipo_cripta').prop('disabled', false);
                     }
                     else if(val=="MAUSOLEO"){
                         $('#letra').val("M");
                         $('#section_data').show();
-
+                        $('#box_tipo_cripta').hide();
+                        $('#box_tipo_cripta').prop('disabled', true);
                     }
                
     
@@ -344,21 +420,29 @@
             $('#btn-cripta-editar').on('click', function(){
                     if($('#bloque :selected').text()=="" || $('#bloque :selected').text()=="SELECCIONAR" ){ var bloq="0";}
                     else{var bloq=$('#bloque :selected').val();}
+                
+                // documentos recibido
+                    if ($("#resolucion").is(":checked")) { var resolucion=$('#nro_resolucion').val(); } else { var resolucion="FALTA";}
+                    if ($("#ci").is(":checked")) { var ci=$('#nro_ci').val();} else { var ci="FALTA";}
+                    if ($("#bienes_m").is(":checked")) { var bienes_m="BIENES M";} else { var bienes_m="FALTA";}
+                    if ($("#planos_aprobados").is(":checked")) { var planos_aprobados="PLANOS A";} else { var planos_aprobados="FALTA";}
+
                 $.ajax({
                         type: 'PUT',
                         headers: {
                             'Content-Type':'application/json',
-                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}'
                         },
                         url: '{{ route("cripta.update") }}',
                         async: false,
-                        data: JSON.stringify({
+                        data: JSON.stringify({  
                             'id_cripta':  $('#btn-cripta-editar').val(),
                             'id_cuartel':  $('.select-cuartel').val(),
                             'codigo': $('#cod-cripta').val(),
                             'codigo_ant': $('#cod_cripta_ant').val(),
                             'bloque':bloq,
                             'sitio':$('#cod-sitio').val(),
+                            'familia':$('#familia').val(),
                             'tipo_reg':$('#tipo_reg').val(),
                             'nombres_resp': $('#cripta-name').val(),   
                             'paterno_resp' :  $('#paterno').val(),                       
@@ -366,18 +450,32 @@
                             'ci_resp' :  $('#dni').val(),  
                             'domicilio' :  $('#domicilio').val(),                            
                             'genero_resp' :  $('#genero').val(), 
+                            'celular' :  $('#telefono').val(), 
+
                             'superficie': $('#superficie').val(),   
                             'nro_cripta' :  $('#nro-cripta').val(), 
-                            'ocupados' :  $('#ocupados').val(),  
-                            'perpetuos' :  $('#perpetuos').val(), 
-                            'total_perpetuos':$('#total_perpetuos').val(),                     
-                            'osarios' :  $('#osarios').val(),                       
+                            'enterratorios_ocupados' :  $('#enterratorios_ocupados').val(),  
+                            'total_enterratorios' :  $('#total_enterratorios').val(),  
 
-                            'total_cajones' :  $('#total_cajones').val(),  
+                            'osarios' :  $('#osarios').val(), 
+                            'total_osarios':$('#total_osarios').val(),                     
+                            'cenisarios' :  $('#cenisarios').val(),                       
+
                             'observaciones' :  $('#observaciones').val(), 
-                            'estado_construccion' :  $('#construido').val(),  
+                            'estado_construccion' :  $('#construido').val(), 
+                            'tipo_cripta':$('#tipo_cripta option:selected').val(),     
+                            'adjudicacion':$('#adjudicacion').val(),
+                            'ultima_gestion_pagada':$('#ultima_gestion_pagada').val(),
                             'foto' :  $('#url-foto').val(), 
-                            'status': $('#estado').val()                        
+                            'estado': $('#estado').val() ,         
+                            'documentos_recibidos':  { 
+                                                       'resolucion': resolucion,
+                                                       'ci': ci,
+                                                       'bienes_m': bienes_m,
+                                                       'planos_aprobados': planos_aprobados
+                                                    }
+
+                                       
                         }),
                         success: function(data_response) {
                             if(data_response.status){
@@ -425,6 +523,7 @@
 
             $(document).on('click', '#btn-editar', function(){
                 $('#section_data').show();
+                $('#estado').show();
 
                 $.ajax({
                         type: 'GET',
@@ -438,7 +537,7 @@
                             console.log(data_response);
                             $('#modal-cripta').modal('show');
                             $('#btn-cripta-editar').show(300);
-                            $('#btn-cripta').hide(300);
+                            $('#btn-cripta').hide(300);                        
                             $(".select-cuartel").val(data_response.response.cuartel_id).trigger('change');
                             $('#cod-cripta').val(data_response.response.codigo);
                             $('#cod_cripta_ant').val(data_response.response.codigo_antiguo); 
@@ -449,20 +548,57 @@
                             $('#superficie').val(data_response.response.superficie);
                             $('#estado').val(data_response.response.estado);
                             $('#btn-cripta-editar').val(data_response.response.id);                           
-                            $('#paterno').val(data_response.response.primer_apellido),                       
-                            $('#materno').val(data_response.response.segundo_apellido),     
-                            $('#dni').val(data_response.response.ci),  
-                            $('#domicilio').val(data_response.response.domicilio),  
-                            $('#genero_resp').val(data_response.response.genero),  
-                            $('#construido').val(data_response.response.estado_construccion), 
-                            $('#ocupados').val(data_response.response.ocupados), 
-                            $('#perpetuos').val(data_response.response.perpetuos),   
-                            $('#total_perpetuos').val(data_response.response.total_perpetuos),                      
+                            $('#paterno').val(data_response.response.primer_apellido);                       
+                            $('#materno').val(data_response.response.segundo_apellido);     
+                            $('#dni').val(data_response.response.ci);  
+                            $('#domicilio').val(data_response.response.domicilio);  
+                            $('#genero_resp').val(data_response.response.genero);  
+                            $('#telefono').val(data_response.response.celular);  
+                            $('#construido').val(data_response.response.estado_construccion); 
+                            $('#enterratorios_ocupados').val(data_response.response.enterratorios_ocupados); 
+                            $('#total_enterratorios').val(data_response.response.total_enterratorios); 
+                            $('#osarios').val(data_response.response.osarios);   
+                            $('#total_osarios').val(data_response.response.total_osarios);   
+                            $('#cenisarios').val(data_response.response.cenisarios);                        
+                            $('#observaciones').html(data_response.response.observaciones); 
+                            $('#familia').val(data_response.response.familia); 
+                            if(data_response.response.documentos_recibidos){
+                                var ar=JSON.parse(data_response.response.documentos_recibidos);
+                                console.log(ar);
+                                if(ar.bienes_m=="BIENES M"){ $('#bienes_m').prop('checked', true); }else{$('#bienes_m').prop('checked', false);}
+                                if(ar.ci!="FALTA"){ $('#ci').prop('checked', true); $('#nro_ci').val(ar.ci); $('#nro_ci').show(); }else{$('#ci').prop('checked', false);}
+                                if(ar.resolucion!="FALTA"){ $('#resolucion').prop('checked', true); $('#nro_resolucion').val(ar.resolucion); $('#nro_resolucion').show(); }else{$('#resolucion').prop('checked', false);}
+                                if(ar.planos_aprobados=="PLANOS A"){ $('#planos_aprobados').prop('checked', true); }else{$('#planos_aprobados').prop('checked', false);}
 
-                            $('#osarios').val(data_response.response.osarios),                        
-                            $('#total_cajones').val(data_response.response.total_cajones),  
-                            $('#observaciones').html(data_response.response.observaciones), 
-                            $('#url-foto').val(data_response.response.foto)  
+
+
+                            }
+ 
+
+
+                             $('#adjudicacion').val(data_response.response.adjudicacion);
+                             $('#ultima_gestion_pagada').val(data_response.response.ultima_gestion_pagada);
+
+                             $('#familia').val(data_response.response.familia); 
+
+                            if(data_response.response.foto!=null){
+                               $('#url-foto').val(data_response.response.foto)  ;
+                               $('#foto_actual').append('<a href="'+ data_response.response.foto+'" target="_blank">Ver foto </a>');
+
+                            }else{
+                                $('#foto_actual').empty();
+                            }
+                            if($('#tipo_reg option:selected').val() =="CRIPTA"){  
+                                        $('#letra').val("C"); 
+                                        $('#box_tipo_cripta').show();  
+                                        $('#box_tipo_cripta').prop('disabled', false);                                      
+                                        $('#tipo_cripta').val(data_response.response.tipo_cripta);
+                                 }else{
+                                    $('#letra').val("M");
+                                    $('#box_tipo_cripta').hide();  
+                                    $('#box_tipo_cripta').prop('disabled', true);
+                                    $('#tipo_cripta').val("");
+                                 }
 
                         }
                     });
@@ -481,20 +617,40 @@
                 $('#cod-sitio').val('');
                 $('#superficie').val('');
                 $('#construido').val(''), 
-                $('#ocupados').val(''),  
-                $('#perpetuos').val(''), 
-                $('#total_perpetuos').val(''),  
+                $('#enterratorios_ocupados').val(''),  
+                $('#total_enterratorios').val(''),  
 
-                $('#osarios').val(''),  
+                $('#osarios').val(''), 
+                $('#total_osarios').val(''),  
 
-                $('#total_cajones').val(''),  
+                $('#cenisarios').val(''),  
+
                 $('#observaciones').val(''),  
                 $('#url-foto').val(''),     
                 $('#domicilio').val(''),                           
-                $('#genero').val(''),                
+                $('#genero').val(''), 
+                $('#telefono').val(''),                
+
                 $('#modal-cripta').modal('show');
                 $('#btn-cripta-editar').hide(300);
                 $('#btn-cripta').show(300);
+                $('#familia').val('');                
+                $('#tipo_cripta').val(''); 
+                $('#resolucion').prop('checked', false);                
+
+                $('#ci').prop('checked', false);
+                $('#nro_ci').val(''),                           
+                $('#nro_resolucion').val(''),    
+              $('#ultima_gestion_pagada').val(''),
+
+
+                $('#planos_aprobados').prop('checked', false); 
+                $('#bienes_m').prop('checked', false); 
+
+
+
+
+
             });
 
 
@@ -511,8 +667,15 @@
 
             $('#btn-cripta').on('click', function()
             {
-                if($('#bloque :selected').text()=="" || $('#bloque :selected').text()=="SELECCIONAR" ){ var bloq="0";}
-                else{var bloq=$('#bloque :selected').val();}
+                if($('#bloque :selected').text()=="" || $('#bloque :selected').text()=="SELECCIONAR" ){ var bloq="0";}else{var bloq=$('#bloque :selected').val();}
+                // documentos recibido
+                    if ($("#resolucion").is(":checked")) { var resolucion=$('#nro_resolucion').val(); } else { var resolucion="FALTA";}
+                    if ($("#ci").is(":checked")) { var ci=$('#nro_ci').val();} else { var ci="FALTA";}
+                    if ($("#bienes_m").is(":checked")) { var bienes_m="BIENES M";} else { var bienes_m="FALTA";}
+                    if ($("#planos_aprobados").is(":checked")) { var planos_aprobados="PLANOS A";} else { var planos_aprobados="FALTA";}
+
+
+
                 $.ajax({
                         type: 'POST',
                         headers: {
@@ -525,7 +688,7 @@
                             'id_cuartel':  $('.select-cuartel').val(),
                             'codigo': $('#cod-cripta').val(),
                             'codigo_ant': $('#cod_cripta_ant').val(),
-                            'bloque':bloq,
+                            'bloque':bloq,                         
                             'sitio':$('#cod-sitio').val(),
                             'tipo_reg':$('#tipo_reg').val(),
                             'nombres_resp': $('#cripta-name').val(),                             
@@ -533,22 +696,28 @@
                             'materno_resp' :  $('#materno').val(),     
                             'ci_resp' :  $('#dni').val(),  
                             'domicilio' :  $('#domicilio').val(),                            
-                            'genero_resp' :  $('#genero').val(),     
-                            // 'paterno' :  $('#paterno').val(),                       
-                           
+                            'genero_resp' :  $('#genero').val(), 
                             'superficie': $('#superficie').val(),   
                             'estado_construccion' :  $('#construido').val(), 
-                            'ocupados' :  $('#ocupados').val(), 
-                            'perpetuos' :  $('#perpetuos').val(),   
-                            'total_perpetuos' :  $('#total_perpetuos').val(),   
-                                                
-                            'osarios' :  $('#osarios').val(),                       
-
-                            'total_cajones' :  $('#total_cajones').val(),  
+                            'enterratorios_ocupados' :  $('#enterratorios_ocupados').val(), 
+                            'total_enterratorios' :  $('#total_enterratorios').val(),  
+                            'osarios' :  $('#osarios').val(),   
+                            'total_osarios' :  $('#total_osarios').val(),
+                            'cenisarios' :  $('#cenisarios').val(),   
                             'observaciones' :  $('#observaciones').val(),  
-                            'foto' :  $('#url-foto').val(),     
-                            // 'domicilio' :  $('#domicilio').val(),                           
-                            // 'genero' :  $('#genero').val(),                       
+                            'foto' :  $('#url-foto').val(),   
+                            'celular' :  $('#telefono').val(), 
+                            'ultima_gestion_pagada' :  $('#ultima_gestion_pagada').val(),   
+
+                            'familia':$('#familia').val(),
+                            'tipo_cripta':$('#tipo_cripta option:selected').val(),     
+                            'adjudicacion':$('#adjudicacion').val(),
+                            'documentos_recibidos':  { 
+                                                       'resolucion': resolucion,
+                                                       'ci': ci,
+                                                       'bienes_m': bienes_m,
+                                                       'planos_aprobados': planos_aprobados
+                                                    },
 
                             'status': $('#estado').val()
                         }),
@@ -945,6 +1114,24 @@ $(document).on('click', '#buscarResp', function() {
                 });
                 // return datos;
             }
+            //controlar activacion de nro de resolucion como documetno recibido
+            $(document).on('click', '#resolucion', function(){
+                 if ($("#resolucion").is(":checked")) {
+                    $('#nro_resolucion').show();
+                } else {
+                    $('#nro_resolucion').val("");
+                    $('#nro_resolucion').hide(); 
+                }
+            });
 
+             //controlar activacion de nro de ci como documetno recibido
+             $(document).on('click', '#ci', function(){
+                 if ($("#ci").is(":checked")) {
+                    $('#nro_ci').show();
+                } else {
+                    $('#nro_ci').val("");
+                    $('#nro_ci').hide(); 
+                }
+            });
     </script>
     @stop
