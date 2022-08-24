@@ -14,6 +14,14 @@
     <h1>Gestion de Criptas y Mausoleos</h1>
 @stop
 
+
+    <style>
+        .obligatorio{
+            color: red;
+            font-weight: 900;
+        }
+    </style>
+
 @section('content')
 
 <div class="card">
@@ -44,6 +52,8 @@
                 <th scope="col">Osarios Ocupados</th>            
                 <th scope="col">Total Osarios</th>
                 <th scope="col">Cenisario</th> 
+                <th scope="col">Ultima Gestion Pagada</th> 
+
                 <th scope="col">Documentos Recibidos</th> 
                 <th scope="col">Estado</th>
                 <th scope="col">Operaciones</th>
@@ -63,8 +73,10 @@
                     <td>{{ $cripta->enterratorios_ocupados }}</td>   
                     <td>{{ $cripta->total_enterratorios }}</td>                  
                     <td>{{ $cripta->osarios }}</td>                  
-                    <td>{{ $cripta->total_osarios; }}</td>                  
-                    <td>{{ $cripta->cenisarios }}</td>                  
+                    <td>{{ $cripta->total_osarios }}</td>                  
+                    <td>{{ $cripta->cenisarios }}</td>      
+                    <td>{{ $cripta->ultima_gestion_pagada }}</td>                  
+
                     <td> 
                         {{ $cripta->documentos_recibidos }}
                     
@@ -86,261 +98,267 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Registrar Nueva Cripta</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Criptas - Mausoleos</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-            <div class="row">
-                <div class="col-12">
-                    <label>tipo:</label>
-                    <select  id="tipo_reg" class="form-control">
-                        <option value="0">SELECCIONAR</option>
-                        <option value="CRIPTA">CRIPTA</option>
-                        <option value="MAUSOLEO">MAUSOLEO</option>
-                    </select>
+                <div class="row">
+                    <div class="col-12">
+                        <label>tipo de registro:</label> <span class="obligatorio">*</span>
+                        <select  id="tipo_reg" class="form-control" required>
+                            <option value="0">SELECCIONAR</option>
+                            <option value="CRIPTA">CRIPTA</option>
+                            <option value="MAUSOLEO">MAUSOLEO</option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="letra" id="letra" required>
                 </div>
-                <input type="hidden" name="letra" id="letra">
-            </div>
         <div id="section_data" style="display: none">
-            <br>
-            <h6 class="section_divider card text-white bg-info mb-3 p-4">
-                DATOS DEL MAUSOLEO O CRIPTA
-            </h6>
-            <br>
+                    <br>
+                    <h6 class="section_divider card text-white bg-info mb-3 p-4">
+                        DATOS DEL MAUSOLEO O CRIPTA
+                    </h6>
+                    <br>
 
-        <div class="row">
-            <div class="col-sm-12 col-md-6 col-xl-6">
-                <label>Familia</label>
-                <input id="familia" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" required>
-            </div>
-            <div class="col-sm-12 col-md-3 col-xl-3" id="box_tipo_cripta" style="display: none">
-                <label>Tipo de Cripta</label>
-                <select  class="form-control select_tipo_cripta" id="tipo_cripta" style="width: 100%">
-                    <option selected disabled>Seleccionar</option>                          
-                            <option value="ENTERRADA">ENTERRADA</option>  
-                            <option value="ELEVADA">ELEVADA</option>  
-                    </select>
-            </div>
-            <div class="col-sm-12 col-md-3 col-xl-3">
-                <label>Ultima Gestion Pagada</label>
-                <input id="ultima_gestion_pagada"  onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  maxlength="4" ></div>
-
-            </div>
-        </div>
-          <div class="row">
-                <div class="col-sm-2">
-                            <label>Cuartel</label>
-                            {{-- @php(print_r($cuartel)); --}}
-                            <select  class="form-control select-cuartel" id="cuartel" style="width: 100%" onchange="generarCodigo()">
-                            <option selected disabled>Seleccione un cuartel</option>
-                                    @foreach ($cuartel as $value)
-                                    <option value="{{ $value->id }}">{{ $value->codigo }}</option>
-                                    @endforeach
-                            </select>
-                </div>
-                <div class="col-sm-2">
-                    <label>Bloque:</label>
-                        <select  class="form-control select-bloque" id="bloque" style="width: 100%" onchange="generarCodigo()">
-                          <option selected disabled>Seleccione un cuartel</option>                       
-                        </select>
-                    {{-- <input id="cod-cripta" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off"> --}}
-                </div>
-
-                <div class="col-sm-2">
-                    <label>Nro Sitio:</label>                      
-                    <input id="cod-sitio" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off"  maxlength="15" onblur="generarCodigo()" required>                </div>
-              
-                <div class="col-sm-3">
-                    <label>Superficie m2:</label>
-                    <input id="superficie" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off" onblur="generarCodigo()" required>
-                </div>
-
-            
-
-             <div class="col-sm-3">
-                <label>Codigo Anterior:</label>
-                <input id="cod_cripta_ant" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off"  >
-                <input id="cod-cripta" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="hidden" class="form-control" autocomplete="off"  onblur="generarCodigo()" readonly>
-             </div>
-
-             <div class="col-sm-2">
-                <label>Estado de construcción:</label>
-                <select name="construido" id="construido" class="form-control"> 
-                    <option value="ABANDONADA">ABANDONADA</option>
-                    <option value="COMO_MAUSOLEO_PEQ">CONST. COMO MAUSOLEO PEQ.</option>
-                    <option value="COMO_MAUSOLEO_GRANDE">CONST. COMO MAUSOLEO GRANDE.</option>
-                    <option value="DETERIORO">DETERIORO</option>
-                    <option value="EN_CONSTRUCCION">EN CONSTRUCCION</option>
-                    <option value="LOTE">LOTE</option>
-                    <option value="OBRA_FINA">OBRA_FINA</option>
-                    <option value="OBRA_GRUESA">OBRA_GRUESA</option>
-                </select>              
-             </div>
-
-             <div class="col-sm-2">
-                <label>Enterratorios Ocupados:</label>
-                <input id="enterratorios_ocupados" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
-             </div>
-
-             <div class="col-sm-2">
-                <label>Total Enterratorios:</label>
-                <input id="total_enterratorios" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
-             </div>
-
-             <div class="col-sm-2">
-                <label>Osarios Ocupados:</label>
-                <input id="osarios" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
-             </div>
-
-             <div class="col-sm-2">
-                <label>Total Osarios:</label>
-                <input id="total_osarios" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
-             </div>
-
-             <div class="col-sm-2">
-                <label>Total Osarios:</label>
-                <input id="cenisarios" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
-             </div>
-
-            
-
-             <div class="col-sm-12 col-md-6 col-xl-6">
-                <label>Foto de la Cripta o Mausoleo:</label>                        
-                <div id="foto" class="dropzone" style="text-align: center"> </div>
-                 <hr>
-                 <input type="hidden" id="url-foto">
-                 <br>
-                 <p id="foto_actual"></p>
-            </div>
-           
-            <div class="col-sm-12 col-md-6 col-xl-6">
-                <label>Observaciones:</label>                        
-                <textarea id="observaciones" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" rows="6"> </textarea>
-                 <hr>
-                 <input type="hidden" id="url-foto">
-            </div>
-       
-        </div>
-        <hr>
-        <h6 class="section_divider card text-white bg-info mb-3 p-4">
-            DATOS DEL PROPIETARIO DEL MAUSOLEO O CRIPTA 
-        </h6>
-            <p><b>* No llenar esta sección en caso de que el mausoleo o cripta no tenga propietario</b></p>
-        <br>
-
-        <div class="row"> 
-               
-                <div class="col-sm-12 col-md-4 col-xl-4">
-                    <label>Documento de Identidad:</label>
-                    <div class="input-group input-group-lg">
-                    <input id="dni" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="search" class="form-control" autocomplete="off">
-
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-lg btn-default" id="buscarResp">
-                                <i class="fa fa-search"></i>
-                            </button>
-
-                            <button type="button" class="btn btn-lg btn-default" id="generarciresp"
-                            title="generar carnet provisional">
-                            <i class="fa fa-pen"></i>
-                        </button>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6 col-xl-6">
+                            <label>Familia</label><span class="obligatorio">*</span>
+                            <input id="familia" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" required>
                         </div>
+                        <div class="col-sm-12 col-md-3 col-xl-3" id="box_tipo_cripta" style="display: none">
+                            <label>Tipo de Cripta</label><span class="obligatorio">*</span>
+                            <select  class="form-control select_tipo_cripta" id="tipo_cripta" style="width: 100%" required>
+                                <option selected disabled>Seleccionar</option>                          
+                                        <option value="ENTERRADA">ENTERRADA</option>  
+                                        <option value="ELEVADA">ELEVADA</option>  
+                                </select>
+                        </div>
+                        <div class="col-sm-12 col-md-3 col-xl-3">
+                            <label>Ultima Gestion Pagada</label>
+                            <input id="ultima_gestion_pagada"  onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  maxlength="4" >
+                        </div>
+
                     </div>
-                </div>
+                    
+                    <div class="row">
+                                    <div class="col-sm-2">
+                                                <label>Cuartel</label><span class="obligatorio">*</span>
+                                                {{-- @php(print_r($cuartel)); --}}
+                                                <select  class="form-control select-cuartel" id="cuartel" style="width: 100%" onchange="generarCodigo()" required>
+                                                <option selected disabled>Seleccione un cuartel</option>
+                                                        @foreach ($cuartel as $value)
+                                                        <option value="{{ $value->id }}">{{ $value->codigo }}</option>
+                                                        @endforeach
+                                                </select>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <label>Bloque:</label>
+                                            <select  class="form-control select-bloque" id="bloque" style="width: 100%" onchange="generarCodigo()">
+                                            <option selected disabled>Seleccione un cuartel</option>                       
+                                            </select>
+                                        {{-- <input id="cod-cripta" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off"> --}}
+                                    </div>
 
-                   <div class="col-sm-12 col-md-4 col-xl-4">
-                    <label>Telefono:</label>
-                    <input id="telefono" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" maxlength="8">
-                   </div>
-    
-                   <div class="col-sm-12 col-md-4 col-xl-4">
-                    <label>Genero :</label>
-                        <select name="genero" id="genero" class="form-control">            
-                            <option value="MASCULINO">MASCULINO</option>
-                            <option value="FEMENINO">FEMENINO</option>        
-                        </select>
-                    </div>
-           </div>
-        <div class="row"> 
-                
-               <div class="col-sm-12 col-md-4 col-xl-4">
-                <label>Nombre:</label>
-                <input id="cripta-name" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
-               </div>
+                                    <div class="col-sm-2">
+                                        <label>Nro Sitio:</label> <span class="obligatorio">*</span>                     
+                                        <input id="cod-sitio" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off"  maxlength="15" onblur="generarCodigo()" required>    
+                                    </div>
+                                
+                                    <div class="col-sm-3">
+                                        <label>Superficie m2:</label><span class="obligatorio">*</span>
+                                        <input id="superficie" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off" onblur="generarCodigo()" required>
+                                    </div>
 
-               <div class="col-sm-12 col-md-4 col-xl-4">
-                <label>Paterno:</label>
-                <input id="paterno" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
-               </div>
+                    
 
-               <div class="col-sm-12 col-md-4 col-xl-4">
-                <label>Materno:</label>
-                <input id="materno" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
-               </div>            
-        </div>
-        <div class="row pb-4"> 
-                <div class="col-sm-12 col-md-10 col-xl-10">
-                    <label>Domicilio:</label>
-                    <input id="domicilio" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
-                </div>
-                <div class="col-sm-6 col-md-2 col-xl-2" id="estado" style="display: none">
-                    <label>Estado:</label>
-                    <select  id="estado" class="form-control">
-                        <option value="ACTIVO">ACTIVO</option>
-                        <option value="INACTIVO">INACTIVO</option>
-                    </select>
-                </div>
-        </div>
-        <div class="row"> 
-            <div class="col-sm-12 col-md-12 col-xl-12"><h6 class="section_divider card text-white bg-info mb-3 p-4">DOCUMENTOS RECIBIDOS</h6></div>
+                                        <div class="col-sm-3">
+                                            <label>Codigo Anterior:</label>
+                                            <input id="cod_cripta_ant" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off"  >
+                                            <input id="cod-cripta" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="hidden" class="form-control" autocomplete="off"  onblur="generarCodigo()" readonly>
+                                        </div>
 
-            <div class="col-sm-4 col-md-3 col-xl-3">
-                <label for="">Fecha Adjudicacion</label>
-                <input type="date" name="adjudicacion" id="adjudicacion" class="form-control">
-            </div>
+                                        <div class="col-sm-2">
+                                            <label>Estado de construcción:</label><span class="obligatorio">*</span>
+                                            <select name="construido" id="construido" class="form-control" required> 
+                                                <option value="ABANDONADA">ABANDONADA</option>
+                                                <option value="COMO_MAUSOLEO_PEQ">CONST. COMO MAUSOLEO PEQ.</option>
+                                                <option value="COMO_MAUSOLEO_GRANDE">CONST. COMO MAUSOLEO GRANDE.</option>
+                                                <option value="DETERIORO">DETERIORO</option>
+                                                <option value="EN_CONSTRUCCION">EN CONSTRUCCION</option>
+                                                <option value="LOTE">LOTE</option>
+                                                <option value="OBRA_FINA">OBRA FINA</option>
+                                                <option value="OBRA_GRUESA">OBRA GRUESA</option>
+                                            </select>              
+                                        </div>
+
+                                        <div class="col-sm-2">
+                                            <label>Enterratorios Ocupados:</label>
+                                            <input id="enterratorios_ocupados" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
+                                        </div>
+
+                                        <div class="col-sm-2">
+                                            <label>Total Enterratorios:</label>
+                                            <input id="total_enterratorios" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
+                                        </div>
+
+                                        <div class="col-sm-2">
+                                            <label>Osarios Ocupados:</label>
+                                            <input id="osarios" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
+                                        </div>
+
+                                        <div class="col-sm-2">
+                                            <label>Total Osarios:</label>
+                                            <input id="total_osarios" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
+                                        </div>
+
+                                        <div class="col-sm-2">
+                                            <label>Cenisarios:</label>
+                                            <input id="cenisarios" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" >
+                                        </div>
+
+                    
+
+                                        <div class="col-sm-12 col-md-6 col-xl-6">
+                                            <label>Foto de la Cripta o Mausoleo:</label>                        
+                                            <div id="foto" class="dropzone" style="text-align: center"> </div>
+                                            <hr>
+                                            <input type="hidden" id="url-foto">
+                                            <br>
+                                            <p id="foto_actual"></p>
+                                        </div>
+                                    
+                                        <div class="col-sm-12 col-md-6 col-xl-6">
+                                            <label>Observaciones:</label>                        
+                                            <textarea id="observaciones" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" rows="6"> </textarea>
+                                            <hr>
+                                            <input type="hidden" id="url-foto">
+                                        </div>
             
-            <div class="col-sm-8 col-md-9 col-xl-9">
-                <div class="row pl-4">
-                    <p><b>Seleccionar los documentos presentados por el/los propietarios</b></p>
-                </div>
-                <div class="row pl-lg-4">
-                    <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="resolucion" value="resolucion" >
-                        <label for="resolucion" class="custom-control-label">Nro Resolución / Nro Testimonio</label>
-                        <br>
-                        <input type="text" name="nro_resolucion" id="nro_resolucion"  style="display: none">
                     </div>
-        
-                    <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="bienes_m" value="bienes_m" >
-                        <label for="bienes_m" class="custom-control-label">Bienes Municipales</label>
-                    </div>
-        
-                    <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="ci" value="ci"  >
-                        <label for="ci" class="custom-control-label">Carnet de Identidad</label>
-                        <br>
-                        <input type="text" name="nro_ci" id="nro_ci"  style="display: none">
-                    </div>
-        
-                    <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-danger" type="checkbox" id="planos_aprobados" value="planos_aprobados"  >
-                        <label for="planos_aprobados" class="custom-control-label">Planos Aprobados</label>
-                    </div>
-               
-                </div>
-            </div> 
-        </div>
+                            <hr>
+                            <h6 class="section_divider card text-white bg-info mb-3 p-4">
+                                DATOS DEL PROPIETARIO DEL MAUSOLEO O CRIPTA 
+                            </h6>
+                                <p><b>* No llenar esta sección en caso de que el mausoleo o cripta no tenga propietario</b></p>
+                                <p><b>* Si no cuenta con la informacion de nro documento de identidad presione el boton con icono lapiz para generar uno provisional</b></p>
+                                <p><b>* Si no cuenta con la informacion de Nombre propietario llenar con  "NN"</b></p>
 
-       <hr>
-       <div class="col-sm-12" style="text-align: center">
-            <button type="button" id="btn-cripta" class="btn btn-success btn-editar">Guardar</button>
-            <button type="button" style="display:none" id="btn-cripta-editar" class="btn btn-success btn-editar">Guardar Modificación</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-        </div> 
-    </div>     
+
+                            <br>
+
+                    <div class="row"> 
+                        
+                            <div class="col-sm-12 col-md-4 col-xl-4">
+                                <label>Documento de Identidad:</label><span class="obligatorio">*</span>
+                                <div class="input-group input-group-lg">
+                                    <input id="dni" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="search" class="form-control" autocomplete="off">
+
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-lg btn-default" id="buscarResp">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+
+                                        <button type="button" class="btn btn-lg btn-default" id="generarciresp"
+                                        title="generar carnet provisional">
+                                        <i class="fa fa-pen"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-4 col-xl-4">
+                                <label>Telefono:</label>
+                                <input id="telefono" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" maxlength="8">
+                            </div>
+                
+                            <div class="col-sm-12 col-md-4 col-xl-4">
+                                <label>Genero :</label>
+                                    <select name="genero" id="genero" class="form-control">            
+                                        <option value="MASCULINO">MASCULINO</option>
+                                        <option value="FEMENINO">FEMENINO</option>        
+                                    </select>
+                                </div>
+                    </div>
+                    <div class="row"> 
+                            
+                        <div class="col-sm-12 col-md-4 col-xl-4">
+                            <label>Nombre:</label><span class="obligatorio">*</span>
+                            <input id="cripta-name" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off" required>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4 col-xl-4">
+                            <label>Paterno:</label><span class="obligatorio">*</span>
+                            <input id="paterno" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off" required>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4 col-xl-4">
+                            <label>Materno:</label>
+                            <input id="materno" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
+                        </div>            
+                    </div>
+                    <div class="row pb-4"> 
+                            <div class="col-sm-12 col-md-10 col-xl-10">
+                                <label>Domicilio:</label>
+                                <input id="domicilio" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
+                            </div>
+                            <div class="col-sm-6 col-md-2 col-xl-2" id="estado" style="display: none">
+                                <label>Estado:</label>
+                                <select  id="estado" class="form-control">
+                                    <option value="ACTIVO">ACTIVO</option>
+                                    <option value="INACTIVO">INACTIVO</option>
+                                </select>
+                            </div>
+                    </div>
+                    <div class="row"> 
+                        <div class="col-sm-12 col-md-12 col-xl-12"><h6 class="section_divider card text-white bg-info mb-3 p-4">DOCUMENTOS RECIBIDOS</h6></div>
+
+                        <div class="col-sm-4 col-md-3 col-xl-3">
+                            <label for="">Fecha Adjudicacion</label>
+                            <input type="date" name="adjudicacion" id="adjudicacion" class="form-control">
+                        </div>
+                        
+                        <div class="col-sm-8 col-md-9 col-xl-9">
+                            <div class="row pl-4">
+                                <p><b>Seleccionar los documentos presentados por el/los propietarios</b></p>
+                            </div>
+                            <div class="row pl-lg-4">
+                                <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
+                                    <input class="custom-control-input custom-control-input-danger" type="checkbox" id="resolucion" value="resolucion" >
+                                    <label for="resolucion" class="custom-control-label">Nro Resolución / Nro Testimonio</label>
+                                    <br>
+                                    <input type="text" name="nro_resolucion" id="nro_resolucion"  style="display: none">
+                                </div>
+                    
+                                <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
+                                    <input class="custom-control-input custom-control-input-danger" type="checkbox" id="bienes_m" value="bienes_m" >
+                                    <label for="bienes_m" class="custom-control-label">Bienes Municipales</label>
+                                </div>
+                    
+                                <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
+                                    <input class="custom-control-input custom-control-input-danger" type="checkbox" id="ci" value="ci"  >
+                                    <label for="ci" class="custom-control-label">Carnet de Identidad</label>
+                                    <br>
+                                    <input type="text" name="nro_ci" id="nro_ci"  style="display: none">
+                                </div>
+                    
+                                <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
+                                    <input class="custom-control-input custom-control-input-danger" type="checkbox" id="planos_aprobados" value="planos_aprobados"  >
+                                    <label for="planos_aprobados" class="custom-control-label">Planos Aprobados</label>
+                                </div>
+                        
+                            </div>
+                        </div> 
+                    </div>
+
+                     <hr>
+                    <div class="col-sm-12" style="text-align: center">
+                            <button type="button" id="btn-cripta" class="btn btn-success btn-editar">Guardar</button>
+                            <button type="button" style="display:none" id="btn-cripta-editar" class="btn btn-success btn-editar">Guardar Modificación</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    </div> 
+      </div>     
         </div>
         <div class="modal-footer">
             
