@@ -270,7 +270,8 @@
 
                             <div class="col-sm-12 col-md-4 col-xl-4">
                                 <label>Telefono:</label>
-                                <input id="telefono" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" maxlength="8">
+                                <input id="telefono"  type="number" class="form-control" 
+                                 oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxLength="8" >
                             </div>
                 
                             <div class="col-sm-12 col-md-4 col-xl-4">

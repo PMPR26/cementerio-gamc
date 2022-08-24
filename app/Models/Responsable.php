@@ -86,7 +86,7 @@ class Responsable extends Model
         $responsable->estado_civil = $request->ecivil ?? null;  
         $responsable->domicilio = $request->domicilio ?? null;  
         $responsable->email = $request->email ?? null;  
-        $responsable->estado = 'ACTIVO';  
+        $responsable->estado = $request->estado ??'ACTIVO';  
         $responsable->user_id = auth()->id();
         $responsable->save();
         return $responsable->id;
