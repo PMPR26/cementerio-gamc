@@ -73,7 +73,7 @@ class CriptaController extends Controller
                                 {  
                                     $responsable_id=Responsable::insertResponsable($request);
                                 }
-                                else{   dd("entraa");
+                                else{  
                                     $responsable_id=Responsable::updateResponsable($request,   $existe_resp->id);  
                                 }
                             }else{
@@ -105,7 +105,8 @@ class CriptaController extends Controller
                                                 ->where('cripta_mausoleo.bloque_id',$request->bloque)
                                                 ->where('cripta_mausoleo.sitio',$request->sitio)
                                                 ->where('cripta_mausoleo.superficie',$request->superficie)                                                
-                                                ->select('cripta_mausoleo.id')
+                                                ->select('cripta_mausoleo_responsable.id')
+
                                                 ->first();   
 
                                                 // dd($search_relacion);
@@ -174,7 +175,7 @@ class CriptaController extends Controller
                             {  
                                 $responsable_id=Responsable::insertResponsable($request);
                             }
-                            else{   dd("entraa");
+                            else{   
                                 $responsable_id=Responsable::updateResponsable($request,   $existe_resp->id);  
                             }
                         }else{
