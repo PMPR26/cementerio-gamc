@@ -49,7 +49,7 @@ class Responsable extends Model
     }
 
     public function insertResponsable($request){
-
+// dd("llegaaaaa");
         $responsable = new Responsable;
         $responsable->ci = $request->ci_resp;
         $responsable->nombres = $request->nombres_resp;
@@ -68,6 +68,10 @@ class Responsable extends Model
         $responsable->id;
         return  $responsable->id;
     }
+
+
+   
+
 
     public function updateResponsable($request, $difuntoid){
         $responsable= Responsable::where('id', $difuntoid)->first();

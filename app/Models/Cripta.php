@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class Cripta extends Model
 {
@@ -15,10 +16,20 @@ class Cripta extends Model
         'bloque_id',
         'sitio',
         'codigo',
-        'nombre',
+        'codigo_antiguo',
+        'familia',
         'superficie',
+        'enterratorios_ocupados',
+        'total_enterratorios',
+        'osarios',
+        'total_osarios',
+        'cenisarios',
+        'estado_construccion',
+        'observaciones',
+        'foto',       
         'estado',
         'tipo_registro',
+        'tipo_cripta',
         'user_id',
         'created_at'
     ];
@@ -28,4 +39,66 @@ class Cripta extends Model
         'updated_at'
     ];
 
+
+    
+    public function addCripta(Request $request){
+        $cripta = New Cripta;
+        $cripta->user_id = auth()->id();
+       $cripta->cuartel_id = trim($request->id_cuartel);
+       $cripta->bloque_id = trim(strtoupper($request->bloque));
+       $cripta->sitio = trim($request->sitio);
+       $cripta->codigo = trim( strtoupper($request->codigo));
+       $cripta->codigo_antiguo = trim( strtoupper($request->codigo_ant)) ?? null;
+       // $cripta->nombre = trim($request->nombres_resp)." ".trim($request->paterno_resp)." ".trim($request->materno_resp);
+       $cripta->superficie = trim($request->superficie);
+       $cripta->enterratorios_ocupados = trim($request->enterratorios_ocupados) ?? 0;
+       $cripta->total_enterratorios = trim($request->total_enterratorios) ?? 0;
+
+       $cripta->osarios = trim($request->osarios)?? 0;
+       $cripta->total_osarios = trim($request->total_osarios)?? 0;
+
+       $cripta->cenisarios = trim($request->cenisarios) ?? 0;
+       $cripta->estado_construccion = trim($request->estado_construccion);
+       $cripta->observaciones = trim($request->observaciones)?? null;
+       $cripta->foto = trim($request->foto)?? null;
+       $cripta->estado = 'ACTIVO';         
+       $cripta->tipo_registro = $request->tipo_reg;
+       $cripta->tipo_cripta = $request->tipo_cripta;
+       $cripta->familia = $request->familia;
+       $cripta->created_at = date("Y-m-d H:i:s");
+       $cripta->updated_at = date("Y-m-d H:i:s");
+       $cripta->save();
+       return $cripta->id;
+}
+
+public function upCripta(Request $request, $id){
+    $cripta= Cripta::where('id', $id)->first();   
+    $cripta->user_id = auth()->id();
+   $cripta->cuartel_id = trim($request->id_cuartel);
+   $cripta->bloque_id = trim(strtoupper($request->bloque));
+   $cripta->sitio = trim($request->sitio);
+   $cripta->codigo = trim( strtoupper($request->codigo));
+   $cripta->codigo_antiguo = trim( strtoupper($request->codigo_ant)) ?? null;
+   // $cripta->nombre = trim($request->nombres_resp)." ".trim($request->paterno_resp)." ".trim($request->materno_resp);
+   $cripta->superficie = trim($request->superficie);
+   $cripta->enterratorios_ocupados = trim($request->enterratorios_ocupados) ?? 0;
+   $cripta->total_enterratorios = trim($request->total_enterratorios) ?? 0;
+
+   $cripta->osarios = trim($request->osarios)?? 0;
+   $cripta->total_osarios = trim($request->total_osarios)?? 0;
+
+   $cripta->cenisarios = trim($request->cenisarios) ?? 0;
+   
+   $cripta->estado_construccion = trim($request->estado_construccion);
+   $cripta->observaciones = trim($request->observaciones) ?? null;
+   $cripta->foto = trim($request->foto) ?? null;
+   $cripta->estado = $request->estado ?? 'ACTIVO';         
+   $cripta->tipo_registro = $request->tipo_reg;
+   $cripta->tipo_cripta = $request->tipo_cripta;
+   $cripta->familia = $request->familia;
+   $cripta->created_at = date("Y-m-d H:i:s");
+   $cripta->updated_at = date("Y-m-d H:i:s");
+   $cripta->save();
+   return $cripta->id;
+}
 }
