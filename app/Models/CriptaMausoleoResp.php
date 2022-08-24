@@ -52,7 +52,7 @@ class CriptaMausoleoResp extends Model
         $criptaMauseleo->ultima_gestion_pagada=$request->ultima_gestion_pagada ?? null;
         $criptaMauseleo->documentos_recibidos=$request->documentos_recibidos ?? null;
         $criptaMauseleo->adjudicacion=$request->adjudicacion ?? null;
-        $criptaMauseleo->estado=$request->estado;
+        $criptaMauseleo->estado=$request->estado??'ACTIVO';
         $criptaMauseleo->updated_at = date("Y-m-d H:i:s");
         $criptaMauseleo->save();  
         return $criptaMauseleo->id; 
