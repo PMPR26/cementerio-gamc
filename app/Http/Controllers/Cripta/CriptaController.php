@@ -98,7 +98,7 @@ class CriptaController extends Controller
                        
                                 $search_relacion=DB::table('cripta_mausoleo_responsable')
                                                 ->join('cripta_mausoleo','cripta_mausoleo.id', 'cripta_mausoleo_responsable.cripta_mausole_id' )
-                                                ->where('responsable_id',$responsable_id)
+                                                // ->where('responsable_id',$responsable_id)
                                                 ->where('cripta_mausole_id',  $cripta_id)
                                                 ->where('cripta_mausoleo.estado', 'ACTIVO')
                                                 ->where('cripta_mausoleo.cuartel_id',$request->id_cuartel)
