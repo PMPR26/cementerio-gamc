@@ -134,7 +134,7 @@ class CriptaController extends Controller
     public function getCripta($id){
 
         $cripta = Cripta::select('cripta_mausoleo.*', 'responsable.id as responsable_id', 'responsable.nombres','responsable.primer_apellido', 
-                                  'responsable.segundo_apellido', 'responsable.ci', 'responsable.domicilio', 'responsable.nombres',
+                                  'responsable.segundo_apellido', 'responsable.ci', 'responsable.domicilio', 'responsable.nombres','responsable.celular',
                                   'responsable.genero', 'cripta_mausoleo_responsable.id as cripta_mausoleo_resp_id', 'cripta_mausoleo_responsable.documentos_recibidos',
                                   'cripta_mausoleo_responsable.adjudicacion' ,  'cripta_mausoleo_responsable.ultima_gestion_pagada' )
                     ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id')
