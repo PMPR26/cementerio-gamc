@@ -579,7 +579,7 @@
                             $('#osarios').val(data_response.response.osarios);   
                             $('#total_osarios').val(data_response.response.total_osarios);   
                             $('#cenisarios').val(data_response.response.cenisarios);                        
-                            $('#observaciones').html(data_response.response.observaciones); 
+                            $('#observaciones').val(data_response.response.observaciones); 
                             $('#familia').val(data_response.response.familia); 
                             if(data_response.response.documentos_recibidos){
                                 var ar=JSON.parse(data_response.response.documentos_recibidos);
