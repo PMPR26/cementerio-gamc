@@ -738,7 +738,7 @@
                                                        'planos_aprobados': planos_aprobados
                                                     },
 
-                            'status': $('#estado').val()
+                            'estado': $('#estado').val()
                         }),
                         success: function(data_response)
                          {
