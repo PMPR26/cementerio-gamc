@@ -185,8 +185,7 @@
                                                 <option value="ABANDONADA">ABANDONADA</option>
                                                 <option value="COMO_MAUSOLEO_PEQ">CONST. COMO MAUSOLEO PEQ.</option>
                                                 <option value="COMO_MAUSOLEO_GRANDE">CONST. COMO MAUSOLEO GRANDE.</option>
-                                                <option value="CONSTRUIDO">CONSTRUIDO</option>
-                                                
+                                                <option value="CONSTRUIDO">CONSTRUIDO</option>                                                
                                                 <option value="DETERIORO">DETERIORO</option>
                                                 <option value="EN_CONSTRUCCION">EN CONSTRUCCION</option>
                                                 <option value="LOTE">LOTE</option>
