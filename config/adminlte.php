@@ -88,7 +88,7 @@ return [
     'layout_fixed_sidebar' => true,
     'layout_fixed_navbar' => true,
     'layout_fixed_footer' => null,
-    'layout_dark_mode' => true, //change mode themer
+    'layout_dark_mode' => false, //change mode themer
 
     /*
     |--------------------------------------------------------------------------
@@ -238,7 +238,7 @@ return [
         ],
         [
             'type'         => 'navbar-notification',
-            'id'           => 'my-notification',      // An ID attribute (required).
+            // 'id'           => 'my-notification',      // An ID attribute (required).
             'icon'         => 'fas fa-bell',          // A font awesome icon (required).
             'icon_color'   => 'warning',              // The initial icon color (optional).
             'label'        => 0,                      // The initial label for the badge (optional).
@@ -272,15 +272,15 @@ return [
             //'label_color' => 'success',
         ],
         [
-            'text' => 'SERVICIOS NICHOS',
+            'text' => 'SERVICIOS',
             'route'  => 'serv',
             'icon' => 'fas fa-laptop-medical',
         ],
-        [
-            'text' => 'SERVICIOS CRIPTA/MAUSOLEOS',
-            'route'  => 'servcm',
-            'icon' => 'fas fa-laptop-medical',
-        ],
+        // [
+        //     'text' => 'SERVICIOS CRIPTA/MAUSOLEOS',
+        //     'route'  => 'servcm',
+        //     'icon' => 'fas fa-laptop-medical',
+        // ],
         [
             'text' => 'MANTENIMIENTO NICHO',
             'route'  => 'mant',
@@ -299,15 +299,11 @@ return [
             'icon' => 'fab fa-docker',
         ],
         [
-            'text' => 'CRIPTA',
+            'text' => 'CRIPTA-MAUSOLEO',
             'url'  => 'cripta/index',
             'icon' => 'fas fa-igloo',
         ],
-        [
-            'text' => 'MAUSOLEOS',
-            'url'  => 'mausoleo/index',
-            'icon' => 'fas fa-church',
-        ],
+       
         [
             'text' => 'NICHOS',
             'url'  => 'nicho/nicho',
