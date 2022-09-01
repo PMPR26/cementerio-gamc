@@ -86,6 +86,7 @@
 
                     <td>
                         <button type="button" class="btn btn-info" value="{{ $cripta->id }}" id="btn-editar" title="Editar cuartel"><i class="fas fa-edit"></i></button>
+                        <button type="button" class="btn btn-warning" value="{{ $cripta->id }}" id="btn-add-difunto" title="Adicionar Difunto"><i class="fa fa-user-plus"></i></button>
                     </td>
                 </tr>
             @endforeach
@@ -1213,6 +1214,8 @@ $(document).on('click', '#buscarResp', function() {
                             }  
                 });
 
+                $(document).on('click', '#btn-add-difunto', function(){
 
+                });
     </script>
     @stop
