@@ -54,9 +54,13 @@ class Difunto extends Model
 
     
     public function insertDifunto($request){
-
+        if($request->ci_dif==null ||$request->ci_dif=="" ){
+            $ci_resp=$this->generateCiDifunto();
+        }else{
+            $ci_dif=$request->ci_dif;
+        }
         $dif = new Difunto;
-        $dif->ci = $request->ci_dif;
+        $dif->ci = $ci_dif;
         $dif->nombres = $request->nombres_dif;
         $dif->primer_apellido = $request->paterno_dif;
         $dif->segundo_apellido = $request->materno_dif;
@@ -77,8 +81,13 @@ class Difunto extends Model
     }
 
     public function updateDifunto($request, $difuntoid){
+        if($request->ci_dif==null ||$request->ci_dif=="" ){
+            $ci_dif=$this->generateCiDifunto();
+        }else{
+            $ci_dif=$request->ci_dif;
+        }
         $difunto= Difunto::where('id', $difuntoid)->first();
-        $difunto->ci = $request->ci_dif;
+        $difunto->ci = $ci_dif;
         $difunto->nombres = $request->nombres_dif;
         $difunto->primer_apellido = $request->paterno_dif;
         $difunto->segundo_apellido = $request->materno_dif;

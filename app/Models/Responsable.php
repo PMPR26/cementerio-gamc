@@ -50,8 +50,13 @@ class Responsable extends Model
 
     public function insertResponsable($request){
 // dd("llegaaaaa");
+if($request->ci_resp==null ||$request->ci_resp=="" ){
+    $ci_resp=$this->generateCiResponsable();
+}else{
+    $ci_resp=$request->ci_resp;
+}
         $responsable = new Responsable;
-        $responsable->ci = $request->ci_resp;
+        $responsable->ci = $ci_resp;
         $responsable->nombres = $request->nombres_resp;
         $responsable->primer_apellido = $request->paterno_resp;
         $responsable->segundo_apellido = $request->materno_resp ?? null;
@@ -74,6 +79,11 @@ class Responsable extends Model
 
 
     public function updateResponsable($request, $difuntoid){
+        if($request->ci_resp==null ||$request->ci_resp=="" ){
+            $ci_resp=$this->generateCiResponsable();
+        }else{
+            $ci_resp=$request->ci_resp;
+        }
         $responsable= Responsable::where('id', $difuntoid)->first();
         $responsable->ci = $request->ci_resp;
         $responsable->nombres = $request->nombres_resp;
