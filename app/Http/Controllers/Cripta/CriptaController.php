@@ -189,7 +189,7 @@ class CriptaController extends Controller
                 }
                     //insert cripta mausoleo
                     $existe=$this->existeCripta($request);
-            
+            // dd($existe);
                   
                             $cripta_id=Cripta::upCripta($request, $existe->id);  
                   
@@ -237,7 +237,7 @@ class CriptaController extends Controller
          $cripta = DB::table('cripta_mausoleo')->where('cuartel_id', $request->id_cuartel)
                            ->where('bloque_id', $request->bloque)
                            ->where('sitio', $request->sitio)
-                           ->where('superficie', $request->superficie)
+                        //    ->where('superficie', $request->superficie)
                            ->first();
                     //    dd($request->id_cripta )    ;     
                            if(!empty($cripta))                           
