@@ -73,7 +73,7 @@ class CriptaController extends Controller
                                 {  
                                     $responsable_id=Responsable::insertResponsable($request);
                                 }
-                                else{   dd("entraa");
+                                else{   
                                     $responsable_id=Responsable::updateResponsable($request,   $existe_resp->id);  
                                 }
                             }else{

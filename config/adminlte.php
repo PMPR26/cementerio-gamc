@@ -299,7 +299,7 @@ return [
             'icon' => 'fab fa-docker',
         ],
         [
-            'text' => 'CRIPTA-MAUSOLEO',
+            'text' => 'RELEVAMIENTO CRIPTA-MAUSOLEO',
             'url'  => 'cripta/index',
             'icon' => 'fas fa-igloo',
         ],
@@ -321,7 +321,7 @@ return [
         ],
 
         [
-            'text' => 'RELEVAMIENTO',
+            'text' => 'RELEVAMIENTO-NICHOS',
             'route'  => 'relev',
             'icon' => 'fas fa-edit',
         ],
