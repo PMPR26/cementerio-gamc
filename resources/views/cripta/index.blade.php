@@ -261,10 +261,10 @@
                                             <i class="fa fa-search"></i>
                                         </button>
 
-                                        <button type="button" class="btn btn-lg btn-default" id="generarciresp"
+                                        {{-- <button type="button" class="btn btn-lg btn-default" id="generarciresp"
                                         title="generar carnet provisional">
                                         <i class="fa fa-pen"></i>
-                                        </button>
+                                        </button> --}}
                                     </div>
                                 </div>
                             </div>
