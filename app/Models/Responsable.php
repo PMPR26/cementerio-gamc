@@ -49,12 +49,13 @@ class Responsable extends Model
     }
 
     public function insertResponsable($request){
-// dd("llegaaaaa");
-if($request->ci_resp==null ||$request->ci_resp=="" ){
-    $ci_resp=$this->generateCiResponsable();
-}else{
-    $ci_resp=$request->ci_resp;
-}
+        if($request->ci_resp==null ||$request->ci_resp=="" ){
+            $respons = new Responsable;  // correct
+               
+            $ci_resp= $respons->generateCiResponsable();;
+        }else{
+            $ci_resp=$request->ci_resp;
+        }
         $responsable = new Responsable;
         $responsable->ci = $ci_resp;
         $responsable->nombres = $request->nombres_resp;
@@ -80,7 +81,9 @@ if($request->ci_resp==null ||$request->ci_resp=="" ){
 
     public function updateResponsable($request, $difuntoid){
         if($request->ci_resp==null ||$request->ci_resp=="" ){
-            $ci_resp=$this->generateCiResponsable();
+            $respons = new Responsable;  // correct
+               
+            $ci_resp= $respons->generateCiResponsable();;
         }else{
             $ci_resp=$request->ci_resp;
         }
