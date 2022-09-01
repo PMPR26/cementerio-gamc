@@ -80,6 +80,8 @@ class CriptaController extends Controller
                                 $responsable_id=Responsable::updateResponsable($request,   $existe_resp->id);  
                             }
                             // dd($responsable_id);
+                     }else if($request->ci_resp==null && $request->paterno_resp!=null){
+                        $responsable_id=Responsable::insertResponsable($request);
                     }
                         //insert cripta mausoleo
                         $existe=$this->existeCripta($request);
