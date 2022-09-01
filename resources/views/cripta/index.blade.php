@@ -349,6 +349,13 @@
                                     <input class="custom-control-input custom-control-input-danger" type="checkbox" id="planos_aprobados" value="planos_aprobados"  >
                                     <label for="planos_aprobados" class="custom-control-label">Planos Aprobados</label>
                                 </div>
+
+                                <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
+                                    <input class="custom-control-input custom-control-input-danger" type="checkbox" id="obs_resolucion" value="obs_resolucion"  >
+                                    <label for="obs_resolucion" class="custom-control-label">Observacion</label>
+                                    <br>
+                                    <input type="text" name="txt_resolucion" id="txt_resolucion" class="form-control" style="display: none">
+                                </div>
                         
                             </div>
                         </div> 
@@ -433,7 +440,7 @@
     
             }
         });
-       
+       txt_resolucion
   });
 
         $(document).ready(function(){
@@ -446,6 +453,8 @@
                     if ($("#ci").is(":checked")) { var ci=$('#nro_ci').val();} else { var ci="FALTA";}
                     if ($("#bienes_m").is(":checked")) { var bienes_m="BIENES M";} else { var bienes_m="FALTA";}
                     if ($("#planos_aprobados").is(":checked")) { var planos_aprobados="PLANOS A";} else { var planos_aprobados="FALTA";}
+                    if ($("#obs_resolucion").is(":checked")) { var obs_resolucion=$('#txt_resolucion').val(); } else { var obs_resolucion="FALTA";}
+
 
                 $.ajax({
                         type: 'PUT',
@@ -492,7 +501,8 @@
                                                        'resolucion': resolucion,
                                                        'ci': ci,
                                                        'bienes_m': bienes_m,
-                                                       'planos_aprobados': planos_aprobados
+                                                       'planos_aprobados': planos_aprobados,
+                                                       'obs_resolucion':obs_resolucion
                                                     }
 
                                        
@@ -589,8 +599,7 @@
                                 if(ar.ci!="FALTA"){ $('#ci').prop('checked', true); $('#nro_ci').val(ar.ci); $('#nro_ci').show(); }else{$('#ci').prop('checked', false);}
                                 if(ar.resolucion!="FALTA"){ $('#resolucion').prop('checked', true); $('#nro_resolucion').val(ar.resolucion); $('#nro_resolucion').show(); }else{$('#resolucion').prop('checked', false);}
                                 if(ar.planos_aprobados=="PLANOS A"){ $('#planos_aprobados').prop('checked', true); }else{$('#planos_aprobados').prop('checked', false);}
-
-
+                                if(ar.obs_resolucion!="FALTA"){ $('#obs_resolucion').prop('checked', true); $('#txt_resolucion').val(ar.obs_resolucion); $('#txt_resolucion').show(); }else{$('#obs_resolucion').prop('checked', false);}
 
                             }
  
@@ -637,13 +646,13 @@
                 $('#cod-sitio').val('');
                 $('#superficie').val('');
                 $('#construido').val(''), 
-                $('#enterratorios_ocupados').val(''),  
-                $('#total_enterratorios').val(''),  
+                $('#enterratorios_ocupados').val(0),  
+                $('#total_enterratorios').val(0),  
 
-                $('#osarios').val(''), 
-                $('#total_osarios').val(''),  
+                $('#osarios').val(0), 
+                $('#total_osarios').val(0),  
 
-                $('#cenisarios').val(''),  
+                $('#cenisarios').val(0),  
 
                 $('#observaciones').val(''),  
                 $('#url-foto').val(''),     
@@ -736,7 +745,8 @@
                                                        'resolucion': resolucion,
                                                        'ci': ci,
                                                        'bienes_m': bienes_m,
-                                                       'planos_aprobados': planos_aprobados
+                                                       'planos_aprobados': planos_aprobados,
+                                                       'obs_resolucion':obs_resolucion
                                                     },
 
                             'estado': $('#estado').val()
@@ -1151,7 +1161,58 @@ $(document).on('click', '#buscarResp', function() {
                 } else {
                     $('#nro_ci').val("");
                     $('#nro_ci').hide(); 
+                }               
+            });
+
+            $(document).on('click', '#obs_resolucion', function(){
+                 if ($("#obs_resolucion").is(":checked")) {
+                    $('#txt_resolucion').show();
+                } else {
+                    $('#txt_resolucion').val("");
+                    $('#txt_resolucion').hide(); 
                 }
             });
+
+            $(function() {
+                    $('.numeroEntero').keypress(function(e) {
+                            if (isNaN(this.value + String.fromCharCode(e.charCode)))
+                                return false;
+                        })
+                        .on("cut copy paste", function(e) {
+                            e.preventDefault();
+                        });
+
+                });
+
+                $(function() {
+                    $('.soloLetras').bind('keyup input', function() {
+                        if (this.value.match(/[^a-zA-Z áéíóúÁÉÍÓÚüÜñÑ]/g)) {
+                            this.value = this.value.replace(/[^a-zA-Z áéíóúÁÉÍÓÚüÜñÑ]/g, '');
+                        }
+                    });
+                });
+
+
+                $(document).on('keyup', '#telefono', function(e){
+                    // alert(this.value + String.fromCharCode(e.charCode));
+                  
+                    var number=$('#telefono').val();  
+                    var primer=number.charAt(0);  
+                    if(number.length>=1) {
+
+                      
+                                if(primer < 4 || primer == 5  || primer == 8 || primer == 9){
+                                    Swal.fire(
+                                            'Error!',
+                                            'El número de telefono  fijo o celular debe iniciar con 4 , 6 o 7!.',
+                                            'error'
+                                        ) ;
+                                        $('#telefono').val("");
+                                    return false;
+                                }
+                            }  
+                });
+
+
     </script>
     @stop
