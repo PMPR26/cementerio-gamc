@@ -892,7 +892,7 @@
 
     function generarCodigo(){
         var sup=$('#superficie').val();
-        if($('#bloque :selected').text()=="" || $('#bloque :selected').text()=="SELECCIONAR" ){ var bloq="0";}
+        if($('#bloque :selected').text()=="" || $('#bloque :selected').text()=="SELECCIONAR" ){ var bloq="000";}
         else{var bloq=$('#bloque :selected').text();}
         var cod=($('#cuartel :selected').text()).toUpperCase()+bloq+$('#cod-sitio').val()+($('#letra').val()).toUpperCase()+parseInt(sup);
         $('#cod-cripta').val(cod);
