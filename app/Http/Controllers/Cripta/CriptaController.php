@@ -189,10 +189,15 @@ class CriptaController extends Controller
                 }
                     //insert cripta mausoleo
                     $existe=$this->existeCripta($request);
-            // dd($existe);
-                  
-                            $cripta_id=Cripta::upCripta($request, $existe->id);  
-                  
+                    // dd($existe);
+                          if(empty($existe)){
+                            $cripta_id=Cripta::upCripta($request, $request->cripta_mausoleo_id);  
+                          }else{
+                            return response([
+                                'status'=> false,
+                                'response'=> "Ya existe registrada una cripta con esas caracteristicas, por favor revisar la informacion e intente nuevamente"
+                            ],201);
+                          }
                  
                     // dd($responsable_id);
                     //insertar relacion cm responsable

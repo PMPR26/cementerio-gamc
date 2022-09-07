@@ -86,7 +86,7 @@
 
                     <td>
                         <button type="button" class="btn btn-info" value="{{ $cripta->id }}" id="btn-editar" title="Editar cuartel"><i class="fas fa-edit"></i></button>
-                        <button type="button" class="btn btn-warning" value="{{ $cripta->id }}" id="btn-add-difunto" title="Adicionar Difunto"><i class="fa fa-user-plus"></i></button>
+                        <button type="button" class="btn btn-warning" value="{{ $cripta->id }}" id="btn_add_difunto" title="Adicionar Difunto"><i class="fa fa-user-plus"></i></button>
                     </td>
                 </tr>
             @endforeach
@@ -361,7 +361,7 @@
                             </div>
                         </div> 
                     </div>
-
+                    <input type="hidden" name="cripta_mausoleo_id"  id="cripta_mausoleo_id" value="">
                      <hr>
                     <div class="col-sm-12" style="text-align: center">
                             <button type="button" id="btn-cripta" class="btn btn-success btn-editar">Guardar</button>
@@ -411,6 +411,15 @@
 
 @section('js')
     <script>
+
+/***difuntos **/
+
+        $(document).on('click', '#btn_add_difunto', function(){
+            $('#modal_add_difunto').modal('show');
+        });
+
+
+
         var letra="";
   $(document).on('change', '#tipo_reg', function(){
         $('#tipo_reg option').each(function() {
@@ -466,6 +475,7 @@
                         url: '{{ route("cripta.update") }}',
                         async: false,
                         data: JSON.stringify({  
+                            'cripta_mausoleo_id': $('#cripta_mausoleo_id').val(),   
                             'id_cripta':  $('#btn-cripta-editar').val(),
                             'id_cuartel':  $('.select-cuartel').val(),
                             'codigo': $('#cod-cripta').val(),
@@ -555,7 +565,7 @@
             $(document).on('click', '#btn-editar', function(){
                 $('#section_data').show();
                 $('#estado').show();
-
+                var cripta_mausoleo_id = $(this).val();
                 $.ajax({
                         type: 'GET',
                         headers: {
@@ -568,7 +578,8 @@
                             console.log(data_response);
                             $('#modal-cripta').modal('show');
                             $('#btn-cripta-editar').show(300);
-                            $('#btn-cripta').hide(300);                        
+                            $('#btn-cripta').hide(300);          
+                            $('#cripta_mausoleo_id').val(cripta_mausoleo_id);    
                             $(".select-cuartel").val(data_response.response.cuartel_id).trigger('change');
                             $('#cod-cripta').val(data_response.response.codigo);
                             $('#cod_cripta_ant').val(data_response.response.codigo_antiguo); 
@@ -890,10 +901,14 @@
                 });
     });
 
-    function generarCodigo(){
+    function generarCodigo(){ 
         var sup=$('#superficie').val();
-        if($('#bloque :selected').text()=="" || $('#bloque :selected').text()=="SELECCIONAR" ){ var bloq="0";}
+        if($('#bloque :selected').text()=="" || $('#bloque :selected').text()=="SELECCIONAR" ){ var bloq="000";}
         else{var bloq=$('#bloque :selected').text();}
+
+        console.log(bloq);
+        console.log($('#cod-sitio').val());
+
         var cod=($('#cuartel :selected').text()).toUpperCase()+bloq+$('#cod-sitio').val()+($('#letra').val()).toUpperCase()+parseInt(sup);
         $('#cod-cripta').val(cod);
     }
