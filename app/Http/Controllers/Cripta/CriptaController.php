@@ -27,7 +27,7 @@ class CriptaController extends Controller
          ->leftJoin('bloque','bloque.id', '=', 'cripta_mausoleo.bloque_id' )
         ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
         ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )
-
+        ->where('cripta_mausoleo.estado', 'ACTIVO')
         ->orderBy('cripta_mausoleo.id', 'DESC')
         ->orderBy('tipo_registro', 'DESC')
         ->orderBy('cripta_mausoleo.codigo', 'DESC')
