@@ -104,8 +104,8 @@
                     <td>
                         <button type="button" class="btn btn-info" value="{{ $cripta->id }}" id="btn-editar" title="Editar cuartel"><i class="fas fa-edit"></i></button>
                         <button type="button" class="btn btn-warning" value="{{ $cripta->id }}" id="btn_add_difunto" title="Adicionar Difunto"><i class="fa fa-user-plus"></i></button>
-                        <button type="button" class="btn btn-danger" value="{{ $cripta->id }}" id="btn_up_pay_cm" title="Actualizar pagos servicios"><i class="fa fa-refresh"></i></button>
-                        <button type="button" class="btn btn-success" value="{{ $cripta->id }}" id="btn_pay_cm" title="Pagar servicios"><i class="fa fa-money"></i></button>
+                        {{-- <button type="button" class="btn btn-danger" value="{{ $cripta->id }}" id="btn_up_pay_cm" title="Actualizar pagos servicios"><i class="fa fa-refresh"></i></button>
+                        <button type="button" class="btn btn-success" value="{{ $cripta->id }}" id="btn_pay_cm" title="Pagar servicios"><i class="fa fa-money"></i></button> --}}
 
                     </td>
                 </tr>
@@ -442,6 +442,7 @@
 $(document).on('click', '#btn_up_pay_cm', function(){
             $('#modal_uppay_cm').modal('show');
 });
+
 /***difuntos **/
 
         $(document).on('click', '#btn_add_difunto', function(){
