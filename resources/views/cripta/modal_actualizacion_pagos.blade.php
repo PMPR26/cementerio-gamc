@@ -27,107 +27,43 @@
                                                         <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdnombre" autocomplete="off">
                                                     </div>
                                                 </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label>Primer apellido :</label>
+                                                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdprimer_apellido" autocomplete="off">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label>Segundo apellido :</label>
+                                                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdsegundo_apellido" autocomplete="off">
+                                                    </div>
+                                                </div>
                                 </div>
                             </fieldset>
-                            <div class="row">
-
-                                <input type="hidden" name="id_cripta_mausoleo_modal" id="id_cripta_mausoleo_modal" >
+                            <fieldset>
+                                <legend>Datos del pago</legend>
+                                <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label>Cedula de Identidad:</label>
-                                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdci" autocomplete="off" value="">
+                                            <label>Ultima gestion Pagada:</label>
+                                            <input type="number" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdsegundo_apellido" autocomplete="off">
                                         </div>
                                     </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Nombre :</label>
-                                                    <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdnombre" autocomplete="off">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Primer apellido :</label>
-                                                    <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdprimer_apellido" autocomplete="off">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Segundo apellido :</label>
-                                                    <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdsegundo_apellido" autocomplete="off">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Fecha de nacimiento :</label>
-                                                    <input type="date"  class="form-control clear" max="{{ date('Y-m-d') }}" placeholder="fecha de nacimiento" id="mdfecha_nacimiento" >
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Fecha de defunción :</label>
-                                                    <input type="date"  class="form-control clear" placeholder="fecha de defuncion" max="{{ date('Y-m-d') }}" id="mdfecha_defuncion"  >
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>SERECI:</label>
-                                                    <input  type="number" class="form-control clear" id="mdcertificado_defuncion" autocomplete="off">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Causa :</label>
-                                                    <select id="causa"
-                                                    class="form-control clears2 select2-multiple select2-hidden-accessible" style="width: 100%">
-                                                    <option value="">SELECIONAR CAUSA</option>
-                                                    @foreach ($causa as $cs)
-                                                            <option value="{{ $cs->causa }}">{{$cs->causa }}</option>
-                                                    @endforeach
-                                                </select>
-
-                                                </div>
-                                            </div>
-
-
-
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Tipo :</label>
-                                                    <select name="tipo_dif" id="mdtipo" class="form-control clears2">
-                                                        <option value="">Seleccionar</option>
-                                                        <option value="ADULTO">ADULTO</option>
-                                                        <option value="PARVULO">PARVULO</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Genero :</label>
-                                                    <select name="status" id="mdgenero" class="form-control clears">
-                                                        <option value="">Seleccionar</option>
-                                                        <option value="MASCULINO">MASCULINO</option>
-                                                        <option value="FEMENINO">FEMENINO</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <hr>
-
-
-
-                            </div>
-                            {{-- end row --}}
-                            <div class="row p-4">
-                                <div class="col-sm-12 col-md-12 col-xl-12">
-                                    <button class="btn btn-primary" id="add_difunto_row"><i class="fa fa-plus 3x"></i> Agregar Difunto</button>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Monto Pagado:</label>
+                                            <input type="number" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdsegundo_apellido" autocomplete="off">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+
+                            </fieldset>
+
+                            {{-- end row --}}
+
 
                             <div class="row">
                                 <div class="col-md">
