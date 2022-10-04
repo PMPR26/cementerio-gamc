@@ -1,9 +1,9 @@
     <!-- Modal crear -->
-    <div class="modal fade  animated bounceIn" id="modal_add_difunto" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade  animated bounceIn" id="modal_pay_cm" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Adicción difuntos Criptas - Mausoleos</h5>
+                        <h1 class="modal-title" id="exampleModalLabel">Pago servicios Cripta - Mausoleos</h1>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
