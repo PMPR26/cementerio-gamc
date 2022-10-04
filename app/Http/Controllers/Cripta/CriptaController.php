@@ -8,7 +8,6 @@ use App\Models\Cuartel;
 use App\Models\Difunto;
 
 use App\Models\Responsable;
-use App\Models\CriptaMausoleo;
 use App\Models\CriptaMausoleoResp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,19 +17,22 @@ class CriptaController extends Controller
 {
     public function index(){
 
-        $cripta = Cripta::select('cripta_mausoleo.id', 'codigo',  'superficie','cripta_mausoleo.estado',
+        $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
          'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios',
-         'cripta_mausoleo_responsable.documentos_recibidos',
-         DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'))
+         'cripta_mausoleo_responsable.documentos_recibidos','cripta_mausoleo.difuntos',
+        'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo',
+         DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
+         'cuartel.codigo as cuartel_codigo','bloque.codigo as bloque_nombre')
+         ->Join('cuartel','cuartel.id', '=', 'cripta_mausoleo.cuartel_id' )
+         ->leftJoin('bloque','bloque.id', '=', 'cripta_mausoleo.bloque_id' )
         ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
         ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )
+
         ->orderBy('cripta_mausoleo.id', 'DESC')
         ->orderBy('tipo_registro', 'DESC')
         ->orderBy('cripta_mausoleo.codigo', 'DESC')
-
-        // ->orderBy('nombre', 'DESC')
         ->get();
-
+//  dd( $cripta);
          $cuartel = Cuartel::select('id','codigo')
                     ->where('estado', 'ACTIVO')
                     ->orderBy('nombre', 'DESC')
@@ -258,7 +260,8 @@ class CriptaController extends Controller
     //verifica si la cripta ya esta registrada, en caso positivo retorna su id
     public function existeCripta(Request $request){
 
-        if ($request->bloque==0){   $cripta = DB::table('cripta_mausoleo')->where('cuartel_id', $request->id_cuartel)
+        if ($request->bloque==0){   $cripta = DB::table('cripta_mausoleo')
+            ->where('cuartel_id', $request->id_cuartel)
             ->where('sitio', $request->sitio)
             ->first(); }
             else{
@@ -356,9 +359,7 @@ class CriptaController extends Controller
                 $this->validate($request, [
                     'cripta_mausoleo_id' => 'required'
                 ],[
-
                     'cripta_mausoleo_id.required' => ':attribute es requerido!' ,
-
                 ]);
 
                 //Buscar si ya existe el difunto en la tabla difunto
@@ -375,28 +376,46 @@ class CriptaController extends Controller
                                     $ci_dif=$value['ci'];
                                 }
                                 $existe=$this->buscarDifunto( $ci_dif, $value['nombres'], $value['primer_apellido'],$value['segundo_apellido']);
-                                dd(json_decode( $existe));
-                                if($existe){
 
+                                if($existe==false){
+                                    $dif->ci = $ci_dif;
+                                    $dif->nombres = $value['nombres'];
+                                    $dif->primer_apellido = $value['primer_apellido'];
+                                    $dif->segundo_apellido = $value['segundo_apellido'];
+                                    $dif->fecha_nacimiento = $value['fecha_nacimiento'];
+                                    $dif->fecha_defuncion = $value['fecha_nacimiento'];
+                                    $dif->certificado_defuncion = $value['ceresi'];
+                                    $dif->causa = $value['causa'];
+                                    $dif->tipo = $value['tipo'];
+                                    $dif->edad = $value['edad'];
+
+                                    $dif->genero = $value['genero'];
+                                    $dif->funeraria = trim($value['funeraria']);
+                                    $dif->certificado_file = trim($value['url']);
+                                    $dif->estado = 'ACTIVO';
+                                    $dif->user_id = auth()->id();
+                                    $dif->save();
+                                    $dif->id;
                                 }
+                            }
 
-                            $dif->ci = $ci_dif;
-                            $dif->nombres = $value['nombres'];
-                            $dif->primer_apellido = $value['primer_apellido'];
-                            $dif->segundo_apellido = $value['segundo_apellido'];
-                            $dif->fecha_nacimiento = $value['fecha_nacimiento'];
-                            $dif->fecha_defuncion = $value['fecha_nacimiento'];
-                            $dif->certificado_defuncion = $value['sereci'];
-                            $dif->causa = $value['causa'];
-                            $dif->tipo = $value['tipo'];
-                            $dif->genero = $value['genero'];
-                            $dif->funeraria = trim($value['funeraria']);
-                            $dif->certificado_file = trim($value['certificado_file']);
-                            $dif->estado = 'ACTIVO';
-                            $dif->user_id = auth()->id();
-                            $dif->save();
-                            $dif->id;
-                        }
+                        $cript=Cripta::where('id',$request->cripta_mausoleo_id )->first();
+                        $cript->difuntos=json_encode($request['difuntos']);
+                        $cript->save();
+
+                       if($cript){
+                            return response([
+                                'status'=> true,
+                                'message'=> 'registro con exito..!'
+                                ],200);
+                       }
+                       else{
+                        return response([
+                            'status'=> false,
+                            'message'=> 'Ocurrio un error al ejecutar la transacción..!'
+                            ],201);
+                       }
+
 
         }else{
               return response([
@@ -408,28 +427,31 @@ class CriptaController extends Controller
 
     }
 
-    public function buscarDifuntoCriptaMausoleo(Request $request){
-
-    }
-
-    public function buscarDifunto($ci, $nombres, $primer_apellido, $segundo_apellido){
-           $difunto= DB::table('difunto1')->where('ci', ''.$ci.'')
+    public function buscarDifunto($ci, $nombres, $primer_apellido, $segundo_apellido)
+    {
+           $difunto_s= DB::table('difunto')->where('ci', ''.$ci.'')
                     ->where('nombres', ''.$nombres.'')
                     ->where('primer_apellido', ''.$primer_apellido.'')
                     ->where('segundo_apellido', ''.$segundo_apellido.'')
                     ->first();
-
-               if(!empty($difunto)){
-                return response([
-                    'status'=> true,
-                    'response'=> $difunto->id
-                ],200);
+               if(!empty($difunto_s))
+               {
+                  return $difunto_s;
                }else{
-                return response([
-                    'status'=> false,
-                ],201);
+                  return false;
                }
     }
+
+    public function getDifuntoCripta(Request $request){
+        // dd($request->cripta_mausoleo_id);
+        $difuntoCript =  Cripta::where('id', $request->cripta_mausoleo_id)->first();
+
+               return response([
+                'status'=> true,
+                'response'=> $difuntoCript
+             ],200);
+    }
+
 
 }
 
