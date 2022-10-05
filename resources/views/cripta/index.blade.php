@@ -125,6 +125,7 @@
           </button>
         </div>
         <div class="modal-body">
+            <form action="" id="cmform">
                 <div class="row">
                     <div class="col-12">
                         <label>tipo de registro:</label> <span class="obligatorio">*</span>
@@ -348,34 +349,34 @@
                             </div>
                             <div class="row pl-lg-4">
                                 <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
-                                    <input class="custom-control-input custom-control-input-danger" type="checkbox" id="resolucion" value="resolucion" >
-                                    <label for="resolucion" class="custom-control-label">Nro Resolución / Nro Testimonio</label>
+                                    <input class="custom-control-input custom-control-input-danger clear" type="checkbox" id="resolucion" value="resolucion" >
+                                    <label for="resolucion" class="custom-control-label clear">Nro Resolución / Nro Testimonio</label>
                                     <br>
-                                    <input type="text" name="nro_resolucion" id="nro_resolucion"  style="display: none">
+                                    <input type="text" name="nro_resolucion" id="nro_resolucion" class="clear"  style="display: none">
                                 </div>
 
                                 <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
-                                    <input class="custom-control-input custom-control-input-danger" type="checkbox" id="bienes_m" value="bienes_m" >
+                                    <input class="custom-control-input custom-control-input-danger clear" type="checkbox" id="bienes_m" value="bienes_m" >
                                     <label for="bienes_m" class="custom-control-label">Bienes Municipales</label>
                                 </div>
 
                                 <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
-                                    <input class="custom-control-input custom-control-input-danger" type="checkbox" id="ci" value="ci"  >
+                                    <input class="custom-control-input custom-control-input-danger clear" type="checkbox" id="ci" value="ci"  >
                                     <label for="ci" class="custom-control-label">Carnet de Identidad</label>
                                     <br>
                                     <input type="text" name="nro_ci" id="nro_ci"  style="display: none">
                                 </div>
 
                                 <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
-                                    <input class="custom-control-input custom-control-input-danger" type="checkbox" id="planos_aprobados" value="planos_aprobados"  >
+                                    <input class="custom-control-input custom-control-input-danger clear" type="checkbox" id="planos_aprobados" value="planos_aprobados"  >
                                     <label for="planos_aprobados" class="custom-control-label">Planos Aprobados</label>
                                 </div>
 
                                 <div class="col-sm-6 col-md-6 col-xl-6 custom-control custom-checkbox">
-                                    <input class="custom-control-input custom-control-input-danger" type="checkbox" id="obs_resolucion" value="obs_resolucion"  >
+                                    <input class="custom-control-input custom-control-input-danger clear" type="checkbox" id="obs_resolucion" value="obs_resolucion"  >
                                     <label for="obs_resolucion" class="custom-control-label">Observacion</label>
                                     <br>
-                                    <input type="text" name="txt_resolucion" id="txt_resolucion" class="form-control" style="display: none">
+                                    <input type="text" name="txt_resolucion" id="txt_resolucion" class="form-control clear" style="display: none">
                                 </div>
 
                             </div>
@@ -388,6 +389,7 @@
                             <button type="button" style="display:none" id="btn-cripta-editar" class="btn btn-success btn-editar">Guardar Modificación</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                     </div>
+                </form>
       </div>
         </div>
         <div class="modal-footer">
@@ -655,8 +657,8 @@ $(document).on('click', '#btn_up_pay_cm', function(){
 
 
 
-
             $(document).on('click', '#btn-editar', function(){
+                $('#cmform').find("input[type=text], input[type=checkbox], textarea").val("");
                 $('#section_data').show();
                 $('#estado').show();
                 var cripta_mausoleo_id = $(this).val();
