@@ -14,12 +14,20 @@
                             <div class="row">
 
                                 <input type="hidden" name="id_cripta_mausoleo_modal" id="id_cripta_mausoleo_modal" >
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label>Cedula de Identidad:</label>
-                                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdci" autocomplete="off" value="">
+
+
+                                    <div class="col-sm-12 col-md-4 col-xl-4">
+                                        <label>Documento de Identidad:</label><span class="obligatorio">*</span>
+                                        <div class="input-group input-group-lg">                                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdci" autocomplete="off" value="">
+
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn btn-lg btn-default" id="buscarDif">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
+
                                             <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label>Nombre :</label>
@@ -112,12 +120,22 @@
                                                         </select>
                                             </div>
                                              <div class="col-sm-12 col-md-6 col-xl-6">
+                                                <div class="row">
+                                                    <div class="col-sm-8 col-md-8 col-xl-8">
                                                         <label>Adjuntar certificado de defunción :</label>
                                                         <div id="cert_defuncion" class="dropzone cleardrop" style="text-align: center">
                                                         </div>
                                                         <hr>
                                                         <input type="hidden" id="mdurl-certification" class="form-control clear">
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-8 col-xl-8">
+                                                       <span id="adjunto"></span>
+                                                    </div>
+                                                </div>
+
                                               </div>
+
+
                             </div>
                             {{-- end row --}}
                             <div class="row p-4">
@@ -150,6 +168,7 @@
                                                 <th>Causa</th>
                                                 <th>Funeraria</th>
                                                 <th>Genero</th>
+                                                <th>enl</th>
                                                 <th>url</th>
                                                 <th>Acción</th>
 

@@ -17,17 +17,17 @@ class ResponsableController extends Controller
                 // ->orderBy('codigo', 'DESC')
                 // ->get();
 
-        $responsable= DB::table('responsable') 
-                ->select('responsable.id','responsable.ci',DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),'responsable.telefono','responsable.celular','responsable.fecha_nacimiento','responsable.estado_civil','responsable.email','responsable.domicilio','responsable.estado','responsable.genero')        
+        $responsable= DB::table('responsable')
+                ->select('responsable.id','responsable.ci',DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),'responsable.telefono','responsable.celular','responsable.fecha_nacimiento','responsable.estado_civil','responsable.email','responsable.domicilio','responsable.estado','responsable.genero')
                 ->get();
-            
+
         return view('responsable/index', compact('responsable'));
     }
 
     public function createNewResponsable(Request $request){
 
         if($request->isJson()){
-            
+
             $this->validate($request, [
                 'ci' => 'required|unique:responsable|max:9',
                 'nombres' => 'required',
@@ -45,7 +45,7 @@ class ResponsableController extends Controller
                 'ci.max' => 'CI no debe ser mayor a 10 caracteres.',
                 'required' => 'El campo :attribute es requerido.'
             ]);
-            
+
 
            $new_responsable =  Responsable::create([
             'ci' => trim($request->ci),
@@ -85,7 +85,7 @@ class ResponsableController extends Controller
         $responsable = Responsable::select()
                         ->where('id', $id)
                         ->first();
-      
+
         if($responsable->estado == 'ACTIVO'){
 
             $disable_responsable =  Responsable::where('id', $responsable->id)
@@ -97,7 +97,7 @@ class ResponsableController extends Controller
                 'status'=> true,
                 'response'=> '!Responsable desactivado!'
              ],200);
-             
+
         }else{
             Responsable::where([
                 'id' => $responsable->id
@@ -161,7 +161,6 @@ class ResponsableController extends Controller
     }
 
     public function searchResponsableAndDifunt(Request $request){
-      
         if($request->isJson()){
             $this->validate($request, [
                 'ci' => 'required',
@@ -169,11 +168,11 @@ class ResponsableController extends Controller
             ]);
 
             if(trim($request->type) == 'deceased'){
-             
-                $person= Difunto::select()                
-                         ->where(['ci' => trim($request->ci)])                          
+
+                $person= Difunto::select()
+                         ->where(['ci' => trim($request->ci)])
                          ->first();
-                         
+
                 return response([
                        'status'=> true,
                        'response'=> $person
