@@ -120,7 +120,7 @@
                                                         </select>
                                             </div>
                                              <div class="col-sm-12 col-md-6 col-xl-6">
-                                                <div class="row">
+                                                <div class="row archivo">
                                                     <div class="col-sm-8 col-md-8 col-xl-8">
                                                         <label>Adjuntar certificado de defunción :</label>
                                                         <div id="cert_defuncion" class="dropzone cleardrop" style="text-align: center">
