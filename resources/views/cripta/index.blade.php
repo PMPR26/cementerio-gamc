@@ -496,7 +496,7 @@ $(document).on('click', '#btn_up_pay_cm', function(){
                                                     $('.clear').val('');
                                                     $('.clears2').val(null).trigger('change');
                                                     $('.dz-image').html("");
-                                                    // Dropzone.forElement('#cert_defuncion').removeAllFiles(true);
+                                                    Dropzone.forElement('#cert_defuncion').removeAllFiles(true);
 
 
                                 })
@@ -1217,21 +1217,22 @@ $("#cert_defuncion").dropzone({
 
 
 
-                this.on("removedfile", function(file) {
-                    $.ajax({
-                                type: 'DELETE',
-                                headers: {
-                                    'Content-Type':'application/json'
-                                },
-                                url: "{{ env('URL_FILE') }}/api/v1/repository/remove-file",
-                                async: false,
-                                data: JSON.stringify({
-                                    'url':  JSON.parse(file.xhr.response).response[0].url_file
-                                }),
-                                success: function(data_response) {
-                                }
-                            })
-                });
+                // this.on("removedfile", function(file) {
+                //     $.ajax({
+                //                 type: 'DELETE',
+                //                 headers: {
+                //                     'Content-Type':'application/json'
+                //                 },
+                //                 url: "{{ env('URL_FILE') }}/api/v1/repository/remove-file",
+                //                 async: false,
+                //                 data: JSON.stringify({
+                //                     'url':  JSON.parse(file.xhr.response).response[0].url_file
+                //                 }),
+                //                 success: function(data_response) {
+                //                 }
+                //             })
+                // });
+
 
                 this.on("maxfilesexceeded", function(file){
                     file.previewElement.classList.add("dz-error");
@@ -1459,7 +1460,21 @@ $(document).on('click', '#buscarResp', function() {
                        // clear modal form
                        $('.clear').val('');
                        $('.clears2').val(null).trigger('change');
-                            //  Dropzone.forElement('#cert_defuncion').removeAllFiles(true);
+                    //     $('.archivo').empty();
+
+                    //    var ad='<div class="col-sm-8 col-md-8 col-xl-8">'
+                    //            +'<label>Adjuntar certificado de defunción :</label>'
+                    //            +'<div id="cert_defuncion" class="dropzone cleardrop" style="text-align: center"><div class="dz-default dz-message">'
+                    //            + ' <button class="dz-button" type="button">Arrastre y suelte aquí los archivos …<br>(o haga clic para seleccionar archivos)</button>'
+                    //            + '</div></div><hr>'
+                    //            + '<hr>'
+                    //            + '<input type="hidden" id="mdurl-certification" class="form-control clear">'
+                    //            + '</div>';
+                    //            $('.archivo').append(ad);
+
+
+                    //    $('.dz-preview .dz-processing .dz-image-preview .dz-success .dz-complete').remove();
+                             Dropzone.forElement('#cert_defuncion').removeAllFiles(true);
 
                     }
 
