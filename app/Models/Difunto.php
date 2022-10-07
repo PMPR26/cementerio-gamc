@@ -38,7 +38,7 @@ class Difunto extends Model
         // ->orderBy('ci', 'DESC')
         // ->first();
 
-        $ci = Difunto::select('ci')
+        $ci = Difunto::select('id')
                ->whereRaw('id = (select max(id) from difunto)')
                 // ->where('ci', 'ilike', "%SCD-0%")
                 // ->orderBy('ci', 'DESC')
@@ -46,7 +46,7 @@ class Difunto extends Model
 
          if($ci){
             $number = (int) str_replace('-','',filter_var($ci, FILTER_SANITIZE_NUMBER_INT)) + 1;
-            return 'SCD-'.str_pad($number, 4, '0', STR_PAD_LEFT);
+            return 'SCDI-'.str_pad($number, 4, '0', STR_PAD_LEFT);
          }else{
              return 'SCD-0001';
          }

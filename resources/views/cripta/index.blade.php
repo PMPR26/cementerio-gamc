@@ -1436,7 +1436,6 @@ $(document).on('click', '#buscarResp', function() {
 
             // show Deceased row in table
                 function mostrar_difunto(){
-
                     var row='<tr>'+
                         '<td class="dtci">'+$('#mdci').val()+'</td>'+
                         '<td class="dtname">'+$('#mdnombre').val()+'</td>'+
@@ -1446,15 +1445,12 @@ $(document).on('click', '#buscarResp', function() {
                         '<td class="dttipo">'+$('#mdtipo').val()+'</td>'+
                          '<td class="dtfecha_nacimiento">'+$('#mdfecha_nacimiento').val()+'</td>'+
                          '<td class="dtedad">'+calcularEdad($('#mdfecha_nacimiento').val())+'</td>'+
-
                         '<td class="dtfecha_defuncion">'+$('#mdfecha_defuncion').val()+'</td>'+
                         '<td class="dtcausa">'+$('#causa').val()+'</td>'+
                         '<td class="dtfuneraria">'+$('#funeraria').val()+'</td>'+
                         '<td class="dtgenero">'+$('#mdgenero').val()+'</td>'+
                         '<td class="enl" ><a href="'+$('#mdurl-certification').val()+'" target="_blank" >ver adjunto</a></td>'+
-
                         '<td class="dturl" >'+$('#mdurl-certification').val()+'</td>'+
-
                         '<td class="remove"> <a href="#" id="remove"  onClick="$(this).parent().parent().remove();"> <i class="fas fa-trash wine fa-2x"></i></a></td></tr>';
                        $('#tabla_difunto_row').append(row);
                        // clear modal form
