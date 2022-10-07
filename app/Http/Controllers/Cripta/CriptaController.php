@@ -366,12 +366,12 @@ class CriptaController extends Controller
 
 
                     $dif = new Difunto;
-
+                    $newdif=[];
                     foreach($request['difuntos'] as $key => $value)
                     {
 
                         if($value['ci']==null || $value['ci']=="" ){
-                                    $ci_dif=$this->generateCiDifunto();
+                                    $ci_dif=$this->generateCiDif();
                                 }else{
                                     $ci_dif=$value['ci'];
                                 }
@@ -385,17 +385,32 @@ class CriptaController extends Controller
                                     $dif->fecha_nacimiento = $value['fecha_nacimiento'];
                                     $dif->fecha_defuncion = $value['fecha_defuncion'];
                                     $dif->certificado_defuncion = $value['ceresi'];
-                                    $dif->causa = $value['causa'];
+                                    $dif->causa = trim(strtoupper($value['causa']));
                                     $dif->tipo = $value['tipo'];
                                     $dif->edad = $value['edad'];
-
                                     $dif->genero = $value['genero'];
-                                    $dif->funeraria = trim($value['funeraria']);
+                                    $dif->funeraria = trim(strtoupper($value['funeraria']));
                                     $dif->certificado_file = trim($value['url']);
                                     $dif->estado = 'ACTIVO';
                                     $dif->user_id = auth()->id();
                                     $dif->save();
                                     $dif->id;
+
+                                    array_push($newdif, [
+                                        "ci"=>$ci_dif,
+                                        "nombres"=>$value['nombres'],
+                                        "primer_apellido"=>$value['primer_apellido'],
+                                        "segundo_apellido"=>$value['segundo_apellido'],
+                                        "ceresi"=>$value['ceresi'],
+                                        "tipo"=>$value['tipo'],
+                                        "fecha_nacimiento"=>$value['fecha_nacimiento'],
+                                        "fecha_defuncion"=>$value['fecha_defuncion'],
+                                        "causa"=>trim(strtoupper($value['causa'])),
+                                        "funeraria"=>trim(strtoupper($value['funeraria'])),
+                                        "genero"=>$value['genero'],
+                                        "url"=>trim($value['url'])
+                                    ]);
+
                                 }
                                 else{
                                     $up_dif= Difunto::where('ci', ''.$ci_dif.'')
@@ -417,11 +432,28 @@ class CriptaController extends Controller
                                     $up_dif->user_id = auth()->id();
                                     $up_dif->save();
                                     $up_dif->id;
+
+                                    array_push($newdif, [
+                                        "ci"=>$ci_dif,
+                                        "nombres"=>$value['nombres'],
+                                        "primer_apellido"=>$value['primer_apellido'],
+                                        "segundo_apellido"=>$value['segundo_apellido'],
+                                        "ceresi"=>$value['ceresi'],
+                                        "tipo"=>$value['tipo'],
+                                        "fecha_nacimiento"=>$value['fecha_nacimiento'],
+                                        "fecha_defuncion"=>$value['fecha_defuncion'],
+                                        "causa"=>trim(strtoupper($value['causa'])),
+                                        "funeraria"=>trim(strtoupper($value['funeraria'])),
+                                        "genero"=>$value['genero'],
+                                        "url"=>trim($value['url'])
+                                    ]);
                                 }
                             }
 
                         $cript=Cripta::where('id',$request->cripta_mausoleo_id )->first();
-                        $cript->difuntos=json_encode($request['difuntos']);
+                        // $cript->difuntos=json_encode($request['difuntos']);
+                        $cript->difuntos=json_encode($newdif);
+
                         $cript->save();
 
                        if($cript){
@@ -467,12 +499,18 @@ class CriptaController extends Controller
         // dd($request->cripta_mausoleo_id);
         $difuntoCript =  Cripta::where('id', $request->cripta_mausoleo_id)->first();
 
+
                return response([
                 'status'=> true,
                 'response'=> $difuntoCript
              ],200);
     }
-
+    public function generateCiDif(){
+        $dif=new Difunto;
+        $nro_ci=$dif->generateCiDifunto();
+        // dd( $nro_ci);
+        return $nro_ci;
+    }
 
 }
 
