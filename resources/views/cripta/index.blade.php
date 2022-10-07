@@ -282,11 +282,6 @@
                                         <button type="submit" class="btn btn-lg btn-default" id="buscarResp">
                                             <i class="fa fa-search"></i>
                                         </button>
-
-                                        {{-- <button type="button" class="btn btn-lg btn-default" id="generarciresp"
-                                        title="generar carnet provisional">
-                                        <i class="fa fa-pen"></i>
-                                        </button> --}}
                                     </div>
                                 </div>
                             </div>
@@ -493,13 +488,15 @@ $(document).on('click', '#btn_up_pay_cm', function(){
                                                         '<td class="dtcausa">'+value['causa']+'</td>'+
                                                         '<td class="dtfuneraria">'+value['funeraria']+'</td>'+
                                                         '<td class="dtgenero">'+value['genero']+'</td>'+
-                                                        '<td class="dturl">'+value['url']+'</td>'+
-                                                        '<td class="dturl"> <a href="#" id="remove"  onClick="$(this).parent().parent().remove();"> <i class="fas fa-trash wine fa-2x"></i></a></td></tr>';
+                                                        '<td class="enl"><a href="'+value['url']+'" target="_blank" >Ver adjunto</a></td>'+
+                                                        '<td class="dturl" >'+value['url']+'</td>'+
+                                                        '<td class="dtborrar"> <a href="#" id="remove"  onClick="$(this).parent().parent().remove();"> <i class="fas fa-trash wine fa-2x"></i></a></td></tr>';
                                                     $('#tabla_difunto_row').append(row);
                                                     // clear modal form
                                                     $('.clear').val('');
                                                     $('.clears2').val(null).trigger('change');
-                                                    Dropzone.forElement('#cert_defuncion').removeAllFiles(true);
+                                                    $('.dz-image').html("");
+                                                    // Dropzone.forElement('#cert_defuncion').removeAllFiles(true);
 
 
                                 })
@@ -1453,13 +1450,16 @@ $(document).on('click', '#buscarResp', function() {
                         '<td class="dtcausa">'+$('#causa').val()+'</td>'+
                         '<td class="dtfuneraria">'+$('#funeraria').val()+'</td>'+
                         '<td class="dtgenero">'+$('#mdgenero').val()+'</td>'+
-                        '<td class="dturl">'+$('#mdurl-certification').val()+'</td>'+
-                        '<td class="dturl"> <a href="#" id="remove"  onClick="$(this).parent().parent().remove();"> <i class="fas fa-trash wine fa-2x"></i></a></td></tr>';
+                        '<td class="enl" ><a href="'+$('#mdurl-certification').val()+'" target="_blank" >ver adjunto</a></td>'+
+
+                        '<td class="dturl" >'+$('#mdurl-certification').val()+'</td>'+
+
+                        '<td class="remove"> <a href="#" id="remove"  onClick="$(this).parent().parent().remove();"> <i class="fas fa-trash wine fa-2x"></i></a></td></tr>';
                        $('#tabla_difunto_row').append(row);
                        // clear modal form
                        $('.clear').val('');
                        $('.clears2').val(null).trigger('change');
-                             Dropzone.forElement('#cert_defuncion').removeAllFiles(true);
+                            //  Dropzone.forElement('#cert_defuncion').removeAllFiles(true);
 
                     }
 
@@ -1591,72 +1591,157 @@ $(document).on('click', '#buscarResp', function() {
                         }
 
 // abrir modal pagar servicio
-         $(document).on('click', '#btn_pay_cm', function(){
-            $('#modal_pay_cm').modal('show');
-            $('#id_cripta_mausoleo_modal').val($(this).val());
-            // buscar si hay difuntos ingresados
+        //  $(document).on('click', '#btn_pay_cm', function(){
+        //     $('#modal_pay_cm').modal('show');
+        //     $('#id_cripta_mausoleo_modal').val($(this).val());
+        //     // buscar si hay difuntos ingresados
 
-            $.ajax({
-                        type: 'POST',
-                        headers: {
-                            'Content-Type':'application/json',
-                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
-                        },
-                        url:'{{ route("difuntoCripta.get") }}',
-                          async: false,
-                        data: JSON.stringify({
-                            'cripta_mausoleo_id': $(this).val(),
-                        }),
-                        success: function(data_response)
-                        {
-                            $('#tabla_difunto_row').empty();
-                            $('#modal_save_difuntos').prop('disabled', false);
+        //     $.ajax({
+        //                 type: 'POST',
+        //                 headers: {
+        //                     'Content-Type':'application/json',
+        //                     'X-CSRF-TOKEN':'{{ csrf_token() }}',
+        //                 },
+        //                 url:'{{ route("difuntoCripta.get") }}',
+        //                   async: false,
+        //                 data: JSON.stringify({
+        //                     'cripta_mausoleo_id': $(this).val(),
+        //                 }),
+        //                 success: function(data_response)
+        //                 {
+        //                     $('#tabla_difunto_row').empty();
+        //                     $('#modal_save_difuntos').prop('disabled', false);
 
-                            console.log(data_response);
-                            var list=jQuery.parseJSON(data_response.response['difuntos']);
-                            if(data_response.response['difuntos']!=null )
-                            {
-                                // var rows = Object.keys(data_response.response['difuntos']).length;
-                                //    console.log(rows);
-                                $.each(list, function(key, value)
-                                 {
-                                         console.log( value[value]);
+        //                     console.log(data_response);
+        //                     var list=jQuery.parseJSON(data_response.response['difuntos']);
+        //                     if(data_response.response['difuntos']!=null )
+        //                     {
+        //                         // var rows = Object.keys(data_response.response['difuntos']).length;
+        //                         //    console.log(rows);
+        //                         $.each(list, function(key, value)
+        //                          {
+        //                                  console.log( value[value]);
 
-                                            //llenar tabla
-                                                  var row='<tr>'+
-                                                        '<td class="dtci">'+value['ci']+'</td>'+
-                                                        '<td class="dtname">'+value['nombres']+'</td>'+
-                                                        '<td class="dtprimer_apellido">'+value['primer_apellido']+'</td>'+
-                                                        '<td class="dtsegundo_apellido">'+value['segundo_apellido']+'</td>'+
-                                                        '<td class="dtcertificado_defuncion">'+value['ceresi']+'</td>'+
-                                                        '<td class="dttipo">'+value['tipo']+'</td>'+
-                                                        '<td class="dtfecha_nacimiento">'+value['fecha_nacimiento']+'</td>'+
-                                                        '<td class="dtedad">'+calcularEdad(value['fecha_nacimiento'])+'</td>'+
+        //                                     //llenar tabla
+        //                                           var row='<tr>'+
+        //                                                 '<td class="dtci">'+value['ci']+'</td>'+
+        //                                                 '<td class="dtname">'+value['nombres']+'</td>'+
+        //                                                 '<td class="dtprimer_apellido">'+value['primer_apellido']+'</td>'+
+        //                                                 '<td class="dtsegundo_apellido">'+value['segundo_apellido']+'</td>'+
+        //                                                 '<td class="dtcertificado_defuncion">'+value['ceresi']+'</td>'+
+        //                                                 '<td class="dttipo">'+value['tipo']+'</td>'+
+        //                                                 '<td class="dtfecha_nacimiento">'+value['fecha_nacimiento']+'</td>'+
+        //                                                 '<td class="dtedad">'+calcularEdad(value['fecha_nacimiento'])+'</td>'+
 
-                                                        '<td class="dtfecha_defuncion">'+value['fecha_defuncion']+'</td>'+
-                                                        '<td class="dtcausa">'+value['causa']+'</td>'+
-                                                        '<td class="dtfuneraria">'+value['funeraria']+'</td>'+
-                                                        '<td class="dtgenero">'+value['genero']+'</td>'+
-                                                        '<td class="dturl">'+value['url']+'</td>'+
-                                                        '<td class="dturl"> <a href="#" id="remove"  onClick="$(this).parent().parent().remove();"> <i class="fas fa-trash wine fa-2x"></i></a></td></tr>';
-                                                    $('#tabla_difunto_row').append(row);
-                                                    // clear modal form
-                                                    $('.clear').val('');
-                                                    $('.clears2').val(null).trigger('change');
-                                                    Dropzone.forElement('#cert_defuncion').removeAllFiles(true);
+        //                                                 '<td class="dtfecha_defuncion">'+value['fecha_defuncion']+'</td>'+
+        //                                                 '<td class="dtcausa">'+value['causa']+'</td>'+
+        //                                                 '<td class="dtfuneraria">'+value['funeraria']+'</td>'+
+        //                                                 '<td class="dtgenero">'+value['genero']+'</td>'+
+        //                                                 '<td class="dturl">'+value['url']+'</td>'+
+        //                                                 '<td class="remov"> <a href="#" id="remove"  onClick="$(this).parent().parent().remove();"> <i class="fas fa-trash wine fa-2x"></i></a></td></tr>';
+        //                                             $('#tabla_difunto_row').append(row);
+        //                                             // clear modal form
+        //                                             $('.clear').val('');
+        //                                             $('.clears2').val(null).trigger('change');
 
 
-                                })
+        //                         })
 
-                                //end foreach
-                            }//end if
+        //                         //end foreach
+        //                     }//end if
+        //                 }
+
+
+
+
+        //     });
+        // });
+
+/// recuperar difunto en modal difunto
+
+
+$(document).on('click', '#buscarDif', function(e) {
+    e.preventDefault();
+                var ci = $('#mdci').val(); alert(ci);
+
+
+                if (ci.length < 1) {
+
+                    Swal.fire(
+                        'Busqueda finalizada!',
+                        'El campo C.I. esta vacio .',
+                        'warning'
+                    )
+
+                } else {
+                    var type = "deceased";
+                    dats = buscar_ci_Dif(ci, type);
+
+                }
+            });
+
+            function buscar_ci_Dif(ci, type) {
+                var datos = "";
+
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Content-Type': 'application/json'
+                    },
+                    url: "{{ route('search.difunto.responsable') }}",
+                    method: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        "ci": ci,
+                        "type": type
+                    }),
+                    success: function(data) {
+                        if (data.response == null) {
+                            Swal.fire(
+                                'Busqueda finalizada!',
+                                'El C.I. ingresado no esta registrado .',
+                                'warning'
+                            )
+                        } else {
+console.log(data);
+                            $('#mdprimer_apellido').val(data.response.primer_apellido);
+                            $('#mdsegundo_apellido').val(data.response.segundo_apellido);
+                            $('#mdfecha_nacimiento').val(data.response.fecha_nacimiento);
+                            $('#mdtipo').val(data.response.tipo);
+                            $('#mdci').val(data.response.ci);
+                            $('#mdnombre').val(data.response.nombres);
+                            $('#mdcertificado_defuncion').val(data.response.certificado_defuncion);
+                            $('#mdfecha_defuncion').val(data.response.fecha_defuncion);
+
+                            $('#causa').val(data.response.causa).trigger('change');
+                            $('#funeraria').val(data.response.funeraria).trigger('change');
+                            $('#mdgenero').val(data.response.genero);
+
+                            if(data.response.certificado_file != null){
+                               $('#mdurl-certification').val(data.response.certificado_file);
+                                var enlace='<a href="'+data.response.certificado_file+'" id="enl" target="_black">Archivo adjunto</a><br>'+
+                                            '<img src="'+data.response.certificado_file+'" width="150px" height="150px">';
+                                $('#adjunto').append(enlace);
+                            }
                         }
 
+                    },
+                    error: function(xhr, status) {
+
+                        Swal.fire(
+                            'Busqueda finalizada!',
+                            'El registro no ha  sido encontrado o no existe .',
+                            'error'
+                        )
+                    },
 
 
 
-            });
-        });
+                });
+                // return datos;
+            }
+
+
 
 
     </script>

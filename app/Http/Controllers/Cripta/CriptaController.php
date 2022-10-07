@@ -371,7 +371,7 @@ class CriptaController extends Controller
                     {
 
                         if($value['ci']==null || $value['ci']=="" ){
-                                    $ci_resp=$this->generateCiDifunto();
+                                    $ci_dif=$this->generateCiDifunto();
                                 }else{
                                     $ci_dif=$value['ci'];
                                 }
@@ -383,7 +383,7 @@ class CriptaController extends Controller
                                     $dif->primer_apellido = $value['primer_apellido'];
                                     $dif->segundo_apellido = $value['segundo_apellido'];
                                     $dif->fecha_nacimiento = $value['fecha_nacimiento'];
-                                    $dif->fecha_defuncion = $value['fecha_nacimiento'];
+                                    $dif->fecha_defuncion = $value['fecha_defuncion'];
                                     $dif->certificado_defuncion = $value['ceresi'];
                                     $dif->causa = $value['causa'];
                                     $dif->tipo = $value['tipo'];
@@ -396,6 +396,27 @@ class CriptaController extends Controller
                                     $dif->user_id = auth()->id();
                                     $dif->save();
                                     $dif->id;
+                                }
+                                else{
+                                    $up_dif= Difunto::where('ci', ''.$ci_dif.'')
+                                    ->first();
+                                    $up_dif->ci = $ci_dif;
+                                    $up_dif->nombres = $value['nombres'];
+                                    $up_dif->primer_apellido = $value['primer_apellido'];
+                                    $up_dif->segundo_apellido = $value['segundo_apellido'];
+                                    $up_dif->fecha_nacimiento = $value['fecha_nacimiento'];
+                                    $up_dif->fecha_defuncion = $value['fecha_defuncion'];
+                                    $up_dif->certificado_defuncion = $value['ceresi'];
+                                    $up_dif->causa = $value['causa'];
+                                    $up_dif->tipo = $value['tipo'];
+                                    $up_dif->edad = $value['edad'];
+                                    $up_dif->genero = $value['genero'];
+                                    $up_dif->funeraria = trim($value['funeraria']);
+                                    $up_dif->certificado_file = trim($value['url']);
+                                    $up_dif->estado = 'ACTIVO';
+                                    $up_dif->user_id = auth()->id();
+                                    $up_dif->save();
+                                    $up_dif->id;
                                 }
                             }
 

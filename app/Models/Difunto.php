@@ -49,10 +49,10 @@ class Difunto extends Model
             return 'SCD-'.str_pad($number, 4, '0', STR_PAD_LEFT);
          }else{
              return 'SCD-0001';
-         }   
+         }
     }
 
-    
+
     public function insertDifunto($request){
         if($request->ci_dif==null ||$request->ci_dif=="" ){
             $ci_resp=$this->generateCiDifunto();
@@ -68,11 +68,13 @@ class Difunto extends Model
         $dif->fecha_defuncion = $request->fechadef_dif;
         $dif->certificado_defuncion = $request->sereci;
         $dif->causa = $request->causa;
-        $dif->tipo = $request->tipo_dif; 
-        $dif->genero = $request->genero_dif;  
+        $dif->edad = $request->edad ?? '';
+
+        $dif->tipo = $request->tipo_dif;
+        $dif->genero = $request->genero_dif;
         $dif->funeraria = trim($request->funeraria);
-        $dif->certificado_file = trim($request->certificado_file);   
-        $dif->estado = 'ACTIVO';  
+        $dif->certificado_file = trim($request->certificado_file);
+        $dif->estado = 'ACTIVO';
         $dif->user_id = auth()->id();
         $dif->save();
         $dif->id;
@@ -95,14 +97,15 @@ class Difunto extends Model
         $difunto->fecha_defuncion = $request->fechadef_dif;
         $difunto->certificado_defuncion = $request->sereci;
         $difunto->causa = $request->causa;
-        $difunto->tipo = $request->tipo_dif; 
-        $difunto->genero = $request->genero_dif; 
+        $difunto->tipo = $request->tipo_dif;
+        $difunto->genero = $request->genero_dif;
         $difunto->funeraria = trim($request->funeraria);
         $difunto->certificado_file = trim($request->url_certificacion);
+        $difunto->edad = $request->edad ?? '';
 
-       // $difunto->certificado_file=$request->adjunto;       
-      //  $difunto->tiempo = $request->tiempo;  
-        $difunto->estado = 'ACTIVO';  
+       // $difunto->certificado_file=$request->adjunto;
+      //  $difunto->tiempo = $request->tiempo;
+        $difunto->estado = 'ACTIVO';
         $difunto->user_id = auth()->id();
         $difunto->save();
         return $difunto->id;
