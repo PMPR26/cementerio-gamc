@@ -1662,7 +1662,7 @@ $(document).on('click', '#buscarResp', function() {
 
 $(document).on('click', '#buscarDif', function(e) {
     e.preventDefault();
-                var ci = $('#mdci').val(); alert(ci);
+                var ci = $('#mdci').val();
 
 
                 if (ci.length < 1) {
