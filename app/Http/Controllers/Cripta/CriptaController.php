@@ -20,7 +20,7 @@ class CriptaController extends Controller
         $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
          'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios',
          'cripta_mausoleo_responsable.documentos_recibidos','cripta_mausoleo.difuntos',
-        'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo',
+        'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo','cripta_mausoleo.familia','cripta_mausoleo_responsable.estado as estado_rel_resp',
          DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
          'cuartel.codigo as cuartel_codigo','bloque.codigo as bloque_nombre')
          ->Join('cuartel','cuartel.id', '=', 'cripta_mausoleo.cuartel_id' )
@@ -150,24 +150,40 @@ class CriptaController extends Controller
 
     public function getCripta($id){
 
-        $cripta = Cripta::select('cripta_mausoleo.*', 'responsable.id as responsable_id', 'responsable.nombres','responsable.primer_apellido',
-                                  'responsable.segundo_apellido', 'responsable.ci', 'responsable.domicilio', 'responsable.nombres','responsable.celular',
-                                  'responsable.genero', 'cripta_mausoleo_responsable.id as cripta_mausoleo_resp_id', 'cripta_mausoleo_responsable.documentos_recibidos',
-                                  'cripta_mausoleo_responsable.adjudicacion' ,  'cripta_mausoleo_responsable.ultima_gestion_pagada' )
-                    ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id')
-                    ->leftJoin('responsable', 'responsable.id','=','cripta_mausoleo_responsable.responsable_id')
-                    ->where('cripta_mausoleo.id', $id)
-                    ->first();
+        // $cripta = Cripta::select('cripta_mausoleo1.*', 'responsable.id as responsable_id', 'responsable.nombres','responsable.primer_apellido',
+        //                           'responsable.segundo_apellido', 'responsable.ci', 'responsable.domicilio', 'responsable.nombres','responsable.celular',
+        //                           'responsable.genero', 'cripta_mausoleo_responsable.id as cripta_mausoleo_resp_id', 'cripta_mausoleo_responsable.documentos_recibidos',
+        //                           'cripta_mausoleo_responsable.adjudicacion' ,  'cripta_mausoleo_responsable.ultima_gestion_pagada' )
+        //             ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id')
+        //             ->leftJoin('responsable', 'responsable.id','=','cripta_mausoleo_responsable.responsable_id')
+        //             ->where('cripta_mausoleo.id', $id)
+        //             ->where('cripta_mausoleo.estado', 'ACTIVO')
+
+        //             ->first();
+
+        $cripta=Cripta::where('id', $id)->where('estado', 'ACTIVO')->orderBy('id', 'desc')->first();
+        $responsable=DB::table('cripta_mausoleo_responsable')
+                         ->join('responsable', 'responsable.id','=', 'cripta_mausoleo_responsable.responsable_id')
+                         ->where('cripta_mausoleo_responsable.cripta_mausole_id', $id)
+                         ->where('cripta_mausoleo_responsable.estado', 'ACTIVO')
+                         ->first();
+
+
 
         return response([
               'status'=> true,
-              'response'=> $cripta
+              'response'=>[
+                "cripta"=>$cripta,
+                "responsable"=>$responsable
+                   ]
                  ],201);
+
+
     }
 
     public function updateCripta(Request $request){
         // return response()->json([ $request->id_cripta]);
-        // dd("entra");
+        // dd($request);
 
         if ($request->isJson())
         {
@@ -187,14 +203,14 @@ class CriptaController extends Controller
         // caso contrario se insterta
                 if($request->ci_resp!=null)
                 {
-                        if( $existe_resp==null){
-                            if($request->ci_resp!=null)
-                            {
+                        if($existe_resp==null){
+                            // if($request->ci_resp!=null)
+                            // {
                                 $responsable_id=Responsable::insertResponsable($request);
-                            }
-                            else{
-                                $responsable_id=Responsable::updateResponsable($request,   $existe_resp->id);
-                            }
+                            // }
+                            // else{
+                            //     $responsable_id=Responsable::updateResponsable($request,   $existe_resp->id);
+                            // }
                         }else{
                             $responsable_id=Responsable::updateResponsable($request,   $existe_resp->id);
                         }
@@ -242,6 +258,23 @@ class CriptaController extends Controller
                                                  CriptaMausoleoResp::upCriptaMausoleoResp($request,$responsable_id, $cripta_id, $search_relacion->id );
                                             }
                          }
+                         if($request->ci_resp == null &&  $request->nombres_resp == null  &&  $request->paterno_resp == null  &&  $request->materno_resp == null)
+                            {
+                                //buscar responsabl ede la cripta o mausoleo
+                                $respons=DB::table('cripta_mausoleo_responsable')
+                                         ->where('cripta_mausole_id',$cripta_id)
+                                         ->where('estado', 'ACTIVO')
+                                         ->orderby('id', 'DESC')
+                                         ->first();
+                                $cmrespons= CriptaMausoleoResp::where('id', $respons->id )
+                                ->where('estado', 'ACTIVO')->first();
+                                // dd($cmrespons);
+
+                                $cmrespons->estado='INACTIVO';
+                                $cmrespons->updated_at = date("Y-m-d H:i:s");
+                                $cmrespons->save();
+                                return $cmrespons->id;
+                            }
 
                return response([
                     'status'=> true,
