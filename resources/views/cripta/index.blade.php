@@ -49,8 +49,10 @@
                 <th scope="col">Cuartel</th>
                 <th scope="col">Bloque</th>
                 <th scope="col">Sitio</th>
-
+                <th scope="col">Familia</th>
                 <th scope="col">Propietario</th>
+                <th scope="col">Documentos Recibidos</th>
+
                 <th scope="col">Superficie</th>
                 <th scope="col">Enterratorio Ocupados</th>
                 <th scope="col">Total Enterratorio</th>
@@ -60,7 +62,6 @@
                 <th scope="col">Ultima Gestion Pagada</th>
                 <th scope="col">Difuntos</th>
 
-                <th scope="col">Documentos Recibidos</th>
                 <th scope="col">Estado</th>
                 <th scope="col">Operaciones</th>
             </tr>
@@ -77,8 +78,19 @@
                     <td>{{ $cripta->cuartel_codigo }}</td>
                     <td>{{ $cripta->bloque_nombre ?? '' }}</td>
                     <td>{{ $cripta->sitio }}</td>
+                    <td>{{ $cripta->familia ?? '' }}</td>
+                    @if($cripta->estado_rel_resp=='ACTIVO')
 
                     <td>{{ $cripta->nombre }}</td>
+                    <td>
+                        {{ $cripta->documentos_recibidos }}
+                    </td>
+                    @else
+                    <td>SIN ASIGANCION</td>
+                    <td>
+                       SIN RECEPCION
+                    </td>
+                    @endif
                     <td>{{ $cripta->superficie }}</td>
                     <td>{{ $cripta->enterratorios_ocupados }}</td>
                     <td>{{ $cripta->total_enterratorios }}</td>
@@ -95,9 +107,7 @@
                             }
                     ?>
                        </td>
-                    <td>
-                      {{ $cripta->documentos_recibidos }}
-                    </td>
+
 
                     <td>{{ $cripta->estado }}</td>
 
@@ -656,6 +666,8 @@ $(document).on('click', '#btn_up_pay_cm', function(){
 
             $(document).on('click', '#btn-editar', function(){
                 $('#cmform').find("input[type=text], input[type=checkbox], textarea").val("");
+                  $(this).find('form').trigger('reset');
+                // $('#modal-cripta').reset();
                 $('#section_data').show();
                 $('#estado').show();
                 var cripta_mausoleo_id = $(this).val();
@@ -667,38 +679,46 @@ $(document).on('click', '#btn_up_pay_cm', function(){
                         },
                         url: '/cripta/get-cripta/' + $(this).val(),
                         async: false,
-                        success: function(data_response) {
-                            console.log(data_response);
+                        success: function(data_query) {
+                            console.log(data_query['response']);
+
+                            console.log(data_query['response']['responsable']);
+                            var data_response=data_query['response']['cripta'];
+                            var data_resp=data_query['response']['responsable'];
                             $('#modal-cripta').modal('show');
                             $('#btn-cripta-editar').show(300);
                             $('#btn-cripta').hide(300);
                             $('#cripta_mausoleo_id').val(cripta_mausoleo_id);
-                            $(".select-cuartel").val(data_response.response.cuartel_id).trigger('change');
-                            $('#cod-cripta').val(data_response.response.codigo);
-                            $('#cod_cripta_ant').val(data_response.response.codigo_antiguo);
-                            $('#cod-sitio').val(data_response.response.sitio);
-                            $('#bloque').val(data_response.response.bloque_id);
-                            $('#tipo_reg').val(data_response.response.tipo_registro);
-                            $('#cripta-name').val(data_response.response.nombres);
-                            $('#superficie').val(data_response.response.superficie);
-                            $('#estado').val(data_response.response.estado);
-                            $('#btn-cripta-editar').val(data_response.response.id);
-                            $('#paterno').val(data_response.response.primer_apellido);
-                            $('#materno').val(data_response.response.segundo_apellido);
-                            $('#dni').val(data_response.response.ci);
-                            $('#domicilio').val(data_response.response.domicilio);
-                            $('#genero_resp').val(data_response.response.genero);
-                            $('#telefono').val(data_response.response.celular);
-                            $('#construido').val(data_response.response.estado_construccion);
-                            $('#enterratorios_ocupados').val(data_response.response.enterratorios_ocupados);
-                            $('#total_enterratorios').val(data_response.response.total_enterratorios);
-                            $('#osarios').val(data_response.response.osarios);
-                            $('#total_osarios').val(data_response.response.total_osarios);
-                            $('#cenisarios').val(data_response.response.cenisarios);
-                            $('#observaciones').val(data_response.response.observaciones);
-                            $('#familia').val(data_response.response.familia);
-                            if(data_response.response.documentos_recibidos){
-                                var ar=JSON.parse(data_response.response.documentos_recibidos);
+                            $(".select-cuartel").val(data_response.cuartel_id).trigger('change');
+                            $('#cod-cripta').val(data_response.codigo);
+                            $('#cod_cripta_ant').val(data_response.codigo_antiguo);
+                            $('#cod-sitio').val(data_response.sitio);
+                            $('#bloque').val(data_response.bloque_id);
+                            $('#tipo_reg').val(data_response.tipo_registro);
+                            $('#superficie').val(data_response.superficie);
+                            $('#estado').val(data_response.estado);
+                            $('#btn-cripta-editar').val(data_response.id);
+
+                            $('#construido').val(data_response.estado_construccion);
+                            $('#enterratorios_ocupados').val(data_response.enterratorios_ocupados);
+                            $('#total_enterratorios').val(data_response.total_enterratorios);
+                            $('#osarios').val(data_response.osarios);
+                            $('#total_osarios').val(data_response.total_osarios);
+                            $('#cenisarios').val(data_response.cenisarios);
+                            $('#observaciones').val(data_response.observaciones);
+                            $('#familia').val(data_response.familia);
+
+                            if(data_resp!=null){
+                            $('#cripta-name').val(data_resp.nombres);
+                            $('#paterno').val(data_resp.primer_apellido);
+                            $('#materno').val(data_resp.segundo_apellido);
+                            $('#dni').val(data_resp.ci);
+                            $('#domicilio').val(data_resp.domicilio);
+                            $('#genero_resp').val(data_resp.genero);
+                            $('#telefono').val(data_resp.celular);
+
+                            if(data_resp.documentos_recibidos){
+                                var ar=JSON.parse(data_resp.documentos_recibidos);
                                 console.log(ar);
                                 if(ar.bienes_m=="BIENES M"){ $('#bienes_m').prop('checked', true); }else{$('#bienes_m').prop('checked', false);}
                                 if(ar.ci!="FALTA"){ $('#ci').prop('checked', true); $('#nro_ci').val(ar.ci); $('#nro_ci').show(); }else{$('#ci').prop('checked', false);}
@@ -707,18 +727,18 @@ $(document).on('click', '#btn_up_pay_cm', function(){
                                 if(ar.obs_resolucion!="FALTA"){ $('#obs_resolucion').prop('checked', true); $('#txt_resolucion').val(ar.obs_resolucion); $('#txt_resolucion').show(); }else{$('#obs_resolucion').prop('checked', false);}
 
                             }
+                        }
 
 
+                             $('#adjudicacion').val(data_response.adjudicacion);
+                             $('#ultima_gestion_pagada').val(data_response.ultima_gestion_pagada);
 
-                             $('#adjudicacion').val(data_response.response.adjudicacion);
-                             $('#ultima_gestion_pagada').val(data_response.response.ultima_gestion_pagada);
-
-                             $('#familia').val(data_response.response.familia);
-                            console.log( "data_response.response.foto"+data_response.response.foto)
-                            if(data_response.response.foto!=null){
-                               $('#url-foto').val(data_response.response.foto)  ;
-                               $('#foto_actual').append('<a href="'+ data_response.response.foto+'" target="_blank">Ver foto actual </a>');
-                               $('#foto_actual').append('<img src="'+ data_response.response.foto+'" widh="100px" heigth="100"');
+                             $('#familia').val(data_response.familia);
+                            console.log( "data_response.foto"+data_response.foto)
+                            if(data_response.foto!=null){
+                               $('#url-foto').val(data_response.foto)  ;
+                               $('#foto_actual').append('<a href="'+ data_response.foto+'" target="_blank">Ver foto actual </a>');
+                               $('#foto_actual').append('<img src="'+ data_response.foto+'" widh="100px" heigth="100"');
 
 
                             }else{
@@ -729,7 +749,7 @@ $(document).on('click', '#btn_up_pay_cm', function(){
                                         $('#letra').val("C");
                                         $('#box_tipo_cripta').show();
                                         $('#box_tipo_cripta').prop('disabled', false);
-                                        $('#tipo_cripta').val(data_response.response.tipo_cripta);
+                                        $('#tipo_cripta').val(data_response.tipo_cripta);
                                  }else{
                                     $('#letra').val("M");
                                     $('#box_tipo_cripta').hide();
