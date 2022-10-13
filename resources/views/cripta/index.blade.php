@@ -345,7 +345,8 @@
 
                         <div class="col-sm-4 col-md-3 col-xl-3">
                             <label for="">Fecha Adjudicacion</label>
-                            <input type="date" name="adjudicacion" id="adjudicacion" class="form-control">
+                            <input type="date" name="adjudicacion" id="adjudicacion" class="form-control" >
+                            {{-- //placeholder="1990-05-26"  required pattern="\d{4}-\d{2}-\d{2}" --}}
                         </div>
 
                         <div class="col-sm-8 col-md-9 col-xl-9">
@@ -717,6 +718,8 @@ $(document).on('click', '#btn_up_pay_cm', function(){
                             $('#genero_resp').val(data_resp.genero);
                             $('#telefono').val(data_resp.celular);
 
+                            $('#adjudicacion').val(data_resp.adjudicacion);
+
                             if(data_resp.documentos_recibidos){
                                 var ar=JSON.parse(data_resp.documentos_recibidos);
                                 console.log(ar);
@@ -730,7 +733,6 @@ $(document).on('click', '#btn_up_pay_cm', function(){
                         }
 
 
-                             $('#adjudicacion').val(data_response.adjudicacion);
                              $('#ultima_gestion_pagada').val(data_response.ultima_gestion_pagada);
 
                              $('#familia').val(data_response.familia);
