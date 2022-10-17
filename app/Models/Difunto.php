@@ -48,7 +48,7 @@ class Difunto extends Model
             // $text=explode('-', );
             // $number = (int) str_replace('-','',filter_var($ci, FILTER_SANITIZE_NUMBER_INT)) + 1;
             $nro=$ci->id+1;
-            $number = 'SCDI-'.$ci->id;
+            $number = 'SCDI-'.$nro;
             return  $number;
             // return 'SCDI-'.str_pad($number, 4, '0', STR_PAD_LEFT);
          }else{
