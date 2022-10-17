@@ -45,8 +45,12 @@ class Difunto extends Model
                 ->first();
 
          if($ci){
-            $number = (int) str_replace('-','',filter_var($ci, FILTER_SANITIZE_NUMBER_INT)) + 1;
-            return 'SCDI-'.str_pad($number, 4, '0', STR_PAD_LEFT);
+            // $text=explode('-', );
+            // $number = (int) str_replace('-','',filter_var($ci, FILTER_SANITIZE_NUMBER_INT)) + 1;
+            $nro=$ci->id+1;
+            $number = 'SCDI-'.$ci->id;
+            return  $number;
+            // return 'SCDI-'.str_pad($number, 4, '0', STR_PAD_LEFT);
          }else{
              return 'SCD-0001';
          }
@@ -109,6 +113,21 @@ class Difunto extends Model
         $difunto->user_id = auth()->id();
         $difunto->save();
         return $difunto->id;
+    }
+
+    public function deleteDifunto($id_difunto){
+        //buscar difunto en pagos servicios
+        // si esta en servicios retornar falso, no eliminar
+        // si no esta en servicios  buscar en nicho y/o criptas-mausoleos
+            //si esta en nichos inactivar row tabla responsable_difunto
+            //si esta en criptas mausoleos, modificar columna difunto de tabla cripta_mausoleo
+            //eliminar difunto
+
+        //buscar difunto en nicho
+        // si difunto esta en nicho
+        //buscar difunto en cripta/mausoleo
+
+
     }
 
 }
