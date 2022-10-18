@@ -158,6 +158,8 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
     Route::get('/disable-difunto/{id}', 'App\Http\Controllers\Difunto\DifuntoController@disableAndEnableDifunto')->name('difunto.disable');
     Route::get('/get-difunto/{id}', 'App\Http\Controllers\Difunto\DifuntoController@getDifunto')->name('difunto.get');
     Route::put('/update-difunto', 'App\Http\Controllers\Difunto\DifuntoController@updateDifunto')->name('difunto.update');
+    Route::get('/ver-registro-difunto/{id}', 'App\Http\Controllers\Difunto\DifuntoController@verRegistroDifunto')->name('difunto.verRegistro');
+    Route::post('/eliminar-difunto', 'App\Http\Controllers\Difunto\DifuntoController@eliminarDifunto')->name('difunto.delete');
 
 });
 
