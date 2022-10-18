@@ -19,7 +19,7 @@ class CriptaController extends Controller
 
         $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
          'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios',
-         'cripta_mausoleo_responsable.documentos_recibidos','cripta_mausoleo.difuntos',
+         'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos',
         'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo','cripta_mausoleo.familia','cripta_mausoleo_responsable.estado as estado_rel_resp',
          DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
          'cuartel.codigo as cuartel_codigo','bloque.codigo as bloque_nombre')

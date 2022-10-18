@@ -64,6 +64,7 @@
                         <button type="button" class="btn btn-info" value="{{ $difunto->id }}" id="btn-editar-difunto-value" title="Editar datos difunto"><i class="fas fa-edit"></i></button>
                         @if($difunto->estado =='ACTIVO')
                         <button type="button" class="btn btn-warning" value="{{ $difunto->id }}" id="btn-desactivar"><i class="fas fa-thumbs-down"></i></button>
+                        <button type="button" class="btn btn-danger" value="{{ $difunto->id }}" id="btn-eliminar"><i class="fas fa-trash"></i></button>
                         @else
                         <button type="button" class="btn btn-success" value="{{ $difunto->id }}" id="btn-desactivar"><i class="fas fa-thumbs-up"></i></button>
                         @endif
@@ -656,7 +657,7 @@ $(document).ready(function ()
                         url: '/difunto/get-difunto/' + $(this).val(),
                         async: false,
                         success: function(data_response) {
-                         console.log(data_response);
+                        //  console.log(data_response);
                            $('#btn_difunto-editar').val(data_response.response.id);
                             $('#modal-update-difunto').modal('show');
 
@@ -816,8 +817,110 @@ $(document).ready(function ()
                    $('#funeraria_edit option:selected').remove();
     });
 
-    // $(document).on('click' ,  '#funeraria_edit .select2-selection__clear', function(){
-    //                $('#funeraria_edit option:selected').remove();
-    // })
-    // </script>
+
+//eliminar difunto
+    $(document).on('click', '#btn-eliminar', function(){
+        var id_difunto=$(this).val();
+            $.ajax({
+                        type: 'GET',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: '/difunto/ver-registro-difunto/' + $(this).val(),
+                        async: false,
+                        success: function(data_response) {
+                            // console.log(data_response);
+                            if(data_response.status==true){
+                                if(data_response.response.tipo=="servicio"){
+                                    swal.fire({
+                                    title: "Atención",
+                                    text: "Imposible eliminar. el difutno tiene registros relacionados con  el pago de servicios",
+                                    type: "warning",
+                                    timer: 1000,
+                                    showCancelButton: false,
+                                    showConfirmButton: false
+                                    });
+                                    return false;
+                                }else{
+                                    console.log("****"+data_response.response.ci_dif);
+                                        swal.fire({
+                                            title: 'Precaucion',
+                                            text: "El difunto se encuentra asociado a la siguiente ubicacion. codigo: "+data_response.response.codigo+" , si elimina el registro afectara a los registros relacionados, desea ejecutar la operacion? ",
+                                            icon: "warning",
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#00B74A',
+                                            confirmButtonText: 'Sí!',
+                                            cancelButtonText: "No, cancelar!",
+                                            reverseButtons: true
+                                        }).then(function(result) {
+
+                                            if (result.value== true) {
+                                               eliminarDifunto(id_difunto, data_response.response.id, data_response.response.tipo, data_response.response.ci_dif);
+                                            }
+                                        });
+                                }
+
+                            }
+
+                        },
+                        error: function (error) {
+
+                            if(error.status == 422){
+                                Object.keys(error.responseJSON.errors).forEach(function(k){
+                                toastr["error"](error.responseJSON.errors[k]);
+                                //console.log(k + ' - ' + error.responseJSON.errors[k]);
+                                });
+                            }else if(error.status == 419){
+                                // location.reload();
+                            }
+
+                        }
+                    })
+        });
+
+        function eliminarDifunto(id_difunto, id_tabla, tipo, ci_dif)
+        {
+
+            if(tipo=="MAUSOLEO" || tipo=="CRIPTA" ){
+                var tbl="cripta_mausoleo";
+            }
+            else{
+                var tbl="responsable_difunto";
+            }
+
+            $.ajax({
+                        type: 'POST',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: "{{ route('difunto.delete') }}",
+                        async: false,
+                        data: JSON.stringify({
+                            'id_difunto':  id_difunto,
+                            'id_tabla':  id_tabla,
+                            'tbl':  tbl,
+                            'tipo':tipo,
+                            'ci_dif':ci_dif,
+
+
+                        }),
+                        success: function(response) {
+                            swal.fire({
+                            title: "Eliminado!",
+                            text: "!Registro eliminado con éxito!",
+                            type: "success",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false
+                            });
+                            setTimeout(function() {
+                                // location.reload();
+                            }, 2000);
+                          }
+                })
+        }
+
+     </script>
 @stop
