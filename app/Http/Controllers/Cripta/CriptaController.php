@@ -12,14 +12,17 @@ use App\Models\CriptaMausoleoResp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use PDF;
 class CriptaController extends Controller
 {
+
     public function index(){
 
         $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
-         'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios',
-         'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos',
+         'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios', 'cripta_mausoleo.notable',
+         'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos', 'mantenimiento.ultimo_pago',
         'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo','cripta_mausoleo.familia','cripta_mausoleo_responsable.estado as estado_rel_resp',
          DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
          'cuartel.codigo as cuartel_codigo','bloque.codigo as bloque_nombre')
@@ -27,6 +30,7 @@ class CriptaController extends Controller
          ->leftJoin('bloque','bloque.id', '=', 'cripta_mausoleo.bloque_id' )
         ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
         ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )
+        ->leftJoin('mantenimiento','mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id' )
         ->where('cripta_mausoleo.estado', 'ACTIVO')
         ->orderBy('cripta_mausoleo.id', 'DESC')
         ->orderBy('tipo_registro', 'DESC')
@@ -48,6 +52,8 @@ class CriptaController extends Controller
         ->whereNotNull('causa')
         ->distinct()->get();
 
+
+        // dd( $tipo_service );
         return view('cripta.index', ['cripta' => $cripta, 'cuartel' => $cuartel, 'funeraria' => $funeraria, 'causa' => $causa]);
 
     }
@@ -63,7 +69,7 @@ class CriptaController extends Controller
                         'codigo' => 'required',
                         'bloque' => 'required',
                         'sitio' => 'required',
-                        // 'name' => 'required',
+                        'notable' => 'required',
                         'superficie' => 'required|numeric',
                         // 'status' => 'required'
                     ],[
@@ -71,7 +77,7 @@ class CriptaController extends Controller
                         'codigo.required' => 'El campo código es requerido!',
                         'sitio.required' => 'El campo sitio es requerido!',
                         'bloque.required' => 'El campo bloque es requerido!',
-                        // 'name.required' => 'Nombre de la cripta es requerido!',
+                        'notable.required' => 'El campo Notable es requerido!',
                         'superficie.required' => ':attribute es requerido!' ,
                         'numeric' => 'La :attribute debe ser un número!'
                     ]);
@@ -545,5 +551,80 @@ class CriptaController extends Controller
         return $nro_ci;
     }
 
+
+    //obtener servicios criptas mausoleos
+    public function getServices(){
+        $headers = [
+            'Content-Type' => 'application/json'
+        ];
+        try {
+            $client = new Client();
+            $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/get-services', [
+                'json' => [],
+                'headers' => $headers
+            ]);
+        } catch (RequestException $re) {
+            return response([
+                'status' => false,
+                'message' => 'Error al procesar su solicitud'
+            ], 200);
+        }
+
+        $tipo_service = json_decode((string) $response->getBody(), true);
+        return $tipo_service;
+    }
+
+
+            public function printMausoleoNotables(Request $request){
+                $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
+                'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios', 'cripta_mausoleo.notable',
+                'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos', 'mantenimiento.ultimo_pago',
+               'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo','cripta_mausoleo.familia','cripta_mausoleo_responsable.estado as estado_rel_resp',
+                DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
+                'cuartel.codigo as cuartel_codigo','bloque.codigo as bloque_nombre')
+                ->Join('cuartel','cuartel.id', '=', 'cripta_mausoleo.cuartel_id' )
+                ->leftJoin('bloque','bloque.id', '=', 'cripta_mausoleo.bloque_id' )
+               ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
+               ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )
+               ->leftJoin('mantenimiento','mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id' )
+               ->where('cripta_mausoleo.estado', 'ACTIVO')
+               ->where('cripta_mausoleo.tipo_registro', 'MAUSOLEO')
+               ->where('cripta_mausoleo.notable', 'SI')
+               ->orderBy('cripta_mausoleo.id', 'DESC')
+               ->orderBy('tipo_registro', 'DESC')
+               ->orderBy('cripta_mausoleo.codigo', 'DESC')
+               ->get();
+
+            //    $pdf = new PDF();
+            //    $pdf = PDF::setPaper('a4', 'landscape');
+               $pdf = PDF::loadView('cripta/reportMausoleoNotable', compact('cripta'))->setPaper('a4', 'landscape');
+               return  $pdf-> stream("Lista_mausoleo_notables.pdf", array("Attachment" => false));
+            }
+
+            public function printCriptaNotables(Request $request){
+                $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
+                'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios', 'cripta_mausoleo.notable',
+                'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos', 'mantenimiento.ultimo_pago',
+               'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo','cripta_mausoleo.familia','cripta_mausoleo_responsable.estado as estado_rel_resp',
+                DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
+                'cuartel.codigo as cuartel_codigo','bloque.codigo as bloque_nombre')
+                ->Join('cuartel','cuartel.id', '=', 'cripta_mausoleo.cuartel_id' )
+                ->leftJoin('bloque','bloque.id', '=', 'cripta_mausoleo.bloque_id' )
+               ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
+               ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )
+               ->leftJoin('mantenimiento','mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id' )
+               ->where('cripta_mausoleo.estado', 'ACTIVO')
+               ->where('cripta_mausoleo.tipo_registro', 'CRIPTA')
+               ->where('cripta_mausoleo.notable', 'SI')
+               ->orderBy('cripta_mausoleo.id', 'DESC')
+               ->orderBy('tipo_registro', 'DESC')
+               ->orderBy('cripta_mausoleo.codigo', 'DESC')
+               ->get();
+
+            //    $pdf = new PDF();
+            //    $pdf = PDF::setPaper('a4', 'landscape');
+               $pdf = PDF::loadView('cripta/reportCriptaNotable', compact('cripta'))->setPaper('a4', 'landscape');
+               return  $pdf-> stream("Lista_criptas_notables.pdf", array("Attachment" => false));
+            }
 }
 

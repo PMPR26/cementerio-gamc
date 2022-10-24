@@ -10,8 +10,8 @@ use GuzzleHttp\Exception\RequestException;
 class Mantenimiento extends Model
 {
     use HasFactory;
-   
-    protected $table = 'mantenimiento_nicho';
+
+    protected $table = 'mantenimiento';
     protected $fillable = [
         'id',
         'date_in', // fecha ingreso al nicho
@@ -27,7 +27,7 @@ class Mantenimiento extends Model
         'id',
         'updated_at'
     ];
-  
-   
+
+
 
 }

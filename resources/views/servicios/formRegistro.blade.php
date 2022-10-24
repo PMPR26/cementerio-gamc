@@ -617,11 +617,8 @@
                                 class="form-control">
                         </div>
                     </div>
-
-
-
-
                 </div>
+
                 <div class="row p-4" id="section_exhum" style="display: none">
                     <div class="col-12 pl-4"></div>
                     <label for="desc"> Detalle de la exhumacion</label>
@@ -724,7 +721,7 @@
                     file.previewElement.classList.add("dz-success");
                     $('#url-certification').val(response.response[0].url_file);
                     // $(file._removeLink).attr('href', response.response[0].url_file);
-                    // $(file._removeLink).attr('id', 'btn-remove-file'); 
+                    // $(file._removeLink).attr('id', 'btn-remove-file');
                 },
                 error: function(file, response) {
 
@@ -1112,7 +1109,7 @@
                                     }
 
                                     if (data.response.datos_difuntos != "") {
-                                        // datos difunto       
+                                        // datos difunto
                                         var pg = data.response.datos_difuntos[0]
                                             .pag_con;
 
@@ -1946,7 +1943,7 @@
                                 $('#renov').val(1);
                             }
                             // else if(anios_ren!=""){
-                            //     $('#renov').val(anios_ren);  
+                            //     $('#renov').val(anios_ren);
                             // }
                         }
                     }
@@ -2138,14 +2135,14 @@
                    $('#propiet_select').hide();
                    $('#list_resp').prop('disabled', true);
                    $('#propiet_txt').show();
-                   $('#search_field').prop('disabled', false);  
+                   $('#search_field').prop('disabled', false);
                 }
-                
+
             } else {
                 $('#propiet_txt').prop('disabled', true);
                 $('#propiet_select').prop('disabled', true);
                 $('#propiet_select').hide();
-                $('#search_field').hide();               
+                $('#search_field').hide();
             }
         });
 

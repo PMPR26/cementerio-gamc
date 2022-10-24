@@ -73,12 +73,18 @@ Route::group(['prefix' => 'cripta', 'middleware' => 'auth'], function () {
     Route::post('/save', [App\Http\Controllers\Cripta\CriptaController::class,'saveCripta'])->name('cripta.save');
     Route::get('/get-cripta/{id}', [App\Http\Controllers\Cripta\CriptaController::class,'getCripta'])->name('cripta.get');
     Route::put('/update-cripta', [App\Http\Controllers\Cripta\CriptaController::class,'updateCripta'])->name('cripta.update');
+    Route::get('mausoleo-notable-pdf', [App\Http\Controllers\Cripta\CriptaController::class, 'printMausoleoNotables'])->name('mausoleosNotables');
+    Route::get('cripta-notable-pdf', [App\Http\Controllers\Cripta\CriptaController::class, 'printCriptaNotables'])->name('criptasNotables');
+
+
+    // Route::put('/-cripta-pay', [App\Http\Controllers\Cripta\CriptaController::class,'updateCriptaInfo'])->name('cripta.update.pay');
+
+
      // servicios criptas mausoleos
      Route::get('/servicios-cripta-mausoleo', [App\Http\Controllers\Cripta\ServiciosCMController::class,'index'])->name('servcm');
      Route::post('/load_cm', [App\Http\Controllers\Cripta\CriptaController::class,'buscarCriptaM'])->name('buscar.cripta');
      Route::put('/add-deseaced', [App\Http\Controllers\Cripta\CriptaController::class,'addDifunto'])->name('add.deseaced');
-
-
+     Route::get('/getServicios', [App\Http\Controllers\Cripta\CriptaController::class,'getServices'])->name('get.services');
 });
 
 
@@ -174,6 +180,9 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
       Route::get('generarci-responsable', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'generateCiResp'])->name('generateCiResp')->middleware('auth');
       Route::post('/verificar-fur', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'buscarFurLiquidacion'])->name('verificarFur');
       Route::post('/buscarCuartel', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'buscarCuartel'])->name('buscar.cuartel');
+      Route::post('/save-up-pay-info', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'relevamientoPagoMant'])->name('save.uppay.info');
+      Route::get('/get-mantenimiento/{id}',  [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'getMantenimiento'])->name('mantenimiento.get');
+
 
 });
 
