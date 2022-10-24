@@ -50,19 +50,24 @@
                             @endforeach
                     </select>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-2">
                     <label>Bloque</label>
                     <select  class="form-control bloque_search" name="bloque_search"  id="bloque_search" style="width: 100%" >
                     </select>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-2">
                     <label>Sitio</label>
                     <input type="text"  class="form-control sitio_search" name="sitio_search"  id="sitio_search" style="width: 100%" />
 
                 </div>
-                <div class="col-sm-3 pt-2">
-<br>
-                    <input type="submit"  class="btn btn-success" name="advanced_search" style="width: 100%" />
+                <div class="col-2 pt-2">
+                    <br>
+                    <input type="submit"  class="btn btn-success" name="advanced_search" style="width: 100%" value="Buscar" />
+
+                </div>
+                <div class="col-2 pt-2">
+                    <br>
+                    <input type="submit"  class="btn btn-info" name="todos" style="width: 100%"  value="Cargar todos"/>
 
                 </div>
             </div>
