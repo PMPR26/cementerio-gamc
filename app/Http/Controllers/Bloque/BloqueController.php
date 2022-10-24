@@ -19,7 +19,6 @@ class BloqueController extends Controller
                  ->select('bloque.*', 'cuartel.codigo as cuartel_cod')
                  ->join('cuartel' , 'cuartel.id','=', 'bloque.cuartel_id')
                  ->orderBy('id', 'Desc')
-
                 // ->where('bloque.estado', '=', 'ACTIVO')
                  ->get();
 

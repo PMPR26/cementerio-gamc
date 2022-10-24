@@ -13,7 +13,7 @@ class CreateMantenimientoNichoTable extends Migration
      */
     public function up()
     {
-        Schema::create('mantenimiento_nicho', function (Blueprint $table) {
+        Schema::create('mantenimiento', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->date('date_in')->nullable();
             $table->string('gestion');
@@ -22,7 +22,7 @@ class CreateMantenimientoNichoTable extends Migration
             $table->integer('fur');
             $table->integer('respdifunto_id');
             $table->integer('cantidad_gestiones');
-            $table->float('precio_sinot', 12, 2);           
+            $table->float('precio_sinot', 12, 2);
             $table->string('monto');
             $table->text('glosa');
             $table->string('ultimo_pago');
@@ -47,6 +47,6 @@ class CreateMantenimientoNichoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mantenimiento_nicho');
+        Schema::dropIfExists('mantenimiento');
     }
 }

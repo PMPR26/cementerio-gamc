@@ -64,14 +64,14 @@ class ServiciosController extends Controller
             ->orderBy('servicio_nicho.id', 'DESC')
             ->get();
 
-          
+
 
         return view('servicios/index', ['servicio' => $servicio]);
     }
 
     public function cargarForm()
     {
-// env('URL_MULTISERVICE')
+        // env('URL_MULTISERVICE')
         $headers = [
             'Content-Type' => 'application/json'
         ];
@@ -113,13 +113,13 @@ class ServiciosController extends Controller
 
         return view('servicios/formRegistro', ['tipo_service' => $tipo_service['response'], 'funeraria' => $funeraria, 'causa' => $causa, 'cuarteles'=>$cuarteles, 'list_responsable'=>$responsable]);
     }
- 
+
 
     public function buscar_nicho(Request $request)
     {
 
         $sql = DB::table('responsable_difunto')
-            ->select(DB::raw('            
+            ->select(DB::raw('
                responsable_difunto.*,
                responsable.segundo_apellido as segap_resp,
                responsable.fecha_nacimiento as nacimiento_resp,
@@ -172,21 +172,21 @@ class ServiciosController extends Controller
             ->where('nicho.fila', '=', $request->fila)
             ->orderBy('servicio_nicho.id', 'DESC')
             ->first();
-       
+
             if($sql){
                 $mensaje=true;
             }
             else{
                 $mensaje= false;
             }
-    
+
             $resp= [
                 "mensaje" => $mensaje,
                 "response"=>$sql
                 ];
 
              return response()->json($resp);
-        
+
     }
 
 
@@ -279,15 +279,15 @@ class ServiciosController extends Controller
         // dd($request->servicio_hijos_txt);
          $explode_txt=explode("Bs.",$request->servicio_hijos_txt);
         // dd($explode_txt);
-        
+
         //  $explode=explode("=>",$request->descripcion_exhumacion);
         //  dd($explode);
-        if ($request->isJson()) 
+        if ($request->isJson())
         {
 
             if($request->externo == "externo" && $request->gratis == "gratis"){
                 $this->validate($request, [
-                  
+
                     'ci_dif' => 'required',
                     'nombres_dif' => 'required',
                     'paterno_dif'=> 'required',
@@ -295,12 +295,12 @@ class ServiciosController extends Controller
                     'genero_dif'=> 'required',
                     'ci_resp' => 'required',
                     'nombres_resp' => 'required',
-                    'paterno_resp'=> 'required',                
+                    'paterno_resp'=> 'required',
                     'domicilio'=> 'required',
                     'genero_resp'=> 'required',
                     'tipo_servicio' => 'required',
-                    'servicio_hijos' => 'required',   
-                    
+                    'servicio_hijos' => 'required',
+
                 ], [
                     'ci_dif.required' => 'El campo ci del difunto es obligatorio, si no tiene documento presione el boton "generar carnet provisional  (icono lapiz)" para asignarle un numero provisional',
                     'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
@@ -309,16 +309,16 @@ class ServiciosController extends Controller
                     'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
                     'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
                     'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
-                    'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',                  
+                    'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
                     'domicilio.required'=> 'El campo domicilio es obligatorio',
                     'genero_resp.required'=> 'El campo genero_resp es obligatorio',
                     'tipo_servicio.required' => 'Debe seleccionar al menos un tipo de servicio',
-                    'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',                    
+                    'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
                 ]);
             }
             else{
 
-          
+
             $this->validate($request, [
                 'nro_nicho' => 'required',
                 'bloque' => 'required',
@@ -341,7 +341,7 @@ class ServiciosController extends Controller
                 'tipo_servicio' => 'required',
                 'servicio_hijos' => 'required',
 
-                
+
             ], [
                 'nro_nicho.required' => 'El campo nicho es obligatorio',
                 'bloque.required' => 'El campo bloque es obligatorio',
@@ -364,15 +364,15 @@ class ServiciosController extends Controller
                 'tipo_servicio.required' => 'Debe seleccionar al menos un tipo servicio',
                 'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
 
-               
+
             ]);
-            }  
+            }
              $datos_cajero=User::select()
             ->where('id',auth()->id())
             ->first();
             $cajero= $datos_cajero->user_sinot;
 
-            
+
             if ($request->person != "responsable") {
                 $pago_por = "Tercera persona";
                 $nombre_pago = $request->name_pago;
@@ -399,7 +399,7 @@ class ServiciosController extends Controller
             }
 
             if (!empty($request->servicio_hijos) && is_array($request->servicio_hijos)) {
-              
+
                 $cod_n = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
                 $cantidadEnNicho=$this->contarDifuntoEnNicho($cod_n);
                 $difuntoEnNicho=$this->buscarDifuntoEnNicho($request->ci_dif);
@@ -409,13 +409,13 @@ class ServiciosController extends Controller
                 foreach($request->servicio_hijos as $key=>$servi)
                 {
                 //  dd($explode_txt[$key]);
-                  
-                  
+
+
                     if($servi=='1979' || $servi=='1977' || $servi=='1978'  || $servi=='1981' || $servi=='1980' || $servi=='1982')
                     {
                                 $estado_nicho="OCUPADO";
                               if($servi=='1979' || $servi=='1977' || $servi=='1978'){
-                              
+
                                     if( $cantidadEnNicho !=false){
                                         return response([
                                             'status'=> false,
@@ -426,7 +426,7 @@ class ServiciosController extends Controller
                                     }
                               }else if($servi=='1981' || $servi=='1980' || $servi=='1982'){
 
-                       
+
                                     if($difuntoEnNicho==false)
                                     {
                                             $cantidadEnNicho=$this->contarDifuntoEnNicho($cod_n);
@@ -435,32 +435,32 @@ class ServiciosController extends Controller
                                             }else{
                                                 $cant=1;
                                             }
-                                    
+
                                     }else{
                                                 if( $cantidadEnNicho !=false){
                                                     $cant= $cantidadEnNicho;
                                                 }else{
                                                     $cant=1;
                                                 }
-                                    
+
                                     }
                                 }
                                 $texto_servicio= $texto_servicio.$separador.$explode_txt[$key]." Bs.";
                     }else if($servi == '645' || $servi =='644')
-                    {    
+                    {
                                 if($difuntoEnNicho==false)
                                 {
-                                    $est_nicho="EXHUMADO";                            
-                                    $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // . 
+                                    $est_nicho="EXHUMADO";
+                                    $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // .
                                 }
                                 else{
-                                
+
                                     $responsable_id=$difuntoEnNicho->responsable_id;
                                     $difunto_id=$difuntoEnNicho->difunto_id;
                                     $est_nicho="EXHUMADO";
-                                    $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // . 
+                                    $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // .
                                 }
-                            
+
 
                                 if( $cantidadEnNicho == 1 ){
                                     $estado_nicho="LIBRE";
@@ -469,11 +469,11 @@ class ServiciosController extends Controller
                                 else if( $cantidadEnNicho >= 1){
                                     $estado_nicho="OCUPADO";
                                     $cant = $cantidadEnNicho -1;
-                                } 
+                                }
                                 else if( $cantidadEnNicho == 0){
                                     $estado_nicho="LIBRE";
                                     $cant= 0;
-                                }    
+                                }
                                 $texto_servicio= $texto_servicio.$separador.$explode_txt[$key]." Bs.";
                         }
                     else{
@@ -493,9 +493,9 @@ class ServiciosController extends Controller
                             $cant=$cantidadEnNicho;
                         }else{
                             $cant=1;
-                        }                        
+                        }
                     }
-                    
+
                 }
             //   dd( $texto_servicio);
             if($request->externo=="externo"){
@@ -510,7 +510,7 @@ class ServiciosController extends Controller
                         if ($existeNicho != null) {
                             $id_nicho = $existeNicho->id;
                             $upnicho= Nicho::where('id',  $id_nicho)->first();
-                            if(isset($estado_nicho)){                            
+                            if(isset($estado_nicho)){
                                 $upnicho->estado_nicho=$estado_nicho;
                             }
 
@@ -538,7 +538,7 @@ class ServiciosController extends Controller
                                         $existeBloque = Bloque::where('codigo', $request->bloque)
                                         ->where('cuartel_id', $id_cuartel)
                                         ->first();
-                                      
+
                                         if ($existeBloque != null) {
                                             $id_bloque = $existeBloque->id;
                                         } else {
@@ -551,7 +551,7 @@ class ServiciosController extends Controller
                                             $bloq->save();
                                             $bloq->id;
                                             $id_bloque = $bloq->id;
-                                            
+
                                         }
 
                                         // insertar nicho
@@ -576,7 +576,7 @@ class ServiciosController extends Controller
 
             }
             //step1: nicho buscar si existe registrado el nicho recuperar el id  sino existe registrarlo
-            
+
 
             // step2: register difunto --- si id_difunto id_difunto es null insertar difunto insertar responsable
             $existeDifunto = Difunto::where('ci', $request->ci_dif)->first();
@@ -588,7 +588,7 @@ class ServiciosController extends Controller
                 $this->updateDifunto($request, $difuntoid);
             }
             // end difunto
-            // step4: register responsable -- si el responsable  
+            // step4: register responsable -- si el responsable
             $existeResponsable = Responsable::where('ci', $request->ci_resp)->first();
             if (!$existeResponsable) {
                 //insertar difunto
@@ -603,7 +603,7 @@ class ServiciosController extends Controller
 
                 $rf = new ResponsableDifunto();
                 $existeRespDif = $rf->searchResponsableDifunt($request);
-              
+
                 if ($existeRespDif != null) {
                     $iddifuntoResp = $this->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
                 } else {
@@ -612,9 +612,9 @@ class ServiciosController extends Controller
             }
 
 
-            //insert pago 
-         
-          
+            //insert pago
+
+
 
                                                 if($request->reg=="reg"){
                                                     $fur=$request->nrofur;
@@ -624,17 +624,17 @@ class ServiciosController extends Controller
                                                 elseif($request->gratis=="gratis"){
                                                     $fur=0;
                                                     $estado_pago=true;
-                                                    $fecha_pago= date("Y-m-d h:i:s");  
+                                                    $fecha_pago= date("Y-m-d h:i:s");
 
                                                 }
                                                 else{
-                                                    $estado_pago=false;  
+                                                    $estado_pago=false;
                                                     $fecha_pago=null   ;
                                                     /** generar fur */
-                                                   
+
                                                                     $nombre_difunto=$request->nombres_dif." ".$request->paterno_dif." ".$request->materno_dif;
 
-                                                                   
+
                                                                     $obj= new ServicioNicho;
                                                                     $cant_serv=count($request->servicio_hijos);
                                                                     for($cont=0; $cont<$cant_serv; $cont++){
@@ -643,17 +643,17 @@ class ServiciosController extends Controller
 
                                                                     $response=$obj->GenerarFur($ci, $nombre_pago, $paterno_pago,
                                                                     $materno_pago, $domicilio,  $nombre_difunto, $codigo_nicho,
-                                                                    $request->bloque, $request->nro_nicho, $request->fila, 
+                                                                    $request->bloque, $request->nro_nicho, $request->fila,
                                                                     $request->servicio_hijos,
                                                                     $cantidades, $cajero, $request->descripcion_exhumacion );
-                                                              
+
                                                                     if($response['status']==true){
                                                                         $fur = $response['response'];
                                                                         //dd($fur);
-                                                                    }  
+                                                                    }
                                                         }
 
-                                                $serv = new ServicioNicho; 
+                                                $serv = new ServicioNicho;
                                                 $serv->codigo_nicho=$codigo_nicho ?? '';
                                                 $serv->fecha_registro = date("Y-m-d");
                                                 $serv->tipo_servicio_id=implode(', ',  $request->tipo_servicio);
@@ -666,7 +666,7 @@ class ServiciosController extends Controller
                                                 $serv->fur=$fur;
                                                 $serv->nro_renovacion= $request->renov ?? '0';
                                                 $serv->monto_renovacion= $request->monto_renov ?? '0';
-                                              
+
                                                 $serv->monto=$request->txttotal;
                                                 $serv->nombrepago=$nombre_pago;
                                                 $serv->paternopago=$paterno_pago;
@@ -676,25 +676,25 @@ class ServiciosController extends Controller
                                                 $serv->estado_pago=$estado_pago;
                                                 $serv->fecha_pago=$fecha_pago;
 
-                                             
+
                                                 $serv->estado='ACTIVO';
                                                 $serv->observacion=$request->observacion;
-                                                $serv->det_exhum=$observacion?? '';                                               
+                                                $serv->det_exhum=$observacion?? '';
                                                 $serv->save();
                                                 // return  $serv->id;
                                                 // return $fur;
                                                 if(isset($responsable_id) ){
                                                     $difres= ResponsableDifunto::where('responsable_id', $responsable_id)
                                                     ->where('difunto_id', $difunto_id)
-                                                   ->first();   
+                                                   ->first();
                                                      $difres->estado_nicho = $est_nicho ?? '';
                                                      $difres->save();
                                                 }
                                             //  return  $serv->id;
 
                              }
-            
-           
+
+
             return response([
                     'status'=> true,
                     'response'=> $serv->id
@@ -714,15 +714,15 @@ class ServiciosController extends Controller
         $dif = new ResponsableDifunto ;
         $dif->responsable_id = $idresp;
         $dif->difunto_id = $difuntoid;
-        $dif->codigo_nicho = $codigo_n;       
-        $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;       
-        $dif->tiempo = $request->tiempo;  
-        if($estado_nicho=="LIBRE"){ 
-            $dif->estado_nicho = $estado_nicho;   
-            $dif->fecha_liberacion= date("Y-m-d H:i:s");   
-            } 
-      
-        $dif->estado = 'ACTIVO';  
+        $dif->codigo_nicho = $codigo_n;
+        $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;
+        $dif->tiempo = $request->tiempo;
+        if($estado_nicho=="LIBRE"){
+            $dif->estado_nicho = $estado_nicho;
+            $dif->fecha_liberacion= date("Y-m-d H:i:s");
+            }
+
+        $dif->estado = 'ACTIVO';
         $dif->user_id = auth()->id();
         $dif->save();
         $dif->id;
@@ -733,17 +733,17 @@ class ServiciosController extends Controller
         public function updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n,  $estado_nicho){
             $dif= ResponsableDifunto::where('responsable_id', $idresp)
                                ->where('difunto_id', $difuntoid)
-                               ->where('codigo_nicho', $codigo_n)->first();   
+                               ->where('codigo_nicho', $codigo_n)->first();
             $dif->responsable_id = $idresp;
             $dif->difunto_id = $difuntoid;
-            $dif->codigo_nicho = $codigo_n;       
-            $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;       
-            $dif->tiempo = $request->tiempo;  
-            if($estado_nicho=="LIBRE"){ 
-                $dif->estado_nicho = $estado_nicho;   
-                $dif->fecha_liberacion= date("Y-m-d H:i:s");   
-                } 
-            $dif->estado = 'ACTIVO';  
+            $dif->codigo_nicho = $codigo_n;
+            $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;
+            $dif->tiempo = $request->tiempo;
+            if($estado_nicho=="LIBRE"){
+                $dif->estado_nicho = $estado_nicho;
+                $dif->fecha_liberacion= date("Y-m-d H:i:s");
+                }
+            $dif->estado = 'ACTIVO';
             $dif->user_id = auth()->id();
             $dif->save();
             $dif->id;
@@ -757,15 +757,15 @@ class ServiciosController extends Controller
         $dif->nombres = trim(mb_strtoupper($request->nombres_dif, 'UTF-8'));
         $dif->primer_apellido = trim(mb_strtoupper($request->paterno_dif, 'UTF-8'));
         $dif->segundo_apellido =trim(mb_strtoupper( $request->materno_dif, 'UTF-8'));
-        $dif->fecha_nacimiento = $request->fechanac_dif ?? null;              
+        $dif->fecha_nacimiento = $request->fechanac_dif ?? null;
         $dif->fecha_defuncion = $request->fecha_def_dif ?? null;
         $dif->certificado_defuncion = $request->sereci;
         $dif->causa = trim(mb_strtoupper($request->causa, 'UTF-8'));
-        $dif->tipo = $request->tipo_dif; 
-        $dif->genero = $request->genero_dif;  
-        $dif->certificado_file = $request->urlcertificacion;           
-        $dif->funeraria =trim(mb_strtoupper($request->funeraria, 'UTF-8'));  
-        $dif->estado = 'ACTIVO';  
+        $dif->tipo = $request->tipo_dif;
+        $dif->genero = $request->genero_dif;
+        $dif->certificado_file = $request->urlcertificacion;
+        $dif->funeraria =trim(mb_strtoupper($request->funeraria, 'UTF-8'));
+        $dif->estado = 'ACTIVO';
         $dif->user_id = auth()->id();
         $dif->save();
         $dif->id;
@@ -774,7 +774,7 @@ class ServiciosController extends Controller
     }
 
     public function updateDifunto($request, $difuntoid){
-       
+
         $difunto= Difunto::where('id', $difuntoid)->first();
         $difunto->ci = $request->ci_dif;
         $difunto->nombres = trim(mb_strtoupper($request->nombres_dif, 'UTF-8'));
@@ -784,11 +784,11 @@ class ServiciosController extends Controller
         $difunto->fecha_defuncion = $request->fecha_def_dif ?? null;
         $difunto->certificado_defuncion = $request->sereci;
         $difunto->causa =  trim(mb_strtoupper($request->causa, 'UTF-8'));
-        $difunto->tipo = $request->tipo_dif; 
-        $difunto->genero = $request->genero_dif;  
-        $difunto->certificado_file = $request->urlcertificacion;           
+        $difunto->tipo = $request->tipo_dif;
+        $difunto->genero = $request->genero_dif;
+        $difunto->certificado_file = $request->urlcertificacion;
         $difunto->funeraria = trim(mb_strtoupper($request->funeraria, 'UTF-8'));
-        $difunto->estado = 'ACTIVO';  
+        $difunto->estado = 'ACTIVO';
         $difunto->user_id = auth()->id();
         $difunto->save();
         return $difunto->id;
@@ -802,13 +802,13 @@ class ServiciosController extends Controller
         $responsable->primer_apellido = trim(mb_strtoupper($request->paterno_resp, 'UTF-8'));
         $responsable->segundo_apellido =  trim(mb_strtoupper($request->materno_resp, 'UTF-8'));
         //$responsable->fecha_nacimiento = $request->fechanac_resp;
-        $responsable->genero = $request->genero_resp;  
-        $responsable->telefono = $request->telefono;  
-        $responsable->celular = $request->celular;  
-        //$responsable->estado_civil = $request->ecivil;  
-        $responsable->domicilio = $request->domicilio; 
-        //$responsable->email = $request->email;  
-        $responsable->estado = 'ACTIVO';  
+        $responsable->genero = $request->genero_resp;
+        $responsable->telefono = $request->telefono;
+        $responsable->celular = $request->celular;
+        //$responsable->estado_civil = $request->ecivil;
+        $responsable->domicilio = $request->domicilio;
+        //$responsable->email = $request->email;
+        $responsable->estado = 'ACTIVO';
         $responsable->user_id = auth()->id();
         $responsable->save();
         $responsable->id;
@@ -823,13 +823,13 @@ class ServiciosController extends Controller
         $responsable->primer_apellido = trim(mb_strtoupper($request->paterno_resp, 'UTF-8'));
         $responsable->segundo_apellido =  trim(mb_strtoupper($request->materno_resp, 'UTF-8'));
         //$responsable->fecha_nacimiento = $request->fechanac_resp ?? '';
-        $responsable->genero = $request->genero_resp;  
-        $responsable->telefono = $request->telefono;  
-        $responsable->celular = $request->celular;  
-        //$responsable->estado_civil = $request->ecivil ??'';  
-        $responsable->domicilio = $request->domicilio;  
-       // $responsable->email = $request->email ??  '';  
-        $responsable->estado = 'ACTIVO';  
+        $responsable->genero = $request->genero_resp;
+        $responsable->telefono = $request->telefono;
+        $responsable->celular = $request->celular;
+        //$responsable->estado_civil = $request->ecivil ??'';
+        $responsable->domicilio = $request->domicilio;
+       // $responsable->email = $request->email ??  '';
+        $responsable->estado = 'ACTIVO';
         $responsable->user_id = auth()->id();
         $responsable->save();
         return $responsable->id;
@@ -844,46 +844,46 @@ class ServiciosController extends Controller
                         ->where('id','=',$request->id)
                         ->orderBy('id','DESC')
                         ->first();
-                        
+
                         if(($request->fur=="0" ||$request->fur==0 ) &&  $request->id!=null )
                         {
-                            if ($tablelocal) {     
+                            if ($tablelocal) {
                                 $tab['fur']= $tablelocal->fur;
                                 $tab['nombre']= $tablelocal->nombrepago." ". $tablelocal->paternopago." ".$tablelocal->maternopago??'';
                                 $tab['ci']= $tablelocal->ci;
                                 $observacion= $tablelocal->observacion;
-                                $tab['cobrosDetalles']= [];                                            
+                                $tab['cobrosDetalles']= [];
                                 $id_s=explode(',', $tablelocal->servicio_id );
-                                foreach( $id_s as  $key => $value ){                                               
-                                     
+                                foreach( $id_s as  $key => $value ){
+
                                             $headers =  ['Content-Type' => 'application/json'];
                                             $client = new Client();
-                                        
+
                                             $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/'.trim($id_s[$key]).'', [
                                             'json' => [
                                                 ],
                                                 'headers' => $headers,
                                             ]);
                                             $data = json_decode((string) $response->getBody(), true);
-                                            
-                                       
+
+
                                         if($data['status']==true){
 
                                             $tab['cobrosDetalles'][$key]['cuenta']=$data['response'][0]['cuenta'];
                                             $tab['cobrosDetalles'][$key]['detalle']=$data['response'][0]['descripcion'];
                                             $tab['cobrosDetalles'][$key]['monto']=0;
-                                     
+
                                             }
                                     }
-                                    
-                          
+
+
                                     $table = json_decode(json_encode($tab));
-                                 
+
                                 $pdf = PDF::setPaper('A4', 'landscape');
                                 $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion'));
-                                return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));    
+                                return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                             }
-                        
+
                     }  else{
                                     $arrayBusqueda = [];
                                     $arrayBusqueda[] = (string)2;
@@ -893,23 +893,23 @@ class ServiciosController extends Controller
                                         'buscar' => $arrayBusquedaString
                                     ]);
 
-                                 
+
                                     if ($response->successful()) {
                                         if($response->object()->status == true) {
-                                            $table = $response->object()->data->cobrosVarios[0];                
+                                            $table = $response->object()->data->cobrosVarios[0];
                                             $observacion= $tablelocal->observacion;
-                                       
+
                                             $pdf = PDF::setPaper('A4', 'landscape');
                                             $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion'));
                                             return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                                         }
-                                }      
+                                }
                         }
         }
-    
 
-        // $miArray = new stdClass(); 
-        // $convertedObj[$k] = $this->ToObject($miArray);         
+
+        // $miArray = new stdClass();
+        // $convertedObj[$k] = $this->ToObject($miArray);
         // $data['miArray']= $convertedObj;
 
 
@@ -927,7 +927,7 @@ class ServiciosController extends Controller
             }
 
 
-    
+
 
     // public function GenerarFur(
     //     $ci,
@@ -973,19 +973,19 @@ class ServiciosController extends Controller
 
     public function precioRenov(){
 
-    
+
 
         $headers =  ['Content-Type' => 'application/json'];
         $client = new Client();
-       
+
         $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/642', [
         'json' => [
             ],
             'headers' => $headers,
         ]);
         $data = json_decode((string) $response->getBody(), true);
-          
-       
+
+
        if($data['status']==true){
         $resp= [
             "status"=>true,
@@ -994,8 +994,8 @@ class ServiciosController extends Controller
             "descrip"=>$data['response'][0]['descripcion'],
 
             ];
-       
-           
+
+
         }else{
             $resp =[
                 "precio"=>0,
@@ -1004,10 +1004,10 @@ class ServiciosController extends Controller
         }
         return response()->json($resp);
 
-      
+
     }
 
-   
+
 
     public function buscarRenovacion(Request $request)
     {
@@ -1021,10 +1021,10 @@ class ServiciosController extends Controller
             if(!empty( $sql)){
                 $resp= [
                     "status"=>true,
-                    "data" => $sql,        
+                    "data" => $sql,
                     ];
-               
-                   
+
+
                 }else{
                     $resp =[
                         "mensaje"=>"no se encontraron resultados",
@@ -1043,17 +1043,17 @@ class ServiciosController extends Controller
                ->Join('nicho', 'nicho.codigo', '=', 'responsable_difunto.codigo_nicho')
                ->where('difunto.ci','=', ''.$ci_dif.'')
                ->first();
-              
+
                if($sql){ return $sql;}
                else{ return false;}
     }
 
     // contarDifuntoEnNicho
     public function contarDifuntoEnNicho( $codigo){
-        $sql=DB::table('nicho')->select('cantidad_cuerpos')            
+        $sql=DB::table('nicho')->select('cantidad_cuerpos')
                ->where('codigo','=', ''. $codigo.'')
                ->first();
-              
+
                if(!empty($sql) || $sql!=null){ return $cc=$sql->cantidad_cuerpos;}
                else{ return $cc=0;}
     }
@@ -1069,23 +1069,23 @@ class ServiciosController extends Controller
 
 
     //insertar servicio cripta mausoleo
-    
+
     public function createNewServicioscm(Request $request)
     {
         //  dd($request->bloque);
          $explode_txt=explode("Bs.",$request->servicio_hijos_txt);
         // dd($explode_txt);
-        
+
         //  $explode=explode("=>",$request->descripcion_exhumacion);
         //  dd($explode);
-        if ($request->isJson()) 
+        if ($request->isJson())
         {
 
             if($request->externo == "externo" && $request->gratis == "gratis"){
 
-                
+
                 $this->validate($request, [
-                  
+
                     'ci_dif' => 'required',
                     'nombres_dif' => 'required',
                     'paterno_dif'=> 'required',
@@ -1093,12 +1093,12 @@ class ServiciosController extends Controller
                     'genero_dif'=> 'required',
                     'ci_resp' => 'required',
                     'nombres_resp' => 'required',
-                    'paterno_resp'=> 'required',                
+                    'paterno_resp'=> 'required',
                     'domicilio'=> 'required',
                     'genero_resp'=> 'required',
                     'tipo_servicio' => 'required',
-                    'servicio_hijos' => 'required',   
-                    
+                    'servicio_hijos' => 'required',
+
                 ], [
                     'ci_dif.required' => 'El campo ci del difunto es obligatorio, si no tiene documento presione el boton "generar carnet provisional  (icono lapiz)" para asignarle un numero provisional',
                     'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
@@ -1107,16 +1107,16 @@ class ServiciosController extends Controller
                     'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
                     'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
                     'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
-                    'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',                  
+                    'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
                     'domicilio.required'=> 'El campo domicilio es obligatorio',
                     'genero_resp.required'=> 'El campo genero_resp es obligatorio',
                     'tipo_servicio.required' => 'Debe seleccionar al menos un tipo de servicio',
-                    'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',                    
+                    'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
                 ]);
             }
             else{
 
-          
+
             $this->validate($request, [
                 'sitio' => 'required',
                 // 'bloque' => 'required',
@@ -1139,7 +1139,7 @@ class ServiciosController extends Controller
                 'tipo_servicio' => 'required',
                 'servicio_hijos' => 'required',
 
-                
+
             ], [
                 'sitio.required' => 'El campo nicho es obligatorio',
                 // 'bloque.required' => 'El campo bloque es obligatorio',
@@ -1162,9 +1162,9 @@ class ServiciosController extends Controller
                 'tipo_servicio.required' => 'Debe seleccionar al menos un tipo servicio',
                 'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
 
-               
+
             ]);
-            }  
+            }
              $datos_cajero=User::select()
             ->where('id',auth()->id())
             ->first();
@@ -1199,11 +1199,11 @@ class ServiciosController extends Controller
 
             // dd($request->servicio_hijos);
 
-            if (!empty($request->servicio_hijos) && is_array($request->servicio_hijos)) 
-            {              
-                
+            if (!empty($request->servicio_hijos) && is_array($request->servicio_hijos))
+            {
+
                 // $cantidadDifCM=$this->contarDifuntoEnCM($cod_n);
-               
+
                 $explode_txt=explode("Bs.",$request->servicio_hijos_txt);
                 $texto_servicio="";
                 $separador=" ";
@@ -1211,18 +1211,18 @@ class ServiciosController extends Controller
                     {
                             $texto_servicio= $texto_servicio.$separador.$explode_txt[$key]." Bs.";                  // restos
                                     if($servi=='622' || $servi=='623' || $servi=='630' || $servi=='631')
-                                {                       
-                                            $nicho_ocupado=$request->ocupados +1;     
+                                {
+                                            $nicho_ocupado=$request->ocupados +1;
                                             $total_cm=$request->total_cm -1;
                                 }else if($servi == '629' || $servi =='628')
-                                {        
+                                {
                                                 $responsable_id=$difuntoEnNicho->responsable_id;
                                                 $difunto_id=$difuntoEnNicho->difunto_id;
                                                 $est_nicho="EXHUMADO";
-                                                $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // . 
+                                                $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // .
                                                 $nicho_ocupado=$request->ocupados -1;
                                                 $total_cm=$request->total_cm +1;
-                              
+
                                         $desc_ex=explode('=>',$request->descripcion_exhumacion);
 
                                         if($servi==$desc_ex[1] and isset($request->descripcion_exhumacion)){
@@ -1233,19 +1233,19 @@ class ServiciosController extends Controller
                                             // dd( $texto_servicio);
                                         }else{
                                             $texto_servicio= $texto_servicio.$separador. $explode_txt[$key]." Bs.";
-                                        }                                       
+                                        }
                                 }  else{
                                     $nicho_ocupado=$request->ocupados;
                                     $total_cm=$request->total_cm;
 
-                                }                  
+                                }
                     // }
-         
+
                                  $existeCripta = Cripta::where('codigo', $codigo_cm)->first();
 
                                     if ($existeCripta != null) {
                                         $id_cm = $existeCripta->id;
-                                        $upCripta= Cripta::where('id',  $id_cm)->first();                          
+                                        $upCripta= Cripta::where('id',  $id_cm)->first();
                                         $upCripta->ocupados=$nicho_ocupado;
                                         $upCripta->total_cajones=$total_cm;
                                         $upCripta->save();
@@ -1272,11 +1272,11 @@ class ServiciosController extends Controller
                                         }
                                         else{
 
-                                       
+
                                                 $existeBloque = Bloque::where('codigo', $request->bloque)
                                                 ->where('cuartel_id', $id_cuartel)
                                                 ->first();
-                                            
+
                                                 if ($existeBloque != null ) {
                                                     $id_bloque = $existeBloque->id;
                                                 } else {
@@ -1289,7 +1289,7 @@ class ServiciosController extends Controller
                                                     $bloq->save();
                                                     $bloq->id;
                                                     $id_bloque = $bloq->id;
-                                                    
+
                                                 }
                                             }
                                         // insertar nicho
@@ -1312,14 +1312,14 @@ class ServiciosController extends Controller
                                     }
             // end nicho
 
-          
+
 
             }
             //step1: nicho buscar si existe registrado la cripta recuperar el id  sino existe registrarlo
-            
 
-           
-            // step4: register responsable -- si el responsable  
+
+
+            // step4: register responsable -- si el responsable
             $existeResponsable = Responsable::where('ci', $request->ci_resp)->first();
             if (!$existeResponsable) {
                 //insertar difunto
@@ -1342,11 +1342,11 @@ class ServiciosController extends Controller
                    $cmd=$this->insertDifuntoCM( $idresp, $id_cripta);
                 }
            }
-           
 
-            //insert pago 
-         
-          
+
+            //insert pago
+
+
 
                                                 if($request->reg=="reg"){
                                                     $fur=$request->nrofur;
@@ -1356,17 +1356,17 @@ class ServiciosController extends Controller
                                                 elseif($request->gratis=="gratis"){
                                                     $fur=0;
                                                     $estado_pago=true;
-                                                    $fecha_pago= date("Y-m-d h:i:s");  
+                                                    $fecha_pago= date("Y-m-d h:i:s");
 
                                                 }
                                                 else{
-                                                    $estado_pago=false;  
+                                                    $estado_pago=false;
                                                     $fecha_pago=null   ;
                                                     /** generar fur */
-                                                   
+
                                                                     $nombre_difunto=$request->nombres_dif." ".$request->paterno_dif." ".$request->materno_dif;
 
-                                                                   
+
                                                                     $obj= new ServicioNicho;
                                                                     $cant_serv=count($request->servicio_hijos);
                                                                     for($cont=0; $cont<$cant_serv; $cont++){
@@ -1377,15 +1377,15 @@ class ServiciosController extends Controller
                                                                     $materno_pago, $domicilio, $codigo,
                                                                     $request->servicio_hijos,
                                                                     $cantidades, $cajero, $request->descripcion_exhumacion );
-                                                                   
-                                                              
+
+
                                                                     if($response['status']==true){
                                                                         $fur = $response['response'];
                                                                         //dd($fur);
-                                                                    }  
+                                                                    }
                                                         }
 
-                                                $serv = new ServicioNicho; 
+                                                $serv = new ServicioNicho;
                                                 $serv->codigo_nicho=$codigo ?? '';
                                                 $serv->fecha_registro = date("Y-m-d");
                                                 $serv->tipo_servicio_id=implode(', ',  $request->tipo_servicio);
@@ -1398,7 +1398,7 @@ class ServiciosController extends Controller
                                                 $serv->fur=$fur;
                                                 $serv->nro_renovacion= $request->renov ?? '0';
                                                 $serv->monto_renovacion= $request->monto_renov ?? '0';
-                                              
+
                                                 $serv->monto=$request->txttotal;
                                                 $serv->nombrepago=$nombre_pago;
                                                 $serv->paternopago=$paterno_pago;
@@ -1408,16 +1408,16 @@ class ServiciosController extends Controller
                                                 $serv->estado_pago=$estado_pago;
                                                 $serv->fecha_pago=$fecha_pago;
 
-                                             
+
                                                 $serv->estado='ACTIVO';
                                                 $serv->observacion=$request->observacion;
-                                                $serv->tipo=$request->tipo_cm?? '';  
-                                                $serv->cripta_mausoleo_responsable_id=$id_cripta?? '';                                              
-                                                $serv->save();                                               
+                                                $serv->tipo=$request->tipo_cm?? '';
+                                                $serv->cripta_mausoleo_responsable_id=$id_cripta?? '';
+                                                $serv->save();
 
                              }
-            
-           
+
+
             return response([
                     'status'=> true,
                     'response'=> $serv->id
@@ -1439,19 +1439,19 @@ class ServiciosController extends Controller
             if($request->tipo_reg=="CRIPTA"){$letra="C";}else{
                 $letra="M";
             }
-        $cuartel=DB::table('cuartel')->where('id', $request->cuartel)        
+        $cuartel=DB::table('cuartel')->where('id', $request->cuartel)
         ->select('codigo')
         ->first();
     //    dd( $cuartel);
         if(!isset($request->bloque ) || $request->bloque==null || $request->bloque=='SELECCIONAR' ){ $bloq="000";}
-        
-        else{ 
+
+        else{
             $b=DB::table('bloque')->where('cuartel_id', $request->cuartel)
             ->where('id', $request->bloque)
             ->select('codigo')
             ->first();
             $bloq=$b->codigo;
-        } 
+        }
         $cod=strtoupper($cuartel->codigo).$bloq.$request->sitio.$letra.$request->superficie;
        return $cod;
     }
@@ -1459,10 +1459,10 @@ class ServiciosController extends Controller
      // contarDifuntoEnNicho
      public function buscarDifuntoEnCM($ci){
         // $idCM=DB::table('cripta_mausoleo')->where('codigo', $codigo)->select('id')->first();
-        $sql=DB::table('difunto')               
+        $sql=DB::table('difunto')
                ->where('ci','=',  $ci)
                ->first();
-              
+
                if(!empty($sql) || $sql!=null){ return $resp=$sql;}
                else{ return $resp=null;}
     }
@@ -1470,8 +1470,8 @@ class ServiciosController extends Controller
     public function insertDifuntoCM( $responsable_id, $cripta_mausoleo_id){
         $dif = new CMDifunto;
         $dif->responsable_id = $responsable_id;
-         
-        $dif->estado = 'ACTIVO';  
+
+        $dif->estado = 'ACTIVO';
         $dif->user_id = auth()->id();
         $dif->save();
         $dif->id;
@@ -1482,7 +1482,7 @@ class ServiciosController extends Controller
         $cmr = new CriptaMausoleoResp;
         $cmr->responsable_id = $responsable_id;
         $cmr->ultima_gestion_pagada=$ultima_gestion_pagada;
-        $cmr->estado = 'ACTIVO';  
+        $cmr->estado = 'ACTIVO';
         $cmr->user_id = auth()->id();
         $cmr->save();
         $cmr->id;
