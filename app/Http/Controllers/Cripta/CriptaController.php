@@ -20,8 +20,8 @@ class CriptaController extends Controller
 
     public function index(Request $request){
         // dd($request);
-        if(($request->select_cuartel_search==null && $request->bloque_search ==null && $request->sitio ==null) ||
-           (!isset($request->select_cuartel_search) && !isset($request->bloque_search) && !isset($request->sitio))){
+        if(($request->select_cuartel_search==null && $request->bloque_search ==null && $request->sitio_search ==null) ||
+           (!isset($request->select_cuartel_search) && !isset($request->bloque_search) && !isset($request->sitio_search))){
             $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
             'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios', 'cripta_mausoleo.notable',
             'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos', 'mantenimiento.ultimo_pago',
@@ -54,6 +54,7 @@ class CriptaController extends Controller
                 $condicion=['cripta_mausoleo.cuartel_id' =>''.$request->select_cuartel_search.''];
             }
             else if($request->select_cuartel_search==null && ($request->bloque_search ==null || $request->bloque_search =='' || !isset($request->bloque_search)) && $request->sitio_search!=null){
+            //    dd("wer");
                 $condicion=['cripta_mausoleo.sitio' =>''.$request->sitio_search.''];
             }
             else if($request->select_cuartel_search==null && $request->bloque_search !=null && $request->sitio_search==null){
