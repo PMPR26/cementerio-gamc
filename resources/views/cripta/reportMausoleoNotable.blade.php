@@ -145,10 +145,7 @@
 
     <!-- Envuelva el contenido de su PDF dentro de una etiqueta principal -->
     <main>
-        <pre>
-               {{-- @php(print_r($cripta ))
-               @php(die()) --}}
-        </pre>
+
                    <h4 align="center">LISTA DE MAUSOLEOS NOTABLES</h4>
         <table class="info">
             <thead>
