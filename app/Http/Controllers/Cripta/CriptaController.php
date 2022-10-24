@@ -18,24 +18,69 @@ use PDF;
 class CriptaController extends Controller
 {
 
-    public function index(){
+    public function index(Request $request){
+        // dd($request);
+        if(($request->select_cuartel_search==null && $request->bloque_search ==null && $request->sitio ==null) ||
+           (!isset($request->select_cuartel_search) && !isset($request->bloque_search) && !isset($request->sitio))){
+            $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
+            'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios', 'cripta_mausoleo.notable',
+            'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos', 'mantenimiento.ultimo_pago',
+           'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo','cripta_mausoleo.familia','cripta_mausoleo_responsable.estado as estado_rel_resp',
+            DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
+            'cuartel.codigo as cuartel_codigo','bloque.codigo as bloque_nombre')
+            ->Join('cuartel','cuartel.id', '=', 'cripta_mausoleo.cuartel_id' )
+            ->leftJoin('bloque','bloque.id', '=', 'cripta_mausoleo.bloque_id' )
+           ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
+           ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )
+           ->leftJoin('mantenimiento','mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id' )
+           ->where('cripta_mausoleo.estado', 'ACTIVO')
+           ->orderBy('cripta_mausoleo.id', 'DESC')
+           ->orderBy('tipo_registro', 'DESC')
+           ->orderBy('cripta_mausoleo.codigo', 'DESC')
+           ->get();
+        }
+        else{
+            // dd($request);
+           if($request->select_cuartel_search!=null && ($request->bloque_search !=null || $request->bloque_search !='' || isset($request->bloque_search)) && $request->sitio_search !=null){
+                $condicion=['cripta_mausoleo.cuartel_id' =>''.$request->select_cuartel_search.'' , 'cripta_mausoleo.bloque_id'=>''.$request->bloque_search.'' , 'cripta_mausoleo.sitio' =>''.$request->sitio_search.''];
+            }
+            elseif($request->select_cuartel_search!=null && ($request->bloque_search !=null || isset($request->bloque_search)) && $request->sitio_search==null){
+                $condicion=['cripta_mausoleo.cuartel_id' =>''.$request->select_cuartel_search.'' , 'cripta_mausoleo.bloque_id'=>''.$request->bloque_search.''];
+            }
+            else if($request->select_cuartel_search!=null && ($request->bloque_search ==null || $request->bloque_search =='' || !isset($request->bloque_search)) && $request->sitio_search!=null){
+                $condicion=['cripta_mausoleo.cuartel_id' =>''.$request->select_cuartel_search.'' ,'cripta_mausoleo.sitio' =>''.$request->sitio_search.' '];
+            }
+            else if($request->select_cuartel_search!=null && ($request->bloque_search ==null || $request->bloque_search =='' || !isset($request->bloque_search)) && $request->sitio_search==null){
+                $condicion=['cripta_mausoleo.cuartel_id' =>''.$request->select_cuartel_search.''];
+            }
+            else if($request->select_cuartel_search==null && ($request->bloque_search ==null || $request->bloque_search =='' || !isset($request->bloque_search)) && $request->sitio_search!=null){
+                $condicion=['cripta_mausoleo.sitio' =>''.$request->sitio_search.''];
+            }
+            else if($request->select_cuartel_search==null && $request->bloque_search !=null && $request->sitio_search==null){
+                $condicion=['cripta_mausoleo.bloque_id' =>''.$request->bloque_search.''];
+            }
 
-        $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
-         'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios', 'cripta_mausoleo.notable',
-         'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos', 'mantenimiento.ultimo_pago',
-        'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo','cripta_mausoleo.familia','cripta_mausoleo_responsable.estado as estado_rel_resp',
-         DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
-         'cuartel.codigo as cuartel_codigo','bloque.codigo as bloque_nombre')
-         ->Join('cuartel','cuartel.id', '=', 'cripta_mausoleo.cuartel_id' )
-         ->leftJoin('bloque','bloque.id', '=', 'cripta_mausoleo.bloque_id' )
-        ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
-        ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )
-        ->leftJoin('mantenimiento','mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id' )
-        ->where('cripta_mausoleo.estado', 'ACTIVO')
-        ->orderBy('cripta_mausoleo.id', 'DESC')
-        ->orderBy('tipo_registro', 'DESC')
-        ->orderBy('cripta_mausoleo.codigo', 'DESC')
-        ->get();
+            $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
+            'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios', 'cripta_mausoleo.notable',
+            'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos', 'mantenimiento.ultimo_pago',
+           'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo','cripta_mausoleo.familia','cripta_mausoleo_responsable.estado as estado_rel_resp',
+            DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
+            'cuartel.codigo as cuartel_codigo','bloque.codigo as bloque_nombre')
+            ->Join('cuartel','cuartel.id', '=', 'cripta_mausoleo.cuartel_id' )
+            ->leftJoin('bloque','bloque.id', '=', 'cripta_mausoleo.bloque_id' )
+           ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
+           ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )
+           ->leftJoin('mantenimiento','mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id' )
+           ->where('cripta_mausoleo.estado', 'ACTIVO')
+           ->where($condicion)
+           ->orderBy('cripta_mausoleo.id', 'DESC')
+           ->orderBy('tipo_registro', 'DESC')
+           ->orderBy('cripta_mausoleo.codigo', 'DESC')
+           ->get();
+
+        }
+
+
 //  dd( $cripta);
          $cuartel = Cuartel::select('id','codigo')
                     ->where('estado', 'ACTIVO')

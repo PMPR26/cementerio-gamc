@@ -32,9 +32,41 @@
         <div class="col-sm-6">
         <button id="new-cripta" type="button" class="btn btn-info col-sm-12" > <i class="fas fa-plus-circle text-white fa-2x"></i> Nueva Cripta</button>
         </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <h3>Busqueda avanzada</h3>
         </div>
+    </div>
+    <form action="{{ route('cripta.index') }}">
+            <div class="row">
+                <div class="col-sm-3">
+                    <label>Cuartel</label>
+                    <select  class="form-control select_cuartel_search" name="select_cuartel_search"  id="select_cuartel_search" style="width: 100%" >
+                    <option selected disabled>Seleccione un cuartel</option>
+                            @foreach ($cuartel as $val)
+                            <option value="{{ $val->id }}">{{ $val->codigo }}</option>
+                            @endforeach
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <label>Bloque</label>
+                    <select  class="form-control bloque_search" name="bloque_search"  id="bloque_search" style="width: 100%" >
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <label>Sitio</label>
+                    <input type="text"  class="form-control sitio_search" name="sitio_search"  id="sitio_search" style="width: 100%" />
 
+                </div>
+                <div class="col-sm-3">
 
+                    <input type="submit"  class="btn btn-success" name="advanced_search" style="width: 100%" />
+
+                </div>
+            </div>
+    </form>
         </div>
        </div>
 
@@ -895,6 +927,16 @@ $(document).on('click', '#btn_up_pay_info', function(){
                 dropdownParent: $('#modal-cripta')
               });
 
+             // select cuartel for search
+              $(".select_cuartel_search").select2({
+                width: 'resolve', // need to override the changed default
+            });
+            $("#bloque_search").select2({
+                width: 'resolve', // need to override the changed default
+
+              });
+
+
             $(document).on('click','#btn-cripta', function()
             {
                 var validar= validar_campos();
@@ -1079,10 +1121,10 @@ $(document).on('click', '#btn_up_pay_info', function(){
 
 
 
-    $(document).on('change', '#cuartel', function(){
-        $('#bloque').empty();
-        var sel_cuartel=$('#cuartel').val();
-              $('#bloque').prop('disabled', false);
+    $(document).on('change', '.select_cuartel_search', function(){
+        $('#bloque_search').empty();
+        var sel_cuartel=$('.select_cuartel_search').val();
+              $('#bloque_search').prop('disabled', false);
                 $.ajax({
                     type: 'POST',
                         headers: {
@@ -1092,14 +1134,14 @@ $(document).on('click', '#btn_up_pay_info', function(){
                         url: "{{ route('bloqueid.get') }}",
                         async: false,
                         data: JSON.stringify({
-                            'cuartel': $('#cuartel').val(),
+                            'cuartel': $('#select_cuartel_search').val(),
                         }),
                         success: function(data_bloque) {
-                           var op1='<option >SELECCIONAR</option>';
-                            $('#bloque').append(op1);
+                           var op1='<option value="" >SELECCIONAR</option>';
+                            $('#bloque_search').append(op1);
                            $.each( data_bloque.response, function( key, value ) {
                                  opt2='<option value="'+ value.id +'">'+value.codigo +'</option>';
-                                 $('#bloque').append(opt2);
+                                 $('#bloque_search').append(opt2);
                             });
                         }
                 });
@@ -2144,6 +2186,9 @@ $(document).on('click', '#btn_modal_up_pay_info', function(e){
             }
             return true;
         }
+
+
+
 
     </script>
     @stop
