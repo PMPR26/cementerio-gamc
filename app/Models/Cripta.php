@@ -26,7 +26,7 @@ class Cripta extends Model
         'cenisarios',
         'estado_construccion',
         'observaciones',
-        'foto',       
+        'foto',
         'estado',
         'tipo_registro',
         'tipo_cripta',
@@ -40,7 +40,7 @@ class Cripta extends Model
     ];
 
 
-    
+
     public function addCripta(Request $request){
         $cripta = New Cripta;
         $cripta->user_id = auth()->id();
@@ -61,10 +61,11 @@ class Cripta extends Model
        $cripta->estado_construccion = trim($request->estado_construccion);
        $cripta->observaciones = trim($request->observaciones)?? null;
        $cripta->foto = trim($request->foto)?? null;
-       $cripta->estado = 'ACTIVO';         
+       $cripta->estado = 'ACTIVO';
        $cripta->tipo_registro = $request->tipo_reg;
        $cripta->tipo_cripta = $request->tipo_cripta;
        $cripta->familia = $request->familia;
+       $cripta->notable = $request->notable;
        $cripta->created_at = date("Y-m-d H:i:s");
        $cripta->updated_at = date("Y-m-d H:i:s");
        $cripta->save();
@@ -72,7 +73,7 @@ class Cripta extends Model
 }
 
 public function upCripta(Request $request, $id){
-    $cripta= Cripta::where('id', $id)->first();   
+    $cripta= Cripta::where('id', $id)->first();
     $cripta->user_id = auth()->id();
    $cripta->cuartel_id = trim($request->id_cuartel);
    $cripta->bloque_id = trim(strtoupper($request->bloque));
@@ -88,14 +89,16 @@ public function upCripta(Request $request, $id){
    $cripta->total_osarios = trim($request->total_osarios)?? 0;
 
    $cripta->cenisarios = trim($request->cenisarios) ?? 0;
-   
+
    $cripta->estado_construccion = trim($request->estado_construccion);
    $cripta->observaciones = trim($request->observaciones) ?? null;
    $cripta->foto = trim($request->foto) ?? null;
-   $cripta->estado = $request->estado ?? 'ACTIVO';         
+   $cripta->estado = $request->estado ?? 'ACTIVO';
    $cripta->tipo_registro = $request->tipo_reg;
    $cripta->tipo_cripta = $request->tipo_cripta;
    $cripta->familia = $request->familia;
+   $cripta->notable = $request->notable;
+
    $cripta->created_at = date("Y-m-d H:i:s");
    $cripta->updated_at = date("Y-m-d H:i:s");
    $cripta->save();

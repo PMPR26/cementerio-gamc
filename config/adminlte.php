@@ -44,7 +44,7 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
     |
     */
-    
+
     'logo' => '',
     'logo_img' => '/img/admin/cbba.png',
     'logo_img_class' => 'brand-image',
@@ -251,7 +251,7 @@ return [
             //     'url' => 'notifications/get',         // The url to periodically fetch new data (optional).
             //     'period' => 30,                       // The update period for get new data (in seconds, optional).
             // ],
-           
+
         ],
 
         // Sidebar items:
@@ -291,7 +291,7 @@ return [
         [
             'text' => 'CUARTEL',
             'url'  => 'cuartel/index',
-            'icon' => 'fab fa-buromobelexperte', 
+            'icon' => 'fab fa-buromobelexperte',
         ],
         [
             'text' => 'BLOQUE',
@@ -303,7 +303,7 @@ return [
             'url'  => 'cripta/index',
             'icon' => 'fas fa-igloo',
         ],
-       
+
         [
             'text' => 'NICHOS',
             'url'  => 'nicho/nicho',
@@ -326,8 +326,19 @@ return [
             'icon' => 'fas fa-edit',
         ],
 
-        // ['header' => 'REPORTES'],
-
+        ['header' => 'REPORTES'],
+        [
+            'text' => 'MAUSOLEOS NOTABLES',
+            'route'  => 'mausoleosNotables',
+            'target' => '_blank',
+            'icon' => 'fas fa-edit',
+        ],
+        [
+            'text' => 'CRIPTAS NOTABLES',
+            'route'  => 'criptasNotables',
+            'target' => '_blank',
+            'icon' => 'fas fa-edit',
+        ],
         // [
         //     'text'    => 'NICHOS',
         //     'icon'    => 'fas fa-fw fa-share',
@@ -379,7 +390,7 @@ return [
         //     ],
         // ],
 
-       
+
         // ['header' => 'BUSQUEDAS'],
         // [
         //     'text' => 'NICHOS',  // POR BLOQUE NICHO FILA
@@ -395,7 +406,7 @@ return [
 
 
         // [
-        //     'text' => 'RESPONSABLE DE CERTIFICADO',  
+        //     'text' => 'RESPONSABLE DE CERTIFICADO',
         //     'route'  => 'relev',
         //     'icon' => 'fas fa-edit',
         // ],
@@ -450,7 +461,7 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Plugins-Configuration
     |
     */
-  
+
 
     'plugins' => [
         'Datatables' => [

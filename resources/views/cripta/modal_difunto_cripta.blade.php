@@ -18,7 +18,8 @@
 
                                     <div class="col-sm-12 col-md-4 col-xl-4">
                                         <label>Documento de Identidad:</label><span class="obligatorio">*</span>
-                                        <div class="input-group input-group-lg">                                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdci" autocomplete="off" value="">
+                                        <div class="input-group input-group-lg">
+                                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdci" autocomplete="off" value="">
 
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-lg btn-default" id="buscarDif">

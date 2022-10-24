@@ -12,155 +12,89 @@
                        <form action="#" method="POST" >
 
                             <div class="row">
-
-                                <input type="hidden" name="id_cripta_mausoleo_modal" id="id_cripta_mausoleo_modal" >
+                                    <input type="hidden" name="id_cripta_mausoleo_modal_pay" id="id_cripta_mausoleo_modal_pay" >
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label>Cedula de Identidad:</label>
-                                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdci" autocomplete="off" value="">
+                                            <label>Código:</label>
+                                            <p id="cod_cm"></p>
                                         </div>
                                     </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Nombre :</label>
-                                                    <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdnombre" autocomplete="off">
-                                                </div>
-                                            </div>
 
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Primer apellido :</label>
-                                                    <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdprimer_apellido" autocomplete="off">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Segundo apellido :</label>
-                                                    <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdsegundo_apellido" autocomplete="off">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Fecha de nacimiento :</label>
-                                                    <input type="date"  class="form-control clear" max="{{ date('Y-m-d') }}" placeholder="fecha de nacimiento" id="mdfecha_nacimiento" >
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Fecha de defunción :</label>
-                                                    <input type="date"  class="form-control clear" placeholder="fecha de defuncion" max="{{ date('Y-m-d') }}" id="mdfecha_defuncion"  >
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>SERECI:</label>
-                                                    <input  type="number" class="form-control clear" id="mdcertificado_defuncion" autocomplete="off">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Causa :</label>
-                                                    <select id="causa"
-                                                    class="form-control clears2 select2-multiple select2-hidden-accessible" style="width: 100%">
-                                                    <option value="">SELECIONAR CAUSA</option>
-                                                    @foreach ($causa as $cs)
-                                                            <option value="{{ $cs->causa }}">{{$cs->causa }}</option>
-                                                    @endforeach
-                                                </select>
-
-                                                </div>
-                                            </div>
-
-
-
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Tipo :</label>
-                                                    <select name="tipo_dif" id="mdtipo" class="form-control clears2">
-                                                        <option value="">Seleccionar</option>
-                                                        <option value="ADULTO">ADULTO</option>
-                                                        <option value="PARVULO">PARVULO</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Genero :</label>
-                                                    <select name="status" id="mdgenero" class="form-control clears">
-                                                        <option value="">Seleccionar</option>
-                                                        <option value="MASCULINO">MASCULINO</option>
-                                                        <option value="FEMENINO">FEMENINO</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <hr>
-
-                                            <div class="col-sm-12 col-md-6 col-xl-6">
-                                                <label>Funeraria</label>
-                                                        <select id="funeraria"
-                                                            class="form-control clears2 select2-multiple select2-hidden-accessible" style="width: 100%">
-                                                            <option value="">SELECIONAR FUNERARIA</option>
-                                                            @foreach ($funeraria as $fun)
-                                                                    <option value="{{ $fun->funeraria }}">{{$fun->funeraria }}</option>
-                                                            @endforeach
-                                                        </select>
-                                            </div>
-                                             <div class="col-sm-12 col-md-6 col-xl-6">
-                                                        <label>Adjuntar certificado de defunción :</label>
-                                                        <div id="cert_defuncion" class="dropzone cleardrop" style="text-align: center">
-                                                        </div>
-                                                        <hr>
-                                                        <input type="hidden" id="mdurl-certification" class="form-control clear">
-                                              </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Responsable :</label>
+                                            <p id="resp_cm"></p>
+                                        </div>
+                                    </div>
                             </div>
                             {{-- end row --}}
-                            <div class="row p-4">
-                                <div class="col-sm-12 col-md-12 col-xl-12">
-                                    <button class="btn btn-primary" id="add_difunto_row"><i class="fa fa-plus 3x"></i> Agregar Difunto</button>
-                                </div>
-                            </div>
-
-                        <div class="row">
-                            <div class="col-md-12 card card-info">
-                                <h3>REGISTRO DE DIFUNTOS INGRESADOS</h3>
-                            </div>
-                        </div>
 
                             <div class="row">
-                                <div class="col-sm-12 col-md-12 col-xl-12 p-4">
-                                    <table class="tabla_difunto table table-striped table-bordered responsive"  role="grid"  aria-describedby="tabla_difunto">
+                                <div class="col-sm-6">
+                                    <label>Tipo Servicio</label>
+                                    <select id="tipo_servicio_value_cm"
+                                        class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
 
-                                        <thead>
-                                            <tr>
-                                                <th>Cedula</th>
-                                                <th>Nombre</th>
-                                                <th>Paterno</th>
-                                                <th>Materno</th>
-                                                <th>cereci</th>
-                                                <th>tipo</th>
-                                                <th>Fecha Nacimiento</th>
-                                                <th>Edad</th>
-                                                <th>Fecha Defunción</th>
-                                                <th>Causa</th>
-                                                <th>Funeraria</th>
-                                                <th>Genero</th>
-                                                <th>url</th>
-                                                <th>Acción</th>
+                                    </select>
+                                </div>
 
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tabla_difunto_row" >
+                                <div class="col-sm-6">
+                                    <label>Servicio</label>
+                                    <select id="servicio-hijos"
+                                        class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
+                                        <option value="">Seleccionar</option>
 
-                                        </tbody>
-                                    </table>
+                                    </select>
+                                </div>
+
+
+
+
+                                <div class="col-sm-6" id="service" style="display:none">
+                                    <label>Servicio</label>
+                                    <select id="servicio-hijos" class="form-control select2-multiple select2-hidden-accessible"
+                                        style="width: 100%"></select>
                                 </div>
                             </div>
+
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4>DETALLE DE SERVICIOS SOLICITADOS</h4>
+                    </div>
+
+                    <div class="row" style="padding-top: 15px;">
+                        <div class="col-sm-6">
+                            <div class="card">
+                                <div class="card-body" id="servicios-data">
+                                    Ningun dato seleccionado.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="card">
+                                <div class="card-body" id="servicios-hijos">
+                                    Ningun dato seleccionado.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cal_price" style="text-align: center">
+                        <div class="card">
+                            <div class="card-body" id="servicios-hijos-price" style="text-align: center">
+
+
+
+                            </div>
+                            <h1><span id="totalServ"> 0 </span> Bs</h1>
+                            <input type="hidden" name="totalservicios" id="totalservicios" value="0"
+                                class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+
 
                             <div class="row">
                                 <div class="col-md">
