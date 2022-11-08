@@ -25,6 +25,7 @@
                                                 <div class="form-group">
                                                     <label>Responsable :</label>
                                                     <p id="resp_cm_info"></p>
+                                                    <p id="respdifunto_id_cm_info" style="color:aliceblue"></p>
                                                 </div>
                                             </div>
                                     </div>
@@ -33,7 +34,7 @@
                         <fieldset>
                              <legend>Datos de la persona que realizó el pago</legend>
                                 <div class="row">
-                                    <div class="col-6">
+                                    <div class="col-3">
                                         <label>Documento de Identidad:</label><span class="obligatorio">*</span>
                                         <div class="input-group input-group-lg">
                                             <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="upci" autocomplete="off" value="">
@@ -47,24 +48,37 @@
                                     </div>
 
 
-                                                <div class="col-sm-6">
+                                                <div class="col-3">
                                                     <div class="form-group">
                                                         <label>Nombre :</label>
                                                         <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="upnombre" autocomplete="off">
                                                     </div>
                                                 </div>
 
-                                                <div class="col-sm-6">
+                                                <div class="col-3">
                                                     <div class="form-group">
                                                         <label>Primer apellido :</label>
                                                         <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="upprimer_apellido" autocomplete="off">
                                                     </div>
                                                 </div>
 
-                                                <div class="col-sm-6">
+                                                <div class="col-3">
                                                     <div class="form-group">
                                                         <label>Segundo apellido :</label>
                                                         <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="upsegundo_apellido" autocomplete="off">
+                                                    </div>
+                                                </div>
+                                                <h4>Especificar si el pago se realizó por el responsable y/o propietario o por tercera persona </h4>
+                                                <div class="col-6">
+                                                    <div class="col-12 custom-control custom-radio">
+                                                        <input class="custom-control-input custom-control-input-danger clear" type="radio" name="persona_pago" id="tercera_persona" value="Tercera persona" >
+                                                        <label for="tercera_persona" class="custom-control-label">Pago realizado por tercera persona</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="col-12 custom-control custom-radio">
+                                                        <input class="custom-control-input custom-control-input-danger clear" type="radio" name="persona_pago" id="responsable_pago" value="Titular responsable" >
+                                                        <label for="responsable_pago" class="custom-control-label">Pago realizado por el responsable o propietario</label>
                                                     </div>
                                                 </div>
                                 </div>
