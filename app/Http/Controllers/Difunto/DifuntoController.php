@@ -152,7 +152,8 @@ class DifuntoController extends Controller
 
 
     public function verRegistroDifunto($id_difunto){
-// dd($id_difunto);
+        // dd($id_difunto);
+        $band=0;
         $datos_difuntos=Difunto::where('id', $id_difunto)->first();
 
         //buscar difunto en pagos servicios
@@ -174,6 +175,7 @@ class DifuntoController extends Controller
                              "id"=>$difunto_servicio->id,
                              "tipo"=>"servicio",
                              "ci_dif"=>$datos_difuntos->ci,
+                            //  "band"=>$band
 
                         ]
                  ],200);
@@ -183,61 +185,75 @@ class DifuntoController extends Controller
                     'response'=>["codigo"=>$difunto_responsable->codigo_nicho,
                                   "id"=>$difunto_responsable->id,
                                    "tipo"=>"nicho",
-                                   "ci_dif"=>$datos_difuntos->ci
+                                   "ci_dif"=>$datos_difuntos->ci,
+                            //  "band"=>$band
+
                     ]
                  ],200);
             }
 
         }
         else{
-        // dd("else");
+
 
             $ci= $datos_difuntos->ci;
             $dfc = Cripta::query();
             $difunto_cripta_mausoleo = $dfc->where('estado','ACTIVO')
             ->whereNotNull('difuntos')->get();
             if($difunto_cripta_mausoleo!=null || !empty($difunto_cripta_mausoleo)){
+
+
                 foreach($difunto_cripta_mausoleo as $value)
                 {
                     $dif=json_decode($value->difuntos, true);
-        //             echo "<pre>";
-        //  print_r($dif);
-        //  echo "</pre>";
+                    //             echo "<pre>";
+                    //  print_r($dif);
+                    //  echo "</pre>";
                     foreach($dif as $difunto){
+                        // dd($difunto['ci']."******".$ci);
                         if($difunto['ci']==$ci){
-        //  print_r($difunto['ci']);
 
+                            $band=1;
                             return response([
                                 'status'=> true,
                                 'response'=> ["codigo"=>$value->codigo,
                                                "id"=>$value->id,
                                               "tipo"=>$value->tipo_registro,
-                                              "ci_dif"=>$datos_difuntos->ci
+                                              "ci_dif"=>$datos_difuntos->ci,
+                                              'band'=>$band
                                                ]
                              ],200);
                         }
                     }
 
                 }
+                if($band==0){
+                    return response([
+                        'status'=> false,
+                        'mensaje'=> 'No se encontraron resultados'
+                     ],201);
+                }
             }
             else{
+
                 return response([
                     'status'=> false,
                     'mensaje'=> 'No se encontraron resultados'
-                 ],200);
+                 ],201);
             }
         }
 
-        // dd("zasdsd");
-                return response([
-                    'status'=> false,
-                    'mensaje'=> 'No se encontraron resultados'
-                 ],200);
+        // // dd("zasdsd");
+        //         return response([
+        //             'status'=> false,
+        //             'mensaje'=> 'Ocurrio un error, intente nuevamente'
+        //          ],201);
     }
 
     public function eliminarDifunto(Request $request){
         //borrar primero en tablas relacionales
         // dd($request);
+
         if($request->tipo=="MAUSOLEO" || $request->tipo=="CRIPTA")
         {
             $d=Cripta::where('id', $request->id_tabla)->first();
@@ -253,6 +269,9 @@ class DifuntoController extends Controller
            $d->save();
         }
         else{
+            if($request->id_tabla==null || $request->tipo==null){
+              $del=DB::table('difunto')->where('id',$request->id_difunto)->delete();
+            }
             $del=DB::table(''.$request->tbl.'')->where('id',$request->id_tabla)->delete();
         }
 
