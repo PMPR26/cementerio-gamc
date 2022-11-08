@@ -601,6 +601,7 @@
                                     {
                                         $('#cod_cm_info').html(data.response.cripta.codigo);
                                         $('#resp_cm_info').html(data.response.responsable.nombres+" "+data.response.responsable.primer_apellido+" "+data.response.responsable.segundo_apellido);
+                                        $('#respdifunto_id_cm_info').html(data.response.responsable.id);
 
                                     }//end if
                                 }
@@ -629,6 +630,15 @@
                                         $('#upmonto').val(mant.resp.monto);
                                         $('#upglosa').val(mant.resp.glosa);
                                         $('#upobservacion').val(mant.resp.observacion);
+
+                                        if(mant.resp.pago_por =="Titular responsable"){
+                                            $('#responsable_pago').prop("checked", true);
+                                        }else if(mant.resp.pago_por =="Tercera persona"){
+                                            $('#tercera_persona').prop("checked", true);
+                                        }
+
+
+
                                         if(mant.resp.fecha_pago!=null){
                                             d=mant.resp.fecha_pago;
                                             var d=(mant.resp.fecha_pago).split(' ');
@@ -646,6 +656,22 @@
         $(document).on('click', '#btn_modal_up_pay_info', function(e){
             e.preventDefault();
 
+            if ($("input[type=radio][name=persona_pago]:checked").is(':checked')) {
+
+                     persona_pago=$('input:radio[name=persona_pago]:checked').val();
+                    //  alert(persona_pago);
+                }
+                else {
+                    swal.fire({
+                        title: "Precaución!",
+                        text: "!Debe definir si el pago se hizo por tercera persona o por el propietario!",
+                        type: "error",
+                        // timer: 2000,
+                        showCancelButton: false,
+                        showConfirmButton: true
+                    });
+                    return false;
+                }
                         $.ajax({
                                             type: 'POST',
                                             headers: {
@@ -656,6 +682,7 @@
                                             async: false,
                                             data: JSON.stringify({
                                                 'cripta_mausoleo_id': $('#id_cripta_mausoleo_modal_pay_info').val(),
+                                                'respdifunto_id': $('#respdifunto_id_cm_info').val(),
                                                 'nombrepago': $('#upnombre').val(),
                                                 'paternopago' :  $('#upprimer_apellido').val(),
                                                 'maternopago' :  $('#upsegundo_apellido').val(),
@@ -663,6 +690,8 @@
                                                 'ultima_gestion': $('#upultima_gestion').val(),
                                                 'fur' :  $('#upfur').val(),
                                                 'monto' :  $('#upmonto').val(),
+                                                'precio_sinot':  $('#upmonto').val(),
+                                                'pago_por':persona_pago,
                                                 'glosa' :  $('#upglosa').val(),
                                                 'observacion' :  $('#upobservacion').val(),
                                                 'tipo_ubicacion' : "cripta-mausoleo",
@@ -670,10 +699,34 @@
                                                 'cantidad_gestiones' :  $('#upcantidad_gestion').val(),
                                                 'gestiones' :  $('#upgestiones').val(),
                                                 'fecha_pago' :  $('#upfecha_pago').val(),
+                                                'id_ubicacion': $('#id_cripta_mausoleo_modal_pay_info').val(),
+                                                'codigo_ubicacion':$('#cod_cm_info').html()
 
                                             }),
                                             success: function(data) {
                                                 console.log()
+                                                if(data.status==true){
+                                                    swal.fire({
+                                                             icon:"success",
+                                                            title: "Registro actualizado!",
+                                                            text: "!La informacion de pago fue actualizada exitosamente!",
+                                                            type: "success",
+                                                            showCancelButton: false,
+                                                            showConfirmButton: true
+                                                        });
+                                                        location.reload();
+
+                                                }else{
+                                                     swal.fire({
+                                                             icon:"error",
+                                                            title: "Algo salió mal!",
+                                                            text: "!Ocurrió un error, por favor  verifique si registró toda información solicitada!",
+                                                            type: "error",
+                                                            showCancelButton: false,
+                                                            showConfirmButton: true
+                                                        });
+                                                        return false;
+                                                }
 
                                             }
                                 });
@@ -2124,11 +2177,14 @@ $("#cert_defuncion_p").dropzone({
             var activado=0;
             $('#servicios-data').empty();
             $('.service_child').each(function( index ) {
-                alert($(this).is(":checked"));
+                alert($(this).val());
             if($(this).is(":checked"))
             {   var info= ($(this).val()).split('=>');
+            alert(info);
 
                 id_serv= $.trim(((info[1]).split('-'))[0]);
+            alert((info[1]).split('-'));
+
                 if(index==0){
                     tipo_serv =$.trim(((info[0]).split('-'))[0]);
                      tipo_serv_txt=((info[0]).split('-'))[1];
@@ -2225,10 +2281,41 @@ $("#cert_defuncion_p").dropzone({
 
             $(document).on('click', '#boton_dif_inhum', function(e){
                 e.preventDefault();
-               insertar_difunto_inhumado();
-               listar_difuntos();
+                // ci=$()
+               var verificado= verificar_asignacion_difunto(ci, nombre, paterno, materno, fecha_nacimiento, fecha_defuncion);
+               if(verificado==true){
+                    insertar_difunto_inhumado();
+                    listar_difuntos();
+               }
+               else{
+                    //mostrar mensaje de advertencia que el difunto esta en otra ubicacion
+               }
 
-            })
+
+            });
+            function verificar_asignacion_difunto(ci, nombre, paterno, materno, fecha_nacimiento, fecha_defuncion){
+                $.ajax({
+                                        type: 'POST',
+                                        headers: {
+                                            'Content-Type':'application/json',
+                                            'X-CSRF-TOKEN':'{{ csrf_token() }}'
+                                        },
+                                        url: '{{ route("verificar.asigancion.difunto") }}',
+                                        async: false,
+                                        data: JSON.stringify({
+                                            'ci': ci,
+                                            'nombre': nombre,
+                                            'paterno': paterno,
+                                            'materno': materno,
+                                            'fecha_nacimiento': fecha_nacimiento,
+                                            'fecha_defuncion': fecha_defuncion
+
+                                        }),
+                                            success: function(data) {
+                                                 console.log(data.status);
+                                            }
+                        });
+            }
 
             //metodo insertar_difunto_inhumado
             function insertar_difunto_inhumado(){
@@ -2246,7 +2333,9 @@ $("#cert_defuncion_p").dropzone({
                                         }),
                                             success: function(data) {
                                                  console.log(data.status);
-                                                 if(data.status==true){}
+                                                 if(data.status==true){
+
+                                                 }
                                             }
                         });
             }
