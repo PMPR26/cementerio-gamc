@@ -833,8 +833,10 @@
                 $parrafos = '';
                 $('#servicios-data').empty();
                 $.each($("#tipo_servicio_value").select2("data"), function(index, value) {
+                    console.log(index);
                     $parrafos = '<p id="' + value.id + '">' + $parrafos + (index + 1) + '.- ' +
                         value.text + '</p>';
+                        // if()
                     $('#servicios-data').html($parrafos);
                 });
             });

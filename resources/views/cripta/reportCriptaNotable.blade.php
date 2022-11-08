@@ -4,56 +4,46 @@
 
 <head>
     <style>
-        /**
-                Establezca los márgenes de la página en 0, por lo que el pie de página y el encabezado
-                puede ser de altura y anchura completas.
-             **/
-        @page {
-            margin: 0cm 0cm;
-        }
+       body{
+      font-family: sans-serif;
+    }
+    @page {
+      margin: 160px 50px;
+    }
+    header { position: fixed;
+      left: 0px;
+      top: -120px;
+      right: 0px;
+      height: 100px;
 
-        /** Defina ahora los márgenes reales de cada página en el PDF **/
-        body {
-            margin-top: 1cm;
-            margin-left: 2cm;
-            margin-right: 2cm;
-            margin-bottom: 3cm;
-            font-size: 9px !important;
-            line-height: 10px !important;
-
-        }
-
-        /** Definir las reglas del encabezado **/
-        header {
-            position: fixed;
-            top: 1cm;
-            left: 2cm;
-            right: 0cm;
-            height: 4cm;
-        }
-        main{
-            position: fixed;
-            top: 2cm;
-            left: 0cm;
-            right: 1.5cm;
-            left: 1.5cm;
-            text-align: center !important;
-        }
-        /** Definir las reglas del pie de página **/
-        footer {
-            position: fixed;
-            bottom: 0cm;
-            left: 0cm;
-            right: 0cm;
-            height: 2cm;
-        }
-
-        table tr td {
-            font-size: 12px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
-        }
-
+      text-align: center;
+    }
+    /* header h1{
+      margin: 10px 0;
+    }
+    header h2{
+      margin: 0 0 10px 0;
+    } */
+    footer {
+      position: fixed;
+      left: 0px;
+      bottom: -50px;
+      right: 0px;
+      height: 40px;
+      border-bottom: 2px solid #ddd;
+    }
+    footer .page:after {
+      content: counter(page);
+    }
+    footer table {
+      width: 100%;
+    }
+    footer div {
+      text-align: right;
+    }
+    footer .izq {
+      text-align: left;
+    }
         .txthead {
             font-size: 10px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -108,6 +98,13 @@
     font-size: 9px;
 
 }
+#footer .page:after {
+  content: counter(page, decimal);
+}
+.page{
+    text-align: center;
+    font-size: 9px;
+}
     </style>
 </head>
 
@@ -140,17 +137,15 @@
     </header>
 
     <footer>
-        <!-- <img src="footer.png" width="100%" height="100%"/> -->
+        <div id="footer">
+            <p class="page">Página </p>
+        </div>
     </footer>
 
-    <!-- Envuelva el contenido de su PDF dentro de una etiqueta principal -->
-    <main>
-        <pre>
-               {{-- @php(print_r($cripta ))
-               @php(die()) --}}
-        </pre>
-                   <h4 align="center">LISTA DE CRIPTAS NOTABLES</h4>
+
+
         <table class="info">
+            <caption>LISTA DE CRIPTAS NOTABLES</caption>
             <thead>
                 <tr>
                     <th>CODIGO</th>
@@ -198,7 +193,7 @@
             </tbody>
         </table>
 
-    </main>
+    {{-- </main> --}}
 </body>
 
 </html>

@@ -583,12 +583,27 @@ class CriptaController extends Controller
     public function getDifuntoCripta(Request $request){
         // dd($request->cripta_mausoleo_id);
         $difuntoCript =  Cripta::where('id', $request->cripta_mausoleo_id)->first();
+        $difuntoResp =  DB::table('cripta_mausoleo_responsable')->where('cripta_mausole_id', $request->cripta_mausoleo_id)->first();
+        if(!empty($difuntoResp)){
+            if($difuntoResp->responsable_id!=null){
+                  $resp =  DB::table('responsable')->where('id', $difuntoResp->responsable_id)->first();
 
-
-               return response([
+            }
+        }
+        if($resp &&  $difuntoCript){
+            return response([
                 'status'=> true,
-                'response'=> $difuntoCript
+                'response'=> $difuntoCript,
+                'responsable'=> $resp
              ],200);
+        }
+        else{
+            return response([
+                'status'=> false,
+                'mensaje'=> "Es probable que la cripta aun no este asociado a un responsable, por favor verifique o complete registro"
+             ],201);
+        }
+
     }
     public function generateCiDif(){
         $dif=new Difunto;
@@ -667,10 +682,18 @@ class CriptaController extends Controller
                ->orderBy('cripta_mausoleo.codigo', 'DESC')
                ->get();
 
-            //    $pdf = new PDF();
+               $pdf = new PDF();
             //    $pdf = PDF::setPaper('a4', 'landscape');
+
                $pdf = PDF::loadView('cripta/reportCriptaNotable', compact('cripta'))->setPaper('a4', 'landscape');
+            //    $pdf = PDF::page_text(1,1, "{PAGE_NUM} of {PAGE_COUNT}", 'Arial', 10, array(0,0,0));
                return  $pdf-> stream("Lista_criptas_notables.pdf", array("Attachment" => false));
+
+
             }
+
+            // public function savePaycm(Request $request){
+            //     dd($request);
+            // }
 }
 
