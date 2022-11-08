@@ -185,7 +185,12 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             @endforeach
                            </select>
                         </div>
-                        <div class="col-sm-12 col-md-6 col-xl-6">
+                        <div class="col-sm-12 col-md-3 col-xl-3">
+                            <label>Nro de documento de identidad del responsable :</label>
+                            <input type="text" name="ci_resp" id="ci_resp" class="form-control">
+                        </div>
+
+                        <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>Adjuntar certificado de defunción :</label>
                             <div id="cert-defuncion" class="dropzone" style="text-align: center"> </div>
                              <hr>
@@ -318,7 +323,11 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         </div>
 
                         <hr>
-                        <div class="col-sm-12 col-md-12 col-xl-12">
+                        <div class="col-sm-12 col-md-6 col-xl-6">
+                            <label>Nro de documento de identidad del responsable :</label>
+                            <input type="text" name="ci_resp_edit" id="ci_resp_edit" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-xl-6">
                                 <label>Adjuntar certificado de defunción :</label>
                                 <div id="file_cert"></div>
                             <div class="col-sm-12" style="text-align: center" id="show-file"></div>
@@ -433,7 +442,9 @@ $(document).ready(function ()
         },
         sending: function(file, xhr, formData){
                     formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
-                    formData.append('collector', 'certificados de difuncion');
+                    formData.append('collector', 'cementerio certificado de difuncion');
+                    formData.append('nro_documento', $('#ci_resp').val());
+
 
                 },
         success: function (file, response) {
@@ -501,7 +512,9 @@ $(document).ready(function ()
         },
         sending: function(file, xhr, formData){
                     formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
-                    formData.append('collector', 'certificados de difuncion');
+                    formData.append('collector', 'cementerio certificados de difuncion');
+                    formData.append('nro_documento', $('#ci_resp_edit').val());
+
 
                 },
         success: function (file, response) {
@@ -568,7 +581,7 @@ $(document).ready(function ()
                             'tipo': $('#tipo-edit').val(),
                             'funeraria': $('#funeraria_edit').val(),
                             'url_certificacion': $('#url-certification-edit').val(),
-
+                            'ci_resp':$('#ci_resp_edit').val(),
                             'genero': $('#genero-edit').val(),
                             'status': $('#estado-edit').val(),
                             'id': $('#btn_difunto-editar').val()
@@ -719,6 +732,7 @@ $(document).ready(function ()
                             'tipo': $('#tipo').val(),
                             'funeraria': $('#funeraria').val(),
                             'genero': $('#genero').val(),
+                            'ci_resp':$('#ci_resp').val(),
                             'certificado_file': $('#url-certification').val() //aqui
                         }),
                         success: function(data_response) {
@@ -856,11 +870,15 @@ $(document).ready(function ()
                                         }).then(function(result) {
 
                                             if (result.value== true) {
-                                               eliminarDifunto(id_difunto, data_response.response.id, data_response.response.tipo, data_response.response.ci_dif);
+                                               eliminarDifunto(id_difuto, data_response.response.id, data_response.response.tipo, data_response.response.ci_dif);
+                                               location.reload();
                                             }
                                         });
                                 }
 
+                            }else{
+                                eliminarDifunto(id_difunto, null ,null, null);
+                                location.reload();
                             }
 
                         },

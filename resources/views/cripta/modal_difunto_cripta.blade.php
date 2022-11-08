@@ -10,8 +10,23 @@
                     </div>
                     <div class="modal-body">
                        <form action="#" method="POST" >
-
                             <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Código:</label>
+                                        <p id="cod_cm_dif"></p>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>C.I. Responsable :</label>
+                                        <p id="resp_cm_dif"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+
 
                                 <input type="hidden" name="id_cripta_mausoleo_modal" id="id_cripta_mausoleo_modal" >
 

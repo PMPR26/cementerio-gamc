@@ -21,6 +21,15 @@
             color: red;
             font-weight: 900;
         }
+        .labelservice{
+            color: rgb(21, 24, 23);
+            font-weight: 900;
+        }
+       .childservice{
+            color: rgb(46, 147, 144);
+            font-weight: 900;
+        }
+
     </style>
 
 @section('content')
@@ -58,17 +67,14 @@
                 <div class="col-2">
                     <label>Sitio</label>
                     <input type="text"  class="form-control sitio_search" name="sitio_search"  id="sitio_search" style="width: 100%" />
-
                 </div>
                 <div class="col-2 pt-2">
                     <br>
                     <input type="submit"  class="btn btn-success" name="advanced_search" style="width: 100%" value="Buscar" />
-
                 </div>
                 <div class="col-2 pt-2">
                     <br>
                     <input type="submit"  class="btn btn-info" name="todos" style="width: 100%"  value="Cargar todos"/>
-
                 </div>
             </div>
     </form>
@@ -118,7 +124,16 @@
 
                     <td>{{ $cripta->nombre }}</td>
                     <td>
-                        {{ $cripta->documentos_recibidos }}
+                        <?php
+                            if($cripta->documentos_recibidos !=null || !empty($cripta->documentos_recibidos)){
+                                $v=json_decode($cripta->documentos_recibidos, true);
+                                echo "<psan>resolucion nro. " .$v['resolucion']. " ,  ".$v['bienes_m']. ", ci del propietario ".$v['ci'] ?? ''. ", ".$v['planos_aprobados']."  </span><br>";
+                                    if(isset($v['foto_resolucion'])){if($v['foto_resolucion']!=null ){echo "<span>|<a href='" .$v['foto_resolucion']. "'> Resolución </a>|</span>"; }}
+                                    if(isset($v['foto_titulo'])){if($v['foto_titulo']!=null ){echo "<span>|<a href='" .$v['foto_titulo']. "'> Titulo de propiedad </a>|</span>"; }}
+                                    if(isset($v['foto_prop_ci'])){if($v['foto_prop_ci']!=null ){echo "<span>|<a href='" .$v['foto_prop_ci']. "'> ci propietario </a>|</span>"; }}
+                                    if(isset($v['foto_planos'])){if($v['foto_planos']!=null ){echo "<span>|<a href='" .$v['foto_planos']. "'> Planos aprobados </a>|</span>"; }}
+                            }
+                    ?>
                     </td>
                     @else
                     <td>SIN ASIGANCION</td>
@@ -424,12 +439,54 @@
                                     <input class="custom-control-input custom-control-input-danger clear" type="checkbox" id="obs_resolucion" value="obs_resolucion"  >
                                     <label for="obs_resolucion" class="custom-control-label">Observacion</label>
                                     <br>
-                                    <input type="text" name="txt_resolucion" id="txt_resolucion" class="form-control clear" style="display: none">
+                                    <input type="text" name="txt_resolucion" id="txt_resolucion" value="" class="form-control clear" style="display: none">
                                 </div>
 
                             </div>
                         </div>
                     </div>
+
+                    <div class="row" id="digital_documents" style="display: none">
+                            <div class="col-sm-12 col-md-12 col-xl-12">
+                                <h6 class="section_divider card text-white bg-info mb-3 p-4">CARGAR DOCUMENTOS DIGITALIZADOS</h6>
+                            </div>
+                             <div class="col-sm-12 col-md-3 col-xl-3">
+                                <label>Resolución/Testimonio:</label>
+                                <div id="foto_resolucion" class="dropzone" style="text-align: center"> </div>
+                                <hr>
+                                <input type="hidden" id="url_foto_resol">
+                                <br>
+                                <p id="foto_resol"></p>
+                             </div>
+
+                             <div class="col-sm-12 col-md-3 col-xl-3">
+                                <label>Título de propiedad:</label>
+                                <div id="foto_titulo" class="dropzone" style="text-align: center"> </div>
+                                <hr>
+                                <input type="hidden" id="url_foto_title">
+                                <br>
+                                <p id="foto_title"></p>
+                             </div>
+
+                             <div class="col-sm-12 col-md-3 col-xl-3">
+                                <label>Carnet de identidad (propietario):</label>
+                                <div id="foto_ci_prop" class="dropzone" style="text-align: center"> </div>
+                                <hr>
+                                <input type="hidden" id="url_foto_prop">
+                                <br>
+                                <p id="foto_prop"></p>
+                             </div>
+
+                             <div class="col-sm-12 col-md-3 col-xl-3">
+                                <label>Planos aprobados:</label>
+                                <div id="foto_planos" class="dropzone" style="text-align: center"> </div>
+                                <hr>
+                                <input type="hidden" id="url_foto_planos_ap">
+                                <br>
+                                <p id="foto_planos_ap"></p>
+                             </div>
+                    </div>
+
                     <input type="hidden" name="cripta_mausoleo_id"  id="cripta_mausoleo_id" value="">
                      <hr>
                     <div class="col-sm-12" style="text-align: center">
@@ -485,138 +542,9 @@
 
 @section('js')
     <script>
-
-
-
-//**** actualizacion de pagos **/
-$(document).on('click', '#btn_up_pay_info', function(){
-            $('#modal_up_pay_info').modal('show');
-            $('#id_cripta_mausoleo_modal_pay_info').val($(this).val());
-            // buscar si hay difuntos ingresados
-            $.ajax({
-                type: 'GET',
-                        headers: {
-                            'Content-Type':'application/json',
-                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
-                        },
-                        url: '/cripta/get-cripta/' + $(this).val(),
-                        success: function(data)
-                        {
-                            console.log(data);
-                            if(data.status!=null )
-                            {
-                                $('#cod_cm_info').html(data.response.cripta.codigo);
-                                $('#resp_cm_info').html(data.response.responsable.nombres+" "+data.response.responsable.primer_apellido+" "+data.response.responsable.segundo_apellido);
-
-                            }//end if
-                        }
-            });
-
-            $.ajax({
-                type: 'GET',
-                        headers: {
-                            'Content-Type':'application/json',
-                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
-                        },
-                        url: '/mantenimiento/get-mantenimiento/' + $(this).val(),
-                        success: function(mant)
-                        {
-                            console.log(mant);
-                            if(mant.status==true )
-                            {
-                                $('#upci').val(mant.resp.ci);
-                                $('#upnombre').val(mant.resp.nombrepago);
-                                $('#upprimer_apellido').val(mant.resp.paternopago);
-                                $('#upsegundo_apellido').val(mant.resp.maternopago);
-                                $('#upgestiones').val(mant.resp.gestion);
-                                $('#upultima_gestion').val(mant.resp.ultimo_pago);
-                                $('#upcantidad_gestion').val(mant.resp.cantidad_gestiones);
-                                $('#upfur').val(mant.resp.fur);
-                                $('#upmonto').val(mant.resp.monto);
-                                $('#upglosa').val(mant.resp.glosa);
-                                $('#upobservacion').val(mant.resp.observacion);
-                                if(mant.resp.fecha_pago!=null){
-                                    d=mant.resp.fecha_pago;
-                                    var d=(mant.resp.fecha_pago).split(' ');
-                                     $('#upfecha_pago').val(d[0]);
-                                }
-
-
-                            }//end if
-                        }
-            });
-});
-
-/***difuntos **/
-
-        $(document).on('click', '#btn_add_difunto', function(){
-            $('#modal_add_difunto').modal('show');
-            $('#id_cripta_mausoleo_modal').val($(this).val());
-            // buscar si hay difuntos ingresados
-
-            $.ajax({
-                        type: 'POST',
-                        headers: {
-                            'Content-Type':'application/json',
-                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
-                        },
-                        url:'{{ route("difuntoCripta.get") }}',
-                          async: false,
-                        data: JSON.stringify({
-                            'cripta_mausoleo_id': $(this).val(),
-                        }),
-                        success: function(data_response)
-                        {
-                            $('#tabla_difunto_row').empty();
-                            $('#modal_save_difuntos').prop('disabled', false);
-
-                            console.log(data_response);
-                            var list=jQuery.parseJSON(data_response.response['difuntos']);
-                            if(data_response.response['difuntos']!=null )
-                            {
-                                // var rows = Object.keys(data_response.response['difuntos']).length;
-                                //    console.log(rows);
-                                $.each(list, function(key, value)
-                                 {
-                                         console.log( value[value]);
-
-                                            //llenar tabla
-                                                  var row='<tr>'+
-                                                        '<td class="dtci">'+value['ci']+'</td>'+
-                                                        '<td class="dtname">'+value['nombres']+'</td>'+
-                                                        '<td class="dtprimer_apellido">'+value['primer_apellido']+'</td>'+
-                                                        '<td class="dtsegundo_apellido">'+value['segundo_apellido']+'</td>'+
-                                                        '<td class="dtcertificado_defuncion">'+value['ceresi']+'</td>'+
-                                                        '<td class="dttipo">'+value['tipo']+'</td>'+
-                                                        '<td class="dtfecha_nacimiento">'+value['fecha_nacimiento']+'</td>'+
-                                                        '<td class="dtedad">'+calcularEdad(value['fecha_nacimiento'])+'</td>'+
-                                                        '<td class="dtfecha_defuncion">'+value['fecha_defuncion']+'</td>'+
-                                                        '<td class="dtcausa">'+value['causa']+'</td>'+
-                                                        '<td class="dtfuneraria">'+value['funeraria']+'</td>'+
-                                                        '<td class="dtgenero">'+value['genero']+'</td>'+
-                                                        '<td class="enl"><a href="'+value['url']+'" target="_blank" >Ver adjunto</a></td>'+
-                                                        '<td class="dturl" >'+value['url']+'</td>'+
-                                                        '<td class="dtborrar"> <a href="#" id="remove"  onClick="$(this).parent().parent().remove();"> <i class="fas fa-trash wine fa-2x"></i></a></td></tr>';
-                                                    $('#tabla_difunto_row').append(row);
-                                                    // clear modal form
-                                                    $('.clear').val('');
-                                                    $('.clears2').val(null).trigger('change');
-                                                    $('.dz-image').html("");
-                                                    Dropzone.forElement('#cert_defuncion').removeAllFiles(true);
-
-
-                                })
-
-                                //end foreach
-                            }//end if
-                        }
-
-
-
-
-            });
-        });
-
+/*****************************************************************************************/
+/***seleccion tipo de sitio-inicio de cargado de modal registro de cripta mausoleo******/
+/****************************************************************************************/
 
 
   var letra="";
@@ -652,6 +580,111 @@ $(document).on('click', '#btn_up_pay_info', function(){
 
   });
 
+/***************************************************************************************/
+/******************************* modal actualizacion de pagos **************************/
+/**************************************************************************************/
+        $(document).on('click', '#btn_up_pay_info', function(){
+                    $('#modal_up_pay_info').modal('show');
+                    $('#id_cripta_mausoleo_modal_pay_info').val($(this).val());
+                    // buscar si hay difuntos ingresados
+                    $.ajax({
+                        type: 'GET',
+                                headers: {
+                                    'Content-Type':'application/json',
+                                    'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                                },
+                                url: '/cripta/get-cripta/' + $(this).val(),
+                                success: function(data)
+                                {
+                                    console.log(data);
+                                    if(data.status!=null )
+                                    {
+                                        $('#cod_cm_info').html(data.response.cripta.codigo);
+                                        $('#resp_cm_info').html(data.response.responsable.nombres+" "+data.response.responsable.primer_apellido+" "+data.response.responsable.segundo_apellido);
+
+                                    }//end if
+                                }
+                    });
+
+                    $.ajax({
+                        type: 'GET',
+                                headers: {
+                                    'Content-Type':'application/json',
+                                    'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                                },
+                                url: '/mantenimiento/get-mantenimiento/' + $(this).val(),
+                                success: function(mant)
+                                {
+                                    console.log(mant);
+                                    if(mant.status==true )
+                                    {
+                                        $('#upci').val(mant.resp.ci);
+                                        $('#upnombre').val(mant.resp.nombrepago);
+                                        $('#upprimer_apellido').val(mant.resp.paternopago);
+                                        $('#upsegundo_apellido').val(mant.resp.maternopago);
+                                        $('#upgestiones').val(mant.resp.gestion);
+                                        $('#upultima_gestion').val(mant.resp.ultimo_pago);
+                                        $('#upcantidad_gestion').val(mant.resp.cantidad_gestiones);
+                                        $('#upfur').val(mant.resp.fur);
+                                        $('#upmonto').val(mant.resp.monto);
+                                        $('#upglosa').val(mant.resp.glosa);
+                                        $('#upobservacion').val(mant.resp.observacion);
+                                        if(mant.resp.fecha_pago!=null){
+                                            d=mant.resp.fecha_pago;
+                                            var d=(mant.resp.fecha_pago).split(' ');
+                                            $('#upfecha_pago').val(d[0]);
+                                        }
+
+
+                                    }//end if
+                                }
+                    });
+        });
+
+        //btn_modal_up_pay_info
+        // send update pagos
+        $(document).on('click', '#btn_modal_up_pay_info', function(e){
+            e.preventDefault();
+
+                        $.ajax({
+                                            type: 'POST',
+                                            headers: {
+                                                'Content-Type':'application/json',
+                                                'X-CSRF-TOKEN':'{{ csrf_token() }}'
+                                            },
+                                            url: '{{ route("save.uppay.info") }}',
+                                            async: false,
+                                            data: JSON.stringify({
+                                                'cripta_mausoleo_id': $('#id_cripta_mausoleo_modal_pay_info').val(),
+                                                'nombrepago': $('#upnombre').val(),
+                                                'paternopago' :  $('#upprimer_apellido').val(),
+                                                'maternopago' :  $('#upsegundo_apellido').val(),
+                                                'ci' :  $('#upci').val(),
+                                                'ultima_gestion': $('#upultima_gestion').val(),
+                                                'fur' :  $('#upfur').val(),
+                                                'monto' :  $('#upmonto').val(),
+                                                'glosa' :  $('#upglosa').val(),
+                                                'observacion' :  $('#upobservacion').val(),
+                                                'tipo_ubicacion' : "cripta-mausoleo",
+                                                'codigo_ubicacion' :  $('#cod_cm_info').html(),
+                                                'cantidad_gestiones' :  $('#upcantidad_gestion').val(),
+                                                'gestiones' :  $('#upgestiones').val(),
+                                                'fecha_pago' :  $('#upfecha_pago').val(),
+
+                                            }),
+                                            success: function(data) {
+                                                console.log()
+
+                                            }
+                                });
+        })
+
+
+
+
+/*************************************************************************/
+/************************ edicion cripta mausoleo **********************/
+/***********************************************************************/
         $(document).ready(function(){
             $(document).on('click','#btn-cripta-editar', function(){
 
@@ -725,7 +758,11 @@ $(document).on('click', '#btn_up_pay_info', function(){
                                                        'ci': ci,
                                                        'bienes_m': bienes_m,
                                                        'planos_aprobados': planos_aprobados,
-                                                       'obs_resolucion':obs_resolucion
+                                                       'obs_resolucion':obs_resolucion,
+                                                       'foto_resolucion':$('#url_foto_resol').val(),
+                                                        'foto_titulo':$('#url_foto_title').val(),
+                                                        'foto_prop_ci':$('#url_foto_prop').val(),
+                                                        'foto_planos':$('#url_foto_planos_ap').val()
                                                     }
 
 
@@ -776,6 +813,8 @@ $(document).on('click', '#btn_up_pay_info', function(){
             $(document).on('click', '#btn-editar', function(){
                 $('#cmform').find("input[type=text], input[type=checkbox], textarea").val("");
                   $(this).find('form').trigger('reset');
+
+
                 // $('#modal-cripta').reset();
                 $('#section_data').show();
                 $('#estado').show();
@@ -832,19 +871,57 @@ $(document).on('click', '#btn_up_pay_info', function(){
                                 var ar=JSON.parse(data_resp.documentos_recibidos);
                                 console.log(ar);
                                 if(ar.bienes_m=="BIENES M"){ $('#bienes_m').prop('checked', true); }else{$('#bienes_m').prop('checked', false);}
-                                if(ar.ci!="FALTA"){ $('#ci').prop('checked', true); $('#nro_ci').val(ar.ci); $('#nro_ci').show(); }else{$('#ci').prop('checked', false);}
+                                if(ar.ci!="FALTA"){ $('#ci').prop('checked', true); $('#nro_ci').val(ar.ci); $('#nro_ci').show(); $('#digital_documents').show(); }else{$('#ci').prop('checked', false);}
                                 if(ar.resolucion!="FALTA"){ $('#resolucion').prop('checked', true); $('#nro_resolucion').val(ar.resolucion); $('#nro_resolucion').show(); }else{$('#resolucion').prop('checked', false);}
                                 if(ar.planos_aprobados=="PLANOS A"){ $('#planos_aprobados').prop('checked', true); }else{$('#planos_aprobados').prop('checked', false);}
                                 if(ar.obs_resolucion!="FALTA"){ $('#obs_resolucion').prop('checked', true); $('#txt_resolucion').val(ar.obs_resolucion); $('#txt_resolucion').show(); }else{$('#obs_resolucion').prop('checked', false);}
 
+
+                                //resolucion
+                                if(ar.foto_resolucion!=null){
+                                    $('#url_foto_resol').val(ar.foto_resolucion)  ;
+                                    $('#foto_resol').append('<a href="'+ ar.foto_resolucion+'" target="_blank">Ver foto actual </a>');
+                                    $('#foto_resol').append('<img src="'+ ar.foto_resolucion+'" widh="100px" heigth="100"');
+                                    }else{
+                                            $('#foto_resol').empty();
+                                            $('#foto_resol').hide();
+                                    }
+                                 //titulo de propiedad
+                                 if(ar.foto_titulo!=null){
+                                    $('#url_foto_title').val(ar.foto_titulo)  ;
+                                    $('#foto_title').append('<a href="'+ ar.foto_titulo+'" target="_blank">Ver foto actual </a>');
+                                    $('#foto_title').append('<img src="'+ ar.foto_titulo+'" widh="100px" heigth="100"');
+                                    }else{
+                                            $('#foto_title').empty();
+                                            $('#foto_title').hide();
+                                    }
+
+                                // ci propietario
+                                 if(ar.foto_prop_ci!=null){
+                                    $('#url_foto_prop').val(ar.foto_prop_ci)  ;
+                                    $('#foto_prop').append('<a href="'+ ar.foto_prop_ci+'" target="_blank">Ver foto actual </a>');
+                                    $('#foto_prop').append('<img src="'+ ar.foto_prop_ci+'" widh="100px" heigth="100"');
+                                    }else{
+                                            $('#foto_prop').empty();
+                                            $('#foto_prop').hide();
+                                    }
+
+                                //planos aprobados
+                                if(ar.foto_planos!=null){
+                                    $('#url_foto_planos_ap').val(ar.foto_planos)  ;
+                                    $('#foto_planos_ap').append('<a href="'+ ar.foto_planos+'" target="_blank">Ver foto actual </a>');
+                                    $('#foto_planos_ap').append('<img src="'+ ar.foto_planos+'" widh="100px" heigth="100"');
+                                    }else{
+                                            $('#foto_planos_ap').empty();
+                                            $('#foto_planos_ap').hide();
+                                    }
                             }
                         }
 
 
                              $('#notable').val(data_response.notable);
 
-                            //  $('#familia').val(data_response.familia);
-                            console.log( "data_response.foto"+data_response.foto)
+
                             if(data_response.foto!=null){
                                $('#url-foto').val(data_response.foto)  ;
                                $('#foto_actual').append('<a href="'+ data_response.foto+'" target="_blank">Ver foto actual </a>');
@@ -867,7 +944,9 @@ $(document).on('click', '#btn_up_pay_info', function(){
                                     $('#tipo_cripta').val("");
                                  }
 
+
                         }
+
                     });
 
             });
@@ -960,7 +1039,7 @@ $(document).on('click', '#btn_up_pay_info', function(){
                 if($('#bloque :selected').text()=="" || $('#bloque :selected').text()=="SELECCIONAR" ){ var bloq="0";}else{var bloq=$('#bloque :selected').val();}
                 // documentos recibido
                     if ($("#resolucion").is(":checked")) { var resolucion=$('#nro_resolucion').val(); } else { var resolucion="FALTA";}
-                    if ($("#ci").is(":checked")) { var ci=$('#nro_ci').val();} else { var ci="FALTA";}
+                    if ($("#ci").is(":checked")) { var ci=$('#nro_ci').val(); $('#digital_documents').show(); } else { var ci="FALTA";}
                     if ($("#bienes_m").is(":checked")) { var bienes_m="BIENES M";} else { var bienes_m="FALTA";}
                     if ($("#planos_aprobados").is(":checked")) { var planos_aprobados="PLANOS A";} else { var planos_aprobados="FALTA";}
 
@@ -1008,10 +1087,13 @@ $(document).on('click', '#btn_up_pay_info', function(){
                                                        'ci': ci,
                                                        'bienes_m': bienes_m,
                                                        'planos_aprobados': planos_aprobados,
-                                                       'obs_resolucion':obs_resolucion
-                                                    },
-
-                            'estado': $('#estado').val()
+                                                       'obs_resolucion':obs_resolucion,
+                                                       'foto_resolucion':$('#url_foto_resol').val(),
+                                                        'foto_titulo':$('#url_foto_title').val(),
+                                                        'foto_prop_ci':$('#url_foto_prop').val(),
+                                                        'foto_planos':$('#url_foto_planos_ap').val()
+                                                       },
+                            'estado': $('#estado').val(),
                         }),
                         success: function(data_response)
                          {
@@ -1093,8 +1175,16 @@ $(document).on('click', '#btn_up_pay_info', function(){
                         },
                     });
         });
+        function validar_campos(){
+            if($('#notable option:selected').val()==null || $('#notable option:selected').val()==""){
 
-
+                return false;
+            }
+            return true;
+        }
+/**************************************************************************/
+/*************combo dinamico bloque en funcion al cuartel ****************/
+/*************************************************************************/
 
         $(document).on('change', '#cuartel', function(){
             $('#bloque').empty();
@@ -1125,6 +1215,9 @@ $(document).on('click', '#btn_up_pay_info', function(){
 
 
 
+/**************************************************************************/
+/*************busqueda avanzada por cuartel*****************************/
+/*************************************************************************/
 
     $(document).on('change', '.select_cuartel_search', function(){
         $('#bloque_search').empty();
@@ -1152,6 +1245,11 @@ $(document).on('click', '#btn_up_pay_info', function(){
                 });
     });
 
+
+
+/**************************************************************************/
+/*************Generar codigo cripta****************************************/
+/*************************************************************************/
     function generarCodigo(){
         var sup=$('#superficie').val();
         if($('#bloque :selected').text()=="" || $('#bloque :selected').text()=="SELECCIONAR" ){ var bloq="000";}
@@ -1164,6 +1262,10 @@ $(document).on('click', '#btn_up_pay_info', function(){
         $('#cod-cripta').val(cod);
     }
 
+
+/**************************************************************************/
+/*************cargado de foto cripta mausoleo *****************************/
+/*************************************************************************/
 
 $(document).ready(function ()
  {
@@ -1216,7 +1318,7 @@ $(document).ready(function ()
         },
         sending: function(file, xhr, formData){
                     formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
-                    formData.append('collector', 'certificados de difuncion');
+                    formData.append('collector', 'cementerio cripta-mausoleo');
 
                 },
         success: function (file, response) {
@@ -1284,7 +1386,7 @@ $(document).ready(function ()
         },
         sending: function(file, xhr, formData){
                     formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
-                    formData.append('collector', 'certificados de difuncion');
+                    formData.append('collector', 'cementerio cripta-mausoleo');
 
                 },
         success: function (file, response) {
@@ -1345,10 +1447,10 @@ $(document).ready(function ()
 })
 
 
-//certificado de defuncion
-
-
-$("#cert_defuncion").dropzone({
+/**************************************************************************/
+/*************cargado de certificado de defuncion**************************/
+/*************************************************************************/
+    $("#cert_defuncion").dropzone({
         dictDefaultMessage: "Arrastre y suelte aquí los archivos …<br>(o haga clic para seleccionar archivos)",
         dictRemoveFile: 'Remover Archivo',
         dictCancelUpload: 'Cancelar carga',
@@ -1378,7 +1480,8 @@ $("#cert_defuncion").dropzone({
         },
         sending: function(file, xhr, formData){
                     formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
-                    formData.append('collector', 'cementerio');
+                    formData.append('collector', 'cementerio certificado defuncion');
+                    formData.append('nro_documento', $('#resp_cm_dif').html());   /***** ci responsable ***/
                 },
         success: function (file, response) {
             file.previewElement.classList.add("dz-success");
@@ -1400,7 +1503,66 @@ $("#cert_defuncion").dropzone({
     });
 
 
-$(document).on('click', '#buscarResp', function() {
+/**************************************************************************/
+/***********cargado de certificado de defuncion desde modal pagos *******/
+/*************************************************************************/
+$("#cert_defuncion_p").dropzone({
+        dictDefaultMessage: "Arrastre y suelte aquí los archivos …<br>(o haga clic para seleccionar archivos)",
+        dictRemoveFile: 'Remover Archivo',
+        dictCancelUpload: 'Cancelar carga',
+        dictResponseError: 'Server responded with  code.',
+        dictCancelUploadConfirmation: '¿Estás seguro/a de que deseas cancelar esta carga?',
+        url: "{{ env('URL_FILE') }}/api/v1/repository/upload-files",
+        paramName: "documens_files[]",
+        addRemoveLinks: true,
+        acceptedFiles: 'image/jpeg, image/png, image/jpg, application/pdf',
+        parallelUploads: 1,
+        maxFiles: 1,
+        init: function()
+        {
+                this.on("complete", function(file) {
+                    if(file.type != 'application/pdf' && file.type != 'image/png' && file.type != 'image/jpg' && file.type != 'image/jpeg') {
+                        this.removeFile(file);
+                        toastr["error"]('No se puede subir el archivo '+ file.name);
+                        return false;
+                    }
+                });
+
+                this.on("maxfilesexceeded", function(file){
+                    file.previewElement.classList.add("dz-error");
+                    $('.dz-error-message').text('No se puede subir mas archivos!');
+                });
+
+        },
+        sending: function(file, xhr, formData){
+                    formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
+                    formData.append('collector', 'cementerio certificado defuncion');
+                    formData.append('nro_documento', $('#resp_cm').html());   /***** ci responsable ***/
+                },
+        success: function (file, response) {
+            file.previewElement.classList.add("dz-success");
+            $('#mdurl-certification-p').val(response.response[0].url_file);
+            // $(file._removeLink).attr('href', response.response[0].url_file);
+            // $(file._removeLink).attr('id', 'btn-remove-file');
+        },
+        error: function (file, response) {
+
+            if(response == 'You can not upload any more files.'){
+                toastr["error"]('No se puede subir mas archivos');
+                this.removeFile(file);
+            }
+            file.previewElement.classList.add("dz-error");
+            $('.dz-error-message').text('No se pudo subir el archivo '+ file.name);
+        }
+
+
+    });
+
+/**************************************************************************/
+/*************metodo de busqueda de ci del responsable o difunto***********/
+/*************************************************************************/
+           $(document).on('click', '#buscarResp', function()
+            {
                 var ci = $('#dni').val();
                 if (ci.length < 1) {
 
@@ -1465,7 +1627,11 @@ $(document).on('click', '#buscarResp', function() {
                 });
                 // return datos;
             }
-            //controlar activacion de nro de resolucion como documetno recibido
+
+/********************************************************************************/
+/****controlar activacion de nro de resolucion como documetno recibido***********/
+/********************************************************************************/
+            //
             $(document).on('click', '#resolucion', function(){
                  if ($("#resolucion").is(":checked")) {
                     $('#nro_resolucion').show();
@@ -1479,6 +1645,7 @@ $(document).on('click', '#buscarResp', function() {
              $(document).on('click', '#ci', function(){
                  if ($("#ci").is(":checked")) {
                     $('#nro_ci').show();
+                    $('#digital_documents').show();
                 } else {
                     $('#nro_ci').val("");
                     $('#nro_ci').hide();
@@ -1494,7 +1661,11 @@ $(document).on('click', '#buscarResp', function() {
                 }
             });
 
-            $(function() {
+/********************************************************************************/
+/*******************validacion numeros o letras y telefono***********************/
+/********************************************************************************/
+
+                $(function() {
                     $('.numeroEntero').keypress(function(e) {
                             if (isNaN(this.value + String.fromCharCode(e.charCode)))
                                 return false;
@@ -1532,6 +1703,96 @@ $(document).on('click', '#buscarResp', function() {
                             }
                 });
 
+/********************************************************************************/
+/****metodo para adicionar difuntos y mostrar difuntos cargados en tabla ***********/
+/********************************************************************************/
+
+        /***difuntos **/
+
+                $(document).on('click', '#btn_add_difunto', function(){
+
+                    // buscar si hay difuntos ingresados
+                    $('#id_cripta_mausoleo_modal').val($(this).val());
+
+                    $.ajax({
+                                type: 'POST',
+                                headers: {
+                                    'Content-Type':'application/json',
+                                    'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                                },
+                                url:'{{ route("difuntoCripta.get") }}',
+                                async: false,
+                                data: JSON.stringify({
+                                    'cripta_mausoleo_id': $(this).val(),
+                                }),
+                                success: function(data_response)
+                                {
+                                            if(data_response.responsable || data_response.responsable!=null)
+                                            {
+                                                $('#modal_add_difunto').modal('show');
+                                                $('#cod_cm_dif').html(data_response.response['codigo']);
+                                                $('#resp_cm_dif').html(data_response.responsable['ci'])
+
+
+                                                $('#tabla_difunto_row').empty();
+                                                $('#modal_save_difuntos').prop('disabled', false);
+
+                                                console.log(data_response);
+                                                var list=jQuery.parseJSON(data_response.response['difuntos']);
+                                                if(data_response.response['difuntos']!=null )
+                                                {
+
+                                                    $.each(list, function(key, value)
+                                                    {
+                                                            console.log( value[value]);
+
+                                                                //llenar tabla
+                                                                    var row='<tr>'+
+                                                                            '<td class="dtci">'+value['ci']+'</td>'+
+                                                                            '<td class="dtname">'+value['nombres']+'</td>'+
+                                                                            '<td class="dtprimer_apellido">'+value['primer_apellido']+'</td>'+
+                                                                            '<td class="dtsegundo_apellido">'+value['segundo_apellido']+'</td>'+
+                                                                            '<td class="dtcertificado_defuncion">'+value['ceresi']+'</td>'+
+                                                                            '<td class="dttipo">'+value['tipo']+'</td>'+
+                                                                            '<td class="dtfecha_nacimiento">'+value['fecha_nacimiento']+'</td>'+
+                                                                            '<td class="dtedad">'+calcularEdad(value['fecha_nacimiento'])+'</td>'+
+                                                                            '<td class="dtfecha_defuncion">'+value['fecha_defuncion']+'</td>'+
+                                                                            '<td class="dtcausa">'+value['causa']+'</td>'+
+                                                                            '<td class="dtfuneraria">'+value['funeraria']+'</td>'+
+                                                                            '<td class="dtgenero">'+value['genero']+'</td>'+
+                                                                            '<td class="enl"><a href="'+value['url']+'" target="_blank" >Ver adjunto</a></td>'+
+                                                                            '<td class="dturl" >'+value['url']+'</td>'+
+                                                                            '<td class="dtborrar"> <a href="#" id="remove"  onClick="$(this).parent().parent().remove();"> <i class="fas fa-trash wine fa-2x"></i></a></td></tr>';
+                                                                        $('#tabla_difunto_row').append(row);
+                                                                        // clear modal form
+                                                                        $('.clear').val('');
+                                                                        $('.clears2').val(null).trigger('change');
+                                                                        $('.dz-image').html("");
+                                                                        Dropzone.forElement('#cert_defuncion').removeAllFiles(true);
+
+
+                                                    })
+
+                                                    //end foreach
+                                                }//end if
+                                            }else{
+                                                            swal.fire({
+                                                                    title: "Precaución!",
+                                                                    text: data_response.mensaje,
+                                                                    type: "warning",
+                                                                    timer: 2000,
+                                                                    showCancelButton: false,
+                                                                    showConfirmButton: false
+                                                                });
+                                                                setTimeout(function() {
+                                                                    location.reload();
+                                                                }, 2000);
+                                            }
+                                }
+                    });
+                });
+
+
                 $(document).on('click', '#add_difunto_row', function(e){
                    e.preventDefault();
                     mostrar_difunto();
@@ -1545,17 +1806,29 @@ $(document).on('click', '#buscarResp', function() {
 
 
                 $("#funeraria").select2({
-                width: 'resolve', // need to override the changed default
-                dropdownParent: $('#modal_add_difunto'),
-                tags: true,
-                allowClear: true
+                    width: 'resolve', // need to override the changed default
+                    dropdownParent: $('#modal_add_difunto'),
+                    tags: true,
+                    allowClear: true
                 });
 
-                $(document).on('click', 'button[aria-describedby="select2-funeraria-container"] span', function() {
-                 $('#funeraria option:selected').remove();
+                $("#funeraria_p").select2({
+                    width: 'resolve', // need to override the changed default
+                    dropdownParent: $('#modal_pay_cm'),
+                    tags: true,
+                    allowClear: true
+                });
+
+
+                 $(document).on('click', 'button[aria-describedby="select2-funeraria-container"] span', function() {
+                  $('#funeraria option:selected').remove();
                  });
 
-                $("#causa").select2({
+                 $(document).on('click', 'button[aria-describedby="select2-funeraria_p-container"] span', function() {
+                  $('#funeraria_p option:selected').remove();
+                 });
+
+                  $("#causa").select2({
                     width: 'resolve', // need to override the changed default
                     dropdownParent: $('#modal_add_difunto'),
                     tags: true,
@@ -1567,7 +1840,19 @@ $(document).on('click', '#buscarResp', function() {
                     })
 
 
-            // show Deceased row in table
+                $("#causa_p").select2({
+                    width: 'resolve', // need to override the changed default
+                    dropdownParent: $('#modal_pay_cm'),
+                    tags: true,
+                    allowClear: true
+                });
+
+                    $(document).on('click', 'button[aria-describedby="select2-causa_p-container"] span', function() {
+                        $('#causa_p option:selected').remove();
+                    })
+
+
+                  // show Deceased row in table
                 function mostrar_difunto()
                 {
                     var row='<tr>'+
@@ -1593,7 +1878,7 @@ $(document).on('click', '#buscarResp', function() {
 
                              Dropzone.forElement('#cert_defuncion').removeAllFiles(true);
 
-                    }
+                }
 
                     // convert table rows in array json for send to controller and send all data to controller
                     $(document).on('click', '#modal_save_difuntos', function(e)
@@ -1719,8 +2004,10 @@ $(document).on('click', '#buscarResp', function() {
                         // ageMonth = age.getMonth(); // Accurate calculation of the month part of the age
                         // ageDay = age.getDate();    // Approximate calculation of the day part of the age
                     }
+/********************************************************************************/
+/*********************abrir modal pagar servicio ********************************/
+/********************************************************************************/
 
-// abrir modal pagar servicio
          $(document).on('click', '#btn_pay_cm', function()
          {
             $('#modal_pay_cm').modal('show');
@@ -1740,6 +2027,7 @@ $(document).on('click', '#buscarResp', function() {
                             {
                                 $('#cod_cm').html(data.response.cripta.codigo);
                                 $('#resp_cm').html(data.response.responsable.nombres+" "+data.response.responsable.primer_apellido+" "+data.response.responsable.segundo_apellido);
+                                $('#field_difuntos').html(data.response.cripta.difuntos);
 
                             }//end if
                         }
@@ -1756,62 +2044,641 @@ $(document).on('click', '#buscarResp', function() {
                     data: JSON.stringify({
                                      }),
                     success: function(data) {
-                        console.log(data.response);
+                        // console.log(data.response);
                         $.each(data.response, function(key,val) {
-                           console.log(val.descripcion );
-                           $('#tipo_servicio_value_cm').append('<option value="'+val.cuenta+'">'+val.descripcion+'</option>')
+                        //    console.log(val.descripcion );
+                           if(val.cuenta=='15224370' || val.cuenta=='15224330' || val.cuenta=='15224380' || val.cuenta=='15224300' || val.cuenta=='15224390' ){}
+                          else{
+                            var html='<div class="form-check">'+
+                                        '<input class="form-check-input" type="checkbox" id="'+val.cuenta+'" name="serv[tipo_servicio]" value="'+val.cuenta+'-'+val.descripcion+'"  onclick="cargar_sevicios_hijos(this)">'+
+                                        '<label class="form-check-label labelservice" for="'+val.cuenta+'">'+val.descripcion+'</label>'+
+                                        '<div id="serv_hijos'+val.cuenta+'"></div>'
+                                        '</div>';
+                                        $('#contenedor_servicios').append(html);
+
+                                        if(val.cuenta=='15224200'){
+                                            listar_difuntos();
+                                        }
+
+                          }
                         });
 
                     }
                 })
 
-        });
+         });
 
-/// recuperar difunto en modal difunto
+        //funcion para cargar servicios hijos por padre
+        function cargar_sevicios_hijos(obj){
+            // alert($(obj).attr("id"));
+            var cuenta=$(obj).attr("id");
+            var txt_cuenta=$(obj).attr("value");
+            console.log(txt_cuenta);
+            if ($('#'+cuenta+'').is(":checked"))
+            {
 
 
-$(document).on('click', '#buscarDif', function(e)
- {
-    e.preventDefault();
-                var ci = $('#mdci').val();
+                        $.ajax({
+                                type: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                url: "https://multiserv.cochabamba.bo/api/v1/cementerio/generate-all-servicios-cm",
+                                async: false,
+                                data: JSON.stringify({
+                                    'data': cuenta
+                                }),
+                                success: function(data_response) {
+                                    console.log(data_response.response);
+                                    $('#servicio-hijos').empty();
+                                    $.each(data_response.response, function(index, value) {
+                                        //alert(value.num_sec)
+                                        if (value.num_sec == '526' || value.num_sec == '525' ||
+                                            value.num_sec == '629' || value.num_sec == '631') {}
+                                                else {
+                                                    // console.log("asdas");
+                                                    var html='<div class="form-check">'+
+                                                    '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs." onclick="seleccionar_hijos_list()" >'+
+                                                    '<label class="form-check-label childservice" for="'+value.num_sec+'">'+value.descripcion+' - ' + value.monto1 +'- Bs.</label>'+
+                                                    '</div>';
+                                                    $('#serv_hijos'+cuenta+'').append(html);
+                                                    }
 
+                                    });
+                                }
+                            });
+            }else{
+                $('#serv_hijos'+cuenta+'').empty();
+            }
+        }
 
-                if (ci.length < 1) {
+        // funcion para enlistar servicios seleccionados y calcular total acumulado
 
-                    Swal.fire(
-                        'Busqueda finalizada!',
-                        'El campo C.I. esta vacio .',
-                        'warning'
-                    )
+        function seleccionar_hijos_list(){
+            var tipo_serv="";
+            var tipo_serv_txt="";
+            var serv="";
+            var serv_txt="";
+            var acum=0;
+            var monto=0;
+            var activado=0;
+            $('#servicios-data').empty();
+            $('.service_child').each(function( index ) {
+                alert($(this).is(":checked"));
+            if($(this).is(":checked"))
+            {   var info= ($(this).val()).split('=>');
 
-                } else {
-                    var type = "deceased";
-                    dats = buscar_ci_Dif(ci, type);
+                id_serv= $.trim(((info[1]).split('-'))[0]);
+                if(index==0){
+                    tipo_serv =$.trim(((info[0]).split('-'))[0]);
+                     tipo_serv_txt=((info[0]).split('-'))[1];
+                     serv= $.trim(((info[1]).split('-'))[0]);
+                     serv_txt=((info[1]).split('-'))[1];
 
+                     if( id_serv =='623' || id_serv =='622'){
+                        activado=1;
+                        $('.section_difunto').show();
+                     }
+                }else{
+                     tipo_serv=tipo_serv+", "+ $.trim(((info[0]).split('-'))[0]);
+                     tipo_serv_txt=tipo_serv_txt+", "+ $.trim(((info[0]).split('-'))[1]);
+                     serv=serv+", "+ $.trim(((info[1]).split('-'))[0]);
+                     serv_txt=serv_txt+", "+ $.trim(((info[1]).split('-'))[1]);
+
+                        if(id_serv =='623' ||  id_serv =='622'){
+                             activado=1;
+                            $('.section_difunto').show();
+
+                        }
                 }
-});
+                monto=((info[1]).split('-'))[2];
+                $('#servicios-data').append('<p>'+((info[1]).split('-'))[1]+' ..................'+monto+'</p>');
+                acum=parseFloat(acum)+parseFloat(monto);
+                $('#totalServ').html(acum);
 
 
-$(document).on('click', '#upbuscarResp', function(e)
- {
-    e.preventDefault();
-                var ci = $('#upci').val();
-
-
-                if (ci.length < 1) {
-
-                    Swal.fire(
-                        'Busqueda finalizada!',
-                        'El campo C.I. esta vacio .',
-                        'warning'
-                    )
-
-                } else {
-                    var type = "responsable";
-                    dats = buscar_ci_Resp(ci, type);
-
+            }else{
+                if((id_serv =='623' ||  id_serv =='622') && activado==0 ){
+                    $('.section_difunto').hide();
                 }
-});
+            }
+
+            });
+        }
+
+
+            //listar difuntos existentes en la cripta / mausoleo
+            function listar_difuntos(){
+                var dif=JSON.parse($('#field_difuntos').html());
+                console.log('----------');
+                console.log(JSON.parse($('#field_difuntos').html()));
+                console.log('----------');
+
+
+                     var tbl_dif='<table class="table data tbldif">'
+                                +'<h4> DETALLE DE DIFUNTOS </h4>'
+                                // +'  <button type="button" class="btn btn-success add_dif_row" id="add_dif_row" >AGREGAR FILA</button> '
+                                + '<thead>'
+                                   +'<tr>'
+                                    +'<th> C.I./NRO IDENTIFICACION </th>'
+                                    +'<th> NOMBRES </th>'
+                                    +'<th> PATERNO </th>'
+                                    +'<th> MATERNO </th>'
+                                    +'<th> GENERO </th>'
+                                    // +'<th> CERESI </th>'
+                                    +'<th> FECHA NACIMIENTO </th>'
+                                    +'<th> FECHA DEFUNCION </th>'
+                                    // +'<th> FUNERARIA</th>'
+                                    // +'<th> CAUSA</th>'
+                                    // +'<th> TIPO</th>'
+
+                                    +'</tr>'
+                                + '</thead>'
+                                + '<tbody>'
+                                + '</tbody>'
+                                + '</table>';
+                                $('#difuntos-data').append(tbl_dif);
+
+                                $.each(dif, function(index, value) {
+                                    console.log('++++++++++++++++++');
+                                    console.log(value.ci);
+                                    var row=    ' <tr>'
+                                            +     '<td class="data">'+value.ci+ ' </td>'
+                                            +     '<td class="data">'+value.nombres+ '</td>'
+                                            +     '<td class="data">'+value.primer_apellido+ '</td>'
+                                            +     '<td class="data">'+value.segundo_apellido+ '</td>'
+                                            +     '<td class="data">'+value.genero+ '</td>'
+                                            // +     '<td class="data">'+value.ceresi+ '</td>'
+                                            +     '<td class="data">'+value.fecha_nacimiento+ '</td>'
+                                            +     '<td class="data">'+value.fecha_defuncion+ '</td>'
+                                            // +     '<td class="data">'+value.funeraria+ '</td>'
+                                            // +     '<td class="data">'+value.causa+ '</td>'
+                                            // +     '<td class="data">'+value.tipo+ '</td>'
+                                            +     '</tr>';
+                                      $('.tbldif tbody').append(row);
+                                })
+
+
+
+            }
+
+
+            $(document).on('click', '#boton_dif_inhum', function(e){
+                e.preventDefault();
+               insertar_difunto_inhumado();
+               listar_difuntos();
+
+            })
+
+            //metodo insertar_difunto_inhumado
+            function insertar_difunto_inhumado(){
+                $.ajax({
+                                        type: 'PUT',
+                                        headers: {
+                                            'Content-Type':'application/json',
+                                            'X-CSRF-TOKEN':'{{ csrf_token() }}'
+                                        },
+                                        url: '{{ route("add.deseaced") }}',
+                                        async: false,
+                                        data: JSON.stringify({
+                                            'cripta_mausoleo_id': $('#id_cripta_mausoleo_modal').val(),
+                                            'difuntos': difuntos
+                                        }),
+                                            success: function(data) {
+                                                 console.log(data.status);
+                                                 if(data.status==true){}
+                                            }
+                        });
+            }
+            // metodo que calcula el monto de los servicios solicitados
+                function calcularPrice()
+                    {
+                        var acum = 0;
+                        $('#totalServ').html(0);
+                        $('#totalservicios').val(0)
+                        $('.costo').each(function(index) {
+                            acum = parseFloat(acum) + parseFloat($(this).val());
+                        });
+                        $('#totalServ').html(acum);
+                        $('#totalservicios').val(acum)
+                        // consolidado();
+
+                    }
+
+
+                // function guardar pagos servicios
+                $(document).on('click', '#modal_save_pagos_cm', function(e){
+                    e.preventDefault();
+                    console.log($('#tipo_servicio_value_cm').val());
+                    console.log("------1--------");
+                    console.log($('#servicio-hijos').val());
+                    console.log("------2--------");
+
+                    console.log($('#tipo_servicio_value_cm option:selected').text());
+                    console.log("------3--------");
+
+                    console.log($('#servicio-hijos option:selected').text());
+                    console.log("------4--------");
+
+
+                    $.ajax({
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                    'Content-Type': 'application/json'
+                                },
+                                url: "{{ route('save.service.pay.cm') }}",
+                                method: 'POST',
+                                dataType: 'json',
+                                data: JSON.stringify({
+                                    "id_cripta_mausoleo": $('#id_cripta_mausoleo_modal_pay').val(),
+                                    'tipo_servicio': $('#tipo_servicio_value').val(),
+                                    'servicio_hijos': $('#servicio-hijos').val(),
+                                    'tipo_servicio_txt': $('#tipo_servicio_value option:selected').text(),
+                                    'servicio_hijos_txt': $('#servicio-hijos option:selected').text(),
+
+                                }),
+                                success: function(data) {
+
+                                }
+                    });
+                })
+/************************* fin pagos servicios **************************************/
+
+
+/******************************************************************************************************/
+/***********************seccion adjuntar documentos difitales ****************************************/
+/****************************************************************************************************/
+
+    $(document).ready(function ()
+    {
+
+            $("#foto_resolucion").dropzone({
+                dictDefaultMessage: "Arrastre y suelte aquí los archivos …<br>(o haga clic para seleccionar archivos)",
+                dictRemoveFile: 'Remover Archivo',
+                dictCancelUpload: 'Cancelar carga',
+                dictResponseError: 'Server responded with  code.',
+                dictCancelUploadConfirmation: '¿Estás seguro/a de que deseas cancelar esta carga?',
+                url: "{{ env('URL_FILE') }}/api/v1/repository/upload-files",
+                paramName: "documens_files[]",
+                addRemoveLinks: true,
+                acceptedFiles: 'image/jpeg, image/png, image/jpg, application/pdf',
+                parallelUploads: 1,
+                maxFiles: 1,
+                init: function()
+                {
+                        this.on("complete", function(file) {
+                            if(file.type != 'application/pdf' && file.type != 'image/png' && file.type != 'image/jpg' && file.type != 'image/jpeg') {
+                                this.removeFile(file);
+                                toastr["error"]('No se puede subir el archivo '+ file.name);
+                                return false;
+                            }
+                        });
+
+
+
+                        this.on("removedfile", function(file) {
+                            $.ajax({
+                                        type: 'DELETE',
+                                        headers: {
+                                            'Content-Type':'application/json'
+                                        },
+                                        url: "{{ env('URL_FILE') }}/api/v1/repository/remove-file",
+                                        async: false,
+                                        data: JSON.stringify({
+                                            'url':  JSON.parse(file.xhr.response).response[0].url_file
+                                        }),
+                                        success: function(data_response) {
+                                        }
+                                    })
+                        });
+
+                        this.on("maxfilesexceeded", function(file){
+                            file.previewElement.classList.add("dz-error");
+                            $('.dz-error-message').text('No se puede subir mas archivos!');
+                        });
+
+                },
+                sending: function(file, xhr, formData){
+                            formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
+                            formData.append('collector', 'cementerio resolucion-testimonio');
+                            formData.append('nro_documento', $('#nro_ci').val());
+
+                        },
+                success: function (file, response) {
+                    file.previewElement.classList.add("dz-success");
+                    $('#url_foto_resol').val(response.response[0].url_file);
+                    // $(file._removeLink).attr('href', response.response[0].url_file);
+                    // $(file._removeLink).attr('id', 'btn-remove-file');
+                },
+                error: function (file, response) {
+
+                    if(response == 'You can not upload any more files.'){
+                        toastr["error"]('No se puede subir mas archivos');
+                        this.removeFile(file);
+                    }
+                    file.previewElement.classList.add("dz-error");
+                    $('.dz-error-message').text('No se pudo subir el archivo '+ file.name);
+                }
+
+
+            });
+
+        //foto titulo de propiedad
+
+            $("#foto_titulo").dropzone({
+                dictDefaultMessage: "Arrastre y suelte aquí los archivos …<br>(o haga clic para seleccionar archivos)",
+                dictRemoveFile: 'Remover Archivo',
+                dictCancelUpload: 'Cancelar carga',
+                dictResponseError: 'Server responded with  code.',
+                dictCancelUploadConfirmation: '¿Estás seguro/a de que deseas cancelar esta carga?',
+                url: "{{ env('URL_FILE') }}/api/v1/repository/upload-files",
+                paramName: "documens_files[]",
+                addRemoveLinks: true,
+                acceptedFiles: 'image/jpeg, image/png, image/jpg, application/pdf',
+                parallelUploads: 1,
+                maxFiles: 1,
+                init: function()
+                {
+                        this.on("complete", function(file) {
+                            if(file.type != 'application/pdf' && file.type != 'image/png' && file.type != 'image/jpg' && file.type != 'image/jpeg') {
+                                this.removeFile(file);
+                                toastr["error"]('No se puede subir el archivo '+ file.name);
+                                return false;
+                            }
+                        });
+
+
+
+                        this.on("removedfile", function(file) {
+                            $.ajax({
+                                        type: 'DELETE',
+                                        headers: {
+                                            'Content-Type':'application/json'
+                                        },
+                                        url: "{{ env('URL_FILE') }}/api/v1/repository/remove-file",
+                                        async: false,
+                                        data: JSON.stringify({
+                                            'url':  JSON.parse(file.xhr.response).response[0].url_file
+                                        }),
+                                        success: function(data_response) {
+                                        }
+                                    })
+                        });
+
+                        this.on("maxfilesexceeded", function(file){
+                            file.previewElement.classList.add("dz-error");
+                            $('.dz-error-message').text('No se puede subir mas archivos!');
+                        });
+
+                },
+                sending: function(file, xhr, formData){
+                            formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
+                            formData.append('collector', 'cementerio titulo de propiedad');
+                            formData.append('nro_documento', $('#nro_ci').val());
+
+                        },
+                success: function (file, response) {
+                    file.previewElement.classList.add("dz-success");
+                    $('#url_foto_title').val(response.response[0].url_file);
+                    // $(file._removeLink).attr('href', response.response[0].url_file);
+                    // $(file._removeLink).attr('id', 'btn-remove-file');
+                },
+                error: function (file, response) {
+
+                    if(response == 'You can not upload any more files.'){
+                        toastr["error"]('No se puede subir mas archivos');
+                        this.removeFile(file);
+                    }
+                    file.previewElement.classList.add("dz-error");
+                    $('.dz-error-message').text('No se pudo subir el archivo '+ file.name);
+                }
+
+
+            });
+
+            //foto ci
+
+            $("#foto_ci_prop").dropzone({
+                dictDefaultMessage: "Arrastre y suelte aquí los archivos …<br>(o haga clic para seleccionar archivos)",
+                dictRemoveFile: 'Remover Archivo',
+                dictCancelUpload: 'Cancelar carga',
+                dictResponseError: 'Server responded with  code.',
+                dictCancelUploadConfirmation: '¿Estás seguro/a de que deseas cancelar esta carga?',
+                url: "{{ env('URL_FILE') }}/api/v1/repository/upload-files",
+                paramName: "documens_files[]",
+                addRemoveLinks: true,
+                acceptedFiles: 'image/jpeg, image/png, image/jpg, application/pdf',
+                parallelUploads: 1,
+                maxFiles: 1,
+                init: function()
+                {
+                        this.on("complete", function(file) {
+                            if(file.type != 'application/pdf' && file.type != 'image/png' && file.type != 'image/jpg' && file.type != 'image/jpeg') {
+                                this.removeFile(file);
+                                toastr["error"]('No se puede subir el archivo '+ file.name);
+                                return false;
+                            }
+                        });
+
+
+
+                        this.on("removedfile", function(file) {
+                            $.ajax({
+                                        type: 'DELETE',
+                                        headers: {
+                                            'Content-Type':'application/json'
+                                        },
+                                        url: "{{ env('URL_FILE') }}/api/v1/repository/remove-file",
+                                        async: false,
+                                        data: JSON.stringify({
+                                            'url':  JSON.parse(file.xhr.response).response[0].url_file
+                                        }),
+                                        success: function(data_response) {
+                                        }
+                                    })
+                        });
+
+                        this.on("maxfilesexceeded", function(file){
+                            file.previewElement.classList.add("dz-error");
+                            $('.dz-error-message').text('No se puede subir mas archivos!');
+                        });
+
+                },
+                sending: function(file, xhr, formData){
+                            formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
+                            formData.append('collector', 'cementerio ci propietario');
+                            formData.append('nro_documento', $('#nro_ci').val());
+
+                        },
+                success: function (file, response) {
+                    file.previewElement.classList.add("dz-success");
+                    $('#url_foto_prop').val(response.response[0].url_file);
+                    // $(file._removeLink).attr('href', response.response[0].url_file);
+                    // $(file._removeLink).attr('id', 'btn-remove-file');
+                },
+                error: function (file, response) {
+
+                    if(response == 'You can not upload any more files.'){
+                        toastr["error"]('No se puede subir mas archivos');
+                        this.removeFile(file);
+                    }
+                    file.previewElement.classList.add("dz-error");
+                    $('.dz-error-message').text('No se pudo subir el archivo '+ file.name);
+                }
+
+
+            });
+
+
+            //planos aprobados
+
+            $("#foto_planos").dropzone({
+                dictDefaultMessage: "Arrastre y suelte aquí los archivos …<br>(o haga clic para seleccionar archivos)",
+                dictRemoveFile: 'Remover Archivo',
+                dictCancelUpload: 'Cancelar carga',
+                dictResponseError: 'Server responded with  code.',
+                dictCancelUploadConfirmation: '¿Estás seguro/a de que deseas cancelar esta carga?',
+                url: "{{ env('URL_FILE') }}/api/v1/repository/upload-files",
+                paramName: "documens_files[]",
+                addRemoveLinks: true,
+                acceptedFiles: 'image/jpeg, image/png, image/jpg, application/pdf',
+                parallelUploads: 1,
+                maxFiles: 1,
+                init: function()
+                {
+                        this.on("complete", function(file) {
+                            if(file.type != 'application/pdf' && file.type != 'image/png' && file.type != 'image/jpg' && file.type != 'image/jpeg') {
+                                this.removeFile(file);
+                                toastr["error"]('No se puede subir el archivo '+ file.name);
+                                return false;
+                            }
+                        });
+
+
+
+                        this.on("removedfile", function(file) {
+                            $.ajax({
+                                        type: 'DELETE',
+                                        headers: {
+                                            'Content-Type':'application/json'
+                                        },
+                                        url: "{{ env('URL_FILE') }}/api/v1/repository/remove-file",
+                                        async: false,
+                                        data: JSON.stringify({
+                                            'url':  JSON.parse(file.xhr.response).response[0].url_file
+                                        }),
+                                        success: function(data_response) {
+                                        }
+                                    })
+                        });
+
+                        this.on("maxfilesexceeded", function(file){
+                            file.previewElement.classList.add("dz-error");
+                            $('.dz-error-message').text('No se puede subir mas archivos!');
+                        });
+
+                },
+                sending: function(file, xhr, formData){
+                            formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
+                            formData.append('collector', 'cementerio planos aprobados');
+                            formData.append('nro_documento', $('#nro_ci').val());
+
+
+                        },
+                success: function (file, response) {
+                    file.previewElement.classList.add("dz-success");
+                    $('#url_foto_planos_ap').val(response.response[0].url_file);
+                    // $(file._removeLink).attr('href', response.response[0].url_file);
+                    // $(file._removeLink).attr('id', 'btn-remove-file');
+                },
+                error: function (file, response) {
+
+                    if(response == 'You can not upload any more files.'){
+                        toastr["error"]('No se puede subir mas archivos');
+                        this.removeFile(file);
+                    }
+                    file.previewElement.classList.add("dz-error");
+                    $('.dz-error-message').text('No se pudo subir el archivo '+ file.name);
+                }
+
+
+            });
+
+
+
+
+                function openFile(file)
+                {
+                        var extension = file.substr( (file.lastIndexOf('.') +1) );
+                        switch(extension) {
+                            case 'jpg':
+                            case 'png':
+                                return 'image';  // There's was a typo in the example where
+                            break;                         // the alert ended with pdf instead of gif.
+                            case 'zip':
+                            case 'rar':
+                                alert('was zip rar');
+                            break;
+                            case 'pdf':
+                                return 'pdf';
+                            break;
+                            default:
+                            return 'desconocido';
+                        }
+                }
+    });
+
+
+/*********** fin adjuntar documentos digitales ************************/
+
+/**************************************************************************/
+/*****metodos de busqueda y recuperacion de responsables y difuntos********/
+/*************************************************************************/
+  /// recuperar difunto en modal difunto
+
+
+            $(document).on('click', '#buscarDif', function(e)
+              {
+                e.preventDefault();
+                            var ci = $('#mdci').val();
+
+
+                            if (ci.length < 1) {
+
+                                Swal.fire(
+                                    'Busqueda finalizada!',
+                                    'El campo C.I. esta vacio .',
+                                    'warning'
+                                )
+
+                            } else {
+                                var type = "deceased";
+                                dats = buscar_ci_Dif(ci, type);
+
+                            }
+            });
+
+
+            $(document).on('click', '#upbuscarResp', function(e)
+            {
+                e.preventDefault();
+                            var ci = $('#upci').val();
+
+
+                            if (ci.length < 1) {
+
+                                Swal.fire(
+                                    'Busqueda finalizada!',
+                                    'El campo C.I. esta vacio .',
+                                    'warning'
+                                )
+
+                            } else {
+                                var type = "responsable";
+                                dats = buscar_ci_Resp(ci, type);
+
+                            }
+            });
 
             //buscar info responsable
             function buscar_ci_Resp(ci, type) {
@@ -1917,283 +2784,6 @@ $(document).on('click', '#upbuscarResp', function(e)
                 });
                 // return datos;
             }
-
-
-
-            // $('#tipo_servicio_value').on('select2:select', function(e) {
-            //     $.ajax({
-            //         headers: {
-            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            //             'Content-Type': 'application/json'
-            //         },
-            //         url: "{{ route('get.services') }}",
-            //         method: 'POST',
-            //         dataType: 'json',
-            //         data: JSON.stringify({
-            //                          }),
-            //         success: function(data) {
-            //             console.log(data);
-            //         }
-            //     })
-
-            // })
-
-
-               //code selected select2 services
-               $('#tipo_servicio_value_cm').select2({
-                multiple: true,
-                width: 'resolve',
-                placeholder: 'Servicios Cementerio',
-                theme: "classic",
-                allowClear: true,
-                "language": {
-                    "noResults": function(e) {
-                        return "Nada Encontrado";
-                    }
-                }
-            });
-
-               // quitar exhumacion de la lista de servicios
-               $("#tipo_servicio_value option[value='15224330']").remove();
-
-
-
-//select event foreach
-$('#tipo_servicio_value_cm').on('select2:select', function(e) {
-    alert($(this).val());
-    var data_request = $(this).val();
-
-    $('#service').show(1000);
-    $parrafos = '';
-    $('#servicios-data').empty();
-    $.each($(this).select2('data'), function(index, value) {
-        $parrafos = '<p id="' + value.id + '">' + $parrafos + (index + 1) + '.- ' +
-            value.text + '</p>';
-        $('#servicios-data').html($parrafos);
-    });
-
-    //carga select servicios hijos
-    $.ajax({
-        type: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        url: "https://multiserv.cochabamba.bo/api/v1/cementerio/generate-all-servicios-nicho",
-        async: false,
-        data: JSON.stringify({
-            'data': data_request
-        }),
-        success: function(data_response) {
-            console.log(data_response.response);
-            $('#servicio-hijos').empty();
-            $.each(data_response.response, function(index, value) {
-                //alert(value.num_sec)
-                /*   if (value.num_sec == '526' || value.num_sec == '1995' ||
-                       value.num_sec == '525') {} else {*/
-
-                $('#servicio-hijos').append('<option value="' + value
-                    .num_sec + '">' + value.cuenta + ' - ' + value
-                    .descripcion + ' - ' + value.monto1 +
-                    '- Bs.</option>')
-                //   }
-                if (value.cuenta == '15224301') {
-                    $('#precio_renov').val(value.monto1);
-                    $('#cuenta_renov').val(value.cuenta);
-                }
-
-            });
-        }
-    });
-});
-
-//unselect event forech  //hacer que busque y limpie el html
-$('#tipo_servicio_value_cm').on('select2:unselect', function(e) {
-    if ($(this).select2('data').length == 0) {
-        $('#servicio-hijos').empty();
-    }
-    $parrafos = '';
-    $('#servicios-data').empty();
-    $.each($("#tipo_servicio_value_cm").select2("data"), function(index, value) {
-        $parrafos = '<p id="' + value.id + '">' + $parrafos + (index + 1) + '.- ' +
-            value.text + '</p>';
-        $('#servicios-data').html($parrafos);
-    });
-});
-
-setTimeout(function() {
-    $("#tipo_servicio_value_cm").val(null).trigger('change');
-}, 100);
-
-
-//--------------------------------------------------------------------
-
-$('#servicio-hijos').select2({
-    multiple: true,
-    width: 'resolve',
-    placeholder: 'Servicios Cementerio',
-    theme: "classic",
-    allowClear: true,
-    "language": {
-        "noResults": function(e) {
-            return "Nada Encontrado";
-        }
-    }
-});
-
-
-//select event forech services hijo
-$('#servicio-hijos').on('select2:select', function(e) {
-    $("#tipo_servicio_value_cm").prop("disabled", true);
-    var data_request = $(this).val();
-
-    $parrafos = '';
-    $('#servicios-hijos').empty();
-    $('#servicios-hijos-price').empty();
-    $.each($(this).select2('data'), function(index, value) {
-
-        $parrafos = '<p id="' + value.id + '">' + $parrafos + (index + 1) + ' - ' +
-            value.text + '</p>';
-
-        $('#servicios-hijos').html($parrafos);
-        if (value.id == '630' || value.id == '628') {
-            $('#descripcion_exhumacion').attr('data-id', value.id);
-            $('#section_exhum').show();
-
-        }
-        if (value.id == '642') {
-            $('#ren').show();
-            buscarUltimaRenovacion();
-
-        } else {
-            var v = (value.text).split('-');
-            var costo = '<input type="hidden" name="costo" value="' + v[v.length - 2] +
-                '" class="costo" id="txt-' + value.id + '" />';
-            $('#servicios-hijos-price').append(costo);
-
-        }
-        // calcularPrice();
-        // consolidado();
-    });
-
-});
-
-
-//unselect event forech services hijos
-$('#servicio-hijos').on('select2:unselect', function(e) {
-
-    var existe = 0;
-    var existe_ex = 0;
-
-    if ($("#servicio-hijos").select2("data").length == 0) {
-        $("#tipo_servicio_value_cm").prop("disabled", false);
-    }
-    $parrafos = '';
-    $('#servicios-hijos').empty();
-    $('#servicios-hijos-price').empty();
-    $('#totalServ').html("0");
-
-    $.each($("#servicio-hijos").select2("data"), function(index, value) {
-        $parrafos = '<p id="' + value.id + '">' + $parrafos + (index + 1) + ' - ' +
-            value.text + '</p>';
-        $('#servicios-hijos').html($parrafos);
-    });
-});
-
-    function consolidado()
-    {
-            // totalServ
-            var totalgral = 0;
-            var acum = 0;
-
-            console.log("monto renov" + $('#monto_renov').val());
-
-            console.log($('#totalservicios').val());
-            if ($('#monto_renov').val() != 0 || $('#monto_renov').val() != null) {
-
-                $('.costo').each(function(index) {
-                    acum = parseFloat(acum) + parseFloat($(this).val());
-                });
-                totalgral = parseFloat($('#monto_renov').val()) + parseFloat(acum);
-                $('#totalServ').html(totalgral);
-                $('#totalservicios').val(totalgral);
-            } else {
-                $('.costo').each(function(index) {
-                    acum = parseFloat(acum) + parseFloat($(this).val());
-                });
-                $('#totalServ').html(acum);
-                $('#totalservicios').val(acum);
-            }
-            if ($('#gratis').is(':checked')) {
-                $('#totalServ').html(0);
-                $('#totalservicios').val(0);
-            }
-    }
-
-
-        function calcularPrice()
-            {
-                var acum = 0;
-                $('#totalServ').html(0);
-                $('#totalservicios').val(0)
-                $('.costo').each(function(index) {
-                    acum = parseFloat(acum) + parseFloat($(this).val());
-                });
-                $('#totalServ').html(acum);
-                $('#totalservicios').val(acum)
-                consolidado();
-
-            }
-
-
-            //btn_modal_up_pay_info
-// send update pagos
-$(document).on('click', '#btn_modal_up_pay_info', function(e){
-    e.preventDefault();
-
-                $.ajax({
-                                    type: 'POST',
-                                    headers: {
-                                        'Content-Type':'application/json',
-                                        'X-CSRF-TOKEN':'{{ csrf_token() }}'
-                                    },
-                                    url: '{{ route("save.uppay.info") }}',
-                                    async: false,
-                                    data: JSON.stringify({
-                                        'cripta_mausoleo_id': $('#id_cripta_mausoleo_modal_pay_info').val(),
-                                        'nombrepago': $('#upnombre').val(),
-                                        'paternopago' :  $('#upprimer_apellido').val(),
-                                        'maternopago' :  $('#upsegundo_apellido').val(),
-                                        'ci' :  $('#upci').val(),
-                                        'ultima_gestion': $('#upultima_gestion').val(),
-                                        'fur' :  $('#upfur').val(),
-                                        'monto' :  $('#upmonto').val(),
-                                        'glosa' :  $('#upglosa').val(),
-                                        'observacion' :  $('#upobservacion').val(),
-                                        'tipo_ubicacion' : "cripta-mausoleo",
-                                        'codigo_ubicacion' :  $('#cod_cm_info').html(),
-                                        'cantidad_gestiones' :  $('#upcantidad_gestion').val(),
-                                        'gestiones' :  $('#upgestiones').val(),
-                                        'fecha_pago' :  $('#upfecha_pago').val(),
-
-                                    }),
-                                    success: function(data) {
-                                        console.log()
-
-                                    }
-                         });
-})
-
-
-        function validar_campos(){
-            if($('#notable option:selected').val()==null || $('#notable option:selected').val()==""){
-
-                return false;
-            }
-            return true;
-        }
-
-
-
 
     </script>
     @stop
