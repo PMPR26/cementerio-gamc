@@ -692,8 +692,8 @@ class CriptaController extends Controller
 
             }
 
-            // public function savePaycm(Request $request){
-            //     dd($request);
-            // }
+            public function verificarAsigancionDifunto(Request $request){
+                dd($request);
+            }
 }
 

@@ -611,7 +611,7 @@ class MantenimientoController extends Controller
    }
 
    public function relevamientoPagoMant(Request $request){
-    // dd($request->fecha_pago);
+
             if($request->isJson()){
                 $this->validate($request,[
                     "fur"=> 'required',
@@ -628,6 +628,7 @@ class MantenimientoController extends Controller
                 if($existe_cripta!= null || !empty($existe_cripta)){
                     $rel=Mantenimiento::where('id_ubicacion', $request->cripta_mausoleo_id)->first();
                     $rel->gestion=$request->gestiones;
+
                     $rel->ultimo_pago=$request->ultima_gestion;
                     $rel->nombrepago=$request->nombrepago;
                     $rel->paternopago=$request->paternopago;
@@ -638,13 +639,17 @@ class MantenimientoController extends Controller
                     $rel->monto=$request->monto;
                     $rel->observacion=$request->observacion;
                     $rel->tipo_ubicacion=$request->tipo_ubicacion;
-                    $rel->codigo_ubicacion=$request->codigo_ubicacion;
                     $rel->cuenta_tipo_servicio="15224360";
                     $rel->cuenta_servicio="15224362";
                     $rel->id_ubicacion=$request->cripta_mausoleo_id;
                     $rel->cantidad_gestiones=$request->cantidad_gestiones;
-                    $rel->precio_sinot=$request->monto;
+                    $rel->precio_sinot=$request->precio_sinot;
                     $rel->fecha_pago=$request->fecha_pago;
+                    $rel->respdifunto_id=$request->respdifunto_id;
+                    $rel->id_ubicacion=$request->id_ubicacion;
+                    $rel->codigo_ubicacion=$request->codigo_ubicacion;
+                    $rel->pago_por=$request->pago_por;
+                    $rel->id_usuario_caja=auth()->id();
 
                     $rel->estado='ACTIVO';
                     $rel->pagado=true;
@@ -665,13 +670,18 @@ class MantenimientoController extends Controller
                     $rel->monto=$request->monto;
                     $rel->observacion=$request->observacion;
                     $rel->tipo_ubicacion=$request->tipo_ubicacion;
-                    $rel->codigo_ubicacion=$request->codigo_ubicacion;
                     $rel->cuenta_tipo_servicio="15224360";
                     $rel->cuenta_servicio="15224362";
                     $rel->id_ubicacion=$request->cripta_mausoleo_id;
-                    $rel->cantidad_gestiones=1;
-                    $rel->fecha_pago=$request->fecha_pago;
                     $rel->cantidad_gestiones=$request->cantidad_gestiones;
+                    $rel->precio_sinot=$request->precio_sinot;
+                    $rel->fecha_pago=$request->fecha_pago;
+                    $rel->respdifunto_id=$request->respdifunto_id;
+                    $rel->id_ubicacion=$request->id_ubicacion;
+                    $rel->codigo_ubicacion=$request->codigo_ubicacion;
+                    $rel->pago_por=$request->pago_por;
+                    $rel->id_usuario_caja=auth()->id();
+
                     $rel->estado='ACTIVO';
                     $rel->pagado=true;
                     $rel->created_at = date("Y-m-d H:i:s");

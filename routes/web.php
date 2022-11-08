@@ -192,6 +192,9 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
 Route::group(['prefix' => 'relevamiento', 'middleware' => 'auth'], function () {
     Route::post('/completar', [App\Http\Controllers\Servicios\ServiciosController::class, 'autocompletar'])->name('completar.datos');
     Route::post('/get-difuntoCripta', [App\Http\Controllers\Cripta\CriptaController::class,'getDifuntoCripta'])->name('difuntoCripta.get');
+    Route::post('/ver-asignacion-difunto', [App\Http\Controllers\Mantenimiento\CriptaController::class, 'verificarAsigancionDifunto'])->name('verificar.asigancion.difunto');
 
 });
+
+
 
