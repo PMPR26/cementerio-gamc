@@ -339,6 +339,19 @@ return [
             'target' => '_blank',
             'icon' => 'fas fa-edit',
         ],
+
+        [
+           'text'    => 'NOTIFICACIONES',
+           'icon'     =>'fas fa-bell',
+           'submenu' => [
+
+                            [
+                                'text' => 'CRIPTAS',
+                                'url'  => 'cripta/cripta-notification',
+                            ],
+
+                         ],
+        ],
         // [
         //     'text'    => 'NICHOS',
         //     'icon'    => 'fas fa-fw fa-share',
@@ -467,11 +480,13 @@ return [
         'Datatables' => [
             'active' => false,
             'files' => [
+
                 [
                     'type' => 'js',
                     'asset' => false,
                     'location' => '/libreries/datatable/js/jquery.dataTables.min.js',
                 ],
+
                 [
                     'type' => 'js',
                     'asset' => false,
@@ -482,6 +497,7 @@ return [
                     'asset' => false,
                     'location' => '/libreries/datatable/js/dataTables.responsive.min.js',
                 ],
+
                 [
                     'type' => 'css',
                     'asset' => false,
