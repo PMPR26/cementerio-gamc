@@ -66,6 +66,8 @@ class Cripta extends Model
        $cripta->tipo_cripta = $request->tipo_cripta;
        $cripta->familia = $request->familia;
        $cripta->notable = $request->notable;
+       $cripta->altura = $request->altura;
+
        $cripta->created_at = date("Y-m-d H:i:s");
        $cripta->updated_at = date("Y-m-d H:i:s");
        $cripta->save();
@@ -98,7 +100,7 @@ public function upCripta(Request $request, $id){
    $cripta->tipo_cripta = $request->tipo_cripta;
    $cripta->familia = $request->familia;
    $cripta->notable = $request->notable;
-
+   $cripta->altura = $request->altura;
    $cripta->created_at = date("Y-m-d H:i:s");
    $cripta->updated_at = date("Y-m-d H:i:s");
    $cripta->save();
