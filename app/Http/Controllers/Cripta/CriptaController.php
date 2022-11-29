@@ -12,6 +12,7 @@ use App\Models\CriptaMausoleoResp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Nicho;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use PDF;
@@ -437,14 +438,18 @@ class CriptaController extends Controller
         return $sql;
     }
 
-    public function addDifunto(Request $request){
-        // dd($request);
+    public function addDifunto(Request $request)
+    {
+        // dd($request['difuntos']);
         if ($request->isJson())
         {
                 $this->validate($request, [
-                    'cripta_mausoleo_id' => 'required'
+                    'id_cripta_mausoleo' => 'required',
+                    'difuntos'=>'required'
                 ],[
                     'cripta_mausoleo_id.required' => ':attribute es requerido!' ,
+                    'difuntos.required' => ':attribute es requerido!'
+
                 ]);
 
                 //Buscar si ya existe el difunto en la tabla difunto
@@ -452,17 +457,19 @@ class CriptaController extends Controller
 
                     $dif = new Difunto;
                     $newdif=[];
-                    foreach($request['difuntos'] as $key => $value)
-                    {
+                            foreach($request['difuntos'] as $key => $value)
+                            {
 
-                        if($value['ci']==null || $value['ci']=="" ){
-                                    $ci_dif=$this->generateCiDif();
-                                }else{
-                                    $ci_dif=$value['ci'];
-                                }
-                                $existe=$this->buscarDifunto( $ci_dif, $value['nombres'], $value['primer_apellido'],$value['segundo_apellido']);
+                                    if($value['ci']==null || $value['ci']=="" ){
+                                        $ci_dif=$this->generateCiDif();
+                                    }else{
+                                        $ci_dif=$value['ci'];
+                                    }
 
-                                if($existe==false){
+                                    $existe=$this->buscarDifunto( $ci_dif, $value['nombres'], $value['primer_apellido'],$value['segundo_apellido'], $value['fecha_nacimiento']);
+                                    // dd($existe);
+                                if($existe==false)
+                                {
                                     $dif->ci = $ci_dif;
                                     $dif->nombres = $value['nombres'];
                                     $dif->primer_apellido = $value['primer_apellido'];
@@ -535,7 +542,7 @@ class CriptaController extends Controller
                                 }
                             }
 
-                        $cript=Cripta::where('id',$request->cripta_mausoleo_id )->first();
+                        $cript=Cripta::where('id',$request->id_cripta_mausoleo )->first();
                         // $cript->difuntos=json_encode($request['difuntos']);
                         $cript->difuntos=json_encode($newdif);
 
@@ -555,7 +562,7 @@ class CriptaController extends Controller
                        }
 
 
-        }else{
+            }else{
               return response([
                      'status'=> false,
                      'message'=> 'Error 401 (Unauthorized)'
@@ -565,12 +572,14 @@ class CriptaController extends Controller
 
     }
 
-    public function buscarDifunto($ci, $nombres, $primer_apellido, $segundo_apellido)
+
+    public function buscarDifunto($ci, $nombres, $primer_apellido, $segundo_apellido, $fecha_nacimiento)
     {
            $difunto_s= DB::table('difunto')->where('ci', ''.$ci.'')
                     ->where('nombres', ''.$nombres.'')
                     ->where('primer_apellido', ''.$primer_apellido.'')
                     ->where('segundo_apellido', ''.$segundo_apellido.'')
+                    ->where('fecha_nacimiento', ''.$fecha_nacimiento.'')
                     ->first();
                if(!empty($difunto_s))
                {
@@ -578,6 +587,154 @@ class CriptaController extends Controller
                }else{
                   return false;
                }
+    }
+
+
+
+    public function buscarDifuntoEncripta($ci, $nombres, $primer_apellido, $segundo_apellido, $fecha_nacimiento, $fecha_defuncion, $id_cripta)
+    {
+           $dif_cripta= DB::table('cripta_mausoleo')
+           ->select('difuntos')->where('estado','ACTIVO')
+           ->where('id', $id_cripta)
+           ->first();
+           $resp=0;
+        //    dd($dif_cripta);
+           if($dif_cripta->difuntos != null){
+                    $ar_difuntos= json_decode($dif_cripta->difuntos, true);
+                    foreach($ar_difuntos as $key=> $value)
+                    {
+                        if($ci!=null){
+                            if($value['ci'] == $ci && $value['nombres'] == $nombres
+                              && $value['primer_apellido'] == $primer_apellido && $value['segundo_apellido'] == $segundo_apellido
+                              && $value['fecha_nacimiento'] == $fecha_nacimiento  && $value['fecha_defuncion'] == $fecha_defuncion){
+                                // unset($ar_difuntos[$key]);
+                                $resp++;
+                            }
+                        }
+                        else{
+                            if($value['nombres'] == $nombres
+                            && $value['primer_apellido'] == $primer_apellido && $value['segundo_apellido'] == $segundo_apellido
+                            && $value['fecha_nacimiento'] == $fecha_nacimiento  && $value['fecha_defuncion'] == $fecha_defuncion){
+                                //    unset($ar_difuntos[$key]);
+                                $resp++;
+                              }
+                            }
+                    }
+                }
+
+
+                  return $resp;
+
+    }
+
+    public function VerificarIngresoExistenteCripta(Request $request)
+    {
+        $cripta=Cripta::where('estado', 'ACTIVO')->get();
+        $resp=0;
+        if($cripta){
+                foreach($cripta as $c){
+                    $idcripta=$c->id;
+                    $existe=$this->buscarDifuntoEncripta($request->ci, $request->nombres,
+                    $request->primer_apellido,
+                    $request->segundo_apellido, $request->fecha_nacimiento,
+                    $request->fecha_defuncion, $idcripta);
+                        if($existe==0){
+                            return $resp;
+                        }else{
+                            $resp=1;
+                            return $resp;
+                        }
+                }
+        }
+    }
+
+    public function VerificarIngresoExistenteNicho(Request $request)
+    {  $resp=0;
+        if($request->ci != null){
+            if($request->segundo_apellido=='' || $request->segundo_apellido== null){
+                $nicho=DB::table('responsable_difunto')
+                ->leftjoin('difunto',  'difunto.id','=','responsable_difunto.difunto_id' )
+                ->where('responsable_difunto.estado', 'ACTIVO')
+                ->where('difunto.ci',''.$request->ci.'')
+                ->where('difunto.nombres',''.$request->nombres.'')
+                ->where('difunto.primer_apellido',''.$request->primer_apellido.'')
+                ->where('difunto.fecha_nacimiento',''.$request->fecha_nacimiento.'')
+                ->where('difunto.fecha_defuncion',''.$request->fecha_defuncion.'')
+                // ->where('responsable_difunto.estado_nicho','!=', 'OCUPADO')
+                ->orderBy('responsable_difunto.id', 'DESC' )
+                ->first();
+            }else{
+                $nicho=DB::table('responsable_difunto')
+                ->leftjoin('difunto',  'difunto.id','=','responsable_difunto.difunto_id' )
+                ->where('responsable_difunto.estado', 'ACTIVO')
+                ->where('difunto.ci',''.$request->ci.'')
+                ->where('difunto.nombres',''.$request->nombres.'')
+                ->where('difunto.primer_apellido',''.$request->primer_apellido.'')
+                ->where('difunto.segundo_apellido',''.$request->segundo_apellido.'')
+                ->where('difunto.fecha_nacimiento',''.$request->fecha_nacimiento.'')
+                ->where('difunto.fecha_defuncion',''.$request->fecha_defuncion.'')
+                // ->where('responsable_difunto.estado_nicho','!=', 'OCUPADO')
+                ->orderBy('responsable_difunto.id', 'DESC' )
+                ->first();
+            }
+
+        }
+        else{
+            if($request->segundo_apellido=='' || $request->segundo_apellido== null){
+
+            $nicho=DB::table('responsable_difunto')
+            ->leftjoin('difunto',  'difunto.id','=','responsable_difunto.difunto_id' )
+            ->where('responsable_difunto.estado', 'ACTIVO')
+            ->where('difunto.nombres',''.$request->nombres.'')
+            ->where('difunto.primer_apellido',''.$request->primer_apellido.'')
+            ->where('difunto.fecha_nacimiento',$request->fecha_nacimiento)
+            ->where('difunto.fecha_defuncion',$request->fecha_defuncion)
+            // ->where('responsable_difunto.estado_nicho', 'OCUPADO')
+            ->orderBy('responsable_difunto.id', 'DESC' )
+            ->first();
+            }else{
+
+                    $nicho=DB::table('responsable_difunto')
+                    ->leftjoin('difunto',  'difunto.id','=','responsable_difunto.difunto_id' )
+                    ->where('responsable_difunto.estado', 'ACTIVO')
+                    ->where('difunto.nombres',''.$request->nombres.'')
+                    ->where('difunto.primer_apellido',''.$request->primer_apellido.'')
+                    ->where('difunto.segundo_apellido',''.$request->segundo_apellido.'')
+                    ->where('difunto.fecha_nacimiento',$request->fecha_nacimiento)
+                    ->where('difunto.fecha_defuncion',$request->fecha_defuncion)
+                    // ->where('responsable_difunto.estado_nicho', 'OCUPADO')
+                    ->orderBy('responsable_difunto.id', 'DESC' )
+                    ->first();
+            }
+
+
+
+        }
+// dd($nicho);
+        if($nicho){
+            if($nicho->estado_nicho== 'OCUPADO'){
+                $resp=1;
+            }else{
+                $resp=0;
+            }
+
+
+        }
+        return $resp;
+    }
+
+    public function buscarDifuntoExistente(Request $request){
+        $resp=0;
+        $existeEnCripta=$this->VerificarIngresoExistenteCripta($request);
+        $existeEnNicho=$this->VerificarIngresoExistenteNicho($request);
+        // dd($existeEnNicho);
+        if( $existeEnCripta > 0 || $existeEnNicho > 0 ){
+             $resp=1;
+        }
+
+        // dd($resp);
+        return $resp;
+
     }
 
     public function getDifuntoCripta(Request $request){
@@ -692,8 +849,11 @@ class CriptaController extends Controller
 
             }
 
-            public function verificarAsigancionDifunto(Request $request){
-                dd($request);
+
+            //setup-cripta-notification
+
+            public function configNotificacion(){
+                return view('cripta.frm_notificacion_cripta');
             }
 }
 
