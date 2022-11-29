@@ -84,17 +84,22 @@ Route::group(['prefix' => 'cripta', 'middleware' => 'auth'], function () {
      // servicios criptas mausoleos
      Route::get('/servicios-cripta-mausoleo', [App\Http\Controllers\Cripta\ServiciosCMController::class,'index'])->name('servcm');
      Route::post('/load_cm', [App\Http\Controllers\Cripta\CriptaController::class,'buscarCriptaM'])->name('buscar.cripta');
-     Route::put('/add-deseaced', [App\Http\Controllers\Cripta\CriptaController::class,'addDifunto'])->name('add.deseaced');
+     Route::put('/agregar-difuntoCripta', [App\Http\Controllers\Cripta\CriptaController::class,'addDifunto'])->name('agregar.difuntos.cripta');
      Route::get('/getServicios', [App\Http\Controllers\Cripta\CriptaController::class,'getServices'])->name('get.services');
+     Route::post('/get-difuntoCripta', [App\Http\Controllers\Cripta\CriptaController::class,'getDifuntoCripta'])->name('difuntoCripta.get');
+     Route::post('/ver-asignacion-difunto', [App\Http\Controllers\Cripta\CriptaController::class, 'verificarAsigancionDifunto'])->name('verificar.asigancion.difunto');
+     Route::post('/buscar-difunto-existente', [App\Http\Controllers\Cripta\CriptaController::class, 'buscarDifuntoExistente'])->name('buscar.difunto.existente');
+     Route::get('/cripta-notification', [App\Http\Controllers\Cripta\CriptaController::class,'configNotificacion'])->name('cripta.notification');
+
 });
 
 
 //mausoleo
 Route::group(['prefix' => 'mausoleo', 'middleware' => 'auth'], function () {
-    Route::get('/index', [App\Http\Controllers\Mausoleo\MausoleoController::class,'index'])->name('mausoleo.index');
-    Route::post('/save', [App\Http\Controllers\Mausoleo\MausoleoController::class,'saveMausoleo'])->name('mausoleo.save');
-    Route::get('/get-mausoleo/{id}', [App\Http\Controllers\Mausoleo\MausoleoController::class,'getMausoleo'])->name('mausoleo.get');
-    Route::put('/update-mausoleo', 'App\Http\Controllers\Mausoleo\MausoleoController@updateMausoleo')->name('mausoleo.update');
+    // Route::get('/index', [App\Http\Controllers\Mausoleo\MausoleoController::class,'index'])->name('mausoleo.index');
+    // Route::post('/save', [App\Http\Controllers\Mausoleo\MausoleoController::class,'saveMausoleo'])->name('mausoleo.save');
+    // Route::get('/get-mausoleo/{id}', [App\Http\Controllers\Mausoleo\MausoleoController::class,'getMausoleo'])->name('mausoleo.get');
+    // Route::put('/update-mausoleo', 'App\Http\Controllers\Mausoleo\MausoleoController@updateMausoleo')->name('mausoleo.update');
 
 });
 
@@ -137,7 +142,6 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     //generate fur from sinot
     Route::post('/generate-fur', [App\Http\Controllers\Servicios\ServiciosController::class,'generateFur'])->name('servicio.fur');
     Route::post('/buscar-renovacion', [App\Http\Controllers\Servicios\ServiciosController::class,'buscarRenovacion'])->name('buscar.renovacion');
-
     Route::get('/cargarFormrel', [App\Http\Controllers\Servicios\RelevamientoController::class,'cargarFormrel'])->name('load.formrel');
     Route::post('/buscar_nichorel', [App\Http\Controllers\Servicios\RelevamientoController::class, 'buscar_nichorel'])->name('buscar.nicho.rel');
 
@@ -191,8 +195,6 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
 // // responsable difuntos
 Route::group(['prefix' => 'relevamiento', 'middleware' => 'auth'], function () {
     Route::post('/completar', [App\Http\Controllers\Servicios\ServiciosController::class, 'autocompletar'])->name('completar.datos');
-    Route::post('/get-difuntoCripta', [App\Http\Controllers\Cripta\CriptaController::class,'getDifuntoCripta'])->name('difuntoCripta.get');
-    Route::post('/ver-asignacion-difunto', [App\Http\Controllers\Mantenimiento\CriptaController::class, 'verificarAsigancionDifunto'])->name('verificar.asigancion.difunto');
 
 });
 

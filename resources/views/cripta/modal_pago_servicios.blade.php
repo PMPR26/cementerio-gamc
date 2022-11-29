@@ -74,7 +74,7 @@
                                     <div class="col-sm-12 col-md-4 col-xl-4">
                                         <label>Documento de Identidad:</label><span class="obligatorio">*</span>
                                         <div class="input-group input-group-lg">
-                                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdci" autocomplete="off" value="">
+                                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdpci" autocomplete="off" value="">
 
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-lg btn-default" id="buscarDif">
@@ -87,41 +87,41 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Nombre :</label>
-                                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdnombre" autocomplete="off">
+                                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdpnombre" autocomplete="off">
                                         </div>
                                     </div>
 
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Primer apellido :</label>
-                                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdprimer_apellido" autocomplete="off">
+                                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdpprimer_apellido" autocomplete="off">
                                         </div>
                                     </div>
 
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Segundo apellido :</label>
-                                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdsegundo_apellido" autocomplete="off">
+                                            <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdpsegundo_apellido" autocomplete="off">
                                         </div>
                                     </div>
 
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Fecha de nacimiento :</label>
-                                            <input type="date"  class="form-control clear" max="{{ date('Y-m-d') }}" placeholder="fecha de nacimiento" id="mdfecha_nacimiento" >
+                                            <input type="date"  class="form-control clear" max="{{ date('Y-m-d') }}" placeholder="fecha de nacimiento" id="mdpfecha_nacimiento" >
                                         </div>
                                     </div>
 
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Fecha de defunción :</label>
-                                            <input type="date"  class="form-control clear" placeholder="fecha de defuncion" max="{{ date('Y-m-d') }}" id="mdfecha_defuncion"  >
+                                            <input type="date"  class="form-control clear" placeholder="fecha de defuncion" max="{{ date('Y-m-d') }}" id="mdpfecha_defuncion"  >
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>SERECI:</label>
-                                            <input  type="number" class="form-control clear" id="mdcertificado_defuncion" autocomplete="off">
+                                            <input  type="number" class="form-control clear" id="mdpcertificado_defuncion" autocomplete="off">
                                         </div>
                                     </div>
 
@@ -142,7 +142,7 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Tipo :</label>
-                                            <select name="tipo_dif" id="mdtipo" class="form-control clears2">
+                                            <select name="tipo_dif" id="mdptipo" class="form-control clears2">
                                                 <option value="">Seleccionar</option>
                                                 <option value="ADULTO">ADULTO</option>
                                                 <option value="PARVULO">PARVULO</option>
@@ -153,7 +153,7 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Genero :</label>
-                                            <select name="status" id="mdgenero" class="form-control clears">
+                                            <select name="status" id="mdpgenero" class="form-control clears">
                                                 <option value="">Seleccionar</option>
                                                 <option value="MASCULINO">MASCULINO</option>
                                                 <option value="FEMENINO">FEMENINO</option>
