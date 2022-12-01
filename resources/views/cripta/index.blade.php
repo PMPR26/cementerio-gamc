@@ -459,16 +459,13 @@
                             'domicilio' :  $('#domicilio').val(),
                             'genero_resp' :  $('#genero').val(),
                             'celular' :  $('#telefono').val(),
-
                             'superficie': $('#superficie').val(),
                             'nro_cripta' :  $('#nro-cripta').val(),
                             'enterratorios_ocupados' :  $('#enterratorios_ocupados').val(),
                             'total_enterratorios' :  $('#total_enterratorios').val(),
-
                             'osarios' :  $('#osarios').val(),
                             'total_osarios':$('#total_osarios').val(),
                             'cenisarios' :  $('#cenisarios').val(),
-
                             'observaciones' :  $('#observaciones').val(),
                             'estado_construccion' :  $('#construido').val(),
                             'tipo_cripta':$('#tipo_cripta option:selected').val(),
@@ -492,6 +489,7 @@
 
                         }),
                         success: function(data_response) {
+                            console.log(data_response);
                             if(data_response.status){
                                         swal.fire({
                                         title: "Guardado!",
@@ -535,7 +533,9 @@
 
 
             $(document).on('click', '#btn-editar', function(){
-                $('#cmform').find("input[type=text], input[type=checkbox], textarea").val("");
+                $('#cmform').find("input[type=text], input[type=checkbox], textarea,  tel").val("");
+                $('#cmform').find("input[type=number]").val("0");
+
                   $(this).find('form').trigger('reset');
 
 
@@ -553,10 +553,15 @@
                         async: false,
                         success: function(data_query) {
                             console.log(data_query['response']);
-
                             console.log(data_query['response']['responsable']);
                             var data_response=data_query['response']['cripta'];
                             var data_resp=data_query['response']['responsable'];
+                            if(data_response.enterratorios_ocupados== null){ var enterratorios_ocupados=0;} else{ var enterratorios_ocupados= data_response.enterratorios_ocupados;}
+                            if(data_response.total_enterratorios== null){ var total_enterratorios=0;} else{ var total_enterratorios= data_response.total_enterratorios;}
+                            if(data_response.osarios== null){ var osarios=0;} else{ var osarios= data_response.osarios;}
+                            if(data_response.total_osarios== null){ var total_osarios=0;} else{ var total_osarios= data_response.total_osarios;}
+                            if(data_response.cenisarios== null){ var cenisarios=0;} else{ var cenisarios= data_response.cenisarios;}
+
                             $('#modal-cripta').modal('show');
                             $('#btn-cripta-editar').show(300);
                             $('#btn-cripta').hide(300);
@@ -572,11 +577,11 @@
                             $('#btn-cripta-editar').val(data_response.id);
 
                             $('#construido').val(data_response.estado_construccion);
-                            $('#enterratorios_ocupados').val(data_response.enterratorios_ocupados);
-                            $('#total_enterratorios').val(data_response.total_enterratorios);
-                            $('#osarios').val(data_response.osarios);
-                            $('#total_osarios').val(data_response.total_osarios);
-                            $('#cenisarios').val(data_response.cenisarios);
+                            $('#enterratorios_ocupados').val(enterratorios_ocupados);
+                            $('#total_enterratorios').val(total_enterratorios);
+                            $('#osarios').val(osarios);
+                            $('#total_osarios').val(total_osarios);
+                            $('#cenisarios').val(cenisarios);
                             $('#observaciones').val(data_response.observaciones);
                             $('#familia').val(data_response.familia);
                             $('#altura').val(data_response.altura);
@@ -909,6 +914,7 @@
                     });
         });
         function validar_campos(){
+            alert("en validar");
             if($('#notable option:selected').val()==null || $('#notable option:selected').val()==""){
 
                 return false;
@@ -1513,9 +1519,9 @@ $("#cert_defuncion_p").dropzone({
                                                                     title: "Precaución!",
                                                                     text: data_response.mensaje,
                                                                     type: "warning",
-                                                                    timer: 2000,
+                                                                    timer: 40000,
                                                                     showCancelButton: false,
-                                                                    showConfirmButton: false
+                                                                    showConfirmButton: true
                                                                 });
                                                                 setTimeout(function() {
                                                                     location.reload();
