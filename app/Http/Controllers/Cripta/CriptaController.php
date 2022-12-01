@@ -236,7 +236,7 @@ class CriptaController extends Controller
 
     public function updateCripta(Request $request){
         // return response()->json([ $request->id_cripta]);
-        // dd($request);
+        // dd("entra");
 
         if ($request->isJson())
         {
@@ -741,11 +741,17 @@ class CriptaController extends Controller
         // dd($request->cripta_mausoleo_id);
         $difuntoCript =  Cripta::where('id', $request->cripta_mausoleo_id)->first();
         $difuntoResp =  DB::table('cripta_mausoleo_responsable')->where('cripta_mausole_id', $request->cripta_mausoleo_id)->first();
+        // dd($difuntoResp);
         if(!empty($difuntoResp)){
             if($difuntoResp->responsable_id!=null){
                   $resp =  DB::table('responsable')->where('id', $difuntoResp->responsable_id)->first();
-
             }
+        }
+        if($difuntoResp==null || empty($difuntoResp)){
+            return response([
+                'status'=> false,
+                'mensaje'=> "Debe ingresar la informacion del responsable o propietario de la unidad antes de ingresar los difuntos"
+             ],201);
         }
         if($resp &&  $difuntoCript){
             return response([

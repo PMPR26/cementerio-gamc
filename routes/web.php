@@ -68,7 +68,7 @@ Route::group(['prefix' => 'bloque', 'middleware' => 'auth'], function () {
 });
 
 //cripta
-Route::group(['prefix' => 'cripta', 'middleware' => 'auth'], function () {
+    Route::group(['prefix' => 'cripta', 'middleware' => 'auth'], function () {
     Route::get('/index', [App\Http\Controllers\Cripta\CriptaController::class,'index'])->name('cripta.index');
     Route::post('/save', [App\Http\Controllers\Cripta\CriptaController::class,'saveCripta'])->name('cripta.save');
     Route::get('/get-cripta/{id}', [App\Http\Controllers\Cripta\CriptaController::class,'getCripta'])->name('cripta.get');
@@ -77,8 +77,6 @@ Route::group(['prefix' => 'cripta', 'middleware' => 'auth'], function () {
     Route::get('cripta-notable-pdf', [App\Http\Controllers\Cripta\CriptaController::class, 'printCriptaNotables'])->name('criptasNotables');
     Route::post('/save-pay-cm', [App\Http\Controllers\Cripta\CriptaController::class, 'savePaycm'])->name('save.service.pay.cm');
 
-
-    // Route::put('/-cripta-pay', [App\Http\Controllers\Cripta\CriptaController::class,'updateCriptaInfo'])->name('cripta.update.pay');
 
 
      // servicios criptas mausoleos
