@@ -535,10 +535,8 @@
             $(document).on('click', '#btn-editar', function(){
                 $('#cmform').find("input[type=text], input[type=checkbox], textarea,  tel").val("");
                 $('#cmform').find("input[type=number]").val("0");
-
+                $('#cmform').find("select[name=notable]").val("");
                   $(this).find('form').trigger('reset');
-
-
                 // $('#modal-cripta').reset();
                 $('#section_data').show();
                 $('#estado').show();
@@ -585,6 +583,7 @@
                             $('#observaciones').val(data_response.observaciones);
                             $('#familia').val(data_response.familia);
                             $('#altura').val(data_response.altura);
+                            $('#notable').val(data_response.notable);
 
                             if(data_resp!=null){
                             $('#cripta-name').val(data_resp.nombres);
@@ -647,11 +646,6 @@
                                     }
                             }
                         }
-
-
-                             $('#notable').val(data_response.notable);
-
-
                             if(data_response.foto!=null){
                                $('#url-foto').val(data_response.foto)  ;
                                $('#foto_actual').append('<a href="'+ data_response.foto+'" target="_blank">Ver foto actual </a>');
@@ -914,7 +908,7 @@
                     });
         });
         function validar_campos(){
-            alert("en validar");
+
             if($('#notable option:selected').val()==null || $('#notable option:selected').val()==""){
 
                 return false;
