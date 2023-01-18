@@ -62,8 +62,8 @@
                                                 </table>
                                         </p>
                                     </div>
-                                    <input type="text" name="inhumacion"  id="inhumacion" value="NO">
-                                    <input type="text" name="exhumacion"  id="exhumacion_txt" value="NO">
+                                    <input type="hidden" name="inhumacion"  id="inhumacion" value="NO">
+                                    <input type="hidden" name="exhumacion"  id="exhumacion_txt" value="NO">
                             </div>
                             {{-- end row --}}
 
