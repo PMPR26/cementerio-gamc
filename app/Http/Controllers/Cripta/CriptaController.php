@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Nicho;
+use App\Models\Servicios\ServicioNicho;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use PDF;
@@ -468,7 +469,8 @@ class CriptaController extends Controller
                                         $ci_dif=$value['ci'];
                                     }
 
-                                    $existe=$this->buscarDifunto( $ci_dif, $value['nombres'], $value['primer_apellido'],$value['segundo_apellido'], $value['fecha_nacimiento']);
+                                    $existe=$this->buscarDifunto( $ci_dif, $value['nombres'],
+                                    $value['primer_apellido'],$value['segundo_apellido'], $value['fecha_nacimiento']);
                                     // dd($existe);
                                         if($existe==false)
                                         {
@@ -476,20 +478,20 @@ class CriptaController extends Controller
                                             $dif->nombres = $value['nombres'];
                                             $dif->primer_apellido = $value['primer_apellido'];
                                             $dif->segundo_apellido = $value['segundo_apellido'];
-                                            $dif->fecha_nacimiento = $value['fecha_nacimiento'];
+                                            $dif->fecha_nacimiento = $value['fecha_nacimiento']??'';
                                             $dif->fecha_defuncion = $value['fecha_defuncion'];
-                                            $dif->certificado_defuncion = $value['ceresi'];
-                                            $dif->causa = trim(strtoupper($value['causa']));
+                                            $dif->certificado_defuncion = $value['ceresi']??'';
+                                            $dif->causa = trim(strtoupper($value['causa']))??'';
                                             $dif->tipo = $value['tipo'];
-                                            $dif->edad = $value['edad'];
+                                            $dif->edad = $value['edad']??'';
                                             $dif->genero = $value['genero'];
-                                            $dif->funeraria = trim(strtoupper($value['funeraria']));
-                                            $dif->certificado_file = trim($value['url']);
+                                            $dif->funeraria = trim(strtoupper($value['funeraria']))??'';
+                                            $dif->certificado_file = trim($value['url'])??'';
                                             $dif->estado = 'ACTIVO';
                                             $dif->user_id = auth()->id();
                                             $dif->save();
                                             $dif->id;
-
+                                            // dd($value);
                                             array_push($newdif, [
                                                 "ci"=>$ci_dif,
                                                 "nombres"=>$value['nombres'],
@@ -504,6 +506,7 @@ class CriptaController extends Controller
                                                 "genero"=>$value['genero'],
                                                 "url"=>trim($value['url'])
                                             ]);
+                                            // print_r($value);
 
                                         }
                                         else{
@@ -541,8 +544,10 @@ class CriptaController extends Controller
                                                 "genero"=>$value['genero'],
                                                 "url"=>trim($value['url'])
                                             ]);
+
                                         }
                                  }
+
 
                                     $cript=Cripta::where('id',$request->id_cripta_mausoleo )->first();
                                     $cript->difuntos=json_encode($newdif);
@@ -633,6 +638,7 @@ class CriptaController extends Controller
 
     public function VerificarIngresoExistenteCripta(Request $request)
     {
+
         $cripta=Cripta::where('estado', 'ACTIVO')->get();
         $resp=0;
         if($cripta){
@@ -728,8 +734,11 @@ class CriptaController extends Controller
     }
 
     public function buscarDifuntoExistente(Request $request){
+        // dd($request);
         $resp=0;
         $existeEnCripta=$this->VerificarIngresoExistenteCripta($request);
+        // dd($existeEnCripta);
+
         $existeEnNicho=$this->VerificarIngresoExistenteNicho($request);
         // dd($existeEnNicho);
         if( $existeEnCripta > 0 || $existeEnNicho > 0 ){
@@ -864,6 +873,149 @@ class CriptaController extends Controller
 
             public function configNotificacion(){
                 return view('cripta.frm_notificacion_cripta');
+            }
+
+            public function saveServiceCripta(Request $request){
+                $this->validate($request, [
+                    'id_cripta_mausoleo' => 'required',
+                    'servicios' => 'required',
+                    'difuntos' => 'required',
+                    'ci' => 'required',
+                    'nombrepago' => 'required',
+                    'paternopago' => 'required',
+                    // 'status' => 'required'
+                ],[
+                    'id_cripta_mausoleo.required' => 'codigo de mausoleo o cripta es requerido!',
+                    'servicios.required' => 'El campo servicio es requerido!',
+                    'difuntos4.required' => 'Los datos de el/los  difunto(s) requerido!',
+                    'ci.required' => 'El campo carnet de identidad de la persona que realizara el pago es requerido!',
+                    'nombrepago' => 'El campo nombre de la persona que realizara el pago es requerido',
+                    'paternopago' =>'El campo apellido paterno de la persona que realizara el pago es requerido',
+
+                ]);
+
+                $desc_exhum="";
+                $cajero="rherrera";
+                $cantidades=[];
+                $tipo_servicio="";
+                $tipo_servicio_txt="";
+                $servicio_hijos="";
+                $txt_servicio_hijos="";
+
+
+                // si es inhumacion o exhumacion actualizar array de difuntos y estado de la unidad
+               // dd($request->difuntos[count( $request->difuntos)-1]['nombres']);
+                foreach($request->tipo_servicio as $key => $value)
+                {
+                  if($value['dt_id_tipo_cuenta'] =="15224150" || $value['dt_id_tipo_cuenta'] =="15224200" )
+                    {
+                      //  print_r("cumpleee");
+                        $this->addDifunto($request);
+                    }
+                }
+
+                //generar fur
+                $obj= new ServicioNicho;
+                $cant_serv=count($request->servicio_hijos);
+                for($cont=0; $cont<$cant_serv; $cont++){
+                    $cantidades[$cont]=1;
+                }
+
+              //  $nombre_difunto= $request->difuntos[count( $request->difuntos)-1]['nombres']." ".$request->difuntos[count( $request->difuntos)-1]['segundo_apellido']." ".$request->difuntos[count( $request->difuntos)-1]['primer_apellido'];
+
+                $response=$obj->GenerarFurCM($request->ci, $request->nombrepago, $request->paternopago,
+                $request->maternopago, $request->domicilio, $request->codigo_unidad,
+                $request->servicio_hijos , $cantidades, $cajero, $desc_exhum);
+
+
+                if($response['status']==true){
+                    $fur = $response['response'];
+                    //dd($fur);
+                }
+
+                foreach($request->tipo_servicio as $key => $value)
+                {
+                    if($key == 0 || $key == (count( $request->difuntos)))
+                    {
+                        $tipo_servicio=$tipo_servicio.$value['dt_id_tipo_cuenta'];
+                    }else{
+                        $tipo_servicio=$tipo_servicio.", ".$value['dt_id_tipo_cuenta'];
+                    }
+
+                }
+
+                foreach($request->tipo_servicio_txt as $key => $value)
+                {
+                    if($key == 0 || $key == (count( $request->difuntos)))
+                    {
+                        $tipo_servicio_txt=$tipo_servicio_txt.$value['dt_txt_tipo_cuenta'];
+                    }else{
+                        $tipo_servicio_txt=$tipo_servicio_txt.", ".$value['dt_txt_tipo_cuenta'];
+                    }
+
+                }
+
+                foreach($request->servicio_hijos as $key => $value)
+                {
+                    if($key == 0 || $key == (count( $request->difuntos)))
+                    {
+                        $servicio_hijos=$servicio_hijos.$value['dt_id_serv'];
+                    }else{
+                        $servicio_hijos=$servicio_hijos.", ".$value['dt_id_serv'];
+                    }
+
+                }
+
+                foreach($request->txt_servicio_hijos as $key => $value)
+                {
+                    if($key == 0 || $key == (count( $request->difuntos)))
+                    {
+                        $txt_servicio_hijos=$txt_servicio_hijos.$value['dt_txt_serv'];
+                    }else{
+                        $txt_servicio_hijos=$txt_servicio_hijos.", ".$value['dt_txt_serv'];
+                    }
+
+                }
+
+               // dd($request->resp_id);//
+                // insertar el pago en tabla servicio nicho
+                    $serv = new ServicioNicho();
+                    $serv->codigo_nicho=$request->codigo_unidad;
+                    $serv->fecha_registro= date("Y-m-d H:i:s");
+                    $serv->tipo_servicio_id=$tipo_servicio; //$request->tipo_servicio;
+                    $serv->tipo_servicio= $tipo_servicio_txt;
+                    $serv->servicio_id= $servicio_hijos;
+                    $serv->servicio= $txt_servicio_hijos;
+                    $serv->responsable_difunto_id=$request->resp_id;
+                    $serv->fur=$fur;
+                    $serv->monto=$request->total_monto;
+                    $serv->nombrepago=$request->nombrepago;
+                    $serv->paternopago=$request->paternopago;
+                    $serv->maternopago=$request->maternopago;
+                    $serv->ci=$request->ci;
+                    $serv->pago_por=$request->pago_por;
+                    $serv->observacion=$request->observacion;
+                    $serv->tipo=$request->tipo_registro;
+                    $serv->ubicacion_id =$request->id ;
+                    $serv->save();
+
+                if($serv->id){
+                    return response([
+                        'status'=> true,
+                        'mensage'=>"servicio registrado con exito"
+                    ],200);
+                }else{
+                    return response([
+                        'status'=> false,
+                        'mensage'=>"algo fallo en la transaccion intentelo nuevamente"
+                    ],201);
+                }
+
+
+
+
+
+
             }
 }
 
