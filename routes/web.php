@@ -75,7 +75,7 @@ Route::group(['prefix' => 'bloque', 'middleware' => 'auth'], function () {
     Route::put('/update-cripta', [App\Http\Controllers\Cripta\CriptaController::class,'updateCripta'])->name('cripta.update');
     Route::get('mausoleo-notable-pdf', [App\Http\Controllers\Cripta\CriptaController::class, 'printMausoleoNotables'])->name('mausoleosNotables');
     Route::get('cripta-notable-pdf', [App\Http\Controllers\Cripta\CriptaController::class, 'printCriptaNotables'])->name('criptasNotables');
-    Route::post('/save-pay-cm', [App\Http\Controllers\Cripta\CriptaController::class, 'savePaycm'])->name('save.service.pay.cm');
+    //Route::post('/save-pay-cm', [App\Http\Controllers\Cripta\CriptaController::class, 'savePaycm'])->name('save.service.pay.cm');
 
 
 
@@ -85,9 +85,11 @@ Route::group(['prefix' => 'bloque', 'middleware' => 'auth'], function () {
      Route::put('/agregar-difuntoCripta', [App\Http\Controllers\Cripta\CriptaController::class,'addDifunto'])->name('agregar.difuntos.cripta');
      Route::get('/getServicios', [App\Http\Controllers\Cripta\CriptaController::class,'getServices'])->name('get.services');
      Route::post('/get-difuntoCripta', [App\Http\Controllers\Cripta\CriptaController::class,'getDifuntoCripta'])->name('difuntoCripta.get');
-     Route::post('/ver-asignacion-difunto', [App\Http\Controllers\Cripta\CriptaController::class, 'verificarAsigancionDifunto'])->name('verificar.asigancion.difunto');
+     Route::post('/ver-asignacion-difunto', [App\Http\Controllers\Cripta\CriptaController::class, 'buscarDifuntoExistente'])->name('verificar.asigancion.difunto');
      Route::post('/buscar-difunto-existente', [App\Http\Controllers\Cripta\CriptaController::class, 'buscarDifuntoExistente'])->name('buscar.difunto.existente');
      Route::get('/cripta-notification', [App\Http\Controllers\Cripta\CriptaController::class,'configNotificacion'])->name('cripta.notification');
+     Route::post('/save-service-cripta', [App\Http\Controllers\Cripta\CriptaController::class, 'saveServiceCripta'])->name('guardar.servicio.cripta');
+    // public function saveServiceCripta(Request $request){
 
 });
 

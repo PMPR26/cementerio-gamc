@@ -17,19 +17,53 @@
                                         <div class="form-group">
                                             <label>Código:</label>
                                             <p id="cod_cm"></p>
+                                            <p id="tipo_registro"></p>
+
+
                                         </div>
                                     </div>
 
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Responsable :</label>
+                                            <p id="resp_cm_id" style="display:none"></p>
                                             <p id="resp_cm"></p>
                                         </div>
                                     </div>
                                     <div class="col-12">
+                                        <p id="difuntos_cm1" style="display: none"></p>
+
                                         <label>Difuntos:</label>
-                                        <p id="field_difuntos"></p>
+                                        <p id="field_difuntos">
+                                                <table class="tabla_difunto_pay table table-striped table-bordered responsive"  role="grid"  aria-describedby="tabla_difunto">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Condicion</th>
+                                                            <th>Cedula</th>
+                                                            <th>Nombre</th>
+                                                            <th>Paterno</th>
+                                                            <th>Materno</th>
+                                                            <th>cereci</th>
+                                                            <th>tipo</th>
+                                                            <th>Fecha Nacimiento</th>
+                                                            <th>Edad</th>
+                                                            <th>Fecha Defunción</th>
+                                                            <th>Causa</th>
+                                                            <th>Funeraria</th>
+                                                            <th>Genero</th>
+                                                            <th>enl</th>
+                                                            <th>url</th>
+                                                            <th>Acción</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tabla_difunto_row_pay" >
+
+                                                    </tbody>
+                                                </table>
+                                        </p>
                                     </div>
+                                    <input type="text" name="inhumacion"  id="inhumacion" value="NO">
+                                    <input type="text" name="exhumacion"  id="exhumacion_txt" value="NO">
                             </div>
                             {{-- end row --}}
 
@@ -193,11 +227,11 @@
 
 
                             </div>
-                </form>
+                       </form>
 
                                 <div class="card-body" id="difuntos-data">
                                 </div>
-                        </div>
+                     </div>
 
 
 
@@ -210,8 +244,22 @@
                     <div class="row" style="padding-top: 15px;">
                         <div class="col-12">
                             <div class="card">
-                                <div class="card-body" id="servicios-data">
-                                    Ningun dato seleccionado.
+                                <div class="card-body" >
+                                    <table border="1" class="detalle_servicios" style="display: none">
+                                        <thead>
+                                            <tr>
+                                                <td>Cuenta Tipo Servicio</td>
+                                                <td>Cuenta Servicio</td>
+                                                <td>Tipo Servicio</td>
+                                                <td>Servicio</td>
+                                                <td>Precio</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="servicios-data">
+
+                                        </tbody>
+                                    </table>
+
                                 </div>
                             </div>
                         </div>
@@ -222,11 +270,57 @@
                         <div class="card">
                             <div class="card-body" id="servicios-hijos-price" style="text-align: center">
                             </div>
-                            <h1><span id="totalServ"> 0 </span> Bs</h1>
+                            <h1><span>Total :</span><span id="totalServ"> 0 </span> Bs</h1>
                             <input type="hidden" name="totalservicios" id="totalservicios" value="0"
                                 class="form-control">
                         </div>
                     </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12"><h6>Datos de la persona que realizara el pago:</h6></div>
+
+                    <div class="col-sm-4 col-md-4 col-lg-4">
+                        <label>Pagado por:</label>
+                        <select name="tipo_resp" id="tipo_resp" class="form-control" required>
+                            <option value="Titular_responsable">Titular responsable</option>
+                            <option value="Tercero_responsable">Tercero Responsable</option>
+                        </select>
+
+                    </div>
+
+                    <div class="col-sm-4 col-md-4 col-lg-4">
+                        <label>C.I:</label>
+                        <input type="text" class="form-control clear" id="cm_ci" autocomplete="off" required>
+                    </div>
+
+                    <div class="col-sm-4 col-md-4 col-lg-4">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control clear" id="cm_nombre_pago" autocomplete="off" required>
+                    </div>
+
+                    <div class="col-sm-4 col-md-4 col-lg-4">
+                        <label>Apellido Paterno:</label>
+                        <input type="text" class="form-control clear" id="cm_paternopago" autocomplete="off" required>
+                    </div>
+
+                    <div class="col-sm-4 col-md-4 col-lg-4">
+                        <label>Apellido Materno:</label>
+                        <input type="text" class="form-control clear" id="cm_maternopago" autocomplete="off">
+                    </div>
+
+
+
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <label>Observación:</label>
+                        <textarea name="cm_observacion" class="form-control clear" id="cm_observacion" cols="100" rows="3"></textarea>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <label>Domicilio:</label>
+                        <textarea name="cm_domicilio" class="form-control clear" id="cm_domicilio" cols="100" rows="3"></textarea>
+                    </div>
+
+
                 </div>
 
 
