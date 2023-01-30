@@ -886,11 +886,11 @@ class CriptaController extends Controller
                     // 'status' => 'required'
                 ],[
                     'id_cripta_mausoleo.required' => 'codigo de mausoleo o cripta es requerido!',
-                    'servicios.required' => 'El campo servicio es requerido!',
+                    'servicios.required' => 'Debe elegir al menos un servicio!',
                     'difuntos4.required' => 'Los datos de el/los  difunto(s) requerido!',
                     'ci.required' => 'El campo carnet de identidad de la persona que realizara el pago es requerido!',
-                    'nombrepago' => 'El campo nombre de la persona que realizara el pago es requerido',
-                    'paternopago' =>'El campo apellido paterno de la persona que realizara el pago es requerido',
+                    'nombrepago.required' => 'El campo nombre de la persona que realizara el pago es requerido',
+                    'paternopago.required' =>'El campo apellido paterno de la persona que realizara el pago es requerido',
 
                 ]);
 

@@ -9,6 +9,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
+                        <div id="response"></div>
                        <form action="#" method="POST" >
 
                             <div class="row">
@@ -16,8 +17,8 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Código:</label>
-                                            <p id="cod_cm"></p>
-                                            <p id="tipo_registro"></p>
+                                            <p id="cod_cm" class="clear"></p>
+                                            <p id="tipo_registro" class="clear"></p>
 
 
                                         </div>
@@ -26,12 +27,12 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Responsable :</label>
-                                            <p id="resp_cm_id" style="display:none"></p>
-                                            <p id="resp_cm"></p>
+                                            <p id="resp_cm_id" style="display:none" class="clear"></p>
+                                            <p id="resp_cm" class="clear"></p>
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <p id="difuntos_cm1" style="display: none"></p>
+                                        <p id="difuntos_cm1" style="display: none" class="clear"></p>
 
                                         <label>Difuntos:</label>
                                         <p id="field_difuntos">
@@ -100,11 +101,21 @@
                     </div>
                 </div>
 
+                <div class="card row" id="contenedor_dif_serv" style="padding-top: 15px;">
+                </div>
+
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <label>Observación / detalles:</label>
+                    <textarea name="cm_observacion" class="form-control clear" id="cm_observacion" cols="100" rows="3"></textarea>
+                </div>
+
 
 
                     <div class="card row" style="padding-top: 15px;">
+
                         <form action="#" method="POST" >
                             <div class="row section_difunto" id="section_difunto" style="display: none;">
+                                <h3 class="p-2" style="background: teal">Completar los datos del difunto que va a ingresar</h3>
                                     <div class="col-sm-12 col-md-4 col-xl-4">
                                         <label>Documento de Identidad:</label><span class="obligatorio">*</span>
                                         <div class="input-group input-group-lg">
@@ -309,16 +320,13 @@
                         <input type="text" class="form-control clear" id="cm_maternopago" autocomplete="off">
                     </div>
 
-
-
-                    <div class="col-sm-12 col-md-12 col-lg-12">
-                        <label>Observación:</label>
-                        <textarea name="cm_observacion" class="form-control clear" id="cm_observacion" cols="100" rows="3"></textarea>
-                    </div>
                     <div class="col-sm-12 col-md-12 col-lg-12">
                         <label>Domicilio:</label>
-                        <textarea name="cm_domicilio" class="form-control clear" id="cm_domicilio" cols="100" rows="3"></textarea>
+                        <textarea name="cm_domicilio" class="form-control clear" id="cm_domicilio" cols="100" rows="1"></textarea>
                     </div>
+
+
+
 
 
                 </div>
