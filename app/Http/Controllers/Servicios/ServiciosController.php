@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Servicios;
 use App\Models\Cripta;
 use App\Models\Cuartel;
 use App\Models\Bloque;
+use App\Models\Nicho;
 use App\Models\Servicios\ServicioNicho;
 use App\Models\Difunto;
 use App\Models\Responsable;
@@ -518,6 +519,7 @@ class ServiciosController extends Controller
                             $upnicho->codigo_anterior=$request->anterior;
                             $upnicho->save();
                             $upnicho->id;
+                            $id_nicho=$upnicho->id;
 
                         } else {      // buscar cuartel si existe recuperar id sino insertar
                                         $existeCuartel = Cuartel::where('codigo', $request->cuartel)->first();
@@ -662,7 +664,7 @@ class ServiciosController extends Controller
                                                 $serv->servicio= $texto_servicio;   //$request->servicio_hijos_txt;
                                                 $serv->responsable_difunto_id=$iddifuntoResp;
                                                 $serv->id_usuario_caja = auth()->id();
-                                                // $serv->id_usuario = auth()->id();
+                                                $serv->tipo = "NICHO";
                                                 $serv->fur=$fur;
                                                 $serv->nro_renovacion= $request->renov ?? '0';
                                                 $serv->monto_renovacion= $request->monto_renov ?? '0';
@@ -680,6 +682,8 @@ class ServiciosController extends Controller
                                                 $serv->estado='ACTIVO';
                                                 $serv->observacion=$request->observacion;
                                                 $serv->det_exhum=$observacion?? '';
+                                                $serv->ubicacion_id=$id_nicho ?? null;
+
                                                 $serv->save();
                                                 // return  $serv->id;
                                                 // return $fur;

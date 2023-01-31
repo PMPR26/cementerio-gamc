@@ -996,7 +996,7 @@ class CriptaController extends Controller
                     $serv->pago_por=$request->pago_por;
                     $serv->observacion=$request->observacion;
                     $serv->tipo=$request->tipo_registro;
-                    $serv->ubicacion_id =$request->id ;
+                    $serv->ubicacion_id =$request->id_cripta_mausoleo;
                     $serv->save();
 
                 if($serv->id){
