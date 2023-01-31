@@ -236,11 +236,11 @@ class ServiciosController extends Controller
     //service update pay from sinot
     public function updatePay(Request $request)
     {
-
+       // dd(trim($request->fur));
         if ($request->isJson()) {
             $this->validate($request, [
                 "fur" => 'required',
-                "id_usuario_caja" => 'required'
+             //   "id_usuario_caja" => 'required'
             ]);
 
             $servicio = ServicioNicho::select('id', 'fur')
@@ -1158,7 +1158,7 @@ class ServiciosController extends Controller
                 // 'ecivil.required'=> 'El campo estado civil  es obligatorio',
                 // 'email.required'=> 'El campo email es obligatorio',
                  'domicilio.required'=> 'El campo domicilio es obligatorio',
-                 'genero_resp.required'=> 'El campo genero_resp es obligatorio',
+                 'genero_resp.required'=> 'El campo genero del responsable es obligatorio',
                 'tipo_servicio.required' => 'Debe seleccionar al menos un tipo servicio',
                 'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
 
@@ -1407,8 +1407,6 @@ class ServiciosController extends Controller
                                                 $serv->pago_por=$pago_por;
                                                 $serv->estado_pago=$estado_pago;
                                                 $serv->fecha_pago=$fecha_pago;
-
-
                                                 $serv->estado='ACTIVO';
                                                 $serv->observacion=$request->observacion;
                                                 $serv->tipo=$request->tipo_cm?? '';
