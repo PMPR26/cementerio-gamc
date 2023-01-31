@@ -2283,7 +2283,7 @@ $("#cert_defuncion_p").dropzone({
 
                                         }),
                                             success: function(data) {
-                                                 alert( "----"+data);
+                                               //  alert( "----"+data);
                                                  if(data==0){
                                                    return verificar=true
 
