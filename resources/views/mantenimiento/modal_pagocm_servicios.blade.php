@@ -77,7 +77,7 @@
                     <div class="col-3"> <label for="ultima_gestion_pagada">Ultima Gestion Pagada anterior</label><input type="number" name="ultima_gestion_pagada" value="0" id="ultima_gestion_pagada" class="form-control"></div>
 
                     <div class="col-3"> <label for="gestiones_pagadas">Ultima Gestion Pagada actual</label><input type="number" name="gestiones_pagadas" value="0" id="gestiones_pagadas" readonly class="form-control"></div>
-                    <div class="col-3"> <label for="cantidad">Cantidad</label><input type="number" name="cantidad" value="0" id="cantidad_ges" class="form-control" readonly><input type="text" name="gestiones_act" value="0" id="gestiones_act" class="form-control"></div>
+                    <div class="col-3"> <label for="cantidad">Cantidad</label><input type="number" name="cantidad" value="0" id="cantidad_ges" class="form-control" readonly><input type="hidden" name="gestiones_act" value="0" id="gestiones_act" class="form-control"></div>
                     <div class="col-3"> <label for="gestiones_pagadas">Ver Gestiones Adeudadas<input type="checkbox" name="adeudado" value="0" id="gestiones_adeudadas" class="form-control"></label></div>
                 </div>
 
@@ -96,7 +96,15 @@
                     </table>
                 </div>
 
-
+                <div id="cal_price" style="text-align: center">
+                    <div class="card">
+                        <div class="card-body" id="servicios-hijos-price" style="text-align: center">
+                        </div>
+                        <h1><span>Total :</span><span id="totalServ"> 0 </span> Bs</h1>
+                        <input type="hidden" name="totalservicios" id="totalservicios" value="0"
+                            class="form-control">
+                    </div>
+                </div>
 
                 <div class="col-sm-12 col-md-12 col-lg-12">
                     <label>Observación / detalles:</label>
@@ -241,8 +249,8 @@
 
 
 
-                <div class="card">
-                    <div class="card-header">
+              <div class="card">
+                 {{--      <div class="card-header">
                         <h4>DETALLE DE SERVICIOS SOLICITADOS</h4>
                     </div>
 
@@ -270,16 +278,8 @@
                         </div>
 
                     </div>
+--}}
 
-                    <div id="cal_price" style="text-align: center">
-                        <div class="card">
-                            <div class="card-body" id="servicios-hijos-price" style="text-align: center">
-                            </div>
-                            <h1><span>Total :</span><span id="totalServ"> 0 </span> Bs</h1>
-                            <input type="hidden" name="totalservicios" id="totalservicios" value="0"
-                                class="form-control">
-                        </div>
-                    </div>
                 </div>
 
                 <div class="row">
