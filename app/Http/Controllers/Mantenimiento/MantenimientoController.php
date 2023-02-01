@@ -12,6 +12,7 @@ use App\Models\ResponsableDifunto;
 use App\Models\User;
 use App\Models\Cripta;
 
+use App\Models\Servicios;
 
 use App\Models\Mantenimiento;
 use App\Http\Controllers\Controller;
@@ -924,7 +925,7 @@ public function pagoMantenimientoCM(Request $request){
                     $cajero= $datos_cajero->user_sinot;
                     $cantidades[0]=$request->cantidad;
                     $servicio_hijos[0]=$request->num_sec;
-
+                    $obj= new ServicioNicho;
                     $response=$obj->GenerarFurCM($request->ci, $request->nombrepago, $request->paternopago,
                     $request->maternopago, $request->domicilio, $request->codigo_unidad,
                     $servicio_hijos , $cantidades, $cajero, null);
