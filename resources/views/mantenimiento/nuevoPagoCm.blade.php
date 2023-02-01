@@ -210,8 +210,22 @@
 /****************************************************************************************/
       $(document).on('click', '#gestiones_adeudadas', function(e){
         var ultpago=$('#ultima_gestion_pagada').val();
-      //  alert(ultpago);
-                if ($(this).is(':checked')) {
+        if(ultpago==0){
+            swal.fire({
+                        title: "Precaución!",
+                        text: "Debe ingresar la ultima gestion pagada ejm. 2022 !",
+                        type: "warning",
+                        showCancelButton: false,
+                        showConfirmButton: true
+                    });
+
+                    setTimeout(function() {
+                        return false;
+                    }, 2000);
+
+        }
+        else{
+               if ($(this).is(':checked')) {
                       gestionesAdeudadas(ultpago);
                 }
                 else{
@@ -219,6 +233,7 @@
                     $('#conservacion').hide();
 
                 }
+            }
       });
 
 
