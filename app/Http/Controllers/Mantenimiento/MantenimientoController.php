@@ -526,11 +526,6 @@ class MantenimientoController extends Controller
 
 
     public function updatePayMant(Request $request){
-<<<<<<< HEAD
-         
-=======
-
->>>>>>> 94c7bf6328ebbd783f9035fdc30b68253fd85061
         if($request->isJson()){
             $this->validate($request,[
                 "fur"=> 'required',
