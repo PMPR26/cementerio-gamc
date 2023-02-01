@@ -1838,7 +1838,7 @@ $("#cert_defuncion_p").dropzone({
                                                             }),
                                             success: function(data) {
                                                 console.log("gggggggggggg");
-                                             console.log(data.response);
+                                                console.log(data.response);
                                                 $.each(data.response, function(key,val)
                                                 {
                                                           // console.log(val.descripcion );
@@ -1871,7 +1871,7 @@ $("#cert_defuncion_p").dropzone({
                                                         }
                                                         }
                                                         else{
-                                                            if(val.cuenta=="15224150" || val.cuenta=="15224250"){
+                                                            if(val.cuenta=="15224150" || val.cuenta=="15224250" || val.cuenta=="15224410" ){
                                                                 var html='<div class="form-check '+val.cuenta+'">'+
                                                                         '<input class="form-check-input" type="checkbox" id="'+val.cuenta+'" name="serv[tipo_servicio]" value="'+val.cuenta+'-'+val.descripcion+'"  onclick="cargar_sevicios_hijos(this)">'+
                                                                         '<label class="form-check-label labelservice" for="'+val.cuenta+'">'+val.descripcion+'</label>'+
@@ -1931,18 +1931,34 @@ $("#cert_defuncion_p").dropzone({
                                 success: function(data_response) {
                                     console.log(data_response.response);
                                     $('#servicio-hijos').empty();
-                                    $.each(data_response.response, function(index, value) {
-                                        //alert(value.num_sec)
-                                        if (value.num_sec == '526' || value.num_sec == '525' ||
-                                            value.num_sec == '629' || value.num_sec == '631') {}
-                                                else {
-                                                    // console.log("asdas");
-                                                    var html='<div class="form-check">'+
-                                                    '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs." onclick="seleccionar_hijos_list()" >'+
-                                                    '<label class="form-check-label childservice" for="'+value.num_sec+'">'+value.descripcion+' - ' + value.monto1 +'- Bs.</label>'+
-                                                    '</div>';
-                                                    $('#serv_hijos'+cuenta+'').append(html);
-                                                    }
+                                    $.each(data_response.response, function(index, value)
+                                    {
+                                        //alert($('#tabla_difunto_row_pay').children().length );
+                                        if($('#tabla_difunto_row_pay').children().length == 0)
+                                            {
+                                                if (value.num_sec == '636' || value.num_sec == '622' || value.num_sec == '623' || value.num_sec == '1990'  )
+                                                {
+                                                               var html='<div class="form-check">'+
+                                                                    '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs." onclick="seleccionar_hijos_list()" >'+
+                                                                    '<label class="form-check-label childservice" for="'+value.num_sec+'">'+value.descripcion+' - ' + value.monto1 +'- Bs.</label>'+
+                                                                    '</div>';
+                                                                    $('#serv_hijos'+cuenta+'').append(html);
+                                                }
+                                            }
+                                            else{
+
+
+                                                        if (value.num_sec == '526' || value.num_sec == '525' ||
+                                                            value.num_sec == '629' || value.num_sec == '631') {}
+                                                                else {
+                                                                    // console.log("asdas");
+                                                                    var html='<div class="form-check">'+
+                                                                    '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs." onclick="seleccionar_hijos_list()" >'+
+                                                                    '<label class="form-check-label childservice" for="'+value.num_sec+'">'+value.descripcion+' - ' + value.monto1 +'- Bs.</label>'+
+                                                                    '</div>';
+                                                                    $('#serv_hijos'+cuenta+'').append(html);
+                                                                    }
+                                                }
 
                                     });
                                 }
@@ -1964,7 +1980,7 @@ $("#cert_defuncion_p").dropzone({
 
             $('#servicios-data').empty();
             $('.service_child').each(function( index ) {
-                // alert($(this).val());
+
                         if($(this).is(":checked"))
                         {   var info= ($(this).val()).split('=>');
                             //  alert(info);
@@ -1982,7 +1998,7 @@ $("#cert_defuncion_p").dropzone({
                                     $('.section_difunto').show();
                                     $('#modal_save_pagos_cm').prop('disabled', true);
                                 }
-                                else if(( id_serv =='623' || id_serv =='622' || id_serv =='636')&& $('#inhumacion').val()=="SI"){
+                                else if(( id_serv =='623' || id_serv =='622' || id_serv =='636' || id_serv =='1990')&& $('#inhumacion').val()=="SI"){
                                     $('.section_difunto').hide();
                                 }
                                 else if(( id_serv =='630' || id_serv =='628' || id_serv =='633' || id_serv =='634' || id_serv =='635')&& $('#exhumacion_txt').val()=="NO"){
@@ -1994,43 +2010,49 @@ $("#cert_defuncion_p").dropzone({
                                 }
                                 else{  $('.section_difunto').hide();
                                 $('#modal_save_pagos_cm').prop('disabled', false);
-                            }
-                            }else{
+                               }
+                            }else
+                            {
                                 var info= ($(this).val()).split('=>');
                                 id_serv= $.trim(((info[1]).split('-'))[0]);
                                 tipo_serv=tipo_serv+", "+ $.trim(((info[0]).split('-'))[0]);
                                 tipo_serv_txt=tipo_serv_txt+", "+ $.trim(((info[0]).split('-'))[1]);
                                 serv=serv+", "+ $.trim(((info[1]).split('-'))[0]);
                                 serv_txt=serv_txt+", "+ $.trim(((info[1]).split('-'))[1]);
+                                   // alert(id_serv);
+                                            if(( id_serv =='623' || id_serv =='622' || id_serv =='636')&& $('#inhumacion').val()=="NO"){
 
-                                if(( id_serv =='623' || id_serv =='622' || id_serv =='636')&& $('#inhumacion').val()=="NO"){
-                                     $('.section_difunto').show();
-                                    $('#modal_save_pagos_cm').prop('disabled', true);
-                                     return false;
-                                }
-                                else if(( id_serv =='623' || id_serv =='622' || id_serv =='636')&& $('#inhumacion').val()=="SI"){
-                                    $('.section_difunto').hide();
-                                }
-                                else if(( id_serv =='630' || id_serv =='628'  || id_serv =='633' || id_serv =='634' || id_serv =='635')&& $('#exhumacion_txt').val()=="NO"){
-                                   $('#dif_exhumado').show();
-                                    seleccionar_difunto();
-                                }
-                                else if(( id_serv =='630' || id_serv =='628' || id_serv =='633' || id_serv =='634' || id_serv =='635')&& $('#exhumacion_txt').val()=="SI"){
-                                    //$('#dif_exhumado').hide();
-                                }
-                                else{  $('.section_difunto').hide();
-                                $('#modal_save_pagos_cm').prop('disabled', false);
+                                                $('.section_difunto').show();
+                                                $('#modal_save_pagos_cm').prop('disabled', true);
+                                                return false;
+                                            }
+                                            else if(( id_serv =='623' || id_serv =='622' || id_serv =='636')&& $('#inhumacion').val()=="SI"){
+                                                $('.section_difunto').hide();
+                                            }
+                                            else if(( id_serv =='630' || id_serv =='628'  || id_serv =='633' || id_serv =='634' || id_serv =='635')&& $('#exhumacion_txt').val()=="NO"){
+                                            $('#dif_exhumado').show();
+                                                seleccionar_difunto();
+                                            }
+                                            else if(( id_serv =='630' || id_serv =='628' || id_serv =='633' || id_serv =='634' || id_serv =='635')&& $('#exhumacion_txt').val()=="SI"){
+                                                //$('#dif_exhumado').hide();
+                                            }
+                                            else{  $('.section_difunto').hide();
+                                            $('#modal_save_pagos_cm').prop('disabled', false);
 
-                                   }
+                                            }
                             }
 
 
                         }else {
+                            if($('#622').is(":checked") || $('#623').is(":checked")){
+
+                            }
+                            else{
                                 var info= ($(this).val()).split('=>');
                                 id_serv= $.trim(((info[1]).split('-'))[0]);
                                 $('.section_difunto').hide();
                                 $('#modal_save_pagos_cm').prop('disabled', false);
-
+                            }
 
                         }
                 calcularPrice();

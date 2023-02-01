@@ -115,7 +115,8 @@
 
                         <form action="#" method="POST" >
                             <div class="row section_difunto" id="section_difunto" style="display: none;">
-                                <h3 class="p-2" style="background: teal">Completar los datos del difunto que va a ingresar</h3>
+                                <h3 class="col-12 p-2" style="background: teal">Completar los datos del difunto que va a ingresar</h3>
+                                   <br>
                                     <div class="col-sm-12 col-md-4 col-xl-4">
                                         <label>Documento de Identidad:</label><span class="obligatorio">*</span>
                                         <div class="input-group input-group-lg">
