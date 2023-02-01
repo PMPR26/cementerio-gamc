@@ -187,6 +187,10 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
       Route::post('/buscarCuartel', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'buscarCuartel'])->name('buscar.cuartel');
       Route::post('/save-up-pay-info', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'relevamientoPagoMant'])->name('save.uppay.info');
       Route::get('/get-mantenimiento/{id}',  [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'getMantenimiento'])->name('mantenimiento.get');
+      Route::get('/form-paycm', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'indexcm'])->name('paycm_mant');
+//getInfoPayCm
+      Route::get('/getServicioMant', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'getInfoPayCm'])->name('get.services.mant');
+      Route::post('/pago-matenimiento', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'pagoMantenimientoCM'])->name('pay.mant.cm');
 
 
 });

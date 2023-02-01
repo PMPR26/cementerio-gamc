@@ -13,7 +13,7 @@
 @section('content')
 
 <div>
-   
+
 </div>
     <div class="card">
         <div class="card-body">
@@ -21,7 +21,12 @@
             <div class="row">
                 <div class="col-sm-6">
                     <a href="{{ route('pay') }}" id="new-mant" class="btn btn-info col-sm-12"> <i
-                            class="fas fa-plus-circle text-white fa-2x"></i> Nuevo Pago</a>
+                            class="fas fa-plus-circle text-white fa-2x"></i> Pago Mant. Nichos</a>
+                </div>
+
+                <div class="col-sm-6">
+                    <a href="{{ route('paycm_mant') }}" id="new-mant" class="btn btn-success col-sm-12"> <i
+                            class="fas fa-plus-circle text-white fa-2x"></i> Pago Mant. Criptas / Mausoleo</a>
                 </div>
             </div>
         </div>
@@ -65,7 +70,7 @@
                                     class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
                         </form>
 
-                      
+
                     </td>
                 </tr>
             @endforeach
