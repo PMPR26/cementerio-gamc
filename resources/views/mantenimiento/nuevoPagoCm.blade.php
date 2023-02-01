@@ -2502,7 +2502,7 @@ $("#cert_defuncion_p").dropzone({
                                                         showConfirmButton: false
                                                         });
                                                        // location.reload();
-                                                        window.location.href = "/servicios/servicios"
+                                                        window.location.href = "/mantenimiento/mantenimiento"
 
                                                   }
                                                     else{
