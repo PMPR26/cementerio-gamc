@@ -10,6 +10,8 @@ use App\Models\Difunto;
 use App\Models\Responsable;
 use App\Models\ResponsableDifunto;
 use App\Models\User;
+use App\Models\Cripta;
+
 
 use App\Models\Mantenimiento;
 use App\Http\Controllers\Controller;
@@ -37,8 +39,6 @@ class MantenimientoController extends Controller
     }
 
     public function createPay(){
-
-
 
         $headers =  ['Content-Type' => 'application/json'];
         $client = new Client();
@@ -299,6 +299,10 @@ class MantenimientoController extends Controller
                                                 $mant->ultimo_pago=$ultimo_pago;
                                                 $mant->estado='ACTIVO';
                                                 $mant->observacion=$request->observacion;
+                                                $mant->tipo_ubicacion="NICHO";
+                                                $mant->id_ubicacion=$id_nicho;
+
+
                                                 $mant->save();
                                                 return  $mant->id;
 
@@ -442,10 +446,12 @@ class MantenimientoController extends Controller
 
           $table = DB::table('mantenimiento')
           ->where('mantenimiento.id', $request->id)
-          ->Join('responsable_difunto' , 'responsable_difunto.id','=', 'mantenimiento.respdifunto_id')
-          ->Join('difunto' , 'difunto.id','=', 'responsable_difunto.difunto_id')
+          ->where('mantenimiento.estado', 'ACTIVO')
 
-          ->select('mantenimiento.*', 'responsable_difunto.codigo_nicho','difunto.ci as codigo_dif','difunto.nombres','difunto.primer_apellido','difunto.segundo_apellido')
+    //      ->Join('responsable_difunto' , 'responsable_difunto.id','=', 'mantenimiento.respdifunto_id')
+       //   ->Join('difunto' , 'difunto.id','=', 'responsable_difunto.difunto_id')
+
+          ->select('mantenimiento.*')
           ->first();
 
         //  dd($table);
@@ -713,4 +719,268 @@ class MantenimientoController extends Controller
         }
 
    }
+
+
+   /***************************************************************************** */
+   /******************* seccion pago mantenimiento criptas mausoleos************* */
+   /***************************************************************************** */
+
+
+   public function getInfoPayCm(){
+
+    $headers =  ['Content-Type' => 'application/json'];
+    $client = new Client();
+
+    $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/526', [
+    'json' => [
+        ],
+        'headers' => $headers,
+    ]);
+    $data = json_decode((string) $response->getBody(), true);
+
+       // dd( $data);
+   if($data['status']==true){
+        $precio = $data['response'][0]['monto1'];
+        $cuenta = $data['response'][0]['cuenta'];
+        $descrip = $data['response'][0]['descripcion'];
+        $num_sec = $data['response'][0]['num_sec'];
+
+    }else{
+        $precio =0;
+    }
+
+
+    return $data;
+
+   // return view('mantenimiento/PagoCmant', ['precio' =>$precio, 'cuenta' =>$cuenta, 'descrip' =>$descrip, 'num_sec' => $num_sec ]);
+}
+
+
+public function indexcm(Request $request){
+    if(($request->select_cuartel_search==null && $request->bloque_search ==null && $request->sitio_search ==null) ||
+    (!isset($request->select_cuartel_search) && !isset($request->bloque_search) && !isset($request->sitio_search))){
+     $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
+     'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios', 'cripta_mausoleo.notable',
+     'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos', 'mantenimiento.ultimo_pago',
+    'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo','cripta_mausoleo.familia','cripta_mausoleo_responsable.estado as estado_rel_resp',
+     DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
+     'cuartel.codigo as cuartel_codigo','bloque.codigo as bloque_nombre')
+     ->Join('cuartel','cuartel.id', '=', 'cripta_mausoleo.cuartel_id' )
+     ->leftJoin('bloque','bloque.id', '=', 'cripta_mausoleo.bloque_id' )
+    ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
+    ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )
+    ->leftJoin('mantenimiento','mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id' )
+    ->where('cripta_mausoleo.estado', 'ACTIVO')
+    ->orderBy('cripta_mausoleo.id', 'DESC')
+    ->orderBy('tipo_registro', 'DESC')
+    ->orderBy('cripta_mausoleo.codigo', 'DESC')
+    ->get();
+ }
+ else{
+     // dd($request);
+    if($request->select_cuartel_search!=null && ($request->bloque_search !=null || $request->bloque_search !='' || isset($request->bloque_search)) && $request->sitio_search !=null){
+         $condicion=['cripta_mausoleo.cuartel_id' =>''.$request->select_cuartel_search.'' , 'cripta_mausoleo.bloque_id'=>''.$request->bloque_search.'' , 'cripta_mausoleo.sitio' =>''.$request->sitio_search.''];
+     }
+     elseif($request->select_cuartel_search!=null && ($request->bloque_search !=null || isset($request->bloque_search)) && $request->sitio_search==null){
+         $condicion=['cripta_mausoleo.cuartel_id' =>''.$request->select_cuartel_search.'' , 'cripta_mausoleo.bloque_id'=>''.$request->bloque_search.''];
+     }
+     else if($request->select_cuartel_search!=null && ($request->bloque_search ==null || $request->bloque_search =='' || !isset($request->bloque_search)) && $request->sitio_search!=null){
+         $condicion=['cripta_mausoleo.cuartel_id' =>''.$request->select_cuartel_search.'' ,'cripta_mausoleo.sitio' =>''.$request->sitio_search.' '];
+     }
+     else if($request->select_cuartel_search!=null && ($request->bloque_search ==null || $request->bloque_search =='' || !isset($request->bloque_search)) && $request->sitio_search==null){
+         $condicion=['cripta_mausoleo.cuartel_id' =>''.$request->select_cuartel_search.''];
+     }
+     else if($request->select_cuartel_search==null && ($request->bloque_search ==null || $request->bloque_search =='' || !isset($request->bloque_search)) && $request->sitio_search!=null){
+     //    dd("wer");
+         $condicion=['cripta_mausoleo.sitio' =>''.$request->sitio_search.''];
+     }
+     else if($request->select_cuartel_search==null && $request->bloque_search !=null && $request->sitio_search==null){
+         $condicion=['cripta_mausoleo.bloque_id' =>''.$request->bloque_search.''];
+     }
+
+     $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
+     'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios', 'cripta_mausoleo.notable',
+     'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos', 'mantenimiento.ultimo_pago',
+    'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo','cripta_mausoleo.familia','cripta_mausoleo_responsable.estado as estado_rel_resp',
+     DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
+     'cuartel.codigo as cuartel_codigo','bloque.codigo as bloque_nombre')
+     ->Join('cuartel','cuartel.id', '=', 'cripta_mausoleo.cuartel_id' )
+     ->leftJoin('bloque','bloque.id', '=', 'cripta_mausoleo.bloque_id' )
+    ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
+    ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )
+    ->leftJoin('mantenimiento','mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id' )
+    ->where('cripta_mausoleo.estado', 'ACTIVO')
+    ->where($condicion)
+    ->orderBy('cripta_mausoleo.id', 'DESC')
+    ->orderBy('tipo_registro', 'DESC')
+    ->orderBy('cripta_mausoleo.codigo', 'DESC')
+    ->get();
+
+ }
+
+
+//  dd( $cripta);
+  $cuartel = Cuartel::select('id','codigo')
+             ->where('estado', 'ACTIVO')
+             ->orderBy('nombre', 'DESC')
+             ->get();
+
+ $funeraria=DB::table('difunto')
+             ->select('funeraria')
+             ->whereNotNull('funeraria')
+             ->distinct()->get();
+
+ $causa=DB::table('difunto')
+ ->select('causa')
+ ->whereNotNull('causa')
+ ->distinct()->get();
+ return view('mantenimiento/nuevoPagoCm',['cripta' => $cripta, 'cuartel' => $cuartel, 'funeraria' => $funeraria, 'causa' => $causa]);
+}
+
+// save pago mantenimiento criptas mausoleo
+
+public function pagoMantenimientoCM(Request $request){
+   /* 'id_cripta_mausoleo': id,
+    'cuenta': cuenta,
+    'descripcion': descripcion,
+    'ultima_gestion_actual': ultima_gestion_actual,
+     'gestiones_act':gestiones_act,
+     'cantidad':cantidad,
+    'total_monto': monto_total,
+    'codigo_unidad': codigo_unidad,
+    'resp_id':$('#resp_cm_id').html(),
+    'ci': $('#cm_ci').val(),
+    'nombrepago': $('#cm_nombre_pago').val(),
+    'paternopago': $('#cm_paternopago').val(),
+    'maternopago': $('#cm_maternopago').val(),
+    'observacion': $('#cm_observacion').val(),
+    'pago_por' : $('#tipo_resp').val(),
+    'domicilio' : $('#cm_domicilio').val(),
+    'cm_observacion':cm_observacion,
+    'tipo_registro':$('#tipo_registro').html(),*/
+
+
+       // dd($request);
+      if($request->isJson())
+      {
+          $this->validate($request, [
+              'id_cripta_mausoleo'=> 'required',
+              'cuenta'=> 'required',
+              'descripcion'=> 'required',
+              'ultima_gestion_actual'=> 'required',
+              'gestiones_act'=> 'required',
+              'cantidad'=> 'required',
+              'codigo_unidad'=> 'required',
+              'resp_id'=> 'required',
+              'ci'=> 'required',
+
+              'nombrepago'=> 'required',
+              'paternopago'=> 'required',
+              'pago_por'=> 'required',
+          ], [
+              'id_cripta_mausoleo.required'=> 'El campo identificador del mausoleo o cripta es obligatorio',
+              'cuenta.required'=> 'El nro de cuenta del servicio es requerido',
+              'descripcion.required'=> 'El nro de cuenta del servicio es requerido',
+              'ultima_gestion_actual.required'=> 'Debe seleccionar la(s) gestiones que desea pagar',
+              'gestiones_act.required'=> 'Debe seleccionar la(s) gestiones que desea pagar',
+              'cantidad.required'=> 'Debe seleccionar al menos una gestion a pagar',
+              'codigo_unidad.required'=> 'El codigo de la unidad es requerido',
+              'resp_id.required'=> 'La unidad debe estar asignada a un responsable',
+              'ci.required'=> 'El ci de la persona que realiza el pago es requerido',
+               'nombres_resp.required'=> 'El campo nombre del responsable es obligatorio',
+               'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
+               'pago_por.required'=> 'Debe especificar si el pago se esta realizando por el propietario o un tercero',
+
+          ]);
+
+             /** generar fur */
+                        //insert pago
+                        if($request->pago_por!= "Titular_responsable"){
+                            $pago_por="Tercera persona";
+                            $nombre_pago=$request->name_pago;
+                            $paterno_pago=$request->paterno_pago;
+                            $materno_pago=$request->materno_pago;
+                            $ci=$request->ci;
+                            $domicilio= $request->domicilio ?? "SIN ESPECIFICACION";
+                        }
+                        else{
+                            $pago_por="Titular responsable";
+                            $nombre_pago=$request->nombres_resp;
+                            if($request->paterno_resp==""){ $paterno_pago="NO DEFINIDO";}else{
+                                $paterno_pago=$request->paterno_resp;
+                            }
+                            if($request->domicilio==""){ $domicilio="NO DEFINIDO";}else{
+                                $domicilio= $request->domicilio;
+                            }
+
+                            $materno_pago=$request->materno_resp;
+                            $ci=$request->ci_resp;
+
+                        }
+            // dd($request);
+                    $datos_cajero=User::select()
+                    ->where('id',auth()->id())
+                    ->first();
+                    $cajero= $datos_cajero->user_sinot;
+                    $cantidades[0]=$request->cantidad;
+                    $servicio_hijos[0]=$request->num_sec;
+
+                    $response=$obj->GenerarFurCM($request->ci, $request->nombrepago, $request->paternopago,
+                    $request->maternopago, $request->domicilio, $request->codigo_unidad,
+                    $servicio_hijos , $cantidades, $cajero, null);
+
+
+                    if($response['status']==true){
+                        $fur = $response['response'];
+                     }
+
+                     $cripta= Cripta::where('id', $request->id_cripta_mausoleo)->first();
+                     $cripta->gestiones_pagadas = $request->gestiones_act;
+                     $cripta->ultima_gestion_pagada = $request->ultima_gestion_actual;
+                     $cripta->save();
+
+                                    $serv = new Mantenimiento();
+                                    $serv->codigo_ubicacion=$request->codigo_unidad;
+                                    $serv->date_in= date("Y-m-d H:i:s");
+                                    $serv->cuenta_tipo_servicio=$request->cuenta; //$request->tipo_servicio;
+                                    $serv->desc_servicio= $request->descripcion;
+                                    $serv->glosa= $request->descripcion;
+                                    $serv->estado="ACTIVO";
+                                    $serv->cuenta_servicio= $request->num_sec;
+                                    $serv->respdifunto_id=$request->resp_id;
+                                    $serv->fur=$fur;
+                                    $serv->gestion=$request->gestiones_act;
+                                    $serv->cantidad_gestiones=$request->cantidad;
+                                    $serv->ultimo_pago=$request->ultima_gestion_actual;
+                                    $serv->precio_sinot=$request->precio_sinot;
+                                    $serv->monto=$request->total_monto;
+                                    $serv->nombrepago=$request->nombrepago;
+                                    $serv->paternopago=$request->paternopago;
+                                    $serv->maternopago=$request->maternopago;
+                                    $serv->ci=$request->ci;
+                                    $serv->pago_por=$request->pago_por;
+                                    $serv->observacion=$request->observacion;
+                                    $serv->tipo_ubicacion=$request->tipo_registro;
+                                    $serv->id_ubicacion =$request->id_cripta_mausoleo ;
+                                    $serv->save();
+
+                                if($serv->id){
+                                    return response([
+                                        'status'=> true,
+                                        'mensage'=>"servicio registrado con exito"
+                                    ],200);
+                                }else{
+                                    return response([
+                                        'status'=> false,
+                                        'mensage'=>"algo fallo en la transaccion intentelo nuevamente"
+                                    ],201);
+                                }
+
+
+
+
+
+
+      }
+    }
 }
