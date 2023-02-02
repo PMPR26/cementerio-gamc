@@ -2140,6 +2140,22 @@ $("#cert_defuncion_p").dropzone({
             function add_to_list_difunto(dif_in, id_tabla_body, class_tabla, cond, key)
             {
 
+
+                                  if(dif_in.nombres=="" && dif_in.primer_apellido== "" && dif_in.fecha_nacimiento=="" && dif_in.fecha_defuncion=="" )
+                                  {
+                                                                  swal.fire({
+                                                                            title: "Precaucion!",
+                                                                            text: "!Debe completar los datos del difunto en el formulario actual, luego presionar el boton para adicion de difuntos!",
+                                                                            type: "warning",
+                                                                            timer: 2000,
+                                                                            showCancelButton: false,
+                                                                            showConfirmButton: false
+                                                                        });
+                                                                        setTimeout(function() {
+                                                                           return false
+                                                                        }, 2000);
+                                  }
+                                  else{
                                       var row=    ' <tr class="row-dif">'
                                             +     '<td id="cond'+key+'" class="data-condicion">'+cond+ ' </td>'
                                             +     '<td id="ci'+key+'" class="data-ci">'+dif_in.ci+ ' </td>'
@@ -2161,6 +2177,7 @@ $("#cert_defuncion_p").dropzone({
                                       $('.'+class_tabla+'').show();
                                       $('#'+id_tabla_body+'').append(row);
                                       $('#modal_save_pagos_cm').prop('disabled', false);
+                                  }
 
 
             }
