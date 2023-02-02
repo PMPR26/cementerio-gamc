@@ -13,13 +13,13 @@
 @stop
 
 @section('content')
-
+{{-- 
 <div class="card">
     <div class="card-body">
         <a href="{{ route('load.form') }}" id="new-servicio" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Servicio</a>
     </div>
  </div>
-
+ --}}
         <div class="col-sm-12">
             <table id="servicio-data" class="table table-striped table-bordered responsive" role="grid"
             aria-describedby="example">
