@@ -215,6 +215,11 @@
 
 @section('js')
     <script>
+
+
+
+
+
 /*****************************************************************************************/
 /***seleccion tipo de sitio-inicio de cargado de modal registro de cripta mausoleo******/
 /****************************************************************************************/
@@ -1794,6 +1799,7 @@ $("#cert_defuncion_p").dropzone({
          $(document).on('click', '#btn_pay_cm', function()
          {
             $('.clear').val("");
+            $('#tabla_difunto_row_pay').empty();
             $('#modal_pay_cm').modal('show');
             $('#id_cripta_mausoleo_modal_pay').val($(this).val());
             $('#contenedor_servicios').empty();
@@ -1808,6 +1814,7 @@ $("#cert_defuncion_p").dropzone({
                         success: function(data)
                         {
                            // alert(data.status);
+                          var array_difuntos=[];
                             if(data.status==true )
                             {
                                // alert(data.response.responsable);
@@ -1993,7 +2000,7 @@ $("#cert_defuncion_p").dropzone({
                                 serv= $.trim(((info[1]).split('-'))[0]);
                                 serv_txt=((info[1]).split('-'))[1];
 
-                                if(( id_serv =='623' || id_serv =='622' || id_serv =='636' )&& $('#inhumacion').val()=="NO"){
+                                if(( id_serv =='623' || id_serv =='622' || id_serv =='636' || id_serv =='1990'  )&& $('#inhumacion').val()=="NO"){
 
                                     $('.section_difunto').show();
                                     $('#modal_save_pagos_cm').prop('disabled', true);
@@ -2020,13 +2027,13 @@ $("#cert_defuncion_p").dropzone({
                                 serv=serv+", "+ $.trim(((info[1]).split('-'))[0]);
                                 serv_txt=serv_txt+", "+ $.trim(((info[1]).split('-'))[1]);
                                    // alert(id_serv);
-                                            if(( id_serv =='623' || id_serv =='622' || id_serv =='636')&& $('#inhumacion').val()=="NO"){
+                                            if(( id_serv =='623' || id_serv =='622' || id_serv =='636' || id_serv =='1990' )&& $('#inhumacion').val()=="NO"){
 
                                                 $('.section_difunto').show();
                                                 $('#modal_save_pagos_cm').prop('disabled', true);
                                                 return false;
                                             }
-                                            else if(( id_serv =='623' || id_serv =='622' || id_serv =='636')&& $('#inhumacion').val()=="SI"){
+                                            else if(( id_serv =='623' || id_serv =='622' || id_serv =='636' || id_serv =='1990' )&& $('#inhumacion').val()=="SI"){
                                                 $('.section_difunto').hide();
                                             }
                                             else if(( id_serv =='630' || id_serv =='628'  || id_serv =='633' || id_serv =='634' || id_serv =='635')&& $('#exhumacion_txt').val()=="NO"){
