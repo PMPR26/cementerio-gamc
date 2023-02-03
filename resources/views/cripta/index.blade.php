@@ -2008,11 +2008,11 @@ $("#cert_defuncion_p").dropzone({
                                 else if(( id_serv =='623' || id_serv =='622' || id_serv =='636' || id_serv =='1990')&& $('#inhumacion').val()=="SI"){
                                     $('.section_difunto').hide();
                                 }
-                                else if(( id_serv =='630' || id_serv =='628' || id_serv =='633' || id_serv =='634' || id_serv =='635')&& $('#exhumacion_txt').val()=="NO"){
+                                else if(( id_serv =='630' || id_serv =='628' || id_serv =='633' || id_serv =='634' || id_serv =='635' || id_serv =='1991' || id_serv =='1992' || id_serv =='1993')&& $('#exhumacion_txt').val()=="NO"){
                                    $('#dif_exhumado').show();
                                     seleccionar_difunto();
                                 }
-                                else if(( id_serv =='630' || id_serv =='628' || id_serv =='633' || id_serv =='634' || id_serv =='635')&& $('#exhumacion').val()=="SI"){
+                                else if(( id_serv =='630' || id_serv =='628' || id_serv =='633' || id_serv =='634' || id_serv =='635'  || id_serv =='1991' || id_serv =='1992' || id_serv =='1993')&& $('#exhumacion').val()=="SI"){
                                     $('#dif_exhumado').hide();
                                 }
                                 else{  $('.section_difunto').hide();
@@ -2036,14 +2036,15 @@ $("#cert_defuncion_p").dropzone({
                                             else if(( id_serv =='623' || id_serv =='622' || id_serv =='636' || id_serv =='1990' )&& $('#inhumacion').val()=="SI"){
                                                 $('.section_difunto').hide();
                                             }
-                                            else if(( id_serv =='630' || id_serv =='628'  || id_serv =='633' || id_serv =='634' || id_serv =='635')&& $('#exhumacion_txt').val()=="NO"){
+                                            else if(( id_serv =='630' || id_serv =='628'  || id_serv =='633' || id_serv =='634' || id_serv =='635'  || id_serv =='1991' || id_serv =='1992' || id_serv =='1993')&& $('#exhumacion_txt').val()=="NO"){
                                             $('#dif_exhumado').show();
                                                 seleccionar_difunto();
                                             }
-                                            else if(( id_serv =='630' || id_serv =='628' || id_serv =='633' || id_serv =='634' || id_serv =='635')&& $('#exhumacion_txt').val()=="SI"){
+                                            else if(( id_serv =='630' || id_serv =='628' || id_serv =='633' || id_serv =='634' || id_serv =='635'  || id_serv =='1991' || id_serv =='1992' || id_serv =='1993')&& $('#exhumacion_txt').val()=="SI"){
                                                 //$('#dif_exhumado').hide();
                                             }
                                             else{  $('.section_difunto').hide();
+                                            $('#dif_exhumado').hide();
                                             $('#modal_save_pagos_cm').prop('disabled', false);
 
                                             }
@@ -2066,6 +2067,30 @@ $("#cert_defuncion_p").dropzone({
 
             });
         }
+
+        $(document).on('click', '#1991', function(){
+            if($('#1991').is(":checked") ){
+                $('#contenedor_dif_serv').show();
+            }else{
+                $('#contenedor_dif_serv').hide();
+            }
+        })
+
+        $(document).on('click', '#1992', function(){
+            if($('#1992').is(":checked") ){
+                $('#contenedor_dif_serv').show();
+            }else{
+                $('#contenedor_dif_serv').hide();
+            }
+        })
+
+        $(document).on('click', '#1993', function(){
+            if($('#1993').is(":checked") ){
+                $('#contenedor_dif_serv').show();
+            }else{
+                $('#contenedor_dif_serv').hide();
+            }
+        })
         // adicionar datos del difunto a inhumar
             $(document).on('click', '#boton_dif_inhum', function(e){
                 e.preventDefault();
@@ -2172,7 +2197,7 @@ $("#cert_defuncion_p").dropzone({
                                             +     '<td id="cereci'+key+'" class="data-ceresi">'+dif_in.ceresi+ '</td>'
                                             +     '<td id="tipo'+key+'" class="data-tipo">'+dif_in.tipo+ '</td>'
                                             +     '<td id="nac'+key+'" class="data-nac">'+dif_in.fecha_nacimiento+ '</td>'
-                                            +     '<td id="edad'+key+'" class="data-edad">'+dif_in.edad+ '</td>'
+                                            +     '<td id="edad'+key+'" class="data-edad">'+calcularEdad(dif_in.fecha_nacimiento)+'</td>'
                                             +     '<td id="def'+key+'" class="data-def">'+dif_in.fecha_defuncion+ '</td>'
                                             +     '<td id="causa'+key+'" class="data-causa">'+dif_in.causa+ '</td>'
                                             +     '<td id="fun'+key+'" class="data-fun">'+dif_in.funeraria+ '</td>'
