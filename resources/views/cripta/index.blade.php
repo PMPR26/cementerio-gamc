@@ -1530,6 +1530,14 @@ $("#cert_defuncion_p").dropzone({
                                                                 }, 2000);
                                             }
                                 }
+                              /*   error: function (error) {
+                                    if(error.status == 422){
+                                        Object.keys(error.responseJSON.errors).forEach(function(k){
+                                        toastr["error"](error.responseJSON.errors[k]);
+                                        //console.log(k + ' - ' + error.responseJSON.errors[k]);
+                                        });
+                                    }
+                                } */
                     });
                 });
 
@@ -1704,7 +1712,7 @@ $("#cert_defuncion_p").dropzone({
                                                 'difuntos': difuntos,
                                             }),
                                             success: function(data)
-                                            { console.log("entraaaa");
+                                            {// console.log("entraaaa");
                                                  console.log(data);
                                                                 if(data.status==true){
                                                                     swal.fire({
@@ -1844,8 +1852,8 @@ $("#cert_defuncion_p").dropzone({
                                             data: JSON.stringify({
                                                             }),
                                             success: function(data) {
-                                                console.log("gggggggggggg");
-                                                console.log(data.response);
+                                                 //console.log("gggggggggggg");
+                                                //console.log(data.response);
                                                 $.each(data.response, function(key,val)
                                                 {
                                                           // console.log(val.descripcion );
@@ -1872,9 +1880,6 @@ $("#cert_defuncion_p").dropzone({
                                                                             $('#modal_save_pagos_cm').prop('disabled', false)
 
                                                                         }
-
-
-
                                                         }
                                                         }
                                                         else{
@@ -2516,8 +2521,8 @@ $("#cert_defuncion_p").dropzone({
                                             }),
                                             success: function(data)
                                             {
-                                                console.log("r5espuesta de servicios");
-                                                console.log(data);
+                                               // console.log("r5espuesta de servicios");
+                                               // console.log(data);
                                                 if(data.status==true){
                                                     swal.fire({
                                                         title: "Exito!",
@@ -2545,36 +2550,15 @@ $("#cert_defuncion_p").dropzone({
 
 
                                             },
-                                            error :function( data ) {
-                                                if( data.status === 422 ) {
-                                                    var msg="";
-                                                    var errors = $.parseJSON(data.responseText);
-                                                    $.each(errors, function (key, value) {
-                                                        // console.log(key+ " " +value);
-                                                    $('#response').addClass("alert alert-danger");
+                                            error: function (error) {
 
-                                                        if($.isPlainObject(value)) {
-                                                            $.each(value, function (key, value) {
-                                                                console.log(key+ " " +value);
-                                                                 msg=msg+value+", ";
-                                                           // $('#response').show().append(value+"<br/>");
-
-                                                            });
-                                                            swal.fire({
-                                                                title: "Precaución!",
-                                                                text:msg,
-                                                                type: "error",
-                                                                timer: 10000,
-                                                                showCancelButton: false,
-                                                                showConfirmButton: true
-                                                                });
-                                                                return false;
-                                                        }
-                                                        /*else{
-                                                        $('#response').show().append(value+"<br/>"); //this is my div with messages
-                                                        }*/
+                                                if(error.status == 422){
+                                                    Object.keys(error.responseJSON.errors).forEach(function(k){
+                                                    toastr["error"](error.responseJSON.errors[k]);
+                                                    //console.log(k + ' - ' + error.responseJSON.errors[k]);
                                                     });
                                                 }
+
                                             }
 
 
