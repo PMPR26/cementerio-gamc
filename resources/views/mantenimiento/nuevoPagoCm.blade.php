@@ -2555,37 +2555,15 @@ $("#cert_defuncion_p").dropzone({
 
 
                                             },
-                                            error :function( data ) {
-                                                if( data.status === 422 ) {
-                                                    var msg="";
-                                                    var errors = $.parseJSON(data.responseText);
-                                                    $.each(errors, function (key, value) {
-                                                        // console.log(key+ " " +value);
-                                                    $('#response').addClass("alert alert-danger");
-
-                                                        if($.isPlainObject(value)) {
-                                                            $.each(value, function (key, value) {
-                                                                console.log(key+ " " +value);
-                                                                 msg=msg+value+", ";
-                                                           // $('#response').show().append(value+"<br/>");
-
+                                            error: function (error) {
+                                                        if(error.status == 422){
+                                                            Object.keys(error.responseJSON.errors).forEach(function(k){
+                                                            toastr["error"](error.responseJSON.errors[k]);
+                                                            //console.log(k + ' - ' + error.responseJSON.errors[k]);
                                                             });
-                                                            swal.fire({
-                                                                title: "Precaución!",
-                                                                text:msg,
-                                                                type: "error",
-                                                                timer: 10000,
-                                                                showCancelButton: false,
-                                                                showConfirmButton: true
-                                                                });
-                                                                return false;
                                                         }
-                                                        /*else{
-                                                        $('#response').show().append(value+"<br/>"); //this is my div with messages
-                                                        }*/
-                                                    });
                                                 }
-                                            }
+
 
 
                                           });
