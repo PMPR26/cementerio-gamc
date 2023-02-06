@@ -10,7 +10,7 @@
                     </div>
                     <div class="modal-body">
                         <div id="response"></div>
-                       <form action="#" method="POST" >
+                       <form action="#" method="POST"  id="form_seccion_cripta" >
 
                             <div class="row">
                                     <input type="hidden" name="id_cripta_mausoleo_modal_pay" id="id_cripta_mausoleo_modal_pay" >
@@ -65,6 +65,8 @@
                                     </div>
                                     <input type="hidden" name="inhumacion"  id="inhumacion" value="NO">
                                     <input type="hidden" name="exhumacion"  id="exhumacion_txt" value="NO">
+                                    <input type="hidden" name="cremacion"   id="cremacion_txt" value="NO">
+
                             </div>
                             {{-- end row --}}
 
@@ -113,7 +115,7 @@
 
                     <div class="card row" style="padding-top: 15px;">
 
-                        <form action="#" method="POST" >
+                        <form action="#" method="POST"  id="form_seccion_difunto">
                             <div class="row section_difunto" id="section_difunto" style="display: none;">
                                 <h3 class="col-12 p-2" style="background: teal">Completar los datos del difunto que va a ingresar</h3>
                                    <br>

@@ -1980,6 +1980,20 @@ $("#cert_defuncion_p").dropzone({
             }
         }
 
+
+        //seleccionar cremacion
+          $(document).on('click', '#1990', function(){
+            if($(this).is(":checked")){
+                $('.section_difunto').show();
+                $('#cremacion_txt').val('SI');
+                $('#modal_save_pagos_cm').prop('disabled', true);
+            }
+            else{
+                $('.section_difunto').hide();
+                $('#cremacion_txt').val('NO');
+                $('#modal_save_pagos_cm').prop('disabled', false);
+            }
+          });
         // funcion para enlistar servicios seleccionados y calcular total acumulado
 
         function seleccionar_hijos_list(){
