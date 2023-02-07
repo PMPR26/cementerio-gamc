@@ -253,7 +253,7 @@
                     $('#infoPlazo').html('El nicho no tiene deudas pendientes');
                     swal.fire({
                         title: "Notificación!",
-                        text: "El nicho no tiene deudas pendientes!",
+                        text: "La unidad no tiene deudas pendientes!",
                         type: "success",
                         showCancelButton: false,
                         showConfirmButton: true
@@ -267,7 +267,7 @@
 
             function drawBox(gest, anio) {
                 var html = "";
-
+                var sup= $('#superficie').html();
                 for (var i = 1; i < gest; i++) {
                     var c = parseInt(anio) + parseInt(i);
 
@@ -275,6 +275,7 @@
                         html = '<tr>' +
                             '<td scope="row" >' + i + '</td> ' +
                             '<td>' + c + '</td> ' +
+                            '<td>' + sup + '</td> ' +
                             '<td>' + $('#precio_unitario').html() + '</td> ' +
                             '<td> <input type="checkbox" style="width:30px;  height: 30px;" name="sel[]" class="sel"  id="' +
                             c + '" value="' + c + '"></td> ' +
@@ -284,6 +285,7 @@
                         html = '<tr>' +
                             '<td scope="row" >' + i + '</td> ' +
                             '<td>' + c + '</td> ' +
+                            '<td>' + sup + '</td> ' +
                             '<td>' +  $('#precio_unitario').html()  + '</td> ' +
                             '<td> <input type="checkbox" style="width:30px;  height: 30px;" name="sel[]" class="sel" value="' +
                             c + '"  id="' + c + '" disabled></td> ' +
@@ -299,12 +301,14 @@
               function calcular_monto(){
                 var sum = 0;
                 var cant = 0;
+                var sup= $('#superficie').html();
+
                 var gestiones_acum =[];
                 var ult_pago=$('#ultima_gestion_pagada').val();
                 $('.sel').each(function(index) {
                     current = $(this).val();
                     if ($(this).is(':checked')) {
-                      sum = parseFloat(sum) + parseFloat($('#precio_unitario').html());
+                      sum = parseFloat(sum) + (sup * parseFloat($('#precio_unitario').html()));
                       cant=cant+1;
                       gestion=parseInt(ult_pago)+parseInt(index)+parseInt(1);
                       gestiones_acum=gestiones_acum + gestion+",";
@@ -1934,6 +1938,7 @@ $("#cert_defuncion_p").dropzone({
 
          $(document).on('click', '#btn_pay_cm_mant', function()
          {
+            $('#tabla_difunto_row_pay').empty();
             $('.clear').val("");
             $('#modal_pay_cmant').modal('show');
             $('#id_cripta_mausoleo_modal_pay').val($(this).val());
@@ -1959,6 +1964,7 @@ $("#cert_defuncion_p").dropzone({
                                         $('#resp_cm_id').html(data.response.responsable.id);
                                         $('#familia').html(data.response.cripta.familia);
                                         $('#tipo_registro').html(data.response.cripta.tipo_registro);
+                                        $('#superficie').html(data.response.cripta.superficie);
                                         var array_difuntos = jQuery.parseJSON(data.response.cripta.difuntos);
                                          $('#difuntos_cm1').html(data.response.cripta.difuntos);
                                         $.each(array_difuntos, function(key,val)

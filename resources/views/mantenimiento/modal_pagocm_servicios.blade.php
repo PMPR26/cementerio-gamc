@@ -18,7 +18,9 @@
                                         <div class="form-group">
                                             <label>Código:</label>
                                             <p id="cod_cm" class="clear"></p>
-                                            <p id="tipo_registro" class="clear"></p>
+                                            <p id="superficie" class="clear" style="display: none"></p>
+                                            <p id="tipo_registro" class="clear" style="display: none"></p>
+
                                             <p>Familia: <span id="familia"></span></p>
 
 
@@ -87,6 +89,8 @@
                             <tr>
                                 <th>Nro</th>
                                 <th>Gestion</th>
+                                <th>Superficie</th>
+
                                 <th>Monto</th>
                             </tr>
                         </thead>
@@ -111,7 +115,7 @@
                     <textarea name="cm_observacion" class="form-control clear" id="cm_observacion" cols="100" rows="3"></textarea>
                 </div>
 
-
+                {{-- <input type="text" name="adicion_difunto" id="adicion_difunto" value=""> --}}
 
                     <div class="card row" style="padding-top: 15px;">
 
@@ -130,6 +134,7 @@
                                             </div>
                                         </div>
                                     </div>
+
 
                                     <div class="col-sm-6">
                                         <div class="form-group">
@@ -241,6 +246,8 @@
 
                             </div>
                        </form>
+
+
 
                                 <div class="card-body" id="difuntos-data">
                                 </div>
