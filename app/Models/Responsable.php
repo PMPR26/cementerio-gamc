@@ -52,10 +52,10 @@ class Responsable extends Model
     }
 
     public function insertResponsable($request){
-        if($request->ci_resp==null ||$request->ci_resp=="" ){
-            $respons = new Responsable;  // correct
+        if(!isset($request->ci_resp) || $request->ci_resp==null || $request->ci_resp==''){
+            $resp=new Responsable;
+            $ci_resp=$resp->generateCiResponsable();
 
-            $ci_resp= $respons->generateCiResponsable();;
         }else{
             $ci_resp=$request->ci_resp;
         }

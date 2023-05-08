@@ -250,8 +250,9 @@ class MantenimientoController extends Controller
                                 $ci=$request->ci_resp;
 
                                }
-                             // dd($request);
-                             $codigo_nicho=$request->cuartel.".".$request->bloque.".".$request->nicho.".".$request->fila;
+                             $codigo_n=$request->cuartel.".".$request->bloque.".".$request->nro_nicho.".".$request->fila;
+                            // dd($codigo_n);
+
                              $servicio_cementery=['525'];
                             if (!empty($request->sel) && is_array($request->sel))
                              {
@@ -269,7 +270,7 @@ class MantenimientoController extends Controller
                                                             $obj= new ServicioNicho;
 
                                                             $response=$obj->GenerarFur($ci, $nombre_pago, $paterno_pago,
-                                                            $materno_pago, $domicilio,  $nombre_difunto, $codigo_nicho,
+                                                            $materno_pago, $domicilio,  $nombre_difunto, $codigo_n,
                                                             $request->bloque, $request->nro_nicho, $request->fila, $servicio_cementery, $cantgestiones, $cajero, null );
 
                                                             if($response['status']==true){
@@ -302,15 +303,10 @@ class MantenimientoController extends Controller
                                                 $mant->observacion=$request->observacion;
                                                 $mant->tipo_ubicacion="NICHO";
                                                 $mant->id_ubicacion=$id_nicho;
-
-
                                                 $mant->save();
                                                 return  $mant->id;
 
                              }
-
-
-
                 }
 
 
@@ -874,7 +870,6 @@ public function pagoMantenimientoCM(Request $request){
               'codigo_unidad'=> 'required',
               'resp_id'=> 'required',
               'ci'=> 'required',
-
               'nombrepago'=> 'required',
               'paternopago'=> 'required',
               'pago_por'=> 'required',
@@ -888,8 +883,8 @@ public function pagoMantenimientoCM(Request $request){
               'codigo_unidad.required'=> 'El codigo de la unidad es requerido',
               'resp_id.required'=> 'La unidad debe estar asignada a un responsable',
               'ci.required'=> 'El ci de la persona que realiza el pago es requerido',
-               'nombres_resp.required'=> 'El campo nombre del responsable es obligatorio',
-               'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
+               'nombrepago.required'=> 'El campo nombre del responsable es obligatorio',
+               'paternopago.required'=> 'El campo apellido paterno del responsable  es obligatorio',
                'pago_por.required'=> 'Debe especificar si el pago se esta realizando por el propietario o un tercero',
 
           ]);

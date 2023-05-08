@@ -146,7 +146,7 @@ class NichoController extends Controller
             'codigo_anterior' => $request->anterior,
             'codigo' => $request->codigo,
             'tipo' => $request->tipo,
-            'tipo' => $request->tipo,
+
             'estado_nicho'=>$request->estado_nicho,
             'user_id' => auth()->id(),
             'estado' => $request->estado,
