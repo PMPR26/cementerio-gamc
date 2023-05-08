@@ -519,7 +519,7 @@
                 <input type="hidden" name="pag_con_ant" id="pag_con_ant">
                 <input type="hidden" name="tiempo" id="tiempo">
                 <input type="hidden" name="vencido" id="vencido" value="asdada">
-                <input type="text" name="renov_txt" id="renov_txt" value="NO">
+                <input type="hidden" name="renov_txt" id="renov_txt" value="NO">
 
                     <div class="col-sm-12" style="text-align: center">
                         <button type="button" id="btn_guardar_servicio" class="btn btn-success">Registrar servicio</button>
