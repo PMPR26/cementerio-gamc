@@ -722,15 +722,7 @@ $(document).ready(function ()
                         '</tr>';
                 $('#list_detalle').append(row);
                 calcularMonto();
-                    //  serv.push(ar[0]);
-                    //  serv_txt.push(ar1[0]);
-                    //  serv_hijos.push(ar1[1]);
-                    //  serv_hijos_txt.push(ar[2]);
-                    //  precio.push(ar[3]);
-                    //  subtotal=cantidad*ar[3];
-                    //  cantidad_serv.push(cantidad);
-
-        }
+            }
 
         $(document).on('click','#gratis', function(){
                 if ($(this).is(':checked') ) {
@@ -869,7 +861,7 @@ $(document).ready(function ()
                                                 +'</div>'
                                                 +'<div class="col-sm-12 col-md-4 col-xl-4">'
                                                     +'<label for=""># de renovacion anterior</label>'
-                                                    +'<input type="number" name="renov_ant" id="renov_ant"  min="0" start="1" class="form-control renov"  onkeyup="calcRenov()">'
+                                                    +'<input type="number" name="renov_ant" id="renov_ant"  onKeyPress="if(this.value.length==2) return false;"    start="1" class="form-control renov"  onkeyup="calcRenov()">'
                                                 +'</div>'
                                                 +'<div class="col-sm-12 col-md-4 col-xl-4">'
                                                     +'<label for="">Ultimo cobro renovacion</label>'
@@ -877,7 +869,7 @@ $(document).ready(function ()
                                                 +'</div>'
                                                 +'<div class="col-sm-12 col-md-3 col-xl-3">'
                                                     +' <label for=""># de renovacion actual </label>'
-                                                    +'<input type="number" name="renov" id="renov" class="form-control renov" onblur="calcRenov()">'
+                                                    +'<input type="number" name="renov" id="renov"onKeyPress="if(this.value.length==2) return false;"   class="form-control renov" onblur="calcRenov()">'
                                                 +'</div>'
                                                 +'<div class="col-sm-12 col-md-3 col-xl-3">'
                                                     +'<label for="">Monto renovacion </label>'
@@ -930,16 +922,23 @@ $(document).ready(function ()
                                         'cuartel':  $('#cuartel').val()
                                     }),
                                     success: function(data_response) {
-                                        console.log(data_response.sql);
+                                        console.log("sql");
+                                        console.log(data_response.status);
+                                        if(data_response.status==true){
                                               //  consolidado();
                                                 $('#btn_guardar_servicio').prop('disabled', true);
-                                                if(data_response.sql.renovacion==null){
+                                                if(!data_response.sql.renovacion  || data_response.sql.renovacion==null){
                                                      $('#renov_ant').val(0);
                                                      $('#precio_renov_ant').val(0);
                                                     }else{
                                                         $('#renov_ant').val(data_response.sql.renovacion);
                                                         $('#precio_renov_ant').val(data_response.sql.monto_renov);
                                                     }
+                                                }
+                                                else{
+                                                    $('#renov_ant').val(0);
+                                                     $('#precio_renov_ant').val(0);
+                                                }
 
                                     },
 
@@ -965,6 +964,7 @@ $(document).ready(function ()
                });
 
                 $(document).on('click', '#buscar', function() {
+                    $('#contenido').hide();
 
                     $('.clear').val("");
                     $('.clear').html("");
@@ -976,16 +976,28 @@ $(document).ready(function ()
                     var bloque = $('#bloque').val();
                     var nicho = $('#nro_nicho').val();
                     var fila = $('#fila').val();
-                    if (bloque && nicho && fila) {
+                    if ((bloque && nicho && fila) && bloque!="" && nicho!=""  && fila!=""  ) {
                         dats=  buscar_datos(bloque, nicho, fila);
                         console.log(dats);
+                    }
+                    else{
+                        $('#sp').empty();
+                        $('#bloque').val("");
+                        $('#nro_nicho').val("");
+                        $('#fila').val("");
+                             Swal.fire(
+                                     'Atencion!',
+                                     'Debe introducir los datos a buscar.',
+                                      'error'
+                                    )
+                                    return false
                     }
 
                 });
 
         function buscar_datos(bloque, nicho, fila) {
              var datos = "";
-                $('#contenido').show();
+
                     $.ajax({
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -1001,6 +1013,7 @@ $(document).ready(function ()
                             }),
                             success: function(data) {
                                 if (data.mensaje) {
+                                    $('#contenido').show();
                                         $('#sp').empty();
                                     console.log(data);
                                   // cargar campos del los forms
@@ -1070,6 +1083,7 @@ $(document).ready(function ()
                                                 success: function(data) {
                                                     $('#sp').empty();
                                                     $('#form').show();
+                                                    $('#contenido').show();
                                                     $('#origen').val('tabla_antigua');
                                                     if(data.response.datos_difuntos!="")
                                                         {
