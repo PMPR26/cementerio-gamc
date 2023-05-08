@@ -41,7 +41,7 @@
                     @php($count = 1)
                     @foreach ($servicio as $serv)
 
-                        <tr>d
+                        <tr>
                             <td scope="row">{{ $count++ }}</td>
                             <td>{{ $serv->codigo_nicho??'' }}</td>
                             <td>{{ $serv->nombre_resp??' '   }} {{   $serv->primerap_resp??''    }}   {{    $serv->segap_resp??'' }}</td>
