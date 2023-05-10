@@ -19,7 +19,7 @@ class ResponsableDifunto extends Model
         'difunto_id',
         'codigo_nicho',
         'fecha_adjudicacion',
-        'tiempo',       
+        'tiempo',
         'user_id',
         'created_at'
     ];
@@ -29,38 +29,28 @@ class ResponsableDifunto extends Model
         'updated_at'
     ];
 
-    public function searchResponsableDifunt(Request $request){
-        $dif = Difunto::select()
-        ->where(['ci' => trim($request->ci_dif)])
-        ->first();
+    public function searchResponsableDifunt(Request $request ,$idresp, $difuntoid ){
 
-        $resp = Responsable::select()
-                            ->where(['ci' => trim($request->ci_resp)])
-                            ->first();
-
-                          
-
-            if( $dif &&   $resp  ){
+            if( $difuntoid &&   $idresp  ){
                 $respdif = DB::table('responsable_difunto')
                 ->select('responsable_difunto.*')
-                ->where(['responsable_id' => trim($resp->id) , 'difunto_id' => trim($dif->id) ])
+                ->where(['responsable_id' => trim($idresp) , 'difunto_id' => trim($difuntoid) ])
                 ->first();
-
               //  dd($respdif);
                 if($respdif!=null){
                     return $respdif->id;
-                    
+
                 }else{
                     return null;
                 }
-               
-    
+
+
             }else{
-    
+
                 return null;
             }
 
-       
+
 
     }
 
@@ -90,21 +80,21 @@ class ResponsableDifunto extends Model
                         "difunto.segundo_apellido as segap_dif",
                         "difunto.segundo_apellido as segap_dif",
                         "difunto.fecha_nacimiento as nacimiento_dif",
-                        "difunto.fecha_defuncion as fecha_def_dif",
+
                         "difunto.causa as causa_dif",
                         "difunto.fecha_defuncion as fecha_defuncion",
                         "difunto.tipo as tipo_dif",
                         "difunto.certificado_defuncion",
                         "difunto.genero as genero_dif",
                         "difunto.certificado_file", //certificado_defuncion
-                        "difunto.funeraria",                     
+                        "difunto.funeraria",
                        "nicho.tipo as tipo_nicho",
                         "nicho.codigo as nicho",
                         "nicho.codigo_anterior as anterior",
                         "bloque.codigo as bloque",
                         "cuartel.codigo as cuartel",
                         "nicho.nro_nicho",
-                        "nicho.cantidad_cuerpos")                    
+                        "nicho.cantidad_cuerpos")
                         ->leftJoin('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
                         ->leftJoin('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
                         ->leftJoin('nicho', 'nicho.codigo', '=', 'responsable_difunto.codigo_nicho')
@@ -113,9 +103,9 @@ class ResponsableDifunto extends Model
                         // ->where('responsable_difunto.codigo_nicho',  'ilike', '%'.$cod.'%' )
                         ->where('bloque.codigo','=',''.$bloque.'')
                         ->where('nicho.nro_nicho','=',''.$nicho.'')
-                        ->where('nicho.fila','=',''.$fila.'')  
-                        ->where('responsable_difunto.estado', '=', 'ACTIVO')    
-                        ->orderBy('responsable_difunto.id', 'DESC')            
+                        ->where('nicho.fila','=',''.$fila.'')
+                        ->where('responsable_difunto.estado', '=', 'ACTIVO')
+                        ->orderBy('responsable_difunto.id', 'DESC')
                         ->first();
 
                         // dd($busq);
@@ -125,15 +115,15 @@ class ResponsableDifunto extends Model
                                 else{
                                     $mensaje= false;
                                 }
-                        
+
                                 $respu= [
                                     "mensaje" => $mensaje,
                                     "response"=>$busq
                                     ];
-                    
+
                                 return response()->json($respu);
                     }
-   
-    
+
+
 
 }

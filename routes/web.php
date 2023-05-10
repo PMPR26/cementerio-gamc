@@ -75,7 +75,7 @@ Route::group(['prefix' => 'bloque', 'middleware' => 'auth'], function () {
     Route::put('/update-cripta', [App\Http\Controllers\Cripta\CriptaController::class,'updateCripta'])->name('cripta.update');
     Route::get('mausoleo-notable-pdf', [App\Http\Controllers\Cripta\CriptaController::class, 'printMausoleoNotables'])->name('mausoleosNotables');
     Route::get('cripta-notable-pdf', [App\Http\Controllers\Cripta\CriptaController::class, 'printCriptaNotables'])->name('criptasNotables');
-    Route::post('/save-pay-cm', [App\Http\Controllers\Cripta\CriptaController::class, 'savePaycm'])->name('save.service.pay.cm');
+    //Route::post('/save-pay-cm', [App\Http\Controllers\Cripta\CriptaController::class, 'savePaycm'])->name('save.service.pay.cm');
 
 
 
@@ -85,9 +85,11 @@ Route::group(['prefix' => 'bloque', 'middleware' => 'auth'], function () {
      Route::put('/agregar-difuntoCripta', [App\Http\Controllers\Cripta\CriptaController::class,'addDifunto'])->name('agregar.difuntos.cripta');
      Route::get('/getServicios', [App\Http\Controllers\Cripta\CriptaController::class,'getServices'])->name('get.services');
      Route::post('/get-difuntoCripta', [App\Http\Controllers\Cripta\CriptaController::class,'getDifuntoCripta'])->name('difuntoCripta.get');
-     Route::post('/ver-asignacion-difunto', [App\Http\Controllers\Cripta\CriptaController::class, 'verificarAsigancionDifunto'])->name('verificar.asigancion.difunto');
+     Route::post('/ver-asignacion-difunto', [App\Http\Controllers\Cripta\CriptaController::class, 'buscarDifuntoExistente'])->name('verificar.asigancion.difunto');
      Route::post('/buscar-difunto-existente', [App\Http\Controllers\Cripta\CriptaController::class, 'buscarDifuntoExistente'])->name('buscar.difunto.existente');
      Route::get('/cripta-notification', [App\Http\Controllers\Cripta\CriptaController::class,'configNotificacion'])->name('cripta.notification');
+     Route::post('/save-service-cripta', [App\Http\Controllers\Cripta\CriptaController::class, 'saveServiceCripta'])->name('guardar.servicio.cripta');
+    // public function saveServiceCripta(Request $request){
 
 });
 
@@ -134,6 +136,8 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::get('/renovacion', [App\Http\Controllers\Servicios\ServiciosController::class,'precioRenov'])->name('precio.renovacion');
     Route::get('generate-pdf', [App\Http\Controllers\Servicios\ServiciosController::class, 'generatePDF'])->name('serv.generatePDF')->middleware('auth');
     Route::post('/new-serviciocm', [App\Http\Controllers\Servicios\ServiciosController::class,'createNewServicioscm'])->name('new.serviciocm');
+    Route::post('/get-nro-renov',  [App\Http\Controllers\Servicios\ServiciosController::class,'getNroRenov'])->name('get.nro.renov');
+
 
 
 
@@ -145,6 +149,8 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
 
     Route::get('/relevamiento', [App\Http\Controllers\Servicios\RelevamientoController::class,'index'])->name('relev');
     Route::post('/new-relevamiento', [App\Http\Controllers\Servicios\RelevamientoController::class,'createNewRelev'])->name('new.relevamiento');
+    Route::post('/get-serv-hijos', [App\Http\Controllers\Servicios\ServiciosController::class,'getServHijos'])->name('get.serv');
+
 
 });
 
@@ -155,6 +161,7 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::get('/disable-responsable/{id}', 'App\Http\Controllers\Responsable\ResponsableController@disableAndEnableResponsable')->name('responsable.disable');
     Route::get('/get-responsable/{id}', 'App\Http\Controllers\Responsable\ResponsableController@getResponsable')->name('responsable.get');
     Route::put('/update-responsable', 'App\Http\Controllers\Responsable\ResponsableController@updateResponsable')->name('responsable.update');
+
     //search difunto and responsable por ci
     Route::post('/search-difunto-responsable', 'App\Http\Controllers\Responsable\ResponsableController@searchResponsableAndDifunt')->name('search.difunto.responsable');
 
@@ -185,6 +192,10 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
       Route::post('/buscarCuartel', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'buscarCuartel'])->name('buscar.cuartel');
       Route::post('/save-up-pay-info', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'relevamientoPagoMant'])->name('save.uppay.info');
       Route::get('/get-mantenimiento/{id}',  [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'getMantenimiento'])->name('mantenimiento.get');
+      Route::get('/form-paycm', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'indexcm'])->name('paycm_mant');
+//getInfoPayCm
+      Route::get('/getServicioMant', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'getInfoPayCm'])->name('get.services.mant');
+      Route::post('/pago-matenimiento', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'pagoMantenimientoCM'])->name('pay.mant.cm');
 
 
 });
@@ -195,6 +206,34 @@ Route::group(['prefix' => 'relevamiento', 'middleware' => 'auth'], function () {
     Route::post('/completar', [App\Http\Controllers\Servicios\ServiciosController::class, 'autocompletar'])->name('completar.datos');
 
 });
+
+//notificaciones
+
+//Route::group(['prefix' => 'Notificacion', 'middleware' => 'auth'], function () {
+    Route::get('/notificacion-tipo', [App\Http\Controllers\TipoNotificacionController::class,'index'])->name('notification-tipo');
+    Route::get('/new-tipo-notification', 'App\Http\Controllers\TipoNotificacionController@createNewTipoNotify')->name('new-tipo-notification');
+    Route::post('/save-tipo-notificacion', [App\Http\Controllers\TipoNotificacionController::class, 'saveTipoNotificacion'])->name('save.tipo.notificacion');
+    Route::post('/edit-Notification-Type', [App\Http\Controllers\TipoNotificacionController::class,'show'])->name('edit.Notification.Type');
+    Route::post('/save-tipo-notificacion', [App\Http\Controllers\TipoNotificacionController::class, 'saveTipoNotificacion'])->name('save.tipo.notificacion');
+
+    Route::post('/save-edit-tipo-notificacion', [App\Http\Controllers\TipoNotificacionController::class, 'saveEditTipoNotificacion'])->name('save.edit.tipo.notificacion');
+
+    Route::get('/notificacion-list', 'App\Http\Controllers\NotificacionesController@index')->name('notificacion.list');
+    Route::post('/notificacion', 'App\Http\Controllers\NotificacionesController@getNotificacion')->name('get.notificacion');
+    Route::get('/new-notificacion', 'App\Http\Controllers\NotificacionesController@CreateFormNotificar')->name('new.notificacion');
+    //new-notification
+    //print.notificacion
+    Route::post('/print-notificacion', 'App\Http\Controllers\NotificacionesController@printNotificacion')->name('print.notificacion');
+    //edit.notificacion
+    Route::post('/edit-Notification', [App\Http\Controllers\NotificacionesController::class,'editNotificacion'])->name('edit.notificacion');
+    Route::post('/get-tipo-notificacion', 'App\Http\Controllers\TipoNotificacionController@getTipo')->name('get.tipo.notificacion');
+    Route::post('/buscar-ubicacion', 'App\Http\Controllers\NotificacionesController@buscarUbicacion')->name('buscar.ubicacion');
+    Route::post('/controlar-notificacion', 'App\Http\Controllers\NotificacionesController@controlarNroNotificacion')->name('count.nro.notificacion');
+
+
+    //controlarNroNotificacion
+    //getTipo
+    //});
 
 
 

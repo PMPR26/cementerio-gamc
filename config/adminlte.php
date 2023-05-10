@@ -286,6 +286,12 @@ return [
             'route'  => 'mant',
             'icon' => 'fas fa-laptop-medical',
         ],
+      /*  [
+            'text' => 'MANTENIMIENTO CRIPTA/MAUSOLEO',
+            'route'  => 'mantcp',
+            'icon' => 'fas fa-laptop-medical',
+        ],
+*/
 
         ['header' => 'REGISTROS'],
         [
@@ -346,9 +352,15 @@ return [
            'submenu' => [
 
                             [
-                                'text' => 'CRIPTAS',
-                                'url'  => 'cripta/cripta-notification',
+                                'text' => 'GESTION TIPOS DE NOTIFICACION',
+                                'route'  => 'notification-tipo',
                             ],
+
+                            [
+                                'text' => 'NOTIFICAR',
+                                'route'  => 'notificacion.list',
+                            ],
+
 
                          ],
         ],
@@ -641,6 +653,62 @@ return [
                 ],
             ],
         ],
+        'datatable-boostrap' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/css/jquery.dataTables.min.css'
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/css/responsive.dataTables.min.css'
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/css/buttons.dataTables.min.css'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/js/jquery.dataTables.min.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/js/dataTables.buttons.min.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/js/jszip.min.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/js/buttons.html5.min.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/js/pdfmake.min.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/js/vfs_fonts.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/js/dataTables.responsive.min.js'
+                ]
+            ]
+        ],
+
     ],
 
     /*

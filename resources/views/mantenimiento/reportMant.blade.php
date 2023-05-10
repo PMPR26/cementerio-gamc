@@ -129,9 +129,9 @@
     <!-- Envuelva el contenido de su PDF dentro de una etiqueta principal -->
     <main>
         <pre>
-               {{-- @php(print_r($table ))
+               {{-- @php(print_r($table->glosa ))
                @php(die()) --}}
-            </pre>
+        </pre>
 
         <!-- tabla encabezado boleta -->
         <table width="100%">
@@ -160,14 +160,26 @@
                 <td width="60%" colspan="2">Pago realizado por : {{ $table->pago_por }}</td>
                 <td width="20%">Actividad: Preliquidación</td>
             </tr>
+            @if($table->tipo_ubicacion == "NICHO")
             <tr>
                 <td colspan="2"> <span class="rotulo"> DATOS DEL DIFUNTO</span></td>
                 <td></td>
             </tr>
+             @php($datos_nicho=explode(",", $table->glosa))
             <tr>
-                <td width="60%" colspan="2">C.I. o Codigo : {{ $table->codigo_dif }}</td>
-                <td width="20%">Nombre:  {{ $table->nombres }} {{ $table->primer_apellido }} {{ $table->segundo_apellido }} </td>
+                <td width="60%" colspan="2"> {{ $datos_nicho[1] }}</td>
+                <td width="20%">{{ $datos_nicho[5] }}</td>
             </tr>
+            @else
+            <tr>
+                <td colspan="2"> <span class="rotulo"> DATOS {{ $table->tipo_ubicacion }}</span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td width="60%" colspan="2">Codigo : {{ $table->codigo_ubicacion }}</td>
+                <td width="20%"></td>
+            </tr>
+            @endif
 
         </table>
 
@@ -177,32 +189,56 @@
                     <h4 align="left">DETALLE LIQUIDACION</h4>
                 </td>
             </tr>
-            <tr>
-                <td width="100%" colspan="2">Codigo nicho: {{ $table->codigo_nicho??'' }}</td>
-            </tr>
+            @if($table->tipo_ubicacion == "NICHO")
+                    <tr>
+                        <td width="100%" colspan="2">Codigo nicho: {{ $table->codigo_nicho??'' }}</td>
+                    </tr>
 
-            <tr class="thead">
-                <td width="10%" align="left">CUENTA</td>
-                <td width="50%" align="center">CONCEPTO</td>
-                <td width="10%" align="right">P.U.</td>
-                <td width="10%" align="right">CANTIDAD</td>
-                <td width="10%" align="right">TOTAL</td>
-            </tr>
+                    <tr class="thead">
+                        <td width="10%" align="left">CUENTA</td>
+                        <td width="50%" align="center">CONCEPTO</td>
+                        <td width="10%" align="right">P.U.</td>
+                        <td width="10%" align="right">CANTIDAD</td>
+                        <td width="10%" align="right">TOTAL</td>
+                    </tr>
 
-            <tr>
-                <td width="10%" align="left">15224361 </td>
-                <td width="50%" align="center">Pago por Conservación de nichos perpetuos de forma anual gestion(es):
-                    {{ $table->gestion ?? '' }} </td>
-                <td width="10%" align="center">{{ $table->precio_sinot ?? '' }}</td>
-                <td width="10%" align="right">{{ $table->cantidad_gestiones ?? '' }}</td>
-                <td width="10%" align="right">{{ $table->monto ?? '' }}</td>
-            </tr>
-            <tr class="odd">
-                <td width="80%" align="left" colspan="4">Total </td>
-                <td width="10%" align="right">{{ $table->monto ?? '' }}</td>
-            </tr>
+                    <tr>
+                        <td width="10%" align="left">15224361 </td>
+                        <td width="50%" align="center">Pago por Conservación de nichos perpetuos de forma anual gestion(es):
+                            {{ $table->gestion ?? '' }} </td>
+                        <td width="10%" align="center">{{ $table->precio_sinot ?? '' }}</td>
+                        <td width="10%" align="right">{{ $table->cantidad_gestiones ?? '' }}</td>
+                        <td width="10%" align="right">{{ $table->monto ?? '' }}</td>
+                    </tr>
+                    <tr class="odd">
+                        <td width="80%" align="left" colspan="4">Total </td>
+                        <td width="10%" align="right">{{ $table->monto ?? '' }}</td>
+                    </tr>
+
+                    @else
+                        <tr class="thead">
+                            <td width="10%" align="left">CUENTA</td>
+                            <td width="50%" align="center">CONCEPTO</td>
+                            <td width="10%" align="right">P.U.</td>
+                            <td width="10%" align="right">CANTIDAD</td>
+                            <td width="10%" align="right">TOTAL</td>
+                        </tr>
+
+                        <tr>
+                            <td width="10%" align="left">{{ $table->cuenta_tipo_servicio}} </td>
+                            <td width="50%" align="center">{{ $table->glosa}} :
+                                {{ $table->gestion ?? '' }} </td>
+                            <td width="10%" align="center">{{ $table->precio_sinot ?? '' }}</td>
+                            <td width="10%" align="right">{{ $table->cantidad_gestiones ?? '' }}</td>
+                            <td width="10%" align="right">{{ $table->monto ?? '' }}</td>
+                        </tr>
+                        <tr class="odd">
+                            <td width="80%" align="left" colspan="4">Total </td>
+                            <td width="10%" align="right">{{ $table->monto ?? '' }}</td>
+                        </tr>
 
 
+                    @endif
             <tr>
                 <td width='100%' colspan="5" height="80px">
                     <?php $subt1 = round($table->monto, 3);

@@ -1,16 +1,16 @@
     <!-- Modal crear -->
-    <div class="modal fade  animated bounceIn" id="modal_pay_cm" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade  animated bounceIn" id="modal_pay_cmant" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title" id="exampleModalLabel">Pago servicios Cripta - Mausoleos</h1>
+                        <h1 class="modal-title" id="exampleModalLabel">Servicios Cripta - Mausoleos</h1>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div id="response"></div>
-                       <form action="#" method="POST"  id="form_seccion_cripta" >
+                       <form action="#" method="POST" >
 
                             <div class="row">
                                     <input type="hidden" name="id_cripta_mausoleo_modal_pay" id="id_cripta_mausoleo_modal_pay" >
@@ -18,7 +18,10 @@
                                         <div class="form-group">
                                             <label>Código:</label>
                                             <p id="cod_cm" class="clear"></p>
-                                            <p id="tipo_registro" class="clear"></p>
+                                            <p id="superficie" class="clear" style="display: none"></p>
+                                            <p id="tipo_registro" class="clear" style="display: none"></p>
+
+                                            <p>Familia: <span id="familia"></span></p>
 
 
                                         </div>
@@ -63,47 +66,48 @@
                                                 </table>
                                         </p>
                                     </div>
-                                    <input type="hidden" name="inhumacion"  id="inhumacion" value="NO">
-                                    <input type="hidden" name="exhumacion"  id="exhumacion_txt" value="NO">
-                                    <input type="hidden" name="cremacion"   id="cremacion_txt" value="NO">
 
                             </div>
                             {{-- end row --}}
 
-                            <div class="row">
-                                {{-- <div class="col-sm-6">
-                                    <label>Tipo Servicio</label>
-                                    <select id="tipo_servicio_value_cm"
-                                        class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
-
-                                    </select>
-                                </div> --}}
-
-                                {{-- <div class="col-sm-6">
-                                    <label>Servicio</label>
-                                    <select id="servicio-hijos"
-                                        class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
-                                        <option value="">Seleccionar</option>
-
-                                    </select>
-                                </div>
-
-
-
-
-                                <div class="col-sm-6" id="service" style="display:none">
-                                    <label>Servicio</label>
-                                    <select id="servicio-hijos" class="form-control select2-multiple select2-hidden-accessible"
-                                        style="width: 100%"></select>
-                                </div> --}}
-                            </div>
                 <div class="row">
-                    <div class="col-12" id="contenedor_servicios" >
-                        <h5>SERVICIOS CRIPA-MAUSOLEOS </h5>
-                    </div>
+                    <div class="col-12" id="contenedor_servicios" ></div>
                 </div>
 
-                <div class="card row" id="contenedor_dif_serv" style="padding-top: 15px;">
+                <div class="row" id="contenedor_pagos" style="padding-top: 15px;">
+
+                    <div class="col-3"> <label for="ultima_gestion_pagada">Ultima Gestion Pagada anterior</label><input type="number" name="ultima_gestion_pagada" value="0" id="ultima_gestion_pagada" class="form-control"></div>
+
+                    <div class="col-3"> <label for="gestiones_pagadas">Ultima Gestion Pagada actual</label><input type="number" name="gestiones_pagadas" value="0" id="gestiones_pagadas" readonly class="form-control"></div>
+                    <div class="col-3"> <label for="cantidad">Cantidad</label><input type="number" name="cantidad" value="0" id="cantidad_ges" class="form-control" readonly><input type="hidden" name="gestiones_act" value="0" id="gestiones_act" class="form-control"></div>
+                    <div class="col-3"> <label for="gestiones_pagadas">Ver Gestiones Adeudadas<input type="checkbox" name="adeudado" value="0" id="gestiones_adeudadas" class="form-control"></label></div>
+                </div>
+
+                <div class="card" id="conservacion" style="display: none">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nro</th>
+                                <th>Gestion</th>
+                                <th>Superficie</th>
+
+                                <th>Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="row-cuota">
+                            <tr></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="cal_price" style="text-align: center">
+                    <div class="card">
+                        <div class="card-body" id="servicios-hijos-price" style="text-align: center">
+                        </div>
+                        <h1><span>Total :</span><span id="totalServ"> 0 </span> Bs</h1>
+                        <input type="hidden" name="totalservicios" id="totalservicios" value="0"
+                            class="form-control">
+                    </div>
                 </div>
 
                 <div class="col-sm-12 col-md-12 col-lg-12">
@@ -111,14 +115,13 @@
                     <textarea name="cm_observacion" class="form-control clear" id="cm_observacion" cols="100" rows="3"></textarea>
                 </div>
 
-
+                {{-- <input type="text" name="adicion_difunto" id="adicion_difunto" value=""> --}}
 
                     <div class="card row" style="padding-top: 15px;">
 
-                        <form action="#" method="POST"  id="form_seccion_difunto">
+                        <form action="#" method="POST" >
                             <div class="row section_difunto" id="section_difunto" style="display: none;">
-                                <h3 class="col-12 p-2" style="background: teal">Completar los datos del difunto que va a ingresar</h3>
-                                   <br>
+                                <h3 class="p-2" style="background: teal">Completar los datos del difunto que va a ingresar</h3>
                                     <div class="col-sm-12 col-md-4 col-xl-4">
                                         <label>Documento de Identidad:</label><span class="obligatorio">*</span>
                                         <div class="input-group input-group-lg">
@@ -131,6 +134,7 @@
                                             </div>
                                         </div>
                                     </div>
+
 
                                     <div class="col-sm-6">
                                         <div class="form-group">
@@ -243,6 +247,8 @@
                             </div>
                        </form>
 
+
+
                                 <div class="card-body" id="difuntos-data">
                                 </div>
                      </div>
@@ -250,8 +256,8 @@
 
 
 
-                <div class="card">
-                    <div class="card-header">
+              <div class="card">
+                 {{--      <div class="card-header">
                         <h4>DETALLE DE SERVICIOS SOLICITADOS</h4>
                     </div>
 
@@ -279,16 +285,8 @@
                         </div>
 
                     </div>
+--}}
 
-                    <div id="cal_price" style="text-align: center">
-                        <div class="card">
-                            <div class="card-body" id="servicios-hijos-price" style="text-align: center">
-                            </div>
-                            <h1><span>Total :</span><span id="totalServ"> 0 </span> Bs</h1>
-                            <input type="hidden" name="totalservicios" id="totalservicios" value="0"
-                                class="form-control">
-                        </div>
-                    </div>
                 </div>
 
                 <div class="row">
