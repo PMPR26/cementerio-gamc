@@ -240,7 +240,7 @@ class ServiciosController extends Controller
                     'paterno_dif'=> 'required',
                     'tipo_dif'=> 'required',
                     'genero_dif'=> 'required',
-                    'ci_resp' => 'required',
+                //   'ci_resp' => 'required',
                     'nombres_resp' => 'required',
                     'paterno_resp'=> 'required',
                     'domicilio'=> 'required',
@@ -254,7 +254,7 @@ class ServiciosController extends Controller
                     'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
                     'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
                     'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
-                    'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
+                    // 'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
                     'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
                     'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
                     'domicilio.required'=> 'El campo domicilio es obligatorio',
@@ -264,8 +264,6 @@ class ServiciosController extends Controller
                 ]);
             }
             else{
-
-
                     $this->validate($request, [
                         'nro_nicho' => 'required',
                         'bloque' => 'required',
