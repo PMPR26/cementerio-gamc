@@ -86,10 +86,10 @@
                             </select>
                         </div>
 
-                        <input type="text" name="cuenta_tipo_servicio" id="cuenta_tipo_servicio" value="{{ $cuenta}}">
-                        <input type="text" name="cuenta_servicio" id="cuenta_servicio" value="{{ $num_sec}}">
-                        <input type="text" name="text_servicio" id="text_servicio" value="{{ $descrip}}">
-                        <input type="text" name="costo_servicio" id="costo_servicio" value="{{ $precio}}">
+                        <input type="hidden" name="cuenta_tipo_servicio" id="cuenta_tipo_servicio" value="{{ $cuenta}}">
+                        <input type="hidden" name="cuenta_servicio" id="cuenta_servicio" value="{{ $num_sec}}">
+                        <input type="hidden" name="text_servicio" id="text_servicio" value="{{ $descrip}}">
+                        <input type="hidden" name="costo_servicio" id="costo_servicio" value="{{ $precio}}">
 
 
 
