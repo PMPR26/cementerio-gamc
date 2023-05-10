@@ -86,6 +86,14 @@
                             </select>
                         </div>
 
+                        <input type="text" name="cuenta_tipo_servicio" id="cuenta_tipo_servicio" value="{{ $cuenta}}">
+                        <input type="text" name="cuenta_servicio" id="cuenta_servicio" value="{{ $num_sec}}">
+                        <input type="text" name="text_servicio" id="text_servicio" value="{{ $descrip}}">
+                        <input type="text" name="costo_servicio" id="costo_servicio" value="{{ $precio}}">
+
+
+
+
                     </div>
                 </div>
 
@@ -146,7 +154,7 @@
                             <div class="col-sm-12 col-md-2 col-xl-2">
                                 <label>Fecha Nacimiento</label>
                                 <input style="text-transform:uppercase;"
-                                    onkeyup="javascript:this.value=this.value.toUpperCase();" type="date"
+                                    type="date"
                                     class="form-control clear" id="fechanac_dif" autocomplete="off">
                             </div>
                             <div class="col-sm-12 col-md-2 col-xl-2">
@@ -176,8 +184,8 @@
                                 onkeyup="javascript:this.value=this.value.toUpperCase();"
                                 class="form-control select2-multiple select2-hidden-accessible">
                                 <option value="">SELECIONAR CAUSA FALLECIMIENTO</option>
-                                @foreach ($causa as $causa)                                  
-                                        <option value="{{ $causa->causa }}">{{$causa->causa }}</option>                                   
+                                @foreach ($causa as $causa)
+                                        <option value="{{ $causa->causa }}">{{$causa->causa }}</option>
                                 @endforeach
                                </select>
                             </div>
@@ -275,7 +283,7 @@
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Fecha Nacimiento</label>
                                 <input style="text-transform:uppercase;"
-                                    onkeyup="javascript:this.value=this.value.toUpperCase();" type="date"
+                                     type="date"
                                     class="form-control" id="fechanac_resp" autocomplete="off">
                             </div>
 
@@ -331,7 +339,7 @@
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
                                     class="form-control" id="domicilio" autocomplete="off">
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -510,7 +518,7 @@
                 else if($('#bloque').val()!="" || $('#nro_nicho').val()!="" || $('#fila').val()!="" ){
                     $('#buscar').prop('disabled', false);
                 }
-                
+
             }
 
             // calcular total a pagar
@@ -573,7 +581,7 @@
                 $('.clean').html("");
                 $('#pag_con').val();
                 $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
-             
+
                 $('#form').hide();
                 var bloque = $('#bloque').val();
                 var nicho = $('#nro_nicho').val();
@@ -613,7 +621,11 @@
                         if (data.mensaje) {
                             $('#sp').empty();
                             $('#origen').val('tabla_nueva');
+                            console.log("++++++++++");
+
                             console.log(data);
+                            console.log("++++++++++");
+
                             // cargar campos del los forms
                             $('#cuartel').val(data.datos.cuartel);
                             $('#anterior').val(data.datos.anterior);
@@ -623,7 +635,7 @@
                             $('#paterno_dif').val(data.datos.paterno_dif);
                             $('#materno_dif').val(data.datos.materno_dif);
                             $('#fechanac_dif').val(data.datos.nacimiento_dif);
-                            $('#fecha_def_dif').val(data.response.fecha_def_dif);
+                            $('#fecha_def_dif').val(data.datos.fecha_defuncion);
                             $('#fechadef_dif').val(data.datos.fecha_adjudicacion);
                             $('#causa').val(data.datos.causa);
                             $('#sereci').val(data.datos.certificado_defuncion);
@@ -687,7 +699,7 @@
 
 
                                     if (data.response.datos_difuntos != "") {
-                                        // datos difunto       
+                                        // datos difunto
                                         var pg = data.response.datos_difuntos[0]
                                             .pag_con;
 
@@ -734,7 +746,7 @@
 
                                                 $('#pago_cont').html(pg);
                                                 $('#pago_cont_ant').html(pg);
-                                               
+
                                                 $('#tipo_nicho').val('PERPETUO');
                                             }
 
@@ -798,12 +810,12 @@
                                     autocompletar();
                                 }
                             });
-                           
+
                         }
-                       
-                      
+
+
                     }
-                   
+
                 });
                 autocompletar();
             }
@@ -946,7 +958,7 @@
                 if ($('#person').is(':checked')) {
                     if($('#name_pago').val()==""  || $('#paterno_pago').val()=="" || $('#ci').val()==""  ){
                         swal.fire({
-                            title: "Completar los datos de la persona que esta realizando el pago!",                          
+                            title: "Completar los datos de la persona que esta realizando el pago!",
                             type: "warning",
                             timer: 2000,
                             showCancelButton: false,
@@ -956,7 +968,7 @@
                 }else{
                     if($('#search_resp').val()==""  || $('#nombres_resp').val()=="" || $('#paterno_resp').val()==""  ){
                         swal.fire({
-                            title: "Completar los datos del responsable que esta realizando el pago!",                          
+                            title: "Completar los datos del responsable que esta realizando el pago!",
                             type: "warning",
                             timer: 2000,
                             showCancelButton: false,
@@ -977,8 +989,8 @@
                 });
                 var codigo_nicho=$('#cuartel').val()+"."+$('#bloque').val()+"."+$('#nro_nicho').val()+"."+$('#fila').val();
                 var difunto=$('#nombres_dif').val()+" "+$('#paterno_dif').val()+" "+$('#materno_dif').val();
-                var glosa="Pago por Conservación de nichos perpetuos de forma anual, Codigo nicho :"+codigo_nicho +"  Bloque: "+$('#bloque').val()+" Nicho: "+$('#nicho').val()+ " Fila:"+ $('#fila').val()+"  Difunto: "+ difunto;
-
+                var glosa="Pago por Conservación de nichos perpetuos de forma anual, Codigo nicho :"+codigo_nicho +" , Bloque: "+$('#bloque').val()+", Nicho: "+$('#nro_nicho').val()+ " ,Fila:"+ $('#fila').val()+" , Difunto: "+ difunto;
+                console.log(glosa);
                 return $.ajax({
                     type: 'POST',
                     headers: {
@@ -1033,9 +1045,12 @@
                         'id_difunto': $('#difunto_search').val(),
                         'id_responsable': $('#responsable_search').val(),
                         'observacion': $('#observacion').val(),
-                        'glosa':glosa
-
-
+                        'glosa':glosa,
+                        'codigo_ubicacion':codigo_nicho,
+                        'cuenta_tipo_servicio':$('#cuenta_tipo_servicio').val(),
+                        'cuenta_servicio':$('#cuenta_servicio').val(),
+                        'text_servicio':$('#text_servicio').val(),
+                        'precio':$('#precio').val(),
                     }),
                     success: function(data_response) {
                         console.log(data_response);
@@ -1210,7 +1225,7 @@
                             $('#telefono').val(data.response.telefono);
                             $('#celular').val(data.response.celular);
                             // $('#ecivil').val(data.response.estado_civil);
-                         
+
                             $('#domicilio').val(data.response.domicilio);
                             $('#genero_resp').val(data.response.genero);
                             $("#responsable_search").val(data.response.id);
@@ -1368,7 +1383,7 @@
                     "fila": fila
 
                 }),
-                success: function(data) {                   
+                success: function(data) {
                     if (data.status==true) {
                         $('#cuartel').val(data.resp.codigo);
                     }else{
@@ -1417,8 +1432,8 @@
                                         "nicho": $('#nro_nicho').val(),
                                         "fila": $('#fila').val()
                                     }),
-                                    success: function(data) 
-                                    {     
+                                    success: function(data)
+                                    {
                                     //    console.log(data);
                                           // data difunto
                                         //   alert(data['response'].fecha_adjudicacion);
@@ -1426,7 +1441,7 @@
                                         //   var f_adj=adj[0];
                                         //   alert(f_adj);
                                             if(data.response!=null)
-                                            {  
+                                            {
                                                 $('#search_dif').val(data['response'].ci_dif);
                                                 $('#nombres_dif').val(data['response'].nombre_dif);
                                                 $('#paterno_dif').val(data['response'].primerap_dif);
@@ -1445,14 +1460,15 @@
                                                 $('#nombres_resp').val(data['response'].nombre_resp);
                                                 $('#paterno_resp').val(data['response'].paterno_resp);
                                                 $('#materno_resp').val(data['response'].segap_resp);
+                                                $('#fechanac_resp').val(data.response.nacimiento_resp);
                                                 $('#telefono').val(data['response'].telefono);
                                                 $('#celular').val(data['response'].celular);
                                                 $('#genero_resp').val(data['response'].genero_resp);
                                                 $('#domicilio').val(data['response'].domicilio_resp);
-                                            } 
-                                           
-                                    }  
-                                                   
+                                            }
+
+                                    }
+
                      });
                    return false;
             }
@@ -1465,7 +1481,7 @@
                 });
 
             $(document).on('click' ,  'button[aria-describedby="select2-causa-container"] span', function(){
-                   $('#causa option:selected').remove(); 
+                   $('#causa option:selected').remove();
             })
 
     </script>

@@ -129,9 +129,9 @@
     <!-- Envuelva el contenido de su PDF dentro de una etiqueta principal -->
     <main>
         <pre>
-               {{-- @php(print_r($table ))
+               {{-- @php(print_r($table->glosa ))
                @php(die()) --}}
-            </pre>
+        </pre>
 
         <!-- tabla encabezado boleta -->
         <table width="100%">
@@ -165,9 +165,10 @@
                 <td colspan="2"> <span class="rotulo"> DATOS DEL DIFUNTO</span></td>
                 <td></td>
             </tr>
+             @php($datos_nicho=explode(",", $table->glosa))
             <tr>
-                <td width="60%" colspan="2">C.I. o Codigo : {{ $table->codigo_dif }}</td>
-                <td width="20%">Nombre:  {{ $table->nombres }} {{ $table->primer_apellido }} {{ $table->segundo_apellido }} </td>
+                <td width="60%" colspan="2"> {{ $datos_nicho[1] }}</td>
+                <td width="20%">{{ $datos_nicho[5] }}</td>
             </tr>
             @else
             <tr>

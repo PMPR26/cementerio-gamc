@@ -80,7 +80,7 @@ class ResponsableDifunto extends Model
                         "difunto.segundo_apellido as segap_dif",
                         "difunto.segundo_apellido as segap_dif",
                         "difunto.fecha_nacimiento as nacimiento_dif",
-                        "difunto.fecha_defuncion as fecha_def_dif",
+
                         "difunto.causa as causa_dif",
                         "difunto.fecha_defuncion as fecha_defuncion",
                         "difunto.tipo as tipo_dif",
