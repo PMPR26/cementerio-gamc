@@ -146,7 +146,7 @@
 
             </tr>
         </table>
-        <table>
+        <table  width="100%">
             <tr>
                 <td colspan="2"> <span class="rotulo"> IDENTIFICACION DEL CONTRIBUYENTE</span></td>
                 <td></td>
@@ -183,7 +183,7 @@
 
         </table>
 
-        <table>
+        <table  width="100%">
             <tr>
                 <td colspan="4" width="380px">
                     <h4 align="left">DETALLE LIQUIDACION</h4>
