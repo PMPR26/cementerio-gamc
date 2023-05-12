@@ -609,8 +609,8 @@ $(document).ready(function ()
                                 $('#serv-hijos-'+cuenta+'').empty();
                                 $.each(data_response.response, function(index, value) {
 
-                                    if (value.num_sec == '526' || value.num_sec == '525' || value.num_sec == '630' || value.num_sec == '628' ) {}
-                                    else {
+                                    // if (value.num_sec == '526' || value.num_sec == '525' || value.num_sec == '630' || value.num_sec == '628' ) {}
+                                    // else {
                                                 // console.log("asdas");
                                                 var html='<div class="form-check">'+
                                                 '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ id_cuenta +'-'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs."  >'+
@@ -621,7 +621,7 @@ $(document).ready(function ()
                                                     var contenedor_renov='<div id="contenedor_renov" ></div>';
                                                     $('#serv-hijos-'+cuenta+'').append(contenedor_renov);
                                                     }
-                                        }
+                                        // }
 
                                 });
                             }
@@ -1282,7 +1282,9 @@ $(document).ready(function ()
                                            showConfirmButton: false
                                            });
                                            setTimeout(function() {
-                                               location.reload();
+                                            //    location.reload();
+                                            window.location.href =  "{{URL::to('serv')}} " //"{{ route('serv') }}";
+
                                            }, 2000);
                                    }
 
@@ -1599,7 +1601,7 @@ $(document).ready(function ()
                                                 $('#materno_dif').val(data['response'].segap_dif);
                                                 $('#fechanac_dif').val(data['response'].nacimiento_dif);
                                                 $('#fecha_def_dif').val(data['response'].fecha_defuncion);
-                                                $('#fechadef_dif').val(data['response'].fecha_adjudicacion);
+                                                $('#fechadef_dif').val(data['response'].fecha_defuncion);
                                                 $('#tipo_dif').val(data['response'].tipo_dif);
                                                 $('#genero_dif').val(data['response'].genero_dif);
                                                 $('#tiempo').val(data['response'].tiempo);
@@ -1629,6 +1631,20 @@ $(document).ready(function ()
                 swal.fire({
                                     title: "Precaucion!",
                                     text: "!Complete la fecha de nacimiento de la sección del responsable",
+                                    type: "warning",
+                                  //  timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: true
+                                    });
+                                    setTimeout(function() {
+                                       return false;
+                                    }, 2000);
+              }
+
+              if($('#fechadef_dif').val() =="" || !$('#fechadef_dif').val()){
+                swal.fire({
+                                    title: "Precaucion!",
+                                    text: "!Complete la fecha de defuncion de la sección del responsable",
                                     type: "warning",
                                   //  timer: 2000,
                                     showCancelButton: false,
