@@ -1860,8 +1860,8 @@ $("#cert_defuncion_p").dropzone({
                                                     // alert($('#tabla_difunto_row_pay').children().length);
                                                         if($('#tabla_difunto_row_pay').children().length>0)
                                                         {
-                                                        if(val.cuenta=='15224370' || val.cuenta=='15224330' || val.cuenta=='15224380' || val.cuenta=='15224300' || val.cuenta=='15224390' ){}
-                                                        else{
+                                                        // if(val.cuenta=='15224370' || val.cuenta=='15224330' || val.cuenta=='15224380' || val.cuenta=='15224300' || val.cuenta=='15224390' ){}
+                                                        // else{
                                                             var html='<div class="form-check '+val.cuenta+'">'+
                                                                         '<input class="form-check-input" type="checkbox" id="'+val.cuenta+'" name="serv[tipo_servicio]" value="'+val.cuenta+'-'+val.descripcion+'"  onclick="cargar_sevicios_hijos(this)">'+
                                                                         '<label class="form-check-label labelservice" for="'+val.cuenta+'">'+val.descripcion+'</label>'+
@@ -1880,7 +1880,7 @@ $("#cert_defuncion_p").dropzone({
                                                                             $('#modal_save_pagos_cm').prop('disabled', false)
 
                                                                         }
-                                                        }
+                                                       // }
                                                         }
                                                         else{
                                                             if(val.cuenta=="15224150" || val.cuenta=="15224250" || val.cuenta=="15224410" ){
