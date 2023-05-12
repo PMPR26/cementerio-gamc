@@ -63,7 +63,7 @@ class ServiciosController extends Controller
         ];
         try {
             $client = new Client();
-            $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/get-services', [
+            $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/get-services', [
                 'json' => [],
                 'headers' => $headers
             ]);
@@ -246,8 +246,6 @@ class ServiciosController extends Controller
                     'domicilio'=> 'required',
                     'genero_resp'=> 'required',
                     'servicios_adquiridos' => 'required',
-
-
                 ], [
                     // 'ci_dif.required' => 'El campo ci del difunto es obligatorio, si no tiene documento presione el boton "generar carnet provisional  (icono lapiz)" para asignarle un numero provisional',
                     'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
@@ -313,6 +311,8 @@ class ServiciosController extends Controller
                 $txt_servicios_hijos=[];
                 $cantidad=[];
                 $pago_renovaciones="NO";
+                $permitir_ingreso_nuevo_cuerpo="NO";
+
                 foreach($request->servicios_adquiridos as $value){
                     array_push($tipo_servicio, $value['tipo_servicio']);
                     array_push($txt_tipo_servicio, $value['txt_tipo_servicio']);
@@ -321,11 +321,11 @@ class ServiciosController extends Controller
                     array_push($cantidad, $value['cantidad']);
                 }
 
-             /****recuperar datos del cajero para registrar el pago  *****/
-             $datos_cajero=User::select()
-            ->where('id',auth()->id())
-            ->first();
-            $cajero= $datos_cajero->user_sinot;
+                /**** recuperar datos del cajero para registrar el pago  *****/
+                $datos_cajero=User::select()
+                ->where('id',auth()->id())
+                ->first();
+                $cajero= $datos_cajero->user_sinot;
 
             /********recuperar datos de la persona que realizo el pago, si es el propietario o un tercer responsable */
 
@@ -381,16 +381,30 @@ class ServiciosController extends Controller
                                             $cant=1;
                                         }
                                     }else if($servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='1982'){
-                                        if($difuntoEnNicho==false)
+                                        if($difuntoEnNicho==false && $request->tipo_nicho== "TEMPORAL")
                                         {
                                                 $cantidadEnNicho=$this->contarDifuntoEnNicho($codigo_n);
-                                                if( $cantidadEnNicho !=false){
+                                                if( $cantidadEnNicho ==0){
                                                     $cant= $cantidadEnNicho + 1;
                                                 }else{
                                                     $cant=1;
+
                                                 }
 
-                                        }else{
+                                        }
+                                        else if($difuntoEnNicho==false && $request->tipo_nicho == "PERPETUO")
+                                        {
+                                                $cantidadEnNicho=$this->contarDifuntoEnNicho($codigo_n);
+                                                if( $cantidadEnNicho <4){
+                                                    $cant= $cantidadEnNicho + 1;
+                                                    $permitir_ingreso_nuevo_cuerpo="SI";
+                                                }else{
+                                                    $cant= $cantidadEnNicho;
+                                                    $permitir_ingreso_nuevo_cuerpo="NO";
+                                                }
+
+                                        }
+                                        else{
                                                     if( $cantidadEnNicho !=false){
                                                         $cant= $cantidadEnNicho;
                                                     }else{
@@ -553,6 +567,8 @@ class ServiciosController extends Controller
                         ->select()
                         ->first();
 
+
+
                         // dd($existeDifunto);
                         if ( !$existeDifunto ||  $existeDifunto == null) {
                              $difuntoid = $this->insertDifunto($request);
@@ -581,6 +597,7 @@ class ServiciosController extends Controller
                         $this->updateResponsable($request, $idresp);
                     }
                     //end responsable
+
                     //insertar tbl responsable_difunto
                     if (isset($difuntoid) && isset($idresp)) {
 
@@ -1053,9 +1070,7 @@ class ServiciosController extends Controller
                ->where('difunto.primer_apellido','=', ''.$request->paterno_dif.'')
                ->where('difunto.segundo_apellido','=', ''.$request->materno_dif.'')
                ->where('difunto.fecha_nacimiento','=', ''.$request->fechanac_dif.'')
-
                ->first();
-
                if($sql){ return $sql;}
                else{ return false;}
     }
@@ -1186,8 +1201,8 @@ class ServiciosController extends Controller
     public function getServHijos(Request $request){
         $headers =  ['Content-Type' => 'application/json'];
                 $client = new Client();
-                // $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-all-servicios-cm', [
-                    $response = $client->post('https://multiserv.cochabamba.bo/api/v1/cementerio/generate-all-servicios-cm', [
+                $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-all-servicios-cm', [
+                    // $response = $client->post('https://v.cochabamba.bo/api/v1/cementerio/generate-all-servicios-cm', [
                'json' => [
                         'data' => $request->data
                     ],
@@ -1195,6 +1210,24 @@ class ServiciosController extends Controller
                 ]);
                 $sevicio = json_decode((string) $response->getBody(), true);
                 return $sevicio;
+
+    }
+
+    public function completarInfoNicho(Request $request){
+        $nicho= New Nicho;
+        $info=$nicho->InfoNicho($request->nicho, $request->fila, $request->bloque);
+        if($info){
+            return response([
+                'status'=> true,
+                'info'=>  $info
+             ],200);
+        }
+        else{
+            return response([
+                'status'=> false,
+                'mensaje'=>  "No se enecontro información del nicho"
+             ],201);
+        }
 
     }
 
