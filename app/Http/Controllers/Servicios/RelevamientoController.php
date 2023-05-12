@@ -48,17 +48,17 @@ class RelevamientoController extends Controller
                 'responsable_difunto.monto_ultima_renov as monto_renov',
                 'responsable_difunto.gestion_renov as gestion_renov',
 
-                'cuartel.codigo as cuartel'                
+                'cuartel.codigo as cuartel'
             )
             ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
             ->join('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
             ->join('nicho', 'nicho.codigo', '=', 'responsable_difunto.codigo_nicho')
             ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id')
-            ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')           
+            ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
             ->orderBy('nicho.id', 'DESC')
             ->get();
 
-          
+
 
         return view('servicios/listrelev', ['servicio' => $servicio]);
     }
@@ -71,7 +71,7 @@ class RelevamientoController extends Controller
         ];
         try {
             $client = new Client();
-            $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/get-services', [
+            $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/get-services', [
                 'json' => [],
                 'headers' => $headers
             ]);
@@ -96,13 +96,13 @@ class RelevamientoController extends Controller
 
         return view('servicios/relevamiento', ['tipo_service' => $tipo_service['response'], 'funeraria' => $funeraria, 'causa' => $causa]);
     }
- 
+
 
     public function buscar_nichorel(Request $request)
     {
 // dd($request);
         $sql = DB::table('responsable_difunto')
-            ->select(DB::raw('            
+            ->select(DB::raw('
                responsable_difunto.*,
                responsable.segundo_apellido as segap_resp,
                responsable.fecha_nacimiento as nacimiento_resp,
@@ -128,7 +128,7 @@ class RelevamientoController extends Controller
                difunto.certificado_defuncion,
                difunto.genero as genero_dif,
                difunto.certificado_file,
-               difunto.funeraria,               
+               difunto.funeraria,
                nicho.tipo as tipo_nicho,
                nicho.codigo as nicho,
                nicho.codigo_anterior as anterior,
@@ -150,21 +150,21 @@ class RelevamientoController extends Controller
             ->orderBy('nicho.id', 'DESC')
             ->first();
 
-         
+
             if($sql){
                 $mensaje=true;
             }
             else{
                 $mensaje= false;
             }
-    
+
             $resp= [
                 "mensaje" => $mensaje,
                 "response"=>$sql
                 ];
 
              return response()->json($resp);
-        
+
     }
 
 
@@ -218,7 +218,7 @@ class RelevamientoController extends Controller
         if ($request->isJson()) {
             $this->validate($request, [
                 "fur" => 'required',
-                "id_usuario_caja" => 'required',               
+                "id_usuario_caja" => 'required',
             ]);
 
             $servicio = ServicioNicho::select('id', 'fur')
@@ -259,14 +259,14 @@ class RelevamientoController extends Controller
 
             if($request->externo == "externo" && $request->gratis == "gratis"){
                 $this->validate($request, [
-                  
+
                     'ci_dif' => 'required',
                     'nombres_dif' => 'required',
                     'paterno_dif'=> 'required',
                     'tipo_dif'=> 'required',
                     'genero_dif'=> 'required',
                     'ci_resp' => 'required',
-                    
+
                 ], [
                     'ci_dif.required' => 'El campo ci del difunto es obligatorio, si no tiene documento presione el boton "generar carnet provisional  (icono lapiz)" para asignarle un numero provisional',
                     'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
@@ -274,10 +274,10 @@ class RelevamientoController extends Controller
                     'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
                     'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
                     'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
-                                    
+
                 ]);
             }
-            else{          
+            else{
             $this->validate($request, [
                 'nro_nicho' => 'required',
                 'bloque' => 'required',
@@ -289,7 +289,7 @@ class RelevamientoController extends Controller
                 'paterno_dif'=> 'required',
                 'tipo_dif'=> 'required',
                 'genero_dif'=> 'required',
-           
+
             ], [
                 'nro_nicho.required' => 'El campo nicho es obligatorio',
                 'bloque.required' => 'El campo bloque es obligatorio',
@@ -301,20 +301,20 @@ class RelevamientoController extends Controller
                 'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
                 'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
                  'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
-                        
+
             ]);
         }
            // if (!empty($request->servicio_hijos) && is_array($request->servicio_hijos)) {
-              
-                        $estado_nicho="OCUPADO";                    
-                        $cant=1;    
+
+                        $estado_nicho="OCUPADO";
+                        $cant=1;
                         $codigo_n = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
                         $existeNicho = Nicho::where('codigo', $codigo_n)->first();
 
                         if ($existeNicho != null) {
                             $id_nicho = $existeNicho->id;
                             $upnicho= Nicho::where('id',  $id_nicho)->first();
-                            if(isset($estado_nicho)){                            
+                            if(isset($estado_nicho)){
                                 $upnicho->estado_nicho=$estado_nicho;
                             }
 
@@ -377,7 +377,7 @@ class RelevamientoController extends Controller
             $codigo_nicho = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
             }
             //step1: nicho buscar si existe registrado el nicho recuperar el id  sino existe registrarlo
-            
+
 
             // step2: register difunto --- si id_difunto id_difunto es null insertar difunto insertar responsable
             $existeDifunto = Difunto::where('ci', $request->ci_dif)->first();
@@ -389,7 +389,7 @@ class RelevamientoController extends Controller
                 $this->updateDifunto($request, $difuntoid);
             }
             // end difunto
-            // step4: register responsable -- si el responsable  
+            // step4: register responsable -- si el responsable
             $existeResponsable = Responsable::where('ci', $request->ci_resp)->first();
             if (!$existeResponsable) {
                 //insertar difunto
@@ -399,10 +399,10 @@ class RelevamientoController extends Controller
                 }
                 else{
                     $idresp = 28;                }
-                
-               
+
+
             } else {
-                
+
                 // $this->updateResponsable($request, $idresp);
                 $idresp=Responsable::updateResponsable($request,$existeResponsable->id);
 
@@ -414,7 +414,7 @@ class RelevamientoController extends Controller
              $existeDifuntoResp=$this->buscarDifuntoResp($request->ci_dif);
             //  print_r("asdasd");
             //  dd($existeDifuntoResp);
-     
+
             // $existeDifuntoResp = ResponsableDifunto::where('ci', $request->ci_dif)->first();
 
             if (isset($difuntoid) && isset($idresp)) {
@@ -432,11 +432,11 @@ class RelevamientoController extends Controller
                         $iddifuntoResp = $this->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
                     }
                 }
-              
+
             }
 
 
-           
+
     }
 
     public function insDifuntoResp($request, $difuntoid, $idresp, $codigo_n, $estado_nicho){
@@ -444,16 +444,16 @@ class RelevamientoController extends Controller
         $dif = new ResponsableDifunto ;
         $dif->responsable_id = $idresp;
         $dif->difunto_id = $difuntoid;
-        $dif->codigo_nicho = $codigo_n;       
-        $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;       
-        $dif->tiempo = $request->tiempo;  
-       
-            $dif->estado_nicho = 'OCUPADO';             
-      
-        $dif->estado = 'ACTIVO';  
-        $dif->nro_renovacion = $request->nro_renovacion ?? null;       
-        $dif->monto_ultima_renov = $request->monto_ultima_renov ?? null;       
-        $dif->gestion_renov = $request->gestion_renov  ?? null   ;  
+        $dif->codigo_nicho = $codigo_n;
+        $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;
+        $dif->tiempo = $request->tiempo;
+
+            $dif->estado_nicho = 'OCUPADO';
+
+        $dif->estado = 'ACTIVO';
+        $dif->nro_renovacion = $request->nro_renovacion ?? null;
+        $dif->monto_ultima_renov = $request->monto_ultima_renov ?? null;
+        $dif->gestion_renov = $request->gestion_renov  ?? null   ;
 
         $dif->user_id = auth()->id();
         $dif->save();
@@ -465,21 +465,21 @@ class RelevamientoController extends Controller
         public function updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n,  $estado_nicho){
             $dif= ResponsableDifunto::where('responsable_id', $idresp)
                                ->where('difunto_id', $difuntoid)
-                               ->where('codigo_nicho', $codigo_n)->first();   
+                               ->where('codigo_nicho', $codigo_n)->first();
             $dif->responsable_id = $idresp;
             $dif->difunto_id = $difuntoid;
-            $dif->codigo_nicho = $codigo_n;       
-            $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;       
-            $dif->tiempo = $request->tiempo;  
-            if($estado_nicho=="LIBRE"){ 
-                $dif->estado_nicho = $estado_nicho;   
-                $dif->fecha_liberacion= date("Y-m-d H:i:s");   
-                } 
-            $dif->estado = 'ACTIVO';  
+            $dif->codigo_nicho = $codigo_n;
+            $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;
+            $dif->tiempo = $request->tiempo;
+            if($estado_nicho=="LIBRE"){
+                $dif->estado_nicho = $estado_nicho;
+                $dif->fecha_liberacion= date("Y-m-d H:i:s");
+                }
+            $dif->estado = 'ACTIVO';
             $dif->user_id = auth()->id();
-            $dif->nro_renovacion = $request->nro_renovacion ?? null;       
-            $dif->monto_ultima_renov = $request->monto_ultima_renov ?? null;       
-            $dif->gestion_renov = $request->gestion_renov  ?? null   ;  
+            $dif->nro_renovacion = $request->nro_renovacion ?? null;
+            $dif->monto_ultima_renov = $request->monto_ultima_renov ?? null;
+            $dif->gestion_renov = $request->gestion_renov  ?? null   ;
             $dif->save();
             $dif->id;
             return  $dif->id;
@@ -497,11 +497,11 @@ class RelevamientoController extends Controller
         $dif->fecha_defuncion = $request->fecha_def_dif ?? null;
         $dif->certificado_defuncion = $request->sereci;
         $dif->causa = $request->causa;
-        $dif->tipo = $request->tipo_dif; 
-        $dif->genero = $request->genero_dif;  
-        $dif->certificado_file = $request->urlcertificacion;           
-        $dif->funeraria = $request->funeraria;  
-        $dif->estado = 'ACTIVO';  
+        $dif->tipo = $request->tipo_dif;
+        $dif->genero = $request->genero_dif;
+        $dif->certificado_file = $request->urlcertificacion;
+        $dif->funeraria = $request->funeraria;
+        $dif->estado = 'ACTIVO';
         $dif->user_id = auth()->id();
         $dif->save();
         $dif->id;
@@ -519,11 +519,11 @@ class RelevamientoController extends Controller
         $difunto->fecha_defuncion = $request->fecha_def_dif ?? null;
         $difunto->certificado_defuncion = $request->sereci;
         $difunto->causa = $request->causa;
-        $difunto->tipo = $request->tipo_dif; 
-        $difunto->genero = $request->genero_dif;  
-        $difunto->certificado_file = $request->urlcertificacion;           
-        $difunto->funeraria = $request->funeraria;  
-        $difunto->estado = 'ACTIVO';  
+        $difunto->tipo = $request->tipo_dif;
+        $difunto->genero = $request->genero_dif;
+        $difunto->certificado_file = $request->urlcertificacion;
+        $difunto->funeraria = $request->funeraria;
+        $difunto->estado = 'ACTIVO';
         $difunto->user_id = auth()->id();
         $difunto->save();
         return $difunto->id;
@@ -537,13 +537,13 @@ class RelevamientoController extends Controller
     //     $responsable->primer_apellido = $request->paterno_resp;
     //     $responsable->segundo_apellido = $request->materno_resp;
     //     //$responsable->fecha_nacimiento = $request->fechanac_resp;
-    //     $responsable->genero = $request->genero_resp;  
-    //     $responsable->telefono = $request->telefono;  
-    //     $responsable->celular = $request->celular;  
-    //     //$responsable->estado_civil = $request->ecivil;  
-    //     $responsable->domicilio = $request->domicilio; 
-    //     //$responsable->email = $request->email;  
-    //     $responsable->estado = 'ACTIVO';  
+    //     $responsable->genero = $request->genero_resp;
+    //     $responsable->telefono = $request->telefono;
+    //     $responsable->celular = $request->celular;
+    //     //$responsable->estado_civil = $request->ecivil;
+    //     $responsable->domicilio = $request->domicilio;
+    //     //$responsable->email = $request->email;
+    //     $responsable->estado = 'ACTIVO';
     //     $responsable->user_id = auth()->id();
     //     $responsable->save();
     //     $responsable->id;
@@ -559,13 +559,13 @@ class RelevamientoController extends Controller
         $responsable->primer_apellido = $request->paterno_resp;
         $responsable->segundo_apellido = $request->materno_resp;
         //$responsable->fecha_nacimiento = $request->fechanac_resp;
-        $responsable->genero = $request->genero_resp;  
-        $responsable->telefono = $request->telefono;  
-        $responsable->celular = $request->celular;  
-        //$responsable->estado_civil = $request->ecivil;  
-        $responsable->domicilio = $request->domicilio; 
-        //$responsable->email = $request->email;  
-        $responsable->estado = 'ACTIVO';  
+        $responsable->genero = $request->genero_resp;
+        $responsable->telefono = $request->telefono;
+        $responsable->celular = $request->celular;
+        //$responsable->estado_civil = $request->ecivil;
+        $responsable->domicilio = $request->domicilio;
+        //$responsable->email = $request->email;
+        $responsable->estado = 'ACTIVO';
         $responsable->user_id = auth()->id();
         $responsable->save();
         $responsable->id;
@@ -580,13 +580,13 @@ class RelevamientoController extends Controller
     //     $responsable->primer_apellido = $request->paterno_resp;
     //     $responsable->segundo_apellido = $request->materno_resp;
     //     //$responsable->fecha_nacimiento = $request->fechanac_resp ?? '';
-    //     $responsable->genero = $request->genero_resp;  
-    //     $responsable->telefono = $request->telefono;  
-    //     $responsable->celular = $request->celular;  
-    //     //$responsable->estado_civil = $request->ecivil ??'';  
-    //     $responsable->domicilio = $request->domicilio;  
-    //    // $responsable->email = $request->email ??  '';  
-    //     $responsable->estado = 'ACTIVO';  
+    //     $responsable->genero = $request->genero_resp;
+    //     $responsable->telefono = $request->telefono;
+    //     $responsable->celular = $request->celular;
+    //     //$responsable->estado_civil = $request->ecivil ??'';
+    //     $responsable->domicilio = $request->domicilio;
+    //    // $responsable->email = $request->email ??  '';
+    //     $responsable->estado = 'ACTIVO';
     //     $responsable->user_id = auth()->id();
     //     $responsable->save();
     //     return $responsable->id;
@@ -604,49 +604,49 @@ class RelevamientoController extends Controller
                         ->where('id','=',$request->id)
                         ->orderBy('id','DESC')
                         ->first();
-                      
-                            if ($tablelocal) {     
+
+                            if ($tablelocal) {
                                 $tab['fur']= $tablelocal->fur;
                                 $tab['nombre']= $tablelocal->nombrepago." ". $tablelocal->paternopago." ".$tablelocal->maternopago??'';
                                 $tab['ci']= $tablelocal->ci;
                                 $tab['cobrosDetalles']= [];
 
-                                            
+
                                   $id_s=explode(',', $tablelocal->servicio_id );
                                 foreach( $id_s as  $key => $value ){
                                                    print_r($id_s[$key]);
-                                      
+
                                             $headers =  ['Content-Type' => 'application/json'];
                                             $client = new Client();
-                                        
+
                                             $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/'.trim($id_s[$key]).'', [
                                             'json' => [
                                                 ],
                                                 'headers' => $headers,
                                             ]);
                                             $data = json_decode((string) $response->getBody(), true);
-                                            
-                                        
+
+
                                         if($data['status']==true){
 
                                             $tab['cobrosDetalles'][$key]['cuenta']=$data['response'][0]['cuenta'];
                                             $tab['cobrosDetalles'][$key]['detalle']=$data['response'][0]['descripcion'];
                                             $tab['cobrosDetalles'][$key]['monto']=0;
-                                     
+
                                             }
                                     }
-                                    
-                          
+
+
                                     $table = json_decode(json_encode($tab));
-                                //     echo "<pre>"; 
+                                //     echo "<pre>";
                                 // print_r($table);
                                 // echo "</pre>";
                                 // die();
                                 $pdf = PDF::setPaper('A4', 'landscape');
                                 $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho'));
-                                return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));    
+                                return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                             }
-                        
+
                     }  else{
                                     $arrayBusqueda = [];
                                     $arrayBusqueda[] = (string)2;
@@ -657,19 +657,19 @@ class RelevamientoController extends Controller
                                     ]);
                                     if ($response->successful()) {
                                         if($response->object()->status == true) {
-                                            $table = $response->object()->data->cobrosVarios[0];                
-                                            
+                                            $table = $response->object()->data->cobrosVarios[0];
+
                                             $pdf = PDF::setPaper('A4', 'landscape');
                                             $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho'));
                                             return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                                         }
-                                }      
+                                }
                         }
         }
-    
 
-        // $miArray = new stdClass(); 
-        // $convertedObj[$k] = $this->ToObject($miArray);         
+
+        // $miArray = new stdClass();
+        // $convertedObj[$k] = $this->ToObject($miArray);
         // $data['miArray']= $convertedObj;
 
 
@@ -687,7 +687,7 @@ class RelevamientoController extends Controller
             }
 
 
-    
+
 
     public function GenerarFur(
         $ci,
@@ -731,19 +731,19 @@ class RelevamientoController extends Controller
 
     public function precioRenov(){
 
-    
+
 
         $headers =  ['Content-Type' => 'application/json'];
         $client = new Client();
-       
+
         $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/642', [
         'json' => [
             ],
             'headers' => $headers,
         ]);
         $data = json_decode((string) $response->getBody(), true);
-          
-       
+
+
        if($data['status']==true){
         $resp= [
             "status"=>true,
@@ -752,8 +752,8 @@ class RelevamientoController extends Controller
             "descrip"=>$data['response'][0]['descripcion'],
 
             ];
-       
-           
+
+
         }else{
             $resp =[
                 "precio"=>0,
@@ -762,10 +762,10 @@ class RelevamientoController extends Controller
         }
         return response()->json($resp);
 
-      
+
     }
 
-   
+
 
     public function buscarRenovacion(Request $request)
     {
@@ -779,10 +779,10 @@ class RelevamientoController extends Controller
             if(!empty( $sql)){
                 $resp= [
                     "status"=>true,
-                    "data" => $sql,        
+                    "data" => $sql,
                     ];
-               
-                   
+
+
                 }else{
                     $resp =[
                         "mensaje"=>"no se encontraron resultados",
@@ -801,21 +801,21 @@ class RelevamientoController extends Controller
                ->Join('nicho', 'nicho.codigo', '=', 'responsable_difunto.codigo_nicho')
                ->where('difunto.ci','=', ''.$ci_dif.'')
                ->first();
-              
+
                if($sql){ return true;}
                else{ return false;}
     }
 
     public function buscarDifuntoResp($ci_dif){
-      
+
         $sql=DB::table('responsable_difunto')
         ->Join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
-        ->Join('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')       
+        ->Join('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
         ->where('difunto.ci','=', ''.$ci_dif.'')
         // ->where('responsable_difunto.difunto_id','=', ''.$ci_dif.'')
 
         ->first();
-       
+
         if($sql){ return true;}
         else{ return false;}
     }

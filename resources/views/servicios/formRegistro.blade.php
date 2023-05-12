@@ -62,7 +62,7 @@
                         <div class="row">
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Cuartel</label>
-                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="cuartel" autocomplete="off">
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="cuartel" >
                             </div>
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
@@ -1077,7 +1077,8 @@ $(document).ready(function ()
                                    $('#store_nro_renovacion').val(data.response.nro_renovacion);
 
 
-
+                                   autocompletar();
+                                                            completarInfoNicho();
 
 
 
@@ -1088,7 +1089,7 @@ $(document).ready(function ()
                                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                                                     'Content-Type': 'application/json'
                                                 },
-                                                url: "https://multiservdev.cochabamba.bo/api/v1/cementerio/get-data",
+                                                url:  "{{ env('URL_MULTISERVICE') }}/api/v1/cementerio/get-data",
                                                 method: 'POST',
                                                 dataType: 'json',
                                                 data: JSON.stringify({
@@ -1146,7 +1147,8 @@ $(document).ready(function ()
                                                                             $('#domicilio').val(data.response.responsable[0].direccion);
                                                                             $('#nombres_resp').val(data.response.responsable[0].razon);
                                                                     }
-                                                                    if(data.response.pagos!=""){
+                                                                    if(data.response.pagos!="")
+                                                                    {
                                                                         $('#razon').html(data.response.pagos[0].razon);
                                                                         $('#comprob').html(data.response.pagos[0].comprob);
                                                                         $('#concepto').html(data.response.pagos[0].concepto);
@@ -1160,7 +1162,7 @@ $(document).ready(function ()
                                                                                 var ultimof=ultaño+"-"+ultmes+"-"+ultdia;
                                                                                 $('#fecha_p').html(ultimof);
                                                                             }
-                                                                         }
+                                                                    }
                                                         } else{
                                                             $('#sp').empty();
                                                                 Swal.fire(
@@ -1172,7 +1174,11 @@ $(document).ready(function ()
                                                                     $('.clear').val("");
                                                                     $('#form').hide();
                                                             }
+                                                            autocompletar();
+                                                            completarInfoNicho();
+
                                                 }
+
                                     });
                                 }
                             }
@@ -1586,8 +1592,98 @@ $(document).ready(function ()
             }
 
 
+            // completar.info-nicho
+            function completarInfoNicho(){
+                var datos="";
+                $.ajax({
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                            'content'),
+                                        'Content-Type': 'application/json'
+                                    },
+                                    url: "{{route('completar.info.nicho')}}",
+                                    method: 'POST',
+                                    dataType: 'json',
+                                    data: JSON.stringify({
+                                        "bloque": $('#bloque').val(),
+                                        "nicho": $('#nro_nicho').val(),
+                                        "fila": $('#fila').val()
+                                    }),
+                                    success: function(data)
+                                    {
 
 
+                                            if(data.info!=null)
+                                            {
+                                                $('#cuartel').val(data.info.codigo);
+                                                $('#anterior').val(data.info.codigo_anterior);
+
+                                            }
+
+                                    }
+
+                     });
+                   return false;
+            }
+
+
+            function autocompletar(){
+                var datos="";
+                $.ajax({
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                            'content'),
+                                        'Content-Type': 'application/json'
+                                    },
+                                    url: "{{route('completar.datos')}}",
+                                    method: 'POST',
+                                    dataType: 'json',
+                                    data: JSON.stringify({
+                                        "bloque": $('#bloque').val(),
+                                        "nicho": $('#nro_nicho').val(),
+                                        "fila": $('#fila').val()
+                                    }),
+                                    success: function(data)
+                                    {
+                                        console.log("autocompletar");
+                                      console.log(data);
+                                          // data difunto
+                                        //   alert(data['response'].fecha_adjudicacion);
+                                        //   var adj=(data['response'].fecha_adjudicacion).split(" ");
+                                        //   var f_adj=adj[0];
+                                        //   alert(f_adj);
+                                            if(data.response!=null)
+                                            {
+                                                $('#search_dif').val(data['response'].ci_dif);
+                                                $('#nombres_dif').val(data['response'].nombre_dif);
+                                                $('#paterno_dif').val(data['response'].primerap_dif);
+                                                $('#materno_dif').val(data['response'].segap_dif);
+                                                $('#fechanac_dif').val(data['response'].nacimiento_dif);
+                                                $('#fecha_def_dif').val(data['response'].fecha_defuncion);
+                                                $('#fechadef_dif').val(data['response'].fecha_adjudicacion);
+                                                $('#tipo_dif').val(data['response'].tipo_dif);
+                                                $('#genero_dif').val(data['response'].genero_dif);
+                                                $('#tiempo').val(data['response'].tiempo);
+                                                $('#sereci').val(data['response'].certificado_defuncion);
+                                                $('#funeraria').val(data['response'].funeraria).trigger('change');
+                                                $('#causa').val(data['response'].causa_dif).trigger('change');
+                                                // data responsable
+                                                $('#search_resp').val(data['response'].ci_resp);
+                                                $('#nombres_resp').val(data['response'].nombre_resp);
+                                                $('#paterno_resp').val(data['response'].paterno_resp);
+                                                $('#materno_resp').val(data['response'].segap_resp);
+                                                $('#fechanac_resp').val(data.response.nacimiento_resp);
+                                                $('#telefono').val(data['response'].telefono);
+                                                $('#celular').val(data['response'].celular);
+                                                $('#genero_resp').val(data['response'].genero_resp);
+                                                $('#domicilio').val(data['response'].domicilio_resp);
+                                            }
+
+                                    }
+
+                     });
+                   return false;
+            }
 
     </script>
 

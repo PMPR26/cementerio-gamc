@@ -2055,7 +2055,7 @@ $("#cert_defuncion_p").dropzone({
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
-                                url: "https://multiserv.cochabamba.bo/api/v1/cementerio/generate-all-servicios-cm",
+                                url: "{{ env('URL_MULTISERVICE') }}/api/v1/cementerio/generate-all-servicios-cm",
                                 async: false,
                                 data: JSON.stringify({
                                     'data': cuenta

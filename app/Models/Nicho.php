@@ -22,7 +22,7 @@ class Nicho extends Model
 
         'tipo',
         'user_id',
-        'estado',       
+        'estado',
         'created_at'
     ];
 
@@ -30,4 +30,17 @@ class Nicho extends Model
         'id',
         'updated_at'
     ];
+
+    public function InfoNicho($nro_nicho, $fila, $bloque){
+        // dd(  $bloque);
+
+
+        $bloque_cod=Bloque::where('codigo','=', $bloque)->select()->first();
+                $sql=Nicho::whereRaw('nro_nicho=\''.trim($nro_nicho).'\'')
+        ->whereRaw('fila=\''.trim($fila).'\'')
+        ->whereRaw('bloque_id=\''.trim( $bloque_cod->id).'\'')
+        ->leftJoin('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
+        ->select()->first();
+        return $sql;
+}
 }
