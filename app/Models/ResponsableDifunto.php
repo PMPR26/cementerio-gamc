@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Models\Difunto;
 use App\Models\Responsable;
 use Illuminate\Support\Facades\DB;
+
+
 class ResponsableDifunto extends Model
 {
     use HasFactory;
@@ -123,6 +125,9 @@ class ResponsableDifunto extends Model
 
                                 return response()->json($respu);
                     }
+
+
+
 
 
 

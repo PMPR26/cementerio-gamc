@@ -137,7 +137,8 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::get('generate-pdf', [App\Http\Controllers\Servicios\ServiciosController::class, 'generatePDF'])->name('serv.generatePDF')->middleware('auth');
     Route::post('/new-serviciocm', [App\Http\Controllers\Servicios\ServiciosController::class,'createNewServicioscm'])->name('new.serviciocm');
     Route::post('/get-nro-renov',  [App\Http\Controllers\Servicios\ServiciosController::class,'getNroRenov'])->name('get.nro.renov');
-
+    Route::post('/completar', [App\Http\Controllers\Servicios\ServiciosController::class, 'autocompletar'])->name('completar.datos');
+    Route::post('/completar-info-nicho', [App\Http\Controllers\Servicios\ServiciosController::class, 'completarInfoNicho'])->name('completar.info.nicho');
 
 
 
@@ -201,11 +202,14 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
 });
 
 
-// // responsable difuntos
-Route::group(['prefix' => 'relevamiento', 'middleware' => 'auth'], function () {
-    Route::post('/completar', [App\Http\Controllers\Servicios\ServiciosController::class, 'autocompletar'])->name('completar.datos');
+// // // responsable difuntos
+// Route::group(['prefix' => 'relevamiento', 'middleware' => 'auth'], function () {
+//     Route::post('/completar', [App\Http\Controllers\Servicios\ServiciosController::class, 'autocompletar'])->name('completar.datos');
+//     Route::post('/completar-info-nicho/{nicho}/{fila}/{bloque}', [App\Http\Controllers\Servicios\ServiciosController::class, 'completarInfoNicho'])->name('completar.info.nicho');
 
-});
+
+
+// });
 
 //notificaciones
 

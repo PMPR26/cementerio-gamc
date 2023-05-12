@@ -16,7 +16,7 @@
 
 <div class="card">
     <div class="card-body">
-        <a href="{{ route('load.form') }}" id="new-servicio" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Servicio</a>
+        <a href="{{ route('load.form') }}" id="new-servicio" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i>Servicios</a>
     </div>
  </div>
 
