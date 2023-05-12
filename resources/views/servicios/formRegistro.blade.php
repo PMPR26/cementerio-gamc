@@ -3,7 +3,9 @@
 @section('plugins.Toastr', true)
 @section('plugins.Sweetalert2', true)
 @section('plugins.Select2', true)
+@section('plugins.dropzone', true)
 @section('plugins.Pace', true)
+
 
 
 @section('content_header')
