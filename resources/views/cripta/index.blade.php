@@ -1960,16 +1960,16 @@ $("#cert_defuncion_p").dropzone({
                                             else{
 
 
-                                                        if (value.num_sec == '526' || value.num_sec == '525' ||
-                                                            value.num_sec == '629' || value.num_sec == '631') {}
-                                                                else {
+                                                        // if (value.num_sec == '526' || value.num_sec == '525' ||
+                                                        //     value.num_sec == '629' || value.num_sec == '631') {}
+                                                        //         else {
                                                                     // console.log("asdas");
                                                                     var html='<div class="form-check">'+
                                                                     '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs." onclick="seleccionar_hijos_list()" >'+
                                                                     '<label class="form-check-label childservice" for="'+value.num_sec+'">'+value.descripcion+' - ' + value.monto1 +'- Bs.</label>'+
                                                                     '</div>';
                                                                     $('#serv_hijos'+cuenta+'').append(html);
-                                                                    }
+                                                                    // }
                                                 }
 
                                     });
