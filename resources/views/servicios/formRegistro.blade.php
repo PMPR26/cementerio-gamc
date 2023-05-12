@@ -7,7 +7,7 @@
 
 
 @section('content_header')
-    <h1>Listado de servicios</h1>
+    <h1 class="p-2 bg-gradient-blue">Formulario de solicitud de servicios</h1>
 @stop
 
 @section('content')
@@ -20,7 +20,7 @@
         <div class="modal-body">
             <div class="col-sm-12 col-md-12 col-xl-12 card m-auto">
 
-                <div class="card" >
+                <div class="card infoPlazo"  style="display:none">
                     <div class="card-header">
                         <h2 id="infoPlazo" class="clean"></h2>
                     </div>
@@ -1193,8 +1193,9 @@ $(document).ready(function ()
 
             if(plazo<year){
                 var vencimiento= fechaVencimiento(nfecha, tiempo);
-                $('#infoPlazo').html('El plazo del enterratorio venció el año '+ plazo +' en fecha '+ vencimiento+'');
 
+                $('#infoPlazo').html('El plazo del enterratorio venció el año '+ plazo +' en fecha '+ vencimiento+'');
+                $('.infoPlazo').show();
                 $('#vencido').val(vencimiento);
                          swal.fire({
                                     title: "Notificación!",
@@ -1210,7 +1211,10 @@ $(document).ready(function ()
             }
             else if(plazo==year){
                 var vencimiento= fechaVencimiento(nfecha, tiempo);
+
                 $('#infoPlazo').html('El plazo del enterratorio vence el '+ vencimiento +'');
+                $('.infoPlazo').show();
+
                // var venc= parseInt(fecha)-parseInt(nfecha);
                 $('#vencido').val(vencimiento);
                          swal.fire({
@@ -1229,7 +1233,10 @@ $(document).ready(function ()
                 var vencimiento= fechaVencimiento(nfecha, tiempo);
                 $('#vencido').val(vencimiento);
                 nplazo=parseInt(year)-parseInt(plazo);
+
+
                 $('#infoPlazo').html('Quedan '+ nplazo +' años de plazo del enterratorio, la fecha de vencimiento es '+ vencimiento + '');
+                $('.infoPlazo').show();
                 swal.fire({
                                     title: "Notificación!",
                                     text: "!El plazo del enterratorio vence el "+ plazo + " la fecha de vencimiento es " + vencimiento + "!",
