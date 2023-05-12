@@ -1194,6 +1194,7 @@ $(document).ready(function ()
 
         $(document).on('click','#btn_guardar_servicio', function(){
                 makeArrayServices();
+                validarInfoEnviada();
                return  $.ajax({
                                type: 'POST',
                                headers: {
@@ -1623,6 +1624,49 @@ $(document).ready(function ()
                    return false;
             }
 
+            function validarInfoEnviada(){
+              if($('#fechanac_resp').val() =="" || !$('#fechanac_resp').val()){
+                swal.fire({
+                                    title: "Precaucion!",
+                                    text: "!Complete la fecha de nacimiento de la sección del responsable",
+                                    type: "warning",
+                                  //  timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: true
+                                    });
+                                    setTimeout(function() {
+                                       return false;
+                                    }, 2000);
+              }
+
+              if($('#fechanac_dif').val() =="" || !$('#fechanac_dif').val()){
+                swal.fire({
+                                    title: "Precaucion!",
+                                    text: "!Complete la fecha de nacimiento de la sección del difunto",
+                                    type: "warning",
+                                  //  timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: true
+                                    });
+                                    setTimeout(function() {
+                                       return false;
+                                    }, 2000);
+              }
+
+              if($('#domicilio').val() =="" || !$('#domicilio').val()){
+                swal.fire({
+                                    title: "Precaucion!",
+                                    text: "!Complete los datos del domicilio del responsable, si es desconocido introduzca 'NO DEFINIDO' ",
+                                    type: "warning",
+                                  //  timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: true
+                                    });
+                                    setTimeout(function() {
+                                       return false;
+                                    }, 2000);
+              }
+            }
     </script>
 
     @stop
