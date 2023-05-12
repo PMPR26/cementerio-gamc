@@ -63,7 +63,9 @@ class ServiciosController extends Controller
         ];
         try {
             $client = new Client();
-            $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/get-services', [
+            // $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/get-services', [
+            $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/get-services', [
+
                 'json' => [],
                 'headers' => $headers
             ]);
