@@ -6,8 +6,6 @@
 @section('plugins.dropzone', true)
 @section('plugins.Pace', true)
 
-
-
 @section('content_header')
     <h1 class="p-2 bg-gradient-blue">Formulario de solicitud de servicios</h1>
 @stop
@@ -180,25 +178,21 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-12 col-md-12 col-xl-12">
+
+                            <div class="col-sm-12 col-md-12 col-xl-12" >
                                     <label>Adjuntar certificado de defunción :</label>
-                                    <div class="col-sm-12">
-                                        <div id="cert-defuncion" class="dropzone" style="text-align: center"> </div>
+                                    <div class="col-sm-12" >
+                                        <div id="cert-defuncion"  class="dropzone" style="text-align: center"> </div>
                                         <hr>
                                         <input type="hidden" id="url-certification" class="new">
                                     </div>
-                            </div>
+                                  </div>
                         </div>
-
-
-
-
-
-                    </div>
+                    </div> {{-- </div>   en section difunto --}}
                 </div>
 
                 {{-- datos responsables --}}
-                <div class="card">
+                <div class="card p-2">
                         <div class="card-header">
                             <h4>DATOS RESPONSABLE</h4>
                         </div>
@@ -340,19 +334,12 @@
                 </div>
             {{-- servicios --}}
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header bg-gradient-danger">
                         <h4>ASIGNACION SERVICIOS</h4>
                     </div>
                     <div class="card-body" id="tipo_servicio_value">
 
-                                        {{--   <select  id="tipo_servicio_value"  class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
-                                                @foreach ($tipo_service as $value)
-                                                    @if($value['cuenta'] =='15224150' ||   $value['cuenta'] =='15224350' )
-                                                    @else
-                                                    <option value="{{ $value['cuenta'] }}">{{ $value['descripcion'] }}</option>
-                                                    @endif
-                                                @endforeach
-                                            </select> --}}
+
 
                         @foreach ($tipo_service as $value)
                             @if($value['cuenta'] =='15224150' ||   $value['cuenta'] =='15224350' || $value['cuenta'] == '15224330' )
@@ -422,47 +409,6 @@
                     </div>
                 </div>
 
-                               {{--  <div class="col-sm-6" id="service" style="display:none">
-                                    <label>Servicio</label>
-                                        <select  id="servicio-hijos" class="form-control select2-multiple select2-hidden-accessible" style="width: 100%"></select>
-                                </div>
-
-
-
-                          <div class="card-header">
-                            <h4>DETALLE DE SERVICIOS SOLICITADOS</h4>
-                        </div>
-
-                    <div class="row" style="padding-top: 15px;">
-                            <div class="col-sm-6">
-                            <div class="card">
-                            <div class="card-body" id="servicios-data">
-                                Ningun dato seleccionado.
-                            </div>
-                            </div>
-                            </div>
-                            <div class="col-sm-6">
-                            <div class="card">
-                            <div class="card-body" id="servicios-hijos">
-                                Ningun dato seleccionado.
-                            </div>
-                            </div>
-                            </div>
-                    </div>
- --}}
-                  {{--   <div id="cal_price" style="text-align: center">
-                        <div class="card">
-                            <div class="card-body" id="servicios-hijos-price" style="text-align: center">
-                                <h1>0Bs</h1>
-                            </div>
-                        </div>
-                    </div> --}}
-
-
-
-
-
-
 
                 <div class="row pb-2" id="conservacion" style="display:none">
                     <div class="col-sm-4 col-md-4 col-xl-4" id="gestion_box">
@@ -493,11 +439,7 @@
                      </div>
 
 
-                    {{-- <div class="col-sm-2 col-md-2 col-xl-2">
-                        <button type="button" class="btn btn-info" id="btn_add" style="display: none">
-                            <i class="fa fa-search"></i>AGREGAR
-                        </button>
-                    </div> --}}
+
                 </div>
 
                 <div class="row card">
@@ -1439,7 +1381,7 @@ $(document).ready(function ()
         else{
         var type ="deceased";
         dats=  buscar_ci(ci,type);
-            console.log("entra a estooooooooooooo"+dats);
+            // console.log("entra a estooooooooooooo"+dats);
         }
 
         });
@@ -1460,7 +1402,7 @@ $(document).ready(function ()
         else{
         var type ="responsable";
         dats=  buscar_ci_resp(ci,type);
-            console.log("entra a esteeeeeeeeeeeeeeeee"+dats);
+            // console.log("entra a esteeeeeeeeeeeeeeeee"+dats);
         }
 
         });
