@@ -80,8 +80,8 @@ class ServicioNicho extends Model
       //   dd( $desc_exhum)
             $headers =  ['Content-Type' => 'application/json'];
             $client = new Client();
-            // $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCM', [
-           $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementery', [
+            $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCM', [
+        //    $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementery', [
 
                 'json' => [
                     'ci' => $ci,
@@ -109,7 +109,7 @@ class ServicioNicho extends Model
         public function getSevHijosByFather(Request $request){
                 $headers =  ['Content-Type' => 'application/json'];
                 $client = new Client();
-                $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-all-servicios-cm', [
+                $response = $client->post( 'https://multiserv.cochabamba.bo/api/v1/cementerio/generate-all-servicios-cm', [
                'json' => [
                         'data' => $request->data
                     ],
