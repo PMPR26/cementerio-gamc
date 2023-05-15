@@ -109,9 +109,7 @@ class ServicioNicho extends Model
         public function getSevHijosByFather(Request $request){
                 $headers =  ['Content-Type' => 'application/json'];
                 $client = new Client();
-                // $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-all-servicios-cm', [
                 $response = $client->post( 'https://multiserv.cochabamba.bo/api/v1/cementerio/generate-all-servicios-cm', [
-
                'json' => [
                         'data' => $request->data
                     ],

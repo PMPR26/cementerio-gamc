@@ -885,8 +885,9 @@ class ServiciosController extends Controller
 
                                             $headers =  ['Content-Type' => 'application/json'];
                                             $client = new Client();
+
                                             // $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/'.trim($id_s[$key]).'', [
-                                            $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/generate-servicios-nicho/'.trim($id_s[$key]).'', [
+                                                $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/generate-servicios-nicho/'.trim($id_s[$key]).'', [
                                             'json' => [
                                                 ],
                                                 'headers' => $headers,
