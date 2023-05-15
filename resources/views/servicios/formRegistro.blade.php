@@ -1261,7 +1261,8 @@ $(document).ready(function ()
                                    showConfirmButton: false
                                    });
                                    setTimeout(function() {
-                                       location.reload();
+                                    //    location.reload();
+                                    window.location.href = "/servicios/servicios"
                                    }, 2000);
                                    //toastr["success"]("Registro realizado con éxito!");
                                },
@@ -1282,8 +1283,8 @@ $(document).ready(function ()
                                            showConfirmButton: false
                                            });
                                            setTimeout(function() {
-                                            //    location.reload();
-                                            window.location.href =  "{{URL::to('serv')}} " //"{{ route('serv') }}";
+                                               location.reload();
+                                            // window.location.href =  "{{URL::to('serv')}} " //"{{ route('serv') }}";
 
                                            }, 2000);
                                    }

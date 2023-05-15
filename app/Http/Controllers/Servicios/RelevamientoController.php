@@ -71,7 +71,7 @@ class RelevamientoController extends Controller
         ];
         try {
             $client = new Client();
-            $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/get-services', [
+            $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/get-services', [
                 'json' => [],
                 'headers' => $headers
             ]);
@@ -619,7 +619,7 @@ class RelevamientoController extends Controller
                                             $headers =  ['Content-Type' => 'application/json'];
                                             $client = new Client();
 
-                                            $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/'.trim($id_s[$key]).'', [
+                                            $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/generate-servicios-nicho/'.trim($id_s[$key]).'', [
                                             'json' => [
                                                 ],
                                                 'headers' => $headers,
@@ -652,7 +652,9 @@ class RelevamientoController extends Controller
                                     $arrayBusqueda[] = (string)2;
                                     $arrayBusqueda[] = (string)$request->fur;
                                     $arrayBusquedaString = json_encode($arrayBusqueda);
-                                    $response = Http::asForm()->post('http://192.168.220.107:8080/cobrosnotributarios/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+                                    // $response = Http::asForm()->post('http://192.168.220.107:8080/cobrosnotributarios/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+                                     $response = Http::asForm()->post(env('URL_SEARCH_FUR'), [
+
                                         'buscar' => $arrayBusquedaString
                                     ]);
                                     if ($response->successful()) {
@@ -736,7 +738,7 @@ class RelevamientoController extends Controller
         $headers =  ['Content-Type' => 'application/json'];
         $client = new Client();
 
-        $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/642', [
+        $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/generate-servicios-nicho/642', [
         'json' => [
             ],
             'headers' => $headers,

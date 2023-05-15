@@ -886,7 +886,8 @@ class ServiciosController extends Controller
                                             $headers =  ['Content-Type' => 'application/json'];
                                             $client = new Client();
 
-                                            $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/'.trim($id_s[$key]).'', [
+                                            // $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/'.trim($id_s[$key]).'', [
+                                                $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/generate-servicios-nicho/'.trim($id_s[$key]).'', [
                                             'json' => [
                                                 ],
                                                 'headers' => $headers,
@@ -916,7 +917,10 @@ class ServiciosController extends Controller
                                     $arrayBusqueda[] = (string)2;
                                     $arrayBusqueda[] = (string)$request->fur;
                                     $arrayBusquedaString = json_encode($arrayBusqueda);
-                                    $response = Http::asForm()->post('http://192.168.104.117/cb-dev/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+                                    //$response = Http::asForm()->post('http://192.168.104.117/cb-dev/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+                                    // $response = Http::asForm()->post('http://192.168.104.117/cb-dev/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+                                    $response = Http::asForm()->post(env('URL_SEARCH_FUR'), [
+
                                         'buscar' => $arrayBusquedaString
                                     ]);
 
@@ -1005,7 +1009,9 @@ class ServiciosController extends Controller
         $headers =  ['Content-Type' => 'application/json'];
         $client = new Client();
 
-        $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/642', [
+        // $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/642', [
+        $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/generate-servicios-nicho/642', [
+
         'json' => [
             ],
             'headers' => $headers,
@@ -1203,8 +1209,8 @@ class ServiciosController extends Controller
     public function getServHijos(Request $request){
         $headers =  ['Content-Type' => 'application/json'];
                 $client = new Client();
-                $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-all-servicios-cm', [
-                    // $response = $client->post('https://v.cochabamba.bo/api/v1/cementerio/generate-all-servicios-cm', [
+                // $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-all-servicios-cm', [
+                    $response = $client->post('https://multiserv.cochabamba.bo/api/v1/cementerio/generate-all-servicios-cm', [
                'json' => [
                         'data' => $request->data
                     ],
