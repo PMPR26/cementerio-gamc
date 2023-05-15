@@ -1530,14 +1530,6 @@ $("#cert_defuncion_p").dropzone({
                                                                 }, 2000);
                                             }
                                 }
-                              /*   error: function (error) {
-                                    if(error.status == 422){
-                                        Object.keys(error.responseJSON.errors).forEach(function(k){
-                                        toastr["error"](error.responseJSON.errors[k]);
-                                        //console.log(k + ' - ' + error.responseJSON.errors[k]);
-                                        });
-                                    }
-                                } */
                     });
                 });
 
@@ -1712,7 +1704,7 @@ $("#cert_defuncion_p").dropzone({
                                                 'difuntos': difuntos,
                                             }),
                                             success: function(data)
-                                            {// console.log("entraaaa");
+                                            { console.log("entraaaa");
                                                  console.log(data);
                                                                 if(data.status==true){
                                                                     swal.fire({
@@ -1852,16 +1844,16 @@ $("#cert_defuncion_p").dropzone({
                                             data: JSON.stringify({
                                                             }),
                                             success: function(data) {
-                                                 //console.log("gggggggggggg");
-                                                //console.log(data.response);
+                                                console.log("gggggggggggg");
+                                                console.log(data.response);
                                                 $.each(data.response, function(key,val)
                                                 {
                                                           // console.log(val.descripcion );
                                                     // alert($('#tabla_difunto_row_pay').children().length);
                                                         if($('#tabla_difunto_row_pay').children().length>0)
                                                         {
-                                                        // if(val.cuenta=='15224370' || val.cuenta=='15224330' || val.cuenta=='15224380' || val.cuenta=='15224300' || val.cuenta=='15224390' ){}
-                                                        // else{
+                                                      //  if(val.cuenta=='15224370' || val.cuenta=='15224330' || val.cuenta=='15224380' || val.cuenta=='15224300' || val.cuenta=='15224390' ){}
+                                                       // else{
                                                             var html='<div class="form-check '+val.cuenta+'">'+
                                                                         '<input class="form-check-input" type="checkbox" id="'+val.cuenta+'" name="serv[tipo_servicio]" value="'+val.cuenta+'-'+val.descripcion+'"  onclick="cargar_sevicios_hijos(this)">'+
                                                                         '<label class="form-check-label labelservice" for="'+val.cuenta+'">'+val.descripcion+'</label>'+
@@ -1880,6 +1872,9 @@ $("#cert_defuncion_p").dropzone({
                                                                             $('#modal_save_pagos_cm').prop('disabled', false)
 
                                                                         }
+
+
+
                                                        // }
                                                         }
                                                         else{
@@ -1935,7 +1930,7 @@ $("#cert_defuncion_p").dropzone({
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
-                                url: "{{ env('URL_MULTISERVICE') }}/api/v1/cementerio/generate-all-servicios-cm",
+                                url: "https://multiserv.cochabamba.bo/api/v1/cementerio/generate-all-servicios-cm",
                                 async: false,
                                 data: JSON.stringify({
                                     'data': cuenta
@@ -1960,16 +1955,16 @@ $("#cert_defuncion_p").dropzone({
                                             else{
 
 
-                                                        // if (value.num_sec == '526' || value.num_sec == '525' ||
-                                                        //     value.num_sec == '629' || value.num_sec == '631') {}
-                                                        //         else {
+                                                        if (value.num_sec == '526' || value.num_sec == '525' ||
+                                                            value.num_sec == '629' || value.num_sec == '631') {}
+                                                                else {
                                                                     // console.log("asdas");
                                                                     var html='<div class="form-check">'+
                                                                     '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs." onclick="seleccionar_hijos_list()" >'+
                                                                     '<label class="form-check-label childservice" for="'+value.num_sec+'">'+value.descripcion+' - ' + value.monto1 +'- Bs.</label>'+
                                                                     '</div>';
                                                                     $('#serv_hijos'+cuenta+'').append(html);
-                                                                    // }
+                                                                    }
                                                 }
 
                                     });
@@ -1980,20 +1975,6 @@ $("#cert_defuncion_p").dropzone({
             }
         }
 
-
-        //seleccionar cremacion
-          $(document).on('click', '#1990', function(){
-            if($(this).is(":checked")){
-                $('.section_difunto').show();
-                $('#cremacion_txt').val('SI');
-                $('#modal_save_pagos_cm').prop('disabled', true);
-            }
-            else{
-                $('.section_difunto').hide();
-                $('#cremacion_txt').val('NO');
-                $('#modal_save_pagos_cm').prop('disabled', false);
-            }
-          });
         // funcion para enlistar servicios seleccionados y calcular total acumulado
 
         function seleccionar_hijos_list(){
@@ -2438,17 +2419,17 @@ $("#cert_defuncion_p").dropzone({
                     let difuntos = [];
 
                        document.querySelectorAll('.detalle_servicios tbody tr').forEach(function(e)
-                        {
-                            let fila = {
+                            {
+                                 let fila = {
                                                 dt_id_tipo_cuenta: e.querySelector('.dt_id_tipo_cuenta').innerText,
                                                 dt_txt_tipo_cuenta: e.querySelector('.dt_txt_tipo_cuenta').innerText,
                                                 dt_id_serv: e.querySelector('.dt_id_serv').innerText,
                                                 dt_txt_serv: e.querySelector('.dt_txt_serv').innerText,
                                                 dt_precio_unitario: e.querySelector('.dt_precio_unitario').innerText,
                                       };
-                            servicios.push(fila);
+                                 servicios.push(fila);
 
-                            let row_tipo_servicio = {
+                                            let row_tipo_servicio = {
                                                 dt_id_tipo_cuenta: e.querySelector('.dt_id_tipo_cuenta').innerText,
                                             };
 
@@ -2535,8 +2516,8 @@ $("#cert_defuncion_p").dropzone({
                                             }),
                                             success: function(data)
                                             {
-                                               // console.log("r5espuesta de servicios");
-                                               // console.log(data);
+                                                console.log("r5espuesta de servicios");
+                                                console.log(data);
                                                 if(data.status==true){
                                                     swal.fire({
                                                         title: "Exito!",
@@ -2564,15 +2545,37 @@ $("#cert_defuncion_p").dropzone({
 
 
                                             },
-                                            error: function (error) {
+                                            error :function( data ) 
+                                            {
+                                                if( data.status === 422 ) {
+                                                    var msg="";
+                                                    var errors = $.parseJSON(data.responseText);
+                                                    $.each(errors, function (key, value) {
+                                                        // console.log(key+ " " +value);
+                                                    $('#response').addClass("alert alert-danger");
 
-                                                if(error.status == 422){
-                                                    Object.keys(error.responseJSON.errors).forEach(function(k){
-                                                    toastr["error"](error.responseJSON.errors[k]);
-                                                    //console.log(k + ' - ' + error.responseJSON.errors[k]);
+                                                        if($.isPlainObject(value)) {
+                                                            $.each(value, function (key, value) {
+                                                                console.log(key+ " " +value);
+                                                                 msg=msg+value+", ";
+                                                           // $('#response').show().append(value+"<br/>");
+
+                                                            });
+                                                            swal.fire({
+                                                                title: "Precaución!",
+                                                                text:msg,
+                                                                type: "error",
+                                                                timer: 10000,
+                                                                showCancelButton: false,
+                                                                showConfirmButton: true
+                                                                });
+                                                                return false;
+                                                        }
+                                                        /*else{
+                                                        $('#response').show().append(value+"<br/>"); //this is my div with messages
+                                                        }*/
                                                     });
                                                 }
-
                                             }
 
 

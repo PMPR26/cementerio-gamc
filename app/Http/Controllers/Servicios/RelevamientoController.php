@@ -652,7 +652,9 @@ class RelevamientoController extends Controller
                                     $arrayBusqueda[] = (string)2;
                                     $arrayBusqueda[] = (string)$request->fur;
                                     $arrayBusquedaString = json_encode($arrayBusqueda);
-                                    $response = Http::asForm()->post('http://192.168.220.107:8080/cobrosnotributarios/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+                                    // $response = Http::asForm()->post('http://192.168.220.107:8080/cobrosnotributarios/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+                                     $response = Http::asForm()->post(env('URL_SEARCH_FUR'), [
+
                                         'buscar' => $arrayBusquedaString
                                     ]);
                                     if ($response->successful()) {
