@@ -569,7 +569,7 @@ class MantenimientoController extends Controller
                 Mantenimiento::where('fur', trim($request->fur))
                 ->update([
                    'pagado' => true,
-                   'id_usuario_caja' => $request->id_usuario_caja,
+                //    'id_usuario_caja' => $request->id_usuario_caja,
                    'fecha_pago'=> date('Y-m-d h:i:s')
                 ]);
                 return response([
@@ -600,7 +600,7 @@ class MantenimientoController extends Controller
         $arrayBusqueda[] = (string)$request->fur;
         $arrayBusquedaString = json_encode($arrayBusqueda);
         // $response = Http::asForm()->post('http://192.168.104.117/cobrosnotributarios/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
-            $response = Http::asForm()->post(env('URL_SEARCH_FUR'), [ 
+            $response = Http::asForm()->post(env('URL_SEARCH_FUR'), [
 
             'buscar' => $arrayBusquedaString
         ]);
