@@ -104,7 +104,7 @@
                 </td>
                 <td width="30%" class="txthead">
                     <span class="txthead">GOBIERNO AUTONOMO MUNICIPAL DE COCHABAMBA <br>
-                        DIVISION DE INGRESOS NO TRIBUTARIOS<br>
+                        DIRECCIÓN DE INGRESOS NO TRIBUTARIOS<br>
                         DIVISION DE CEMENTERIO</span>
 
                 </td>
@@ -152,9 +152,13 @@
                 <td></td>
             </tr>
             <tr>
-                <td width="80%" colspan="2">Nombre: {{ucwords($table->nombrepago )}} {{ucwords( $table->paternopago) }}
-                    {{ ucwords($table->maternopago ?? '') }}</td>
-                <td width="20%">C.I.:{{ $table->ci }} </td>
+                <td width="100%" colspan="2">Nombre Adjudicatario: {{ucwords($resp ?? '' )}}  </td>
+
+            </tr>
+            <tr>
+                <td width="100%" colspan="2">Nombre: {{ucwords($table->nombrepago )}} {{ucwords( $table->paternopago) }}
+                    {{ ucwords($table->maternopago ?? '') }}  C.I.:{{ $table->ci }}</td>
+                {{-- <td width="20%">C.I.:{{ $table->ci }} </td> --}}
             </tr>
             <tr>
                 <td width="60%" colspan="2">Pago realizado por : {{ $table->pago_por }}</td>
@@ -249,6 +253,12 @@
                     <b> {{ $txt }} </b>
                 </td>
             </tr>
+            @if(isset($observacion) || $observacion!= null)
+            <tr>
+                <td colspan="5"><b>OBSERVACION:</b> {{ $observacion ?? '' }} </td>
+                <td colspan="5"><b></b> {{ $det_exhum ?? '' }} </td>
+            </tr>
+          @endif
         </table>
 
     </main>

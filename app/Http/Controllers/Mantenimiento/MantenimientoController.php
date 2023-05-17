@@ -15,6 +15,8 @@ use App\Models\Cripta;
 use App\Models\Servicios;
 
 use App\Models\Mantenimiento;
+use App\Models\CriptaMausoleoResp;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -138,6 +140,7 @@ class MantenimientoController extends Controller
             //step1: nicho buscar si existe registrado el nicho recuperar el id  sino existe registrarlo
             $codigo_n=$request->cuartel.".".$request->bloque.".".$request->nro_nicho.".".$request->fila;
             $existeNicho= Nicho::where('codigo', $codigo_n)->first();
+            // dd( $existeNicho);
 
             if($existeNicho!=null){
                 $id_nicho=$existeNicho->id;
@@ -480,12 +483,35 @@ class MantenimientoController extends Controller
           ->select('mantenimiento.*')
           ->first();
 
+
+
+
+          $datos_ubicacion=$table->id_ubicacion;
+          $tipo_ubicacion=$table->tipo_ubicacion;
+          $observacion=$table->observacion;
+        //   dd( $datos_ubicacion);
+
+        if($tipo_ubicacion=="CRIPTA" || $tipo_ubicacion== "MAUSOLEO" ){
+            $sq=CriptaMausoleoResp::where('cripta_mausoleo_responsable.cripta_mausole_id', '=',$datos_ubicacion )
+            ->join('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
+            ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
+            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp."  C.I.: ".$sq->ci_resp;
+        }
+        else{
+            $sq=Nicho::where('nicho.id', '=',$datos_ubicacion )
+            ->join('responsable_difunto', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
+            ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
+            ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
+            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp ."  C.I.: ".$sq->ci_resp;
+        }
+          $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp ."  C.I.: ".$sq->ci_resp;
+
         //  dd($table);
                 //     $td=$table->getOriginal();
 
 
                     $pdf = PDF::setPaper('A4', 'landscape');
-                    $pdf = PDF::loadView('mantenimiento/reportMant', compact('table'));
+                    $pdf = PDF::loadView('mantenimiento/reportMant', compact('table', 'resp', 'observacion'));
                     return  $pdf-> stream("preliquidacion_mantenimiento.pdf", array("Attachment" => false));
 
             }
