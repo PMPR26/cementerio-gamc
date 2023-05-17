@@ -130,10 +130,10 @@
                         <?php
                             if($cripta->documentos_recibidos !=null || !empty($cripta->documentos_recibidos)){
                                 $v=json_decode($cripta->documentos_recibidos, true);
-                                echo "<psan>resolucion nro. " .$v['resolucion']. " ,  ".$v['bienes_m']. ", ci del propietario ".$v['ci'] ?? ''. ", ".$v['planos_aprobados']."  </span><br>";
+                                echo "<psan>resolucion nro. " .$v['resolucion']. " , Bienes: ".$v['bienes_m'].", Planos aprobados ".$v['planos_aprobados'].", ci del adjudicatario ".$v['ci'] ?? ''. "  </span><br>";
                                     if(isset($v['foto_resolucion'])){if($v['foto_resolucion']!=null ){echo "<span>|<a href='" .$v['foto_resolucion']. "'> Resolución </a>|</span>"; }}
                                     if(isset($v['foto_titulo'])){if($v['foto_titulo']!=null ){echo "<span>|<a href='" .$v['foto_titulo']. "'> Titulo de propiedad </a>|</span>"; }}
-                                    if(isset($v['foto_prop_ci'])){if($v['foto_prop_ci']!=null ){echo "<span>|<a href='" .$v['foto_prop_ci']. "'> ci propietario </a>|</span>"; }}
+                                    if(isset($v['foto_prop_ci'])){if($v['foto_prop_ci']!=null ){echo "<span>|<a href='" .$v['foto_prop_ci']. "'> ci adjudicatario </a>|</span>"; }}
                                     if(isset($v['foto_planos'])){if($v['foto_planos']!=null ){echo "<span>|<a href='" .$v['foto_planos']. "'> Planos aprobados </a>|</span>"; }}
                             }
                     ?>
@@ -342,7 +342,7 @@
                 else {
                     swal.fire({
                         title: "Precaución!",
-                        text: "!Debe definir si el pago se hizo por tercera persona o por el propietario!",
+                        text: "!Debe definir si el pago se hizo por tercera persona o por el adjudicatario!",
                         type: "error",
                         // timer: 2000,
                         showCancelButton: false,
@@ -633,7 +633,7 @@
                                             $('#foto_title').hide();
                                     }
 
-                                // ci propietario
+                                // ci adjudicatario
                                  if(ar.foto_prop_ci!=null){
                                     $('#url_foto_prop').val(ar.foto_prop_ci)  ;
                                     $('#foto_prop').append('<a href="'+ ar.foto_prop_ci+'" target="_blank">Ver foto actual </a>');
@@ -727,7 +727,7 @@
                 $('#nro_resolucion').hide();
                 $('#nro_ci').hide();
                 $('#txt_resolucion').hide();
-                $('#txt_resolucion').prop('checked', false);
+                $('#obs_resolucion').prop('checked', false);
 
                 $('#planos_aprobados').prop('checked', false);
                 $('#bienes_m').prop('checked', false);
@@ -781,6 +781,7 @@
                     if ($("#ci").is(":checked")) { var ci=$('#nro_ci').val(); $('#digital_documents').show(); } else { var ci="FALTA";}
                     if ($("#bienes_m").is(":checked")) { var bienes_m="BIENES M";} else { var bienes_m="FALTA";}
                     if ($("#planos_aprobados").is(":checked")) { var planos_aprobados="PLANOS A"; $('#digital_documents').show(); } else { var planos_aprobados="FALTA";}
+                    if ($("#obs_resolucion").is(":checked")) { var obs_resolucion=$('#txt_resolucion').val(); } else { var obs_resolucion="FALTA";}
 
                     if($('#notable :selected').text()=="SELECCIONAR"){ var field_notable=null;}else{ var field_notable= $('#notable :selected').val(); }
 
@@ -2785,7 +2786,7 @@ $("#cert_defuncion_p").dropzone({
                 },
                 sending: function(file, xhr, formData){
                             formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
-                            formData.append('collector', 'cementerio ci propietario');
+                            formData.append('collector', 'cementerio ci adjudicatario');
                             formData.append('nro_documento', $('#nro_ci').val());
 
                         },
