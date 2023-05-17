@@ -887,7 +887,7 @@ class ServiciosController extends Controller
 
                         if($tipo_ubicacion=="CRIPTA" || $tipo_ubicacion== "MAUSOLEO" ){
                             $sq=CriptaMausoleoResp::where('cripta_mausoleo_responsable.cripta_mausole_id', '=',$datos_ubicacion )
-                            ->join('cripta_mausoleo_responsable', 'responsable_id', '=', 'responsable.id')
+                            ->join('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
                             ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
                             $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp."  C.I.: ".$sq->ci_resp;
                         }
