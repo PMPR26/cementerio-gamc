@@ -18,7 +18,7 @@ class ResponsableController extends Controller
                 // ->get();
 
         $responsable= DB::table('responsable')
-                ->select('responsable.id','responsable.ci',DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),'responsable.telefono','responsable.celular','responsable.fecha_nacimiento','responsable.estado_civil','responsable.email','responsable.domicilio','responsable.estado','responsable.genero')
+                ->select('responsable.id','responsable.ci',DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),'responsable.telefono','responsable.celular','responsable.fecha_nacimiento','responsable.estado','responsable.genero')
                 ->get();
 
         return view('responsable/index', compact('responsable'));
@@ -34,7 +34,7 @@ class ResponsableController extends Controller
                 'primer_apellido' => 'required',
                 'fecha_nacimiento' => 'required',
                 'telefono' => 'digits:7|numeric',
-                'domicilio' => 'required',
+                // 'domicilio' => 'required',
                 'genero' => 'required'
             ], [
                 'nombres.required'  => 'El campo nombre de responsable es obligatorio!',
@@ -43,7 +43,7 @@ class ResponsableController extends Controller
                 'min' => 'El :attribute debe tener al menos 8 caracteres.',
                 'telefono' => 'El telefono no debe ser mayor a 7 digitos.',
                 'ci.max' => 'CI no debe ser mayor a 10 caracteres.',
-                'required' => 'El campo :attribute es requerido.'
+                // 'required' => 'El campo :attribute es requerido.'
             ]);
 
 
@@ -55,10 +55,10 @@ class ResponsableController extends Controller
             'fecha_nacimiento' => trim($request->fecha_nacimiento),
             'telefono' => trim($request->telefono),
             'celular' => trim($request->celular),
-            'estado_civil' => trim($request->estado_civil),
+            // 'estado_civil' => trim($request->estado_civil),
             'genero' => trim($request->genero),
-            'email' => trim($request->email),
-            'domicilio' => trim($request->domicilio),
+            // 'email' => trim($request->email),
+            // 'domicilio' => trim($request->domicilio),
             'user_id' => auth()->id(),
             'estado' => 'ACTIVO',
             'created_at' => date("Y-m-d H:i:s"),
@@ -145,9 +145,9 @@ class ResponsableController extends Controller
             'genero' => $request->genero,
             'telefono' => $request->telefono,
             'celular' => $request->celular,
-            'estado_civil' => $request->estado_civil,
-            'email' => $request->email,
-            'domicilio' => $request->domicilio,
+            // 'estado_civil' => $request->estado_civil,
+            // 'email' => $request->email,
+            // 'domicilio' => $request->domicilio,
 
             //'estado' => $request->status,
             'updated_at' => date("Y-m-d H:i:s")

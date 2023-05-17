@@ -29,7 +29,7 @@
                 <th scope="col">Nombre</th>
                 <th scope="col">Telefono</th>
                 <th scope="col">Celular</th>
-                <th scope="col">Dirección</th>
+                {{-- <th scope="col">Dirección</th> --}}
                 <th scope="col">Opciones</th>
             </tr>
         </thead>
@@ -45,7 +45,7 @@
                     <td>{{ $responsable->nombre }}</td>
                     <td>{{ $responsable->telefono }}</td>
                     <td>{{ $responsable->celular }}</td>
-                    <td>{{ $responsable->domicilio }}</td>
+                    {{-- <td>{{ $responsable->domicilio }}</td> --}}
 
                     <td>
                         <button type="button" class="btn btn-info" value="{{ $responsable->id }}" id="btn-editar" title="Editar responsable"><i class="fas fa-edit"></i></button>
@@ -165,7 +165,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-6">
+                {{-- <div class="col-sm-6">
 
                     <div class="form-group">
                         <label>Estado civil:</label>
@@ -179,21 +179,21 @@
                         </select>
 
                     </div>
-                </div>
+                </div> --}}
 
-                <div class="col-sm-6">
+                {{-- <div class="col-sm-6">
                     <div class="form-group">
                         <label>Email :</label>
                         <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="email-responsable" autocomplete="off">
                     </div>
-                </div>
+                </div> --}}
 
-                <div class="col-sm-6">
+                {{-- <div class="col-sm-6">
                     <div class="form-group">
                         <label>Domicilio :</label>
                         <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="domicilio-responsable" autocomplete="off">
                     </div>
-                </div>
+                </div> --}}
             </div>
           </div>
         </div>
@@ -254,9 +254,9 @@
                             'genero':  $('#genero-responsable').val(),
                             'telefono':  $('#telefono-responsable').val(),
                             'celular':  $('#celular-responsable').val(),
-                            'estado_civil':  $('#estado_civil-responsable').val(),
-                            'email': $('#email-responsable').val(),
-                            'domicilio': $('#domicilio-responsable').val(),
+                            // 'estado_civil':  $('#estado_civil-responsable').val(),
+                            // 'email': $('#email-responsable').val(),
+                            // 'domicilio': $('#domicilio-responsable').val(),
                             'id': $('#btn-editar-va').val()
                         }),
                         success: function(data_response) {
@@ -355,9 +355,9 @@
                             $('#genero-responsable').val(data_response.response.genero);
                             $('#telefono-responsable').val(data_response.response.telefono);
                             $('#celular-responsable').val(data_response.response.celular);
-                            $('#estado_civil-responsable').val(data_response.response.estado_civil);
-                            $('#email-responsable').val(data_response.response.email);
-                            $('#domicilio-responsable').val(data_response.response.domicilio);
+                            // $('#estado_civil-responsable').val(data_response.response.estado_civil);
+                            // $('#email-responsable').val(data_response.response.email);
+                            // $('#domicilio-responsable').val(data_response.response.domicilio);
 
                             $('#estado option[value="'+data_response.response.estado+'"]').attr("selected", "selected");
                         }
@@ -388,9 +388,9 @@
                             'genero':  $('#genero').val(),
                             'telefono':  $('#telefono').val(),
                             'celular':  $('#celular').val(),
-                            'estado_civil':  $('#estado_civil').val(),
-                            'email': $('#email').val(),
-                            'domicilio': $('#domicilio').val(),
+                            // 'estado_civil':  $('#estado_civil').val(),
+                            // 'email': $('#email').val(),
+                            // 'domicilio': $('#domicilio').val(),
                         }),
                         success: function(data_response) {
                             swal.fire({

@@ -229,6 +229,8 @@
                                 <select name="tiempo" id="tiempo" class="form-control">
                                     <option value="2">2</option>
                                     <option value="5">5</option>
+                                    <option value="30">30</option>
+
 
                                 </select>
 
