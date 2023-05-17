@@ -92,7 +92,7 @@
                 <th scope="col">Bloque</th>
                 <th scope="col">Sitio</th>
                 <th scope="col">Familia</th>
-                <th scope="col">Propietario</th>
+                <th scope="col">Adjudicatario</th>
                 <th scope="col">Documentos Recibidos</th>
                 <th scope="col">Superficie</th>
                 <th scope="col">Enterratorio Ocupados</th>
@@ -2545,7 +2545,7 @@ $("#cert_defuncion_p").dropzone({
 
 
                                             },
-                                            error :function( data ) 
+                                            error :function( data )
                                             {
                                                 if( data.status === 422 ) {
                                                     var msg="";

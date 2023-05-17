@@ -130,27 +130,41 @@ class CriptaController extends Controller
                         'numeric' => 'La :attribute debe ser un número!'
                     ]);
 
-            $existe_resp=Responsable::where('ci', $request->ci_resp)->first();
+            // $existe_resp=Responsable::where('ci', $request->ci_resp)->first();
+            $existe_resp=Responsable::whereRaw('nombres=\''. trim($request->nombres_resp).'\'')
+                    ->whereRaw('primer_apellido=\''.trim($request->paterno_resp).'\'')
+                    ->whereRaw('segundo_apellido=\''.trim($request->materno_resp).'\'')
+                    // ->whereRaw('fecha_nacimiento=\''.trim($request->fechanac_resp).'\'')
+                    ->first();
             //    dd($existe_resp);
             // si se envian datos del propietario del mausoleo o cripta entonces se busca en la tabla responsable para actualizar datos y no duplicar
             // caso contrario se insterta
-                    if($request->ci_resp!=null)
-                    {
-                            if( $existe_resp==null){
-                                if($request->ci_resp!=null)
-                                {
-                                    $responsable_id=Responsable::insertResponsable($request);
-                                }
-                                else{
-                                    $responsable_id=Responsable::updateResponsable($request,   $existe_resp->id);
-                                }
-                            }else{
-                                $responsable_id=Responsable::updateResponsable($request,   $existe_resp->id);
-                            }
-                            // dd($responsable_id);
-                     }else if($request->ci_resp==null && $request->paterno_resp!=null){
-                        $responsable_id=Responsable::insertResponsable($request);
-                    }
+            if (!$existe_resp ||  $existe_resp == null) {
+                //insertar difunto
+                $idresp = Responsable::insertResponsable($request);
+            } else {
+                $idresp = $existe_resp->id;
+                Responsable::updateResponsable($request, $idresp);
+            }
+            //end responsable
+
+                    // if($request->ci_resp!=null)
+                    // {
+                    //         if( $existe_resp==null){
+                    //             if($request->ci_resp!=null)
+                    //             {
+                    //                 $responsable_id=Responsable::insertResponsable($request);
+                    //             }
+                    //             else{
+                    //                 $responsable_id=Responsable::updateResponsable($request,   $existe_resp->id);
+                    //             }
+                    //         }else{
+                    //             $responsable_id=Responsable::updateResponsable($request,   $existe_resp->id);
+                    //         }
+                    //         // dd($responsable_id);
+                    //  }else if($request->ci_resp==null && $request->paterno_resp!=null){
+                    //     $responsable_id=Responsable::insertResponsable($request);
+                    // }
                         //insert cripta mausoleo
                         $existe=$this->existeCripta($request);
 
@@ -215,7 +229,7 @@ class CriptaController extends Controller
 
         //             ->first();
 
-        $cripta=Cripta::where('id', $id)->where('estado', 'ACTIVO')->orderBy('id', 'desc')->first();
+        $cripta=Cripta::where('id', $id)->where('estado', 'ACTIVO')->orderBy('id', 'desc')->select('*')->first();
         $responsable=DB::table('cripta_mausoleo_responsable')
                          ->join('responsable', 'responsable.id','=', 'cripta_mausoleo_responsable.responsable_id')
                          ->where('cripta_mausoleo_responsable.cripta_mausole_id', $id)
@@ -879,7 +893,7 @@ class CriptaController extends Controller
                 $this->validate($request, [
                     'id_cripta_mausoleo' => 'required',
                     'servicios' => 'required',
-                    'difuntos' => 'required',
+                   // 'difuntos' => 'required',
                     'ci' => 'required',
                     'nombrepago' => 'required',
                     'paternopago' => 'required',
@@ -887,7 +901,7 @@ class CriptaController extends Controller
                 ],[
                     'id_cripta_mausoleo.required' => 'codigo de mausoleo o cripta es requerido!',
                     'servicios.required' => 'Debe elegir al menos un servicio!',
-                    'difuntos4.required' => 'Los datos de el/los  difunto(s) requerido!',
+                    //'difuntos.required' => 'Los datos de el/los  difunto(s) requerido!',
                     'ci.required' => 'El campo carnet de identidad de la persona que realizara el pago es requerido!',
                     'nombrepago.required' => 'El campo nombre de la persona que realizara el pago es requerido',
                     'paternopago.required' =>'El campo apellido paterno de la persona que realizara el pago es requerido',
@@ -909,7 +923,6 @@ class CriptaController extends Controller
                 {
                   if($value['dt_id_tipo_cuenta'] =="15224150" || $value['dt_id_tipo_cuenta'] =="15224200" )
                     {
-                      //  print_r("cumpleee");
                         $this->addDifunto($request);
                     }
                 }
@@ -996,7 +1009,7 @@ class CriptaController extends Controller
                     $serv->pago_por=$request->pago_por;
                     $serv->observacion=$request->observacion;
                     $serv->tipo=$request->tipo_registro;
-                    $serv->ubicacion_id =$request->id_cripta_mausoleo;
+                    $serv->ubicacion_id =$request->id_cripta_mausoleo ;
                     $serv->save();
 
                 if($serv->id){

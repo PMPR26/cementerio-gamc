@@ -104,7 +104,7 @@
                 </td>
                 <td width="30%" class="txthead">
                     <span class="txthead">GOBIERNO AUTONOMO MUNICIPAL DE COCHABAMBA <br>
-                        DIVISION DE INGRESOS NO TRIBUTARIOS<br>
+                        DIRECCION DE INGRESOS NO TRIBUTARIOS<br>
                         DIVISION DE CEMENTERIO</span>
 
                 </td>
@@ -129,11 +129,11 @@
     <!-- Envuelva el contenido de su PDF dentro de una etiqueta principal -->
     <main>
         <pre>
-               {{-- @php(print_r($codigo_nicho)) 
+               {{-- @php(print_r($codigo_nicho))
                @php(die()) --}}
         </pre>
 
-       
+
 
                 <table width="100%">
                     <tr>
@@ -153,8 +153,13 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td width="80%" colspan="2">Nombre: {{ucwords($table->nombre ?? '' )}}  </td>
-                        <td width="20%">C.I.:{{ $table->ci ??'' }} </td>
+                        <td width="100%" colspan="2">Nombre Adjudicatario: {{ucwords($resp ?? '' )}}  </td>
+
+                    </tr>
+
+                    <tr>
+                        <td width="100%" colspan="2">Pagado por: {{ucwords($table->nombre ?? '' )}} C.I.:{{ $table->ci ??'' }}   </td>
+
                     </tr>
                     <tr>
                         @if($table->fur==0)
@@ -166,15 +171,17 @@
                         <td><b>Codigo Nicho:  {{ $codigo_nicho }}</b></td>
                     </tr>
 
+
+
                 </table>
-         
+
                     <table>
                         <tr>
                             <td colspan="4" width="380px">
                                 <h4 align="left">DETALLE LIQUIDACION</h4>
                             </td>
                         </tr>
-                    
+
 
                         <tr class="thead">
                             <td width="10%" align="left">NRO</td>
@@ -215,13 +222,21 @@
                             </td>
                         </tr>
 
-                        @if(isset($observacion) || $observacion!= null)
-                                <tr>
-                                    <td colspan="5">OBSERVACION: {{ $observacion ?? '' }}</td>
-                                </tr>
-                        @endif
+
+
+                {{-- @if(isset($det_exhum) || $det_exhum!= null || $det_exhum!= "")
+                    <tr>
+                        <td colspan="5"><b>DETALLE EXHUMACION: </b>{{ $det_exhum ?? '' }}</td>
+                    </tr>
+               @endif --}}
+               @if(isset($observacion) || $observacion!= null)
+               <tr>
+                   <td colspan="5"><b>OBSERVACION:</b> {{ $observacion ?? '' }} </td>
+                   <td colspan="5"><b></b> {{ $det_exhum ?? '' }} </td>
+               </tr>
+       @endif
                     </table>
- 
+
 
     </main>
 </body>

@@ -28,7 +28,7 @@
                     <tr role="row">
                         <th scope="col">#</th>
                         <th scope="col">CÓDIGO NICHO</th>
-                        <th scope="col">RESPONSABLE PAGO</th>
+                        <th scope="col">SOLICITANTE</th>
                         <th scope="col">SERVICIOS</th>
                         <th scope="col">MONTO</th>
                         <th scope="col">FUR</th>

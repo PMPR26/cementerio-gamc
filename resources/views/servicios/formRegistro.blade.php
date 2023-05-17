@@ -77,6 +77,7 @@
                             </div>
 
                         </div>
+                        <div class="col-12 p-3 text-blue">ESTADO DE NICHO: <span id="estado_actual_nicho"></span></div>
                     </div>
 
 
@@ -142,9 +143,20 @@
                                 <input type="date" class="form-control clear new" id="fechadef_dif" >
                             </div>
 
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+                            {{-- <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Causa</label>
                                 <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear new" id="causa" autocomplete="off">
+                            </div> --}}
+                            <div class="form-group col-sm-12 col-md-3 col-xl-3">
+                                <label>Causa :</label>
+                                <select id="causa"
+                                class="form-control clears2 select2-multiple select2-hidden-accessible" style="width: 100%">
+                                <option value="">SELECIONAR CAUSA</option>
+                                    @foreach ($causa as $c)
+                                            <option value="{{ $c->causa }}">{{$c->causa }}</option>
+                                    @endforeach
+                                </select>
+
                             </div>
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
@@ -245,7 +257,7 @@
                                 <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="celular" autocomplete="off">
                             </div>
 
-                            <div class="col-sm-12 col-md-3 col-xl-3">
+                            {{-- <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Estado civil</label>
                                 <select name="ecivil" id="ecivil" class="form-control">
                                     <option value="">Seleccionar</option>
@@ -255,20 +267,8 @@
                                     <option value="SOLTERO">SOLTERO/A</option>
                                     <option value="VIUDO">VIUDO/A</option>
                                 </select>
-                            </div>
-                        </div>
-                        <div class="row">
+                            </div> --}}
                             <div class="col-sm-12 col-md-3 col-xl-3">
-                                    <label>E-mail</label>
-                                    <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="email" autocomplete="off">
-                            </div>
-
-
-                            <div class="col-sm-12 col-md-7 col-xl-7">
-                                <label>Domicilio</label>
-                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="domicilio" autocomplete="off">
-                            </div>
-                            <div class="col-sm-12 col-md-2 col-xl-2">
                                 <label>Genero</label>
                                 <select name="genero_resp" id="genero_resp" class="form-control">
                                     <option value="">Seleccionar</option>
@@ -276,6 +276,19 @@
                                     <option value="MASCULINO">MASCULINO</option>
                                 </select>
                             </div>
+                        </div>
+                        <div class="row">
+                            {{-- <div class="col-sm-12 col-md-3 col-xl-3">
+                                    <label>E-mail</label>
+                                    <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="email" autocomplete="off">
+                            </div> --}}
+
+
+                            {{-- <div class="col-sm-12 col-md-7 col-xl-7">
+                                <label>Domicilio</label>
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="domicilio" autocomplete="off">
+                            </div> --}}
+
                         </div>
                     </div>
                 </div>
@@ -921,7 +934,7 @@ $(document).ready(function ()
                     var fila = $('#fila').val();
                     if ((bloque && nicho && fila) && bloque!="" && nicho!=""  && fila!=""  ) {
                         dats=  buscar_datos(bloque, nicho, fila);
-                        console.log(dats);
+
                     }
                     else{
                         $('#sp').empty();
@@ -965,17 +978,34 @@ $(document).ready(function ()
                                    $('#cuartel').val(data.response.cuartel);
                                    $('#anterior').val(data.response.anterior);
                                    $('#tipo_nicho').val(data.response.tipo_nicho);
-                                   $('#search_dif').val(data.response.ci_dif);
-                                   $('#ci_difunto_actual').val(data.response.ci_dif);
-                                   $('#nombres_dif').val(data.response.nombre_dif);
-                                   $('#paterno_dif').val(data.response.primerap_dif);
-                                   $('#materno_dif').val(data.response.segap_dif);
-                                   $('#fechanac_dif').val(data.response.nacimiento_dif);
-                                   $('#fechadef_dif').val(data.response.fecha_def_dif);
-                                   $('#causa').val(data.response.causa_dif);
-                                   $('#sereci').val(data.response.certificado_defuncion);
-                                   $('#tipo_dif').val(data.response.tipo_dif);
-                                   $('#genero_dif').val(data.response.genero_dif);
+
+                                   if(data.response.estado_nicho=="LIBRE"){
+                                            $('#search_dif').val();
+                                        $('#ci_difunto_actual').val();
+                                        $('#nombres_dif').val();
+                                        $('#paterno_dif').val();
+                                        $('#materno_dif').val();
+                                        $('#fechanac_dif').val();
+                                        $('#fechadef_dif').val();
+                                        $('#causa').val();
+                                        $('#sereci').val();
+                                        $('#tipo_dif').val();
+                                        $('#genero_dif').val();
+                                   }
+                                   else{
+                                        $('#search_dif').val(data.response.ci_dif);
+                                        $('#ci_difunto_actual').val(data.response.ci_dif);
+                                        $('#nombres_dif').val(data.response.nombre_dif);
+                                        $('#paterno_dif').val(data.response.primerap_dif);
+                                        $('#materno_dif').val(data.response.segap_dif);
+                                        $('#fechanac_dif').val(data.response.nacimiento_dif);
+                                        $('#fechadef_dif').val(data.response.fecha_def_dif);
+                                        $('#causa').val(data.response.causa_dif);
+                                        $('#sereci').val(data.response.certificado_defuncion);
+                                        $('#tipo_dif').val(data.response.tipo_dif);
+                                        $('#genero_dif').val(data.response.genero_dif);
+                                   }
+
 
                                     //setear campos responsable
 
@@ -986,9 +1016,9 @@ $(document).ready(function ()
                                    $('#fechanac_resp').val(data.response.nacimiento_resp);
                                    $('#telefono').val(data.response.telefono);
                                    $('#celular').val(data.response.celular);
-                                   $('#ecivil').val(data.response.ecivil_resp);
-                                   $('#email').val(data.response.email_resp);
-                                   $('#domicilio').val(data.response.domicilio_resp);
+                                //    $('#ecivil').val(data.response.ecivil_resp);
+                                //    $('#email').val(data.response.email_resp);
+                                //    $('#domicilio').val(data.response.domicilio_resp);
                                    $('#genero_resp').val(data.response.genero_resp);
                                    $('#tiemp').html(data.response.tiempo);
                                    $('#comprob').html(data.response.fur);
@@ -997,15 +1027,15 @@ $(document).ready(function ()
                                    $('#pago_cont').html(data.response.fecha_pago);
                                    $('#fecha_p').html(data.response.fecha_pago);
 
-                                   $('#fecha_liberacion').val(data.response.fecha_liberacion);
-                                   $('#fecha_adjudicacion').val(data.response.fecha_adjudicacion);
+                                   $('#fecha_liberacion').html(data.response.fecha_liberacion);
+                                   $('#fecha_adjudicacion').html(data.response.fecha_adjudicacion);
                                    $('#concepto').html(data.response.servicios);
                                    $('#store_monto_renovacion').val(data.response.monto_renovacion);
                                    $('#store_nro_renovacion').val(data.response.nro_renovacion);
 
-
-                                   autocompletar();
-                                                            completarInfoNicho();
+                                   $('#estado_actual_nicho').html(data.response.estado_nicho);
+                                     autocompletar();
+                                     completarInfoNicho();
 
 
 
@@ -1219,7 +1249,7 @@ $(document).ready(function ()
                                    'fechanac_dif':  $('#fechanac_dif').val(),
                                    'fecha_def_dif':  $('#fechadef_dif').val(),
                                    'causa':  $('#causa').val(),
-                                   'ecivil_dif':  $('#ecivil_dif').val(),
+                                //    'ecivil_dif':  $('#ecivil_dif').val(),
                                    'tipo_dif':  $('#tipo_dif').val(),
                                    'genero_dif':  $('#genero_dif').val(),
                                    'ci_resp':  $('#search_resp').val(),
@@ -1229,9 +1259,9 @@ $(document).ready(function ()
                                    'fechanac_resp':  $('#fechanac_resp').val(),
                                    'telefono':  $('#telefono').val(),
                                    'celular':  $('#celular').val(),
-                                   'ecivil':  $('#ecivil').val(),
-                                   'email':  $('#email').val(),
-                                   'domicilio':  $('#domicilio').val(),
+                                //    'ecivil':  $('#ecivil').val(),
+                                //    'email':  $('#email').val(),
+                                //    'domicilio':  $('#domicilio').val(),
                                    'genero_resp':  $('#genero_resp').val(),
                                    'pag_con':  $('#pag_con').val(),
                                    'tiempo':  $('#tiempo').val(),
@@ -1241,6 +1271,7 @@ $(document).ready(function ()
                                    'ci_pago':$('#ci_pago').val(),
                                    'pago_por':$('#pago_tercero').val(),
                                    'descripcion_exhumacion':$('#det_exhumacion').val(),
+                                   'observacion':$('#observacion').val(),
                                    'servicios_adquiridos':servicios_adquiridos,
                                    'monto':$('#totalServ').html(),
                                    'monto_renov':  $('#monto_renov').val(),
@@ -1596,19 +1627,34 @@ $(document).ready(function ()
                                         //   alert(f_adj);
                                             if(data.response!=null)
                                             {
-                                                $('#search_dif').val(data['response'].ci_dif);
-                                                $('#nombres_dif').val(data['response'].nombre_dif);
-                                                $('#paterno_dif').val(data['response'].primerap_dif);
-                                                $('#materno_dif').val(data['response'].segap_dif);
-                                                $('#fechanac_dif').val(data['response'].nacimiento_dif);
-                                                $('#fecha_def_dif').val(data['response'].fecha_defuncion);
-                                                $('#fechadef_dif').val(data['response'].fecha_defuncion);
-                                                $('#tipo_dif').val(data['response'].tipo_dif);
-                                                $('#genero_dif').val(data['response'].genero_dif);
-                                                $('#tiempo').val(data['response'].tiempo);
-                                                $('#sereci').val(data['response'].certificado_defuncion);
-                                                $('#funeraria').val(data['response'].funeraria).trigger('change');
-                                                $('#causa').val(data['response'].causa_dif).trigger('change');
+                                                if(data.response.estado_nicho=="LIBRE"){
+                                                                $('#search_dif').val();
+                                                            $('#ci_difunto_actual').val();
+                                                            $('#nombres_dif').val();
+                                                            $('#paterno_dif').val();
+                                                            $('#materno_dif').val();
+                                                            $('#fechanac_dif').val();
+                                                            $('#fechadef_dif').val();
+                                                            $('#causa').val();
+                                                            $('#sereci').val();
+                                                            $('#tipo_dif').val();
+                                                            $('#genero_dif').val();
+                                                    }else{
+                                                        $('#search_dif').val(data['response'].ci_dif);
+                                                        $('#nombres_dif').val(data['response'].nombre_dif);
+                                                        $('#paterno_dif').val(data['response'].primerap_dif);
+                                                        $('#materno_dif').val(data['response'].segap_dif);
+                                                        $('#fechanac_dif').val(data['response'].nacimiento_dif);
+                                                        $('#fecha_def_dif').val(data['response'].fecha_defuncion);
+                                                        $('#fechadef_dif').val(data['response'].fecha_defuncion);
+                                                        $('#tipo_dif').val(data['response'].tipo_dif);
+                                                        $('#genero_dif').val(data['response'].genero_dif);
+                                                        $('#tiempo').val(data['response'].tiempo);
+                                                        $('#sereci').val(data['response'].certificado_defuncion);
+                                                        $('#funeraria').val(data['response'].funeraria).trigger('change');
+                                                        $('#causa').val(data['response'].causa_dif).trigger('change');
+                                                    }
+
                                                 // data responsable
                                                 $('#search_resp').val(data['response'].ci_resp);
                                                 $('#nombres_resp').val(data['response'].nombre_resp);
@@ -1684,6 +1730,12 @@ $(document).ready(function ()
                                     }, 2000);
               }
             }
+            $("#causa").select2({
+                    width: 'resolve', // need to override the changed default
+                    // dropdownParent: $('#modal_add_difunto'),
+                    tags: true,
+                    allowClear: true
+                  });
     </script>
 
     @stop
