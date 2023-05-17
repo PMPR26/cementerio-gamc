@@ -156,10 +156,10 @@
                         </div>
                                 <hr>
                                 <h6 class="section_divider card text-white bg-info mb-3 p-4">
-                                    DATOS DEL PROPIETARIO DEL MAUSOLEO O CRIPTA
+                                    DATOS DEL ADJUDICATARIO DEL MAUSOLEO O CRIPTA
                                 </h6>
-                                    <p><b>* No llenar esta sección en caso de que el mausoleo o cripta no tenga propietario</b></p>
-                                    <p><b>* Si no cuenta con la informacion de nro documento de identidad presione el boton con icono lapiz para generar uno provisional</b></p>
+                                    <p><b>* No llenar esta sección en caso de que el mausoleo o cripta no tenga Adjudicatario</b></p>
+                                    {{-- <p><b>* Si no cuenta con la informacion de nro documento de identidad presione el boton con icono lapiz para generar uno provisional</b></p> --}}
                                     <p><b>* Si no cuenta con la informacion de Nombre propietario llenar con  "NN"</b></p>
 
 
@@ -180,9 +180,15 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-12 col-md-4 col-xl-4">
+                                <div class="col-sm-12 col-md-2 col-xl-2">
                                     <label>Telefono:</label>
                                     <input id="telefono"  type="number" class="form-control"
+                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxLength="8" >
+                                </div>
+
+                                <div class="col-sm-12 col-md-2 col-xl-2">
+                                    <label>Celular:</label>
+                                    <input id="celular"  type="number" class="form-control"
                                      oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxLength="8" >
                                 </div>
 
@@ -212,10 +218,10 @@
                             </div>
                         </div>
                         <div class="row pb-4">
-                                <div class="col-sm-12 col-md-10 col-xl-10">
+                                {{-- <div class="col-sm-12 col-md-10 col-xl-10">
                                     <label>Domicilio:</label>
                                     <input id="domicilio" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" autocomplete="off">
-                                </div>
+                                </div> --}}
                                 <div class="col-sm-6 col-md-2 col-xl-2" id="estado" style="display: none">
                                     <label>Estado:</label>
                                     <select  id="estado" class="form-control">
@@ -266,7 +272,8 @@
                                         <input class="custom-control-input custom-control-input-danger clear" type="checkbox" id="obs_resolucion" value="obs_resolucion"  >
                                         <label for="obs_resolucion" class="custom-control-label">Observacion</label>
                                         <br>
-                                        <input type="text" name="txt_resolucion" id="txt_resolucion" value="" class="form-control clear" style="display: none">
+                                        <textarea name="txt_resolucion" id="txt_resolucion" cols="50" rows="2" class="form-control clear" style="display: none"></textarea>
+                                        {{-- <input type="text" name="txt_resolucion" id="txt_resolucion" value="" class="form-control clear" style="display: none"> --}}
                                     </div>
 
                                 </div>

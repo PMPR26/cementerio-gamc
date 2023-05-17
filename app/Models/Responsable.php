@@ -52,6 +52,7 @@ class Responsable extends Model
     }
 
     public function insertResponsable($request){
+        // dd("llega  sdasd");
         if(!isset($request->ci_resp) || $request->ci_resp==null || $request->ci_resp==''){
             $resp=new Responsable;
             $ci_resp=$resp->generateCiResponsable();
@@ -68,9 +69,9 @@ class Responsable extends Model
         $responsable->genero = $request->genero_resp ?? null;
         $responsable->telefono = $request->telefono ?? null;
         $responsable->celular = $request->celular ?? null;
-        $responsable->estado_civil = $request->ecivil ?? null;
-        $responsable->domicilio = $request->domicilio;
-        $responsable->email = $request->email ?? null;
+        // $responsable->estado_civil = $request->ecivil ?? null;
+        // $responsable->domicilio = $request->domicilio;
+        // $responsable->email = $request->email ?? null;
         $responsable->estado = 'ACTIVO';
         $responsable->user_id = auth()->id();
         $responsable->save();
@@ -99,9 +100,9 @@ class Responsable extends Model
         $responsable->genero = $request->genero_resp;
         $responsable->telefono = $request->telefono ?? null;
         $responsable->celular = $request->celular ?? null;
-        $responsable->estado_civil = $request->ecivil ?? null;
-        $responsable->domicilio = $request->domicilio ?? null;
-        $responsable->email = $request->email ?? null;
+        // $responsable->estado_civil = $request->ecivil ?? null;
+        // $responsable->domicilio = $request->domicilio ?? null;
+        // $responsable->email = $request->email ?? null;
         $responsable->estado = $request->estado ??'ACTIVO';
         $responsable->user_id = auth()->id();
         $responsable->save();
