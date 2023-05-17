@@ -75,7 +75,7 @@ Route::group(['prefix' => 'bloque', 'middleware' => 'auth'], function () {
     Route::put('/update-cripta', [App\Http\Controllers\Cripta\CriptaController::class,'updateCripta'])->name('cripta.update');
     Route::get('mausoleo-notable-pdf', [App\Http\Controllers\Cripta\CriptaController::class, 'printMausoleoNotables'])->name('mausoleosNotables');
     Route::get('cripta-notable-pdf', [App\Http\Controllers\Cripta\CriptaController::class, 'printCriptaNotables'])->name('criptasNotables');
-    //Route::post('/save-pay-cm', [App\Http\Controllers\Cripta\CriptaController::class, 'savePaycm'])->name('save.service.pay.cm');
+    // Route::post('/save-pay-cm', [App\Http\Controllers\Cripta\CriptaController::class, 'savePaycm'])->name('save.service.pay.cm');
 
 
 
