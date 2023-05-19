@@ -255,8 +255,8 @@
             </tr>
             @if(isset($observacion) || $observacion!= null)
             <tr>
-                <td colspan="5"><b>OBSERVACION:</b> {{ $observacion ?? '' }} </td>
-                <td colspan="5"><b></b> {{ $det_exhum ?? '' }} </td>
+                <td width="80%" colspan="5"><b>OBSERVACION:</b> {{ $observacion ?? '' }} {{ $det_exhum ?? '' }}  </td>
+
             </tr>
           @endif
         </table>

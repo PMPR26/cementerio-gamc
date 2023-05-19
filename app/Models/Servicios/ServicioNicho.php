@@ -39,8 +39,10 @@ class ServicioNicho extends Model
 
     public function GenerarFur($ci, $nombre, $primer_apellido,
     $ap_materno, $direccion, $nombre_difunto, $codigo,
-     $bloque, $nicho, $fila, $servicios_cementery , $cantidades, $cajero, $desc_exhum)
+     $bloque, $nicho, $fila, $servicios_cementery , $cantidades, $cajero, $desc_exhum,  $nombre_adjudicatario, $ci_adjudicatario)
      {
+
+
 // dd( $servicios_cementery);
           $headers =  ['Content-Type' => 'application/json'];
           $client = new Client();
@@ -61,7 +63,9 @@ class ServicioNicho extends Model
                   'servicios_cementery' => $servicios_cementery,
                   'cantidad' => $cantidades,
                   'cajero'=>$cajero,
-                  'desc_exhum'=>$desc_exhum
+                  'desc_exhum'=>$desc_exhum,
+                  'nombre_adjudicatario'=>$nombre_adjudicatario,
+                  'ci_adjudicatario'=>$ci_adjudicatario
               ],
               'headers' => $headers,
           ]);
@@ -75,13 +79,13 @@ class ServicioNicho extends Model
 
       public function GenerarFurCM($ci, $nombre, $primer_apellido,
       $ap_materno, $direccion, $codigo,
-       $servicios_cementery , $cantidades, $cajero, $desc_exhum)
+       $servicios_cementery , $cantidades, $cajero, $desc_exhum, $adjudicatario)
         {
       //   dd( $desc_exhum)
             $headers =  ['Content-Type' => 'application/json'];
             $client = new Client();
             $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCM', [
-        //    $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementery', [
+        //    $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryCM', [
 
                 'json' => [
                     'ci' => $ci,
@@ -89,15 +93,14 @@ class ServicioNicho extends Model
                     'primer_apellido' => $primer_apellido,
                     'ap_materno' => $ap_materno,
                     'direccion' => $direccion,
-                    // 'nombre_difunto' => $nombre_difunto,
+
                     'codigo' => $codigo,
-                    // 'bloque' => $bloque,
-                    // 'fila' => $fila,
-                    // 'nicho' => $nicho,
+
                     'servicios_cementery' => $servicios_cementery,
                     'cantidad' => $cantidades,
                     'cajero'=>$cajero,
-                    'desc_exhum'=>$desc_exhum
+                    'desc_exhum'=>$desc_exhum,
+                    'adjudicatario'=>$adjudicatario
                 ],
                 'headers' => $headers,
             ]);
