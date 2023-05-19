@@ -85,7 +85,7 @@ class ServicioNicho extends Model
             $headers =  ['Content-Type' => 'application/json'];
             $client = new Client();
             // $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCM', [
-           $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementery', [
+           $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryCM', [
 
                 'json' => [
                     'ci' => $ci,
@@ -93,11 +93,9 @@ class ServicioNicho extends Model
                     'primer_apellido' => $primer_apellido,
                     'ap_materno' => $ap_materno,
                     'direccion' => $direccion,
-                    // 'nombre_difunto' => $nombre_difunto,
+
                     'codigo' => $codigo,
-                    // 'bloque' => $bloque,
-                    // 'fila' => $fila,
-                    // 'nicho' => $nicho,
+
                     'servicios_cementery' => $servicios_cementery,
                     'cantidad' => $cantidades,
                     'cajero'=>$cajero,
