@@ -19,6 +19,7 @@ class ResponsableController extends Controller
 
         $responsable= DB::table('responsable')
                 ->select('responsable.id','responsable.ci',DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),'responsable.telefono','responsable.celular','responsable.fecha_nacimiento','responsable.estado','responsable.genero')
+               ->orderBy('id', 'desc')
                 ->get();
 
         return view('responsable/index', compact('responsable'));
@@ -29,41 +30,26 @@ class ResponsableController extends Controller
         if($request->isJson()){
 
             $this->validate($request, [
-                'ci' => 'required|unique:responsable|max:9',
-                'nombres' => 'required',
-                'primer_apellido' => 'required',
-                'fecha_nacimiento' => 'required',
-                'telefono' => 'digits:7|numeric',
+                // 'ci' => 'required|unique:responsable|max:9',
+                'nombres_resp' => 'required',
+                'paterno_resp' => 'required',
+                // 'fecha_nacimiento' => 'required',
+                // 'telefono' => 'digits:7|numeric',
                 // 'domicilio' => 'required',
-                'genero' => 'required'
+                'genero_resp' => 'required'
             ], [
-                'nombres.required'  => 'El campo nombre de responsable es obligatorio!',
-                'ci.required'    => 'El campo cedula de identidad es obligatorio!',
+                'nombres_resp.required'  => 'El campo nombre de responsable es obligatorio!',
+                // 'ci.required'    => 'El campo cedula de identidad es obligatorio!',
                 'ci.unique' => 'El numero de cedula '.$request->ci.' ya se encuentra en uso!.',
-                'min' => 'El :attribute debe tener al menos 8 caracteres.',
-                'telefono' => 'El telefono no debe ser mayor a 7 digitos.',
-                'ci.max' => 'CI no debe ser mayor a 10 caracteres.',
+                // 'min' => 'El :attribute debe tener al menos 8 caracteres.',
+                // 'telefono' => 'El telefono no debe ser mayor a 7 digitos.',
+                // 'ci.max' => 'CI no debe ser mayor a 10 caracteres.',
                 // 'required' => 'El campo :attribute es requerido.'
             ]);
 
 
-           $new_responsable =  Responsable::create([
-            'ci' => trim($request->ci),
-            'nombres' => trim(mb_strtoupper($request->nombres,'UTF-8')),
-            'primer_apellido' => trim(mb_strtoupper($request->primer_apellido,'UTF-8')),
-            'segundo_apellido' => trim(mb_strtoupper($request->segundo_apellido,'UTF-8')),
-            'fecha_nacimiento' => trim($request->fecha_nacimiento),
-            'telefono' => trim($request->telefono),
-            'celular' => trim($request->celular),
-            // 'estado_civil' => trim($request->estado_civil),
-            'genero' => trim($request->genero),
-            // 'email' => trim($request->email),
-            // 'domicilio' => trim($request->domicilio),
-            'user_id' => auth()->id(),
-            'estado' => 'ACTIVO',
-            'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s"),
-           ]);
+              $new_responsable=Responsable::insertResponsable($request);
+
 
 
             return response([
@@ -128,30 +114,16 @@ class ResponsableController extends Controller
     public function updateResponsable(Request $request){
 
         $this->validate($request, [
-            'ci' => 'required',
-            'nombres' => 'required',
+            'ci_resp' => 'required',
+            'nombres_resp' => 'required',
             'id' => 'required'
         ], [
-            'nombres.required'  => 'El campo nombre de responsable es obligatorio!'
+            'nombres_resp.required'  => 'El campo nombre de responsable es obligatorio!'
         ]);
 
-        $disable_responsable =  Responsable::where('id', $request->id)
-        ->update([
-            'ci' => $request->ci,
-            'nombres' => trim(mb_strtoupper($request->nombres,'UTF-8')),
-            'primer_apellido' => trim(mb_strtoupper($request->primer_apellido,'UTF-8')),
-            'segundo_apellido' => trim(mb_strtoupper($request->segundo_apellido,'UTF-8')),
-            'fecha_nacimiento' => $request->fecha_nacimiento,
-            'genero' => $request->genero,
-            'telefono' => $request->telefono,
-            'celular' => $request->celular,
-            // 'estado_civil' => $request->estado_civil,
-            // 'email' => $request->email,
-            // 'domicilio' => $request->domicilio,
 
-            //'estado' => $request->status,
-            'updated_at' => date("Y-m-d H:i:s")
-        ]);
+        $disable_responsable =Responsable::updateResponsable($request);
+
 
         return response([
             'status'=> true,

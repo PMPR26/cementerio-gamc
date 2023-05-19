@@ -170,7 +170,7 @@
                         <div class="row">
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Tipo Difunto</label>
-                                <select name="tipo_dif" id="tipo_dif" class="form-control new">
+                                <select name="tipo_dif" id="tipo_dif" class="form-control new clears2">
                                     <option value="">Seleccionar</option>
                                     <option value="ADULTO">ADULTO</option>
                                     <option value="PARVULO">PARVULO</option>
@@ -179,7 +179,7 @@
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Genero</label>
-                                <select name="genero" id="genero_dif" class="form-control new">
+                                <select name="genero" id="genero_dif" class="form-control clears2 new">
                                     <option value="">Seleccionar</option>
                                     <option value="FEMENINO">FEMENINO</option>
                                     <option value="MASCULINO">MASCULINO</option>
@@ -213,12 +213,12 @@
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                     <label>Carnet de Identidad</label>
                                     <div class="input-group input-group-lg">
-                                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="search" class="form-control" id="search_resp" autocomplete="off">
+                                        <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="search" class="form-control clear" id="search_resp" autocomplete="off">
                                         <div class="input-group-append">
                                             <button type="submit" class="btn btn-lg btn-default"  id="buscarResp">
                                                 <i class="fa fa-search"></i>
                                             </button>
-                                            <input type="hidden" name="responable_search" id="responsable_search">
+                                            <input class="clear" type="hidden" name="responable_search" id="responsable_search">
                                         </div>
                                     </div>
                             </div>
@@ -270,7 +270,7 @@
                             </div> --}}
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Genero</label>
-                                <select name="genero_resp" id="genero_resp" class="form-control">
+                                <select name="genero_resp" id="genero_resp" class="form-control clears2">
                                     <option value="">Seleccionar</option>
                                     <option value="FEMENINO">FEMENINO</option>
                                     <option value="MASCULINO">MASCULINO</option>
@@ -926,6 +926,7 @@ $(document).ready(function ()
                     $('.clear').html("");
                     $('.clean').val("");
                     $('.clean').html("");
+                    $('.clears2').val(null).trigger('change');
                     $('#pag_con').val();
                     $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
                     $('#form').hide();
