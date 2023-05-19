@@ -46,8 +46,8 @@ class ServicioNicho extends Model
 // dd( $servicios_cementery);
           $headers =  ['Content-Type' => 'application/json'];
           $client = new Client();
-        //   $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementery', [
-         $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementery', [
+          $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementery', [
+        //  $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementery', [
 
               'json' => [
                   'ci' => $ci,
@@ -84,8 +84,8 @@ class ServicioNicho extends Model
       //   dd( $desc_exhum)
             $headers =  ['Content-Type' => 'application/json'];
             $client = new Client();
-            // $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCM', [
-           $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryCM', [
+            $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCM', [
+        //    $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryCM', [
 
                 'json' => [
                     'ci' => $ci,
