@@ -210,6 +210,13 @@
                             <td width="10%" align="right">{{ $acum ?? '' }}</td>
                         </tr>
 
+                        @if(isset($observacion) || $observacion!= null)
+               <tr>
+                   <td  width="80%" colspan="5"><b>OBSERVACION:</b> {{ $observacion ?? '' }} {{ $det_exhum ?? '' }}  </td>
+                   {{-- <td colspan="5"><b></b> {{ $det_exhum ?? '' }} </td> --}}
+               </tr>
+       @endif
+
 
                         <tr>
                             <td width='100%' colspan="5" height="80px">
@@ -229,12 +236,7 @@
                         <td colspan="5"><b>DETALLE EXHUMACION: </b>{{ $det_exhum ?? '' }}</td>
                     </tr>
                @endif --}}
-               @if(isset($observacion) || $observacion!= null)
-               <tr>
-                   <td colspan="5"><b>OBSERVACION:</b> {{ $observacion ?? '' }} </td>
-                   <td colspan="5"><b></b> {{ $det_exhum ?? '' }} </td>
-               </tr>
-       @endif
+
                     </table>
 
 

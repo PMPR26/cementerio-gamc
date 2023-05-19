@@ -265,13 +265,9 @@ class CriptaController extends Controller
                 if($request->ci_resp!=null)
                 {
                         if($existe_resp==null){
-                            // if($request->ci_resp!=null)
-                            // {
+
                                 $responsable_id=Responsable::insertResponsable($request);
-                            // }
-                            // else{
-                            //     $responsable_id=Responsable::updateResponsable($request,   $existe_resp->id);
-                            // }
+
                         }else{
                             $responsable_id=Responsable::updateResponsable($request,   $existe_resp->id);
                         }
@@ -485,7 +481,7 @@ class CriptaController extends Controller
                                             $dif->nombres = $value['nombres'];
                                             $dif->primer_apellido = $value['primer_apellido'];
                                             $dif->segundo_apellido = $value['segundo_apellido'];
-                                            $dif->fecha_nacimiento = $value['fecha_nacimiento']??'';
+                                            $dif->fecha_nacimiento = $value['fecha_nacimiento']?? null;
                                             $dif->fecha_defuncion = $value['fecha_defuncion'];
                                             $dif->certificado_defuncion = $value['ceresi']??'';
                                             $dif->causa = trim(strtoupper($value['causa']))??'';
@@ -506,7 +502,7 @@ class CriptaController extends Controller
                                                 "segundo_apellido"=>$value['segundo_apellido'],
                                                 "ceresi"=>$value['ceresi'],
                                                 "tipo"=>$value['tipo'],
-                                                "fecha_nacimiento"=>$value['fecha_nacimiento'],
+                                                "fecha_nacimiento"=>$value['fecha_nacimiento'] ?? null,
                                                 "fecha_defuncion"=>$value['fecha_defuncion'],
                                                 "causa"=>trim(strtoupper($value['causa'])),
                                                 "funeraria"=>trim(strtoupper($value['funeraria'])),
@@ -523,7 +519,7 @@ class CriptaController extends Controller
                                             $up_dif->nombres = $value['nombres'];
                                             $up_dif->primer_apellido = $value['primer_apellido'];
                                             $up_dif->segundo_apellido = $value['segundo_apellido'];
-                                            $up_dif->fecha_nacimiento = $value['fecha_nacimiento'];
+                                            $up_dif->fecha_nacimiento = $value['fecha_nacimiento'] ?? null;
                                             $up_dif->fecha_defuncion = $value['fecha_defuncion'];
                                             $up_dif->certificado_defuncion = $value['ceresi'];
                                             $up_dif->causa = $value['causa'];
@@ -544,7 +540,7 @@ class CriptaController extends Controller
                                                 "segundo_apellido"=>$value['segundo_apellido'],
                                                 "ceresi"=>$value['ceresi'],
                                                 "tipo"=>$value['tipo'],
-                                                "fecha_nacimiento"=>$value['fecha_nacimiento'],
+                                                "fecha_nacimiento"=>$value['fecha_nacimiento'] ?? null,
                                                 "fecha_defuncion"=>$value['fecha_defuncion'],
                                                 "causa"=>trim(strtoupper($value['causa'])),
                                                 "funeraria"=>trim(strtoupper($value['funeraria'])),
@@ -595,7 +591,7 @@ class CriptaController extends Controller
                     ->where('nombres', ''.$nombres.'')
                     ->where('primer_apellido', ''.$primer_apellido.'')
                     ->where('segundo_apellido', ''.$segundo_apellido.'')
-                    ->where('fecha_nacimiento', ''.$fecha_nacimiento.'')
+                    // ->where('fecha_nacimiento', ''.$fecha_nacimiento.'')
                     ->first();
                if(!empty($difunto_s))
                {
@@ -926,12 +922,14 @@ class CriptaController extends Controller
                 for($cont=0; $cont<$cant_serv; $cont++){
                     $cantidades[$cont]=1;
                 }
+            //    dd($request->ci_resp);
+            $adjudicatario=$request->nombre_resp." C.I.: ".$request->ci_resp;
 
               //  $nombre_difunto= $request->difuntos[count( $request->difuntos)-1]['nombres']." ".$request->difuntos[count( $request->difuntos)-1]['segundo_apellido']." ".$request->difuntos[count( $request->difuntos)-1]['primer_apellido'];
 
                 $response=$obj->GenerarFurCM($request->ci, $request->nombrepago, $request->paternopago,
                 $request->maternopago, $request->domicilio, $request->codigo_unidad,
-                $request->servicio_hijos , $cantidades, $cajero, $desc_exhum);
+                $request->servicio_hijos , $cantidades, $cajero, $desc_exhum, $adjudicatario);
 
 
                 if($response['status']==true){

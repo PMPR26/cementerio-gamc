@@ -13,7 +13,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
 
             <div class="card">
                 <div class="card-body">
-            
+
                     <div class="row">
                         <div class="col-sm-6">
                                 <div class="form-group">
@@ -42,27 +42,26 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             </div>
                         </div>
 
-                        <div class="col-sm-6">
+                        {{-- <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Fecha de nacimiento :</label>
                                 <input type="date"  class="form-control" placeholder="fecha de nacimiento" id="fecha_nacimiento" max="2006-12-31" >
-                                {{-- <input type="text" class="form-control datetimepicker" placeholder="Fecha de nacimiento" id="fecha_nacimiento" name="fecha_nacimiento"  />
-                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="segundo_apellido" autocomplete="off"> --}}
+
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-sm-6">
-                 
+
                             <div class="form-group">
                                 <label>Genero :</label>
                                 <select name="status" id="genero" class="form-control">
-            
+
                                     <option value="MASCULINO"> Masculino</option>
                                     <option value="FEMENINO"> Femenino</option>
-        
+
                                 </select>
-                               
-                            </div> 
+
+                            </div>
                         </div>
 
                         <div class="col-sm-6">
@@ -79,46 +78,46 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             </div>
                         </div>
 
-                        <div class="col-sm-6">
-                         
+                        {{-- <div class="col-sm-6">
+
                             <div class="form-group">
                                 <label>Estado civil:</label>
                                 <select name="status" id="estado_civil" class="form-control">
-            
+
                                     <option value="SOLTERO"> Soltero/a</option>
                                     <option value="CASADO"> Casado/a</option>
                                     <option value="DIVORCIADO"> Divociado/a</option>
                                     <option value="VIUDO"> Viudo/a</option>
 
                                 </select>
-                               
-                            </div> 
-                        </div>
 
-                        <div class="col-sm-6">
+                            </div>
+                        </div> --}}
+
+                        {{-- <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Email :</label>
                                 <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="email" autocomplete="off">
                             </div>
-                        </div>
+                        </div> --}}
 
-                        <div class="col-sm-6">
+                        {{-- <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Domicilio :</label>
                                 <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="domicilio" autocomplete="off">
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
-            
-                   
+
+
                     <div class="col-sm-12" style="text-align: center">
                         <button type="button" id="{{ $id_button }}" class="btn btn-success">{{ $title_buton }}</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    </div> 
-            
+                    </div>
+
                 </div>
               </div>
-            
+
 
         </div>
         {{-- <div class="modal-footer">

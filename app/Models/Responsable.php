@@ -15,13 +15,13 @@ class Responsable extends Model
         'nombres',
         'primer_apellido',
         'segundo_apellido',
-        'fecha_nacimiento',
+        // 'fecha_nacimiento',
         'telefono',
         'celular',
-        'estado_civil',
+        // 'estado_civil',
         'genero',
-        'email',
-        'domicilio',
+        // 'email',
+        // 'domicilio',
         'estado',
         'user_id',
         'created_at'
@@ -83,7 +83,7 @@ class Responsable extends Model
 
 
 
-    public function updateResponsable($request, $difuntoid){
+    public function updateResponsableByDif($request, $difuntoid){
         if($request->ci_resp==null ||$request->ci_resp=="" ){
             $respons = new Responsable;  // correct
 
@@ -107,6 +107,26 @@ class Responsable extends Model
         $responsable->user_id = auth()->id();
         $responsable->save();
         return $responsable->id;
+    }
+
+    public function updateResponsable($request){
+     $disable_responsable =  Responsable::where('id', $request->id)
+        ->update([
+            'ci' => $request->ci_resp,
+            'nombres' => trim(mb_strtoupper($request->nombres_resp,'UTF-8')),
+            'primer_apellido' => trim(mb_strtoupper($request->paterno_resp,'UTF-8')),
+            'segundo_apellido' => trim(mb_strtoupper($request->materno_resp,'UTF-8')),
+            // 'fecha_nacimiento' => $request->fecha_nacimiento??null,
+            'genero' => $request->genero_resp,
+            'telefono' => $request->telefono,
+            'celular' => $request->celular,
+            // 'estado_civil' => $request->estado_civil,
+            // 'email' => $request->email,
+            // 'domicilio' => $request->domicilio,
+
+            //'estado' => $request->status,
+            'updated_at' => date("Y-m-d H:i:s")
+        ]);
     }
 
 }

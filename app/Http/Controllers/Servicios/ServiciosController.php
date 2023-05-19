@@ -258,7 +258,7 @@ class ServiciosController extends Controller
                     'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
                     'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
                     // 'domicilio.required'=> 'El campo domicilio es obligatorio',
-                    'genero_resp.required'=> 'El campo genero_resp es obligatorio',
+                    'genero_resp.required'=> 'El campo genero del responsable es obligatorio',
                     'servicios_adquiridos.required' => 'Debe seleccionar al menos un tipo de servicio',
                     // 'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
                 ]);
@@ -297,7 +297,7 @@ class ServiciosController extends Controller
                         'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
                         'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
                         // 'domicilio.required'=> 'El campo domicilio es obligatorio',
-                        'genero_resp.required'=> 'El campo genero_resp es obligatorio',
+                        'genero_resp.required'=> 'El campo genero del responsable es obligatorio',
                         'servicios_adquiridos.required' => 'Debe seleccionar al menos un tipo servicio',
                         // 'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
                     ]);
@@ -329,32 +329,6 @@ class ServiciosController extends Controller
                 ->first();
                 $cajero= $datos_cajero->user_sinot;
 
-            /********recuperar datos de la persona que realizo el pago, si es el propietario o un tercer responsable */
-
-            if ($request->pago_por != "responsable") {
-                $pago_por = "Tercera persona";
-                $nombre_pago = trim(strtoupper($request->name_pago));
-                $paterno_pago = trim(strtoupper($request->paterno_pago));
-                $materno_pago =  trim(strtoupper($request->materno_pago));
-                $ci = $request->ci_pago;
-                $domicilio = "SIN ESPECIFICACION";
-            } else {
-                        $pago_por = "Titular responsable";
-                        $nombre_pago =  trim(strtoupper($request->nombres_resp));
-                        if ($request->paterno_resp == "") {
-                            $paterno_pago = "NO DEFINIDO";
-                        } else {
-                            $paterno_pago =  trim(strtoupper($request->paterno_resp));
-                        }
-                        if ($request->domicilio == "") {
-                            $domicilio = "NO DEFINIDO";
-                        } else {
-                            $domicilio = trim(strtoupper($request->domicilio));
-                        }
-
-                        $materno_pago =  trim(strtoupper($request->materno_resp)) ?? '';
-                        $ci = $request->ci_resp;
-            }
 
             //******************** recuperar los servicios adquiridos ***** */
             if (!empty($request->servicios_adquiridos) && is_array($request->servicios_adquiridos))
@@ -587,18 +561,57 @@ class ServiciosController extends Controller
                     $existeResponsable = Responsable::whereRaw('nombres=\''. trim($request->nombres_resp).'\'')
                     ->whereRaw('primer_apellido=\''.trim($request->paterno_resp).'\'')
                     ->whereRaw('segundo_apellido=\''.trim($request->materno_resp).'\'')
-                    // ->whereRaw('fecha_nacimiento=\''.trim($request->fechanac_resp).'\'')
+                    ->OrWhereRaw('ci=\''.trim($request->ci_resp).'\'')
                     ->first();
 
                         // dd($existeResponsable);
 
                     if (!$existeResponsable ||  $existeResponsable == null) {
                         //insertar difunto
-                        $idresp = $this->insertResponsable($request);
+                        // $idresp = $this->insertResponsable($request);
+                        $idresp = Responsable::insertResponsable($request);
+
+
                     } else {
                         $idresp = $existeResponsable->id;
                         $this->updateResponsable($request, $idresp);
                     }
+                    if($request->ci_resp==null || !isset($request->ci_resp) || $request->ci_resp==""){
+                        $sqresp=Responsable::WhereRaw('id=\''.trim($idresp).'\'')->select('ci')->first();
+                        $ci_adjudicatario=$sqresp->ci;
+                    }
+                    else{
+                        $ci_adjudicatario=$request->ci_resp;
+                    }
+
+                       /********recuperar datos de la persona que realizo el pago, si es el propietario o un tercer responsable */
+
+            if ($request->pago_por != "responsable") {
+                $pago_por = "Tercera persona";
+                $nombre_pago = trim(strtoupper($request->name_pago));
+                $paterno_pago = trim(strtoupper($request->paterno_pago));
+                $materno_pago =  trim(strtoupper($request->materno_pago));
+                $ci = $request->ci_pago;
+                $domicilio = "SIN ESPECIFICACION";
+            } else {
+                        $pago_por = "Titular responsable";
+                        $nombre_pago =  trim(strtoupper($request->nombres_resp));
+                        if ($request->paterno_resp == "") {
+                            $paterno_pago = "NO DEFINIDO";
+                        } else {
+                            $paterno_pago =  trim(strtoupper($request->paterno_resp));
+                        }
+                        if ($request->domicilio == "") {
+                            $domicilio = "NO DEFINIDO";
+                        } else {
+                            $domicilio = trim(strtoupper($request->domicilio));
+                        }
+
+                        $materno_pago =  trim(strtoupper($request->materno_resp)) ?? '';
+                        $ci = $ci_adjudicatario;
+            }
+
+
                     //end responsable
 
                     //insertar tbl responsable_difunto
@@ -642,11 +655,13 @@ class ServiciosController extends Controller
                                                                     for($cont=0; $cont<$cant_serv; $cont++){
                                                                         $cantidades[$cont]=1;
                                                                     }
-                                                                    $response=$obj->GenerarFur($ci, $nombre_pago, $paterno_pago,
-                                                                    $materno_pago, $domicilio,  $nombre_difunto, $codigo_n,
+
+                                                                    $nombre_adjudicatario= $request->nombre_resp." ".$request->paterno_resp." ".$request->materno_resp;
+                                                                    $ci_adjudicatario=
+                                                                    $response=$obj->GenerarFur($ci,$nombre_pago,$paterno_pago,$materno_pago, $domicilio,  $nombre_difunto, $codigo_n,
                                                                     $request->bloque, $request->nro_nicho, $request->fila,
                                                                     $servicio_hijos,
-                                                                    $cantidades, $cajero, $request->descripcion_exhumacion );
+                                                                    $cantidades, $cajero, $request->descripcion_exhumacion, $nombre_adjudicatario, $ci_adjudicatario );
 
                                                                     if($response['status']==true){
                                                                         $fur = $response['response'];
@@ -822,34 +837,34 @@ class ServiciosController extends Controller
         return $difunto->id;
     }
 
-    public function insertResponsable($request){
-           /*******verificar si el campo ci del difunto esta vacio y generar uno provisional */
-           if(!isset($request->ci_resp) || $request->ci_resp==null || $request->ci_resp==''){
-            $resp=new Difunto;
-            $ci_resp=$resp->generateCiDifunto();
-            }else{
-                $ci_resp=$request->ci_resp;
-            }
+    // public function insertResponsable($request){
+    //        /*******verificar si el campo ci del difunto esta vacio y generar uno provisional */
+    //        if(!isset($request->ci_resp) || $request->ci_resp==null || $request->ci_resp==''){
+    //         $resp=new Difunto;
+    //         $ci_resp=$resp->generateCiDifunto();
+    //         }else{
+    //             $ci_resp=$request->ci_resp;
+    //         }
 
-        $responsable = new Responsable;
-        $responsable->ci = $request->ci_resp;
-        $responsable->nombres =  trim(mb_strtoupper($request->nombres_resp, 'UTF-8'));
-        $responsable->primer_apellido = trim(mb_strtoupper($request->paterno_resp, 'UTF-8'));
-        $responsable->segundo_apellido =  trim(mb_strtoupper($request->materno_resp, 'UTF-8'));
-        $responsable->fecha_nacimiento = $request->fechanac_resp ?? '';
-        $responsable->genero = $request->genero_resp;
-        $responsable->telefono = $request->telefono;
-        $responsable->celular = $request->celular;
-        $responsable->estado_civil = $request->ecivil ?? '';
-        $responsable->domicilio = $request->domicilio;
-        $responsable->email = $request->email ?? '';
-        $responsable->estado = 'ACTIVO';
-        $responsable->user_id = auth()->id();
-        $responsable->save();
-        $responsable->id;
-        return  $responsable->id;
+    //     $responsable = new Responsable;
+    //     $responsable->ci = $ci_resp;
+    //     $responsable->nombres =  trim(mb_strtoupper($request->nombres_resp, 'UTF-8'));
+    //     $responsable->primer_apellido = trim(mb_strtoupper($request->paterno_resp, 'UTF-8'));
+    //     $responsable->segundo_apellido =  trim(mb_strtoupper($request->materno_resp, 'UTF-8'));
+    //     $responsable->fecha_nacimiento = $request->fechanac_resp ?? null;
+    //     $responsable->genero = $request->genero_resp;
+    //     $responsable->telefono = $request->telefono;
+    //     $responsable->celular = $request->celular;
+    //     $responsable->estado_civil = $request->ecivil ?? '';
+    //     $responsable->domicilio = $request->domicilio??'';
+    //     $responsable->email = $request->email ?? '';
+    //     $responsable->estado = 'ACTIVO';
+    //     $responsable->user_id = auth()->id();
+    //     $responsable->save();
+    //     $responsable->id;
+    //     return  $responsable->id;
 
-    }
+    // }
 
     public function updateResponsable($request, $difuntoid){
         $responsable= Responsable::where('id', $difuntoid)->first();
@@ -857,12 +872,12 @@ class ServiciosController extends Controller
         $responsable->nombres =  trim(mb_strtoupper($request->nombres_resp, 'UTF-8'));
         $responsable->primer_apellido = trim(mb_strtoupper($request->paterno_resp, 'UTF-8'));
         $responsable->segundo_apellido =  trim(mb_strtoupper($request->materno_resp, 'UTF-8'));
-        $responsable->fecha_nacimiento = $request->fechanac_resp ?? '';
+        $responsable->fecha_nacimiento = $request->fechanac_resp ?? null;
         $responsable->genero = $request->genero_resp;
         $responsable->telefono = $request->telefono;
         $responsable->celular = $request->celular;
         $responsable->estado_civil = $request->ecivil ??'';
-        $responsable->domicilio = $request->domicilio;
+        $responsable->domicilio = $request->domicilio??'';
        $responsable->email = $request->email ??  '';
         $responsable->estado = 'ACTIVO';
         $responsable->user_id = auth()->id();
@@ -1107,7 +1122,7 @@ class ServiciosController extends Controller
                ->where('difunto.nombres','=', ''.$request->nombres_dif.'')
                ->where('difunto.primer_apellido','=', ''.$request->paterno_dif.'')
                ->where('difunto.segundo_apellido','=', ''.$request->materno_dif.'')
-               ->where('difunto.fecha_nacimiento','=', ''.$request->fechanac_dif.'')
+            //    ->where('difunto.fecha_nacimiento','=', ''.$request->fechanac_dif.'')
                ->first();
                if($sql){ return $sql;}
                else{ return false;}
