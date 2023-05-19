@@ -278,7 +278,8 @@
                                     if(data.status!=null )
                                     {
                                         $('#cod_cm_info').html(data.response.cripta.codigo);
-                                        $('#resp_cm_info').html(data.response.responsable.nombres+" "+data.response.responsable.primer_apellido+" "+data.response.responsable.segundo_apellido);
+                                        var segundo_apellido=data.response.responsable.segundo_apellido ? data.response.responsable.segundo_apellido : '';
+                                        $('#resp_cm_info').html(data.response.responsable.nombres+" "+data.response.responsable.primer_apellido+" "+segundo_apellido);
                                         $('#respdifunto_id_cm_info').html(data.response.responsable.id);
 
                                     }//end if
@@ -1822,7 +1823,8 @@ $("#cert_defuncion_p").dropzone({
                                 if(data.response.responsable !=null)
                                 {
                                         $('#cod_cm').html(data.response.cripta.codigo);
-                                        $('#resp_cm').html(data.response.responsable.nombres+" "+data.response.responsable.primer_apellido+" "+data.response.responsable.segundo_apellido);
+                                        var segundo_apellido=data.response.responsable.segundo_apellido ? data.response.responsable.segundo_apellido : '';
+                                        $('#resp_cm').html(data.response.responsable.nombres+" "+data.response.responsable.primer_apellido+" "+segundo_apellido);
                                         $('#resp_cm_id').html(data.response.responsable.id);
                                         $('#tipo_registro').html(data.response.cripta.tipo_registro);
                                         var array_difuntos = jQuery.parseJSON(data.response.cripta.difuntos);
@@ -2511,15 +2513,15 @@ $("#cert_defuncion_p").dropzone({
                                                 'maternopago': $('#cm_maternopago').val(),
                                                 'observacion': $('#cm_observacion').val(),
                                                 'pago_por' : $('#tipo_resp').val(),
-                                                'domicilio' : $('#cm_domicilio').val()? $('#cm_domicilio').val() : 'NO DEFINIDO',
                                                 'ci_resp':$('#resp_cm_id').html(),
                                                 'nombre_resp':$('#resp_cm').html(),
                                                 'sel_exhumado':sel_exhumado,
-                                                'tipo_registro':$('#tipo_registro').html(),
+                                                'tipo_registro': $('#tipo_registro').html(),
+                                                'domicilio' : $('#cm_domicilio').val()? $('#cm_domicilio').val() : 'NO DEFINIDO'
                                             }),
                                             success: function(data)
                                             {
-                                                console.log("r5espuesta de servicios");
+
                                                 console.log(data);
                                                 if(data.status==true){
                                                     swal.fire({
