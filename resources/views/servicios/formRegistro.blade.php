@@ -23,6 +23,9 @@
                     </div>
                 </div>
 
+               
+
+
                 {{-- datos busqueda --}}
 
                 <div class="card">
