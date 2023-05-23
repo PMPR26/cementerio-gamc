@@ -23,10 +23,6 @@
                     </div>
                 </div>
 
-<<<<<<< HEAD
-               
-
-=======
                   {{-- seccion servicios excepcionales - externos  --}}
                   <div class="card">
                     <div class="card-header bg-gradient-cyan">
@@ -46,7 +42,6 @@
                     </div>
 
                 </div>
->>>>>>> 2a0c88850b4224118eb5bf54acb74102758cb781
 
                 {{-- datos busqueda --}}
 
