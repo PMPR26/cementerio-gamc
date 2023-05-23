@@ -235,7 +235,7 @@ class ServiciosController extends Controller
         if ($request->isJson())
         {
 
-            if($request->externo == "externo" && $request->gratis == "gratis"){
+            if($request->externo == "externo" && $request->gratis == "GRATIS"){
                 $this->validate($request, [
                     // 'ci_dif' => 'required',
                     'nombres_dif' => 'required',
