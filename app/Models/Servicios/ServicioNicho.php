@@ -39,15 +39,15 @@ class ServicioNicho extends Model
 
     public function GenerarFur($ci, $nombre, $primer_apellido,
     $ap_materno, $direccion, $nombre_difunto, $codigo,
-     $bloque, $nicho, $fila, $servicios_cementery , $cantidades, $cajero, $desc_exhum,  $nombre_adjudicatario, $ci_adjudicatario)
+     $bloque, $nicho, $fila, $servicios_cementery , $cantidades, $cajero, $desc_exhum,  $nombre_adjudicatario, $ci_adjudicatario, $observacion)
      {
 
 
 // dd( $servicios_cementery);
           $headers =  ['Content-Type' => 'application/json'];
           $client = new Client();
-          $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementery', [
-        //  $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementery', [
+        //   $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementery', [
+         $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementery', [
 
               'json' => [
                   'ci' => $ci,
@@ -65,7 +65,8 @@ class ServicioNicho extends Model
                   'cajero'=>$cajero,
                   'desc_exhum'=>$desc_exhum,
                   'nombre_adjudicatario'=>$nombre_adjudicatario,
-                  'ci_adjudicatario'=>$ci_adjudicatario
+                  'ci_adjudicatario'=>$ci_adjudicatario,
+                  'observacion'=>$observacion
               ],
               'headers' => $headers,
           ]);
@@ -79,13 +80,13 @@ class ServicioNicho extends Model
 
       public function GenerarFurCM($ci, $nombre, $primer_apellido,
       $ap_materno, $direccion, $codigo,
-       $servicios_cementery , $cantidades, $cajero, $desc_exhum, $adjudicatario)
+       $servicios_cementery , $cantidades, $cajero, $desc_exhum, $adjudicatario, $observacion)
         {
       //   dd( $desc_exhum)
             $headers =  ['Content-Type' => 'application/json'];
             $client = new Client();
-            $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCM', [
-        //    $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryCM', [
+            // $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCM', [
+           $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryCM', [
 
                 'json' => [
                     'ci' => $ci,
@@ -93,14 +94,13 @@ class ServicioNicho extends Model
                     'primer_apellido' => $primer_apellido,
                     'ap_materno' => $ap_materno,
                     'direccion' => $direccion,
-
                     'codigo' => $codigo,
-
                     'servicios_cementery' => $servicios_cementery,
                     'cantidad' => $cantidades,
                     'cajero'=>$cajero,
                     'desc_exhum'=>$desc_exhum,
-                    'adjudicatario'=>$adjudicatario
+                    'adjudicatario'=>$adjudicatario,
+                    'observacion'=>$observacion
                 ],
                 'headers' => $headers,
             ]);
