@@ -23,9 +23,29 @@
                     </div>
                 </div>
 
+                  {{-- seccion servicios excepcionales - externos  --}}
+                  <div class="card">
+                    <div class="card-header bg-gradient-cyan">
+                        <h4>SELECCIONE PARA EXTERNOS</h4>
+                    </div>
+
+                      <div class="row card-body">
+
+                              <div class="col-sm-12 col-md-12 col-xl-12">
+
+                                 <label>
+                                    <input type="checkbox" name="servicio_externo"  id="servicio_externo" value="NO" style="width: 35px; height:35px">
+                                       Seleccione la opción para habilitar el formulario para servicio externo
+                                 </label>
+                            </div>
+
+                    </div>
+
+                </div>
+
                 {{-- datos busqueda --}}
 
-                <div class="card">
+                <div class="card busquedaNichos">
                     <div class="card-header bg-gradient-cyan">
                         <h4>BUSCAR REGISTRO</h4>
                     </div>
@@ -55,7 +75,7 @@
                 </div>
 
                 <div id="contenido" style="display: none">
-                    <div class="card">
+                    <div class="card complementoBusqueda"  >
                         <div class="row">
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>Cuartel</label>
@@ -85,11 +105,11 @@
                     <div class="card">
                         <div class="row bg-gradient-cyan">
                             <div class="card-header col-md-6 col-xl-6">
-                                <h4>DATOS DIFUNTOS </h4>
+                                <h4> DATOS DIFUNTOS </h4>
                             </div>
-                            <div class="col-sm-12 col-md-6 col-xl-6 p-4">
+                            <div class="col-sm-12 col-md-6 col-xl-6 p-4 nuevo_difunto">
                                 <label>INGRESAR NUEVO DIFUNTO
-                                <input type="checkbox" name="add_difunto"  id="add_difunto" value="" style="width: 35px; height:35px">
+                                    <input type="checkbox" name="add_difunto"  id="add_difunto" value="" style="width: 35px; height:35px">
                                  </label>
                             </div>
                         </div>
@@ -355,7 +375,8 @@
 
 
                         @foreach ($tipo_service as $value)
-                            @if($value['cuenta'] =='15224150' ||   $value['cuenta'] =='15224350' || $value['cuenta'] == '15224330' )
+                            @if($value['cuenta'] == '15224330' )
+                            {{-- //$value['cuenta'] =='15224150' ||   $value['cuenta'] =='15224350' ||  --}}
                             @else
                                 <div class="col-12 {{ $value['cuenta'] }}">
                                      <label>   <input type="checkbox" name="{{ $value['cuenta'] }}" value="{{ $value['descripcion'] }}" id="{{ $value['cuenta'] }}" class="serv"  >{{ $value['descripcion'] }}</label>
@@ -1226,7 +1247,11 @@ $(document).ready(function ()
         $(document).on('click','#btn_guardar_servicio', function(){
                 makeArrayServices();
                 validarInfoEnviada();
-               return  $.ajax({
+                if ($('#servicio_externo').is(":checked")){
+                    registrarServicioExterno();
+                 }
+                 else{
+                    return  $.ajax({
                                type: 'POST',
                                headers: {
                                    'Content-Type':'application/json',
@@ -1323,6 +1348,8 @@ $(document).ready(function ()
 
                                }
                            })
+                 }
+
                });
 
 
@@ -1737,6 +1764,123 @@ $(document).ready(function ()
                     tags: true,
                     allowClear: true
                   });
+
+
+                  /**********************************************************************************************************/
+                  /***************************************SERVICIOS EXTERNOS ************************************************/
+                  /**********************************************************************************************************/
+
+                  $(document).on('click', '#servicio_externo',function(){
+
+                        if ($('#servicio_externo').is(":checked")){
+                             $('#contenido').show();
+                             $('.busquedaNichos').hide();
+                             $('.complementoBusqueda').hide();
+                             $('.nuevo_difunto').hide();
+                         }
+                         else{
+                             $('#contenido').hide();
+                             $('.busquedaNichos').show();
+                             $('.complementoBusqueda').show();
+                             $('.nuevo_difunto').show();
+                         }
+                  });
+
+                function registrarServicioExterno(){
+                    return  $.ajax({
+                               type: 'POST',
+                               headers: {
+                                   'Content-Type':'application/json',
+                                   'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                               },
+                               url: "{{ route('new.servicio.externo') }}",
+                               async: false,
+                               data: JSON.stringify({
+
+
+                                   'tipo_nicho':  $('#tipo_nicho').val(),
+                                    'ci_dif':  $('#search_dif').val(),
+                                   'nombres_dif':  $('#nombres_dif').val(),
+                                   'paterno_dif':  $('#paterno_dif').val(),
+                                   'materno_dif':  $('#materno_dif').val(),
+                                   'fechanac_dif':  $('#fechanac_dif').val(),
+                                   'fecha_def_dif':  $('#fechadef_dif').val(),
+                                   'causa':  $('#causa').val(),
+                                //    'ecivil_dif':  $('#ecivil_dif').val(),
+                                   'tipo_dif':  $('#tipo_dif').val(),
+                                   'genero_dif':  $('#genero_dif').val(),
+                                   'ci_resp':  $('#search_resp').val(),
+                                   'nombres_resp':  $('#nombres_resp').val(),
+                                   'paterno_resp':  $('#paterno_resp').val(),
+                                   'materno_resp':  $('#materno_resp').val(),
+                                   'fechanac_resp':  $('#fechanac_resp').val(),
+                                   'telefono':  $('#telefono').val(),
+                                   'celular':  $('#celular').val(),
+                                //    'ecivil':  $('#ecivil').val(),
+                                //    'email':  $('#email').val(),
+                                //    'domicilio':  $('#domicilio').val(),
+                                   'genero_resp':  $('#genero_resp').val(),
+                                   'pag_con':  $('#pag_con').val(),
+                                   'tiempo':  $('#tiempo').val(),
+                                   'name_pago':$('#name_pago').val(),
+                                   'paterno_pago':$('#paterno_pago').val(),
+                                   'materno_pago':$('#materno_pago').val(),
+                                   'ci_pago':$('#ci_pago').val(),
+                                   'pago_por':$('#pago_tercero').val(),
+                                   'descripcion_exhumacion':$('#det_exhumacion').val(),
+                                   'observacion':$('#observacion').val(),
+                                   'servicios_adquiridos':servicios_adquiridos,
+                                   'monto':$('#totalServ').html(),
+                                   'monto_renov':  $('#monto_renov').val(),
+                                //    'gestion_renov':  $('#gestion_renov').val(),
+                                   'nro_renovacion':$('#renov').val(),
+                                   'sereci':$('#sereci').val(),
+                                   'gratis':$('#gratis').val(),
+                                   'add_difunto':$('#add_difunto').val(),
+
+                               }),
+                               success: function(data_response) {
+                                   swal.fire({
+                                   title: "Guardado!",
+                                   text: "!Registro realizado con éxito!",
+                                   type: "success",
+                                   timer: 2000,
+                                   showCancelButton: false,
+                                   showConfirmButton: false
+                                   });
+                                   setTimeout(function() {
+                                    //    location.reload();
+                                    window.location.href = "/servicios/servicios"
+                                   }, 2000);
+                                   //toastr["success"]("Registro realizado con éxito!");
+                               },
+                               error: function (error) {
+
+                                   if(error.status == 422){
+                                       Object.keys(error.responseJSON.errors).forEach(function(k){
+                                       toastr["error"](error.responseJSON.errors[k]);
+                                       //console.log(k + ' - ' + error.responseJSON.errors[k]);
+                                       });
+                                   }else if(error.status == 400){
+                                       swal.fire({
+                                           title: "Registro Duplicado!",
+                                           text: "!Transacción rechazada!",
+                                           type: "error",
+                                           timer: 2000,
+                                           showCancelButton: false,
+                                           showConfirmButton: false
+                                           });
+                                           setTimeout(function() {
+                                               location.reload();
+                                            // window.location.href =  "{{URL::to('serv')}} " //"{{ route('serv') }}";
+
+                                           }, 2000);
+                                   }
+
+                               }
+                           })
+                  }
+
     </script>
 
     @stop
