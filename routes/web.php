@@ -130,6 +130,8 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::group(['prefix' => 'servicios', 'middleware' => 'auth'], function () {
     Route::get('/servicios', [App\Http\Controllers\Servicios\ServiciosController::class,'index'])->name('serv');
     Route::post('/new-servicio', [App\Http\Controllers\Servicios\ServiciosController::class,'createNewServicios'])->name('new.servicio');
+    Route::post('/new-servicio-externo', [App\Http\Controllers\Servicios\ServiciosController::class,'createNewServiciosExterno'])->name('new.servicio.externo');
+
     Route::post('/buscar_nicho', [App\Http\Controllers\Servicios\ServiciosController::class, 'buscar_nicho'])->name('buscar.nicho');
     Route::get('/cargarForm', [App\Http\Controllers\Servicios\ServiciosController::class,'cargarForm'])->name('load.form');
     Route::get('/cargarMantenimiento', [App\Http\Controllers\Servicios\ServiciosController::class,'cargarMantenimiento'])->name('load.mant');

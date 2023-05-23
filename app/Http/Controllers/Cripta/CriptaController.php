@@ -929,7 +929,7 @@ class CriptaController extends Controller
 
                 $response=$obj->GenerarFurCM($request->ci, $request->nombrepago, $request->paternopago,
                 $request->maternopago, $request->domicilio, $request->codigo_unidad,
-                $request->servicio_hijos , $cantidades, $cajero, $desc_exhum, $adjudicatario);
+                $request->servicio_hijos , $cantidades, $cajero, $desc_exhum, $adjudicatario, $request->observacion);
 
 
                 if($response['status']==true){
