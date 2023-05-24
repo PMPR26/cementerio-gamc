@@ -259,15 +259,13 @@ class CriptaController extends Controller
         ]);
 
         $existe_resp=Responsable::where('ci', $request->ci_resp)->first();
-        //    dd($existe_resp);
+        //    dd( $existe_resp->id);
         // si se envian datos del propietario del mausoleo o cripta entonces se busca en la tabla responsable para actualizar datos y no duplicar
         // caso contrario se insterta
                 if($request->ci_resp!=null)
                 {
                         if($existe_resp==null){
-
                                 $responsable_id=Responsable::insertResponsable($request);
-
                         }else{
                             $responsable_id=Responsable::updateResponsable($request,   $existe_resp->id);
                         }
@@ -275,11 +273,12 @@ class CriptaController extends Controller
                 }else if($request->ci_resp==null && $request->paterno_resp!=null){
                     $responsable_id=Responsable::insertResponsable($request);
                 }
+
                     //insert cripta mausoleo
                     $existe=$this->existeCripta($request);
                     // dd($existe);
                           if(empty($existe)){
-                            $cripta_id=Cripta::upCripta($request, $request->cripta_mausoleo_id);
+                            $cripta_id=Cripta::addCripta($request, $request->cripta_mausoleo_id);
                           }
                         else if(!empty($existe) && $existe->id == $request->cripta_mausoleo_id){
                             $cripta_id=Cripta::upCripta($request, $request->cripta_mausoleo_id);
@@ -293,6 +292,7 @@ class CriptaController extends Controller
 
 
                     //insertar relacion cm responsable
+                    // dd($responsable_id);
                      if( isset($responsable_id)){
 
                             $search_relacion=DB::table('cripta_mausoleo_responsable')
