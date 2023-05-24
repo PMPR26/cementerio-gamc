@@ -109,24 +109,20 @@ class Responsable extends Model
         return $responsable->id;
     }
 
-    public function updateResponsable($request){
-     $disable_responsable =  Responsable::where('id', $request->id)
-        ->update([
-            'ci' => $request->ci_resp,
-            'nombres' => trim(mb_strtoupper($request->nombres_resp,'UTF-8')),
-            'primer_apellido' => trim(mb_strtoupper($request->paterno_resp,'UTF-8')),
-            'segundo_apellido' => trim(mb_strtoupper($request->materno_resp,'UTF-8')),
-            // 'fecha_nacimiento' => $request->fecha_nacimiento??null,
-            'genero' => $request->genero_resp,
-            'telefono' => $request->telefono,
-            'celular' => $request->celular,
-            // 'estado_civil' => $request->estado_civil,
-            // 'email' => $request->email,
-            // 'domicilio' => $request->domicilio,
+    public function updateResponsable($request, $id_resp){
 
-            //'estado' => $request->status,
-            'updated_at' => date("Y-m-d H:i:s")
-        ]);
+        $responsable= Responsable::where('id', $id_resp)->first();
+        // dd($responsable);
+        $responsable->ci=$request->ci_resp;
+        $responsable->nombres=trim(mb_strtoupper($request->nombres_resp,'UTF-8'));
+        $responsable->primer_apellido= trim(mb_strtoupper($request->paterno_resp,'UTF-8'));
+        $responsable->segundo_apellido=trim(mb_strtoupper($request->materno_resp,'UTF-8'))?? '';
+        $responsable->genero=$request->genero_resp ?? '';
+        $responsable->telefono=$request->telefono ?? 0;
+        $responsable->celular=$request->celular ?? 0;
+        $responsable->updated_at=date("Y-m-d H:i:s");
+        $responsable->save();
+        return $responsable->id;
     }
 
 }
