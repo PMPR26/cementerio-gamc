@@ -687,7 +687,7 @@
 
 
             $(document).on('click','#new-cripta', function(){
-
+                $('.clear').val('');
                 $(".select-cuartel").val('').trigger('change');
                 $('#cod-cripta').val('');
                 $('#cod_cripta_ant').val('');
@@ -709,6 +709,12 @@
                 $('#domicilio').val(''),
                 $('#genero').val(''),
                 $('#telefono').val(''),
+
+                //reset documentos recibidos
+                $('#foto_resol').html('');
+                $('#foto_title').html('');
+                $('#foto_prop').html('');
+                $('#foto_planos_ap').html('');
 
 
                 $('#btn-cripta-editar').hide(300);
@@ -734,6 +740,7 @@
                 $('#bienes_m').prop('checked', false);
 
                 $('#modal-cripta').modal('show');
+
 
 
 
