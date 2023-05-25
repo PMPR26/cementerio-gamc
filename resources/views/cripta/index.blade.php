@@ -542,6 +542,59 @@
 
 
             $(document).on('click', '#btn-editar', function(){
+                $('.clear').val('');
+                $(".select-cuartel").val('').trigger('change');
+                $('#cod-cripta').val('');
+                $('#cod_cripta_ant').val('');
+                $('#cripta-name').val('');
+                $('#bloque').val('');
+                $('#cod-sitio').val('');
+                $('#superficie').val('');
+                $('#construido').val(''),
+                $('#enterratorios_ocupados').val(0),
+                $('#total_enterratorios').val(0),
+
+                $('#osarios').val(0),
+                $('#total_osarios').val(0),
+
+                $('#cenisarios').val(0),
+
+                $('#observaciones').val(''),
+                $('#url-foto').val(''),
+                $('#domicilio').val(''),
+                $('#genero').val(''),
+                $('#telefono').val(''),
+
+                //reset documentos recibidos
+                $('#foto_resol').html('');
+                $('#foto_title').html('');
+                $('#foto_prop').html('');
+                $('#foto_planos_ap').html('');
+
+
+
+                $('#familia').val('');
+                $('#tipo_cripta').val('');
+                $('#resolucion').prop('checked', false);
+
+                $('#ci').prop('checked', false);
+                $('#nro_ci').val(''),
+                $('#nro_resolucion').val(''),
+                $('#notable').val(''),
+                $('#altura').val(''),
+
+                $('#dni').val(''),
+                $('#adjudicacion').val(''),
+                $('#nro_resolucion').hide();
+                $('#nro_ci').hide();
+                $('#txt_resolucion').hide();
+                $('#obs_resolucion').prop('checked', false);
+
+                $('#planos_aprobados').prop('checked', false);
+                $('#bienes_m').prop('checked', false);
+
+
+
                 $('#cmform').find("input[type=text], input[type=checkbox], textarea,  tel").val("");
                 $('#cmform').find("input[type=number]").val("0");
                 $('#cmform').find("select[name=notable]").val("");
