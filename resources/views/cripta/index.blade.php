@@ -542,7 +542,9 @@
 
 
             $(document).on('click', '#btn-editar', function(){
-                $('.clear').val('');
+
+                $('#foto_actual').empty();
+                $('#foto_actual').hide();
                 $(".select-cuartel").val('').trigger('change');
                 $('#cod-cripta').val('');
                 $('#cod_cripta_ant').val('');
@@ -740,6 +742,9 @@
 
 
             $(document).on('click','#new-cripta', function(){
+                $('#foto_actual').empty();
+                $('#foto_actual').hide();
+
                 $('.clear').val('');
                 $(".select-cuartel").val('').trigger('change');
                 $('#cod-cripta').val('');

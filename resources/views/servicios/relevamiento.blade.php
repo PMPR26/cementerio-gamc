@@ -112,11 +112,11 @@
                                         <button type="submit" class="btn btn-lg btn-default" id="buscarDifunto">
                                             <i class="fa fa-search"></i>
                                         </button>
-                                        <button type="button" class="btn btn-lg btn-default" id="generarcidif"
+                                        {{-- <button type="button" class="btn btn-lg btn-default" id="generarcidif"
                                             title="generar carnet provisional">
 
                                             <i class="fa fa-pen"></i>
-                                        </button>
+                                        </button> --}}
                                         <input type="hidden" name="difunto_search" id="difunto_search">
                                     </div>
                                 </div>
@@ -976,7 +976,7 @@
                             'fila': $('#fila').val(),
                             'tipo_nicho': $('#tipo_nicho').val(),
                             'anterior': $('#anterior').val(),
-                            'ci_dif': $('#search_dif').val(),
+                            // 'ci_dif': $('#search_dif').val(),
                             // 'id_difunto': $('#difunto_search').val(),
                             'nombres_dif': $('#nombres_dif').val(),
                             'paterno_dif': $('#paterno_dif').val(),
@@ -988,7 +988,7 @@
                             'ecivil_dif': $('#ecivil_dif').val(),
                             'tipo_dif': $('#tipo_dif').val(),
                             'genero_dif': $('#genero_dif').val(),
-                            'ci_resp': $('#search_resp').val(),
+                            // 'ci_resp': $('#search_resp').val(),
                            // 'id_responsable': $('#responsable_search').val(),
                             'nombres_resp': $('#nombres_resp').val(),
                             'paterno_resp': $('#paterno_resp').val(),
