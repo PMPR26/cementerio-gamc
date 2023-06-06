@@ -380,13 +380,33 @@ class RelevamientoController extends Controller
 
 
              // step2: register difunto --- si id_difunto id_difunto es null insertar difunto insertar responsable
-             $existeDifunto =DB::table('difunto')->whereRaw('nombres=\''.trim(mb_strtoupper($request->nombres_dif, 'UTF-8')).'\'')
-             ->whereRaw('primer_apellido=\''.trim(mb_strtoupper($request->paterno_dif, 'UTF-8')).'\'')
-             ->whereRaw('segundo_apellido=\''.trim(mb_strtoupper($request->materno_dif, 'UTF-8')).'\'')
-             // ->whereRaw('fecha_nacimiento=\''.trim($request->fechanac_dif).'\'')
-             ->whereRaw('fecha_defuncion=\''.trim($request->fecha_def_dif).'\'')
-             ->select()
-             ->first();
+            if($request->fecha_def_dif== null || $request->fecha_def_dif==''){
+                $existeDifunto =DB::table('difunto')->whereRaw('nombres=\''.trim(mb_strtoupper($request->nombres_dif, 'UTF-8')).'\'')
+                ->whereRaw('primer_apellido=\''.trim(mb_strtoupper($request->paterno_dif, 'UTF-8')).'\'')
+                ->whereRaw('segundo_apellido=\''.trim(mb_strtoupper($request->materno_dif, 'UTF-8')).'\'')
+                // ->whereRaw('fecha_nacimiento=\''.trim($request->fechanac_dif).'\'')
+                // ->whereRaw('fecha_defuncion=\''.trim($request->fecha_def_dif).'\'')
+                ->select()
+                ->first();
+            }else if(($request->materno_dif== null || $request->materno_dif=='') && $request->fecha_def_dif !='' ){
+                        $existeDifunto =DB::table('difunto')->whereRaw('nombres=\''.trim(mb_strtoupper($request->nombres_dif, 'UTF-8')).'\'')
+                    ->whereRaw('primer_apellido=\''.trim(mb_strtoupper($request->paterno_dif, 'UTF-8')).'\'')
+                    // ->whereRaw('segundo_apellido=\''.trim(mb_strtoupper($request->materno_dif, 'UTF-8')).'\'')
+                    // ->whereRaw('fecha_nacimiento=\''.trim($request->fechanac_dif).'\'')
+                    ->whereRaw('fecha_defuncion=\''.trim($request->fecha_def_dif).'\'')
+                    ->select()
+                    ->first();
+            }else{
+                $existeDifunto =DB::table('difunto')->whereRaw('nombres=\''.trim(mb_strtoupper($request->nombres_dif, 'UTF-8')).'\'')
+                ->whereRaw('primer_apellido=\''.trim(mb_strtoupper($request->paterno_dif, 'UTF-8')).'\'')
+                ->whereRaw('segundo_apellido=\''.trim(mb_strtoupper($request->materno_dif, 'UTF-8')).'\'')
+                // ->whereRaw('fecha_nacimiento=\''.trim($request->fechanac_dif).'\'')
+                ->whereRaw('fecha_defuncion=\''.trim($request->fecha_def_dif).'\'')
+                ->select()
+                ->first();
+
+            }
+
 
 
 
