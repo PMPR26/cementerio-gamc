@@ -543,8 +543,9 @@
 
             $(document).on('click', '#btn-editar', function(){
 
-                $('#foto_actual').empty();
-                $('#foto_actual').hide();
+                // $('#foto_actual').empty();
+                // $('#foto_actual').hide();
+                $('.clear').val('');
                 $(".select-cuartel").val('').trigger('change');
                 $('#cod-cripta').val('');
                 $('#cod_cripta_ant').val('');
