@@ -112,11 +112,11 @@
                                         <button type="submit" class="btn btn-lg btn-default" id="buscarDifunto">
                                             <i class="fa fa-search"></i>
                                         </button>
-                                        {{-- <button type="button" class="btn btn-lg btn-default" id="generarcidif"
+                                        <button type="button" class="btn btn-lg btn-default" id="generarcidif"
                                             title="generar carnet provisional">
 
                                             <i class="fa fa-pen"></i>
-                                        </button> --}}
+                                        </button>
                                         <input type="hidden" name="difunto_search" id="difunto_search">
                                     </div>
                                 </div>
