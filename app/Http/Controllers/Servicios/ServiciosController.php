@@ -189,7 +189,7 @@ class ServiciosController extends Controller
         if ($request->isJson()) {
             $this->validate($request, [
                 "fur" => 'required',
-               "id_usuario_caja" => 'required'
+                 //"id_usuario_caja" => 'required'
             ]);
 
             $servicio = ServicioNicho::select('id', 'fur')
@@ -569,7 +569,8 @@ class ServiciosController extends Controller
                     if (!$existeResponsable ||  $existeResponsable == null) {
                         //insertar difunto
                         // $idresp = $this->insertResponsable($request);
-                        $idresp = Responsable::insertResponsable($request);
+                        $r=New Responsable;
+                        $idresp = $r->insertResponsable($request);
 
 
                     } else {
@@ -1393,7 +1394,10 @@ class ServiciosController extends Controller
 
                     if (!$existeResponsable ||  $existeResponsable == null) {
                         //insertar difunto
-                                   $idresp = Responsable::insertResponsable($request);
+                        $r=New Responsable;
+                        $idresp = $r->insertResponsable($request);
+
+
 
                     } else {
                         $idresp = $existeResponsable->id;
@@ -1531,6 +1535,27 @@ class ServiciosController extends Controller
                 ],401);
             }
     }
+
+    public function verificarPago(Request $request){
+        $service=New ServicioNicho;
+        $estado_pago=$service->buscarFur($request);
+
+        if($estado_pago->estado_pago=="AC"){
+            $this->updatePay($request);
+            $this-> updateFechaPago($request->fur,$estado_pago->fecha_pago);
+        }
+        return $estado_pago;
+    }
+
+    public function updateFechaPago($fur, $fecha){
+        ServicioNicho::where('fur', trim($fur))
+        ->update([
+            'estado_pago' => true,
+            //'id_usuario_caja' => $request->id_usuario_caja,
+            'fecha_pago' => $fecha
+        ]);
+    }
+
 
 
 }
