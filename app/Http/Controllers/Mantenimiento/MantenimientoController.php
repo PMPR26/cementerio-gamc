@@ -19,8 +19,9 @@ use App\Models\CriptaMausoleoResp;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\DB;
+
 use GuzzleHttp\Exception\RequestException;
 use PDF;
 use Illuminate\Support\Facades\Http;
@@ -224,11 +225,15 @@ class MantenimientoController extends Controller
                     ->first();
 
                             if($request->id_responsable=="" || !$existeResponsable){
-                                //insertar difunto
+                                 $respon=New Responsable;
                                  $idresp=$this->insertResponsable($request);
+                                 $adjudicatario=$request->nombres_resp." ".$request->paterno_resp??''." ".$request->materno_resp??'';
+                                 $ci_adjudicatario=$respon->getCiResp($idresp);
                             }else{
                                 $idresp=$request->id_responsable;
                                 $this->updateResponsable($request, $idresp);
+                                $adjudicatario=$request->nombres_resp." ".$request->paterno_resp??''." ".$request->materno_resp??'';
+                                $ci_adjudicatario= $idresp;
 
                             }
                     //end responsable
@@ -292,7 +297,8 @@ class MantenimientoController extends Controller
 
                                                             $response=$obj->GenerarFur($ci, $nombre_pago, $paterno_pago,
                                                             $materno_pago, $domicilio,  $nombre_difunto, $codigo_n,
-                                                            $request->bloque, $request->nro_nicho, $request->fila, $servicio_cementery, $cantgestiones, $cajero, null );
+                                                            $request->bloque, $request->nro_nicho, $request->fila, $servicio_cementery, $cantgestiones, $cajero, null,
+                                                             $adjudicatario, $ci_adjudicatario, $request->observacion );
 
                                                             if($response['status']==true){
                                                                 $fur = $response['response'];
@@ -321,7 +327,7 @@ class MantenimientoController extends Controller
                                                 $mant->id_usuario_caja = auth()->id();
                                                 $mant->ultimo_pago=$ultimo_pago;
                                                 $mant->estado='ACTIVO';
-                                                $mant->observacion=$request->observacion;
+                                                $mant->observacion=$request->observacion??'';
                                                 $mant->tipo_ubicacion="NICHO";
                                                 $mant->id_ubicacion=$id_nicho;
                                                 $mant->codigo_ubicacion=$id_nicho;
@@ -984,7 +990,7 @@ public function pagoMantenimientoCM(Request $request){
                     $obj= new ServicioNicho;
                     $response=$obj->GenerarFurCM($request->ci, $request->nombrepago, $request->paternopago,
                     $request->maternopago, $request->domicilio, $request->codigo_unidad,
-                    $servicio_hijos , $cantidades, $cajero, null);
+                    $servicio_hijos , $cantidades, $cajero,  null, $request->resp_id, $request->observacion);
 
 
                     if($response['status']==true){
@@ -1040,4 +1046,26 @@ public function pagoMantenimientoCM(Request $request){
 
       }
     }
+
+
+    public function verificarPagoMant(Request $request){
+        $service=New ServicioNicho;
+        $estado_pago=$service->buscarFur($request);
+
+        if($estado_pago->estado_pago=="AC"){
+            $this->updatePayMant($request);
+            $this-> updateFechaPago($request->fur,$estado_pago->fecha_pago);
+        }
+        return $estado_pago;
+    }
+
+    public function updateFechaPago($fur, $fecha){
+        ServicioNicho::where('fur', trim($fur))
+        ->update([
+            'estado_pago' => true,
+            //'id_usuario_caja' => $request->id_usuario_caja,
+            'fecha_pago' => $fecha
+        ]);
+    }
+
 }

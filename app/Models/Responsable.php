@@ -125,4 +125,9 @@ class Responsable extends Model
         return $responsable->id;
     }
 
+    public function getCiResp($id_resp){
+        $q= Responsable::where('id', $id_resp)->first();
+        $ci_responsable=$q->ci;
+        return $ci_responsable;
+    }
 }
