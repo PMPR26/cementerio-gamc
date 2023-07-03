@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+
+use Illuminate\Http\Exceptions;
+
 class ServicioNicho extends Model
 {
     use HasFactory;
@@ -46,8 +50,8 @@ class ServicioNicho extends Model
 // dd( $servicios_cementery);
           $headers =  ['Content-Type' => 'application/json'];
           $client = new Client();
-        //   $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementery', [
-         $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementery', [
+          $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementery', [
+        //  $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementery', [
 
               'json' => [
                   'ci' => $ci,
@@ -85,8 +89,8 @@ class ServicioNicho extends Model
       //   dd( $desc_exhum)
             $headers =  ['Content-Type' => 'application/json'];
             $client = new Client();
-            // $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCM', [
-           $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryCM', [
+            $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCM', [
+        //    $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryCM', [
 
                 'json' => [
                     'ci' => $ci,
@@ -121,6 +125,74 @@ class ServicioNicho extends Model
                 //$sevicio = json_decode((string) $response->getBody(), true);
                 return $response;
         }
+
+
+          //verificar pago qr
+          public function verificarPagos(Request $request){
+            // URL_BASE_APIPAY
+            $fur=(string)$request->fur;
+            // dd( $fur);
+
+                try {
+                    $response = Http::withHeaders([
+                        'Content-Type' => 'application/json',
+                        'Authorization' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM0MTE5NTc1LWI1NTItNGIxOC04MDA0LTAwYmVlY2NhNGM3MCIsImlhdCI6MTY4ODE2MDE4M30.w6Cav55fRELcRSHBInz7xdIX7_yNyL95FgvAr1t7Suw',
+                    ])
+                        ->get(env('URL_BASE_APIPAY').'/qr/verificar', [
+                            'fur'=>$fur
+                        ]);
+
+                        dd( $response->json());
+                        return response([
+                            'status' => false,
+                            'data' => $response->json()
+                        ], 200);
+
+                } catch (RequestException $re) {
+                    return response([
+                        'status' => false,
+                        'message' => 'Error al procesar su solicitud'
+                    ], 201);
+                }
+
+            }
+
+            public function buscarFur(Request $request) {
+                $arrayBusqueda = [];
+                $arrayBusqueda[] = (string)2;
+                $arrayBusqueda[] = (string)$request->fur;
+                $arrayBusquedaString = json_encode($arrayBusqueda);
+
+                $url=env('URL_SEARCH_FUR');
+                                // $response = Http::asForm()->post('http://192.168.104.117/cobrosnotributarios/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+
+                   try{
+                    $response = Http::asForm()->post($url, [
+                        'buscar' => $arrayBusquedaString
+                    ]);
+                   // return $response->object()->data->cobrosVarios[0];
+
+                    if ($response->successful()) {
+                        if($response->object()->status == true) {
+                            $dato = $response->object()->data->cobrosVarios[0];
+                            return $dato;
+                        }
+                   }
+
+                } catch (RequestException $e) {
+                    return response([
+                        'status' => false,
+                        'message' => 'Error al procesar su solicitud'. $e->getMessage()
+                    ], 201);
+                }
+            }
+
+
+            public function actualizarPago(Request $request){
+
+            }
+
+
 
 
 
