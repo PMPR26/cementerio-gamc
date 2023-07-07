@@ -35,24 +35,32 @@ class ServiciosController extends Controller
 
     public function index()
     {
-        $servicio=DB::table('servicio_nicho')
-        ->select(  'servicio_nicho.codigo_nicho',
-        'servicio_nicho.tipo_servicio',
-        'servicio_nicho.servicio',
-        'servicio_nicho.fur',
-        'servicio_nicho.monto',
-        'servicio_nicho.nombrepago as nombre_resp',
-        'servicio_nicho.paternopago as primerap_resp',
-        'servicio_nicho.maternopago as segap_dif',
-        'servicio_nicho.estado_pago',
-        'servicio_nicho.id as serv_id')
-        ->where('servicio_nicho.estado','ACTIVO')
-        ->orderBy('servicio_nicho.id', 'DESC')
-        ->get();
+        if (auth()->check()) {
+            $user = auth()->user();
+            $rolUsuario = $user->role;
 
+            }
 
+            if($rolUsuario == "APOYO"){
+                return view('restringidos/no_autorizado');
+            }else{
+                $servicio=DB::table('servicio_nicho')
+                ->select(  'servicio_nicho.codigo_nicho',
+                'servicio_nicho.tipo_servicio',
+                'servicio_nicho.servicio',
+                'servicio_nicho.fur',
+                'servicio_nicho.monto',
+                'servicio_nicho.nombrepago as nombre_resp',
+                'servicio_nicho.paternopago as primerap_resp',
+                'servicio_nicho.maternopago as segap_dif',
+                'servicio_nicho.estado_pago',
+                'servicio_nicho.id as serv_id')
+                ->where('servicio_nicho.estado','ACTIVO')
+                ->orderBy('servicio_nicho.id', 'DESC')
+                ->get();
+               return view('servicios/index', ['servicio' => $servicio]);
+            }
 
-        return view('servicios/index', ['servicio' => $servicio]);
     }
 
     public function cargarForm()
