@@ -9,27 +9,39 @@ use Illuminate\Support\Facades\DB;
 
 class NichoController extends Controller
 {
+
     public function index(){
-        $cuartel = DB::table('cuartel')
-        ->select('cuartel.id', 'cuartel.codigo as codigo')
-                // ->select('cuartel.id', DB::raw("CONCAT(codigo,' - ',nombre) as codigo"))
-                 ->where('estado', '=', 'ACTIVO')
-                 ->get();
+        if (auth()->check()) {
+            $user = auth()->user();
+            $rolUsuario = $user->role;
 
-                 $bloque= DB::table('bloque')
-                 ->select('bloque.id', 'bloque.codigo')
-                 ->where('estado', '=', 'ACTIVO')
-                 ->get();
+            }
+
+            if($rolUsuario == "APOYO"){
+                return view('restringidos/no_autorizado');
+            }else{
+
+                    $cuartel = DB::table('cuartel')
+                    ->select('cuartel.id', 'cuartel.codigo as codigo')
+                            // ->select('cuartel.id', DB::raw("CONCAT(codigo,' - ',nombre) as codigo"))
+                            ->where('estado', '=', 'ACTIVO')
+                            ->get();
+
+                            $bloque= DB::table('bloque')
+                            ->select('bloque.id', 'bloque.codigo')
+                            ->where('estado', '=', 'ACTIVO')
+                            ->get();
 
 
-        $nicho =DB::table('nicho')
-                 ->select('nicho.*', 'cuartel.codigo as cuartel_cod', 'bloque.codigo as bloque_id')
-                 ->join('cuartel' , 'cuartel.id','=', 'nicho.cuartel_id')
-                 ->join('bloque' , 'bloque.id','=', 'nicho.bloque_id')
-                // ->where('bloque.estado', '=', 'ACTIVO')
-                 ->get();
+                        $nicho =DB::table('nicho')
+                                ->select('nicho.*', 'cuartel.codigo as cuartel_cod', 'bloque.codigo as bloque_id')
+                                ->join('cuartel' , 'cuartel.id','=', 'nicho.cuartel_id')
+                                ->join('bloque' , 'bloque.id','=', 'nicho.bloque_id')
+                                // ->where('bloque.estado', '=', 'ACTIVO')
+                                ->get();
 
-        return view('nicho/index', ['bloque' =>$bloque , 'cuartel' => $cuartel , 'nicho' => $nicho]);
+                        return view('nicho/index', ['bloque' =>$bloque , 'cuartel' => $cuartel , 'nicho' => $nicho]);
+            }
     }
 
     public function createNewNicho(Request $request){

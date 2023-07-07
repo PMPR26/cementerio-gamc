@@ -31,6 +31,15 @@ class RelevamientoController extends Controller
 
     public function index()
     {
+        if (auth()->check()) {
+            $user = auth()->user();
+            $rolUsuario = $user->role;
+
+            }
+
+            if($rolUsuario == "APOYO"){
+                return view('restringidos/no_autorizado');
+            }else{
 
         $servicio = DB::table('responsable_difunto')
             ->select(
@@ -58,9 +67,8 @@ class RelevamientoController extends Controller
             ->orderBy('nicho.id', 'DESC')
             ->get();
 
-
-
         return view('servicios/listrelev', ['servicio' => $servicio]);
+            }
     }
 
     public function cargarFormrel()

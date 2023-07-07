@@ -33,13 +33,22 @@ class MantenimientoController extends Controller
     }
 
     public function index(){
-        $mant= Mantenimiento::select('mantenimiento.*',  DB::raw('CONCAT(mantenimiento.nombrepago , \' \',mantenimiento.paternopago, \' \', mantenimiento.maternopago ) AS nombre'))
-                ->leftJoin('responsable', 'responsable.id', '=', 'mantenimiento.respdifunto_id')
-                ->where('mantenimiento.estado', 'ACTIVO')
-                ->orderBy('id', 'DESC')
-                 ->get();
+        if (auth()->check()) {
+            $user = auth()->user();
+            $rolUsuario = $user->role;
 
-        return view('mantenimiento/index', compact('mant'));
+            }
+
+            if($rolUsuario == "APOYO"){
+                return view('restringidos/no_autorizado');
+            }else{
+                    $mant= Mantenimiento::select('mantenimiento.*',  DB::raw('CONCAT(mantenimiento.nombrepago , \' \',mantenimiento.paternopago, \' \', mantenimiento.maternopago ) AS nombre'))
+                        ->leftJoin('responsable', 'responsable.id', '=', 'mantenimiento.respdifunto_id')
+                        ->where('mantenimiento.estado', 'ACTIVO')
+                        ->orderBy('id', 'DESC')
+                        ->get();
+                     return view('mantenimiento/index', compact('mant'));
+                }
     }
 
     public function createPay(){
