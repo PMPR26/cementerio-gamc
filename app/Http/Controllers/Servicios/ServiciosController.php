@@ -233,7 +233,7 @@ class ServiciosController extends Controller
 
     public function createNewServicios(Request $request)
     {
-        // dd($request->servicio_hijos_txt);
+        // dd($request->servicios_adquiridos);
         // $explode_txt=explode("Bs.",$request->servicio_hijos_txt);
       //  $explode_txt=$request->servicio_hijos_txt;
         // dd($explode_txt);
@@ -320,6 +320,8 @@ class ServiciosController extends Controller
                 $servicio_hijos=[];
                 $txt_servicios_hijos=[];
                 $cantidad=[];
+                $tblobs=[];
+
                 $pago_renovaciones="NO";
                 $permitir_ingreso_nuevo_cuerpo="NO";
 
@@ -329,7 +331,10 @@ class ServiciosController extends Controller
                     array_push( $servicio_hijos, $value['serv']);
                     array_push($txt_servicios_hijos, $value['txt_serv']);
                     array_push($cantidad, $value['cantidad']);
+                    array_push($tblobs, $value['tblobs']);
+
                 }
+        // dd($txt_servicios_hijos);
 
                 /**** recuperar datos del cajero para registrar el pago  *****/
                 $datos_cajero=User::select()
@@ -404,7 +409,7 @@ class ServiciosController extends Controller
                                         {
                                             $estado_nicho="EXHUMADO";
                                             // $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // .
-                                            $det_exhum=$request->descripcion_exhumacion;
+                                            $det_exhum=$servi['tblobs'];
 
                                         }
                                         else{
@@ -413,7 +418,7 @@ class ServiciosController extends Controller
                                             $difunto_id=$difuntoEnNicho->difunto_id;
                                             $estado_nicho="EXHUMADO";
                                             // $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // .
-                                            $det_exhum=$request->descripcion_exhumacion;
+                                            $det_exhum=$servi['tblobs'];
                                         }
 
 
@@ -666,26 +671,20 @@ class ServiciosController extends Controller
                                                                     }
 
                                                                     $nombre_adjudicatario= $request->nombre_resp." ".$request->paterno_resp." ".$request->materno_resp;
-                                                                    $ci_adjudicatario=
+
                                                                     $response=$obj->GenerarFur($ci,$nombre_pago,$paterno_pago,$materno_pago, $domicilio,  $nombre_difunto, $codigo_n,
-                                                                    $request->bloque, $request->nro_nicho, $request->fila,
-                                                                    $servicio_hijos,
-                                                                    $cantidades, $cajero, $request->descripcion_exhumacion, $nombre_adjudicatario, $ci_adjudicatario , $request->observacion);
+                                                                    $request->bloque, $request->nro_nicho, $request->fila, $servicio_hijos, $cantidades, $cajero,
+                                                                    $nombre_adjudicatario, $ci_adjudicatario , $tblobs);
 
                                                                     if($response['status']==true){
                                                                         $fur = $response['response'];
                                                                         //dd($fur);
                                                                     }
                                                         }
-                                                        // dd($fur);
+                                                        if(!empty($tblobs)){
+                                                            $descripcion_exhumacion=  implode(', ', $tblobs);
 
-                                                        // $tipo_servicio=[];
-                                                        // $txt_tipo_servicio=[];
-                                                        // $servicio_hijos=[];
-                                                        // $txt_servicios_hijos=[];
-                                                        // $cantidad=[];
-
-                                                        // dd(implode(', ',  $tipo_servicio));
+                                                        }
                                                 $serv = new ServicioNicho;
                                                 $serv->codigo_nicho=$codigo_n ?? '';
                                                 $serv->fecha_registro = date("Y-m-d");
@@ -708,8 +707,8 @@ class ServiciosController extends Controller
                                                 $serv->estado_pago=$estado_pago;
                                                 $serv->fecha_pago=$fecha_pago;
                                                 $serv->estado='ACTIVO';
-                                                $serv->observacion=$request->observacion;
-                                                $serv->det_exhum=$request->descripcion_exhumacion?? '';
+                                                $serv->observacion=$descripcion_exhumacion;
+                                                $serv->det_exhum=$descripcion_exhumacion?? '';
                                                 $serv->ubicacion_id=$id_nicho ?? null;
                                                 if($pago_renovaciones=="SI"){
                                                     $serv->monto_renovacion=$request->monto_renov;
@@ -1353,6 +1352,7 @@ class ServiciosController extends Controller
                     array_push( $servicio_hijos, $value['serv']);
                     array_push($txt_servicios_hijos, $value['txt_serv']);
                     array_push($cantidad, $value['cantidad']);
+                    array_push($tblobs, $value['tblobs']);
                 }
 
                 /**** recuperar datos del cajero para registrar el pago  *****/
@@ -1489,11 +1489,15 @@ class ServiciosController extends Controller
                                                                     $response=$obj->GenerarFur($ci,$nombre_pago,$paterno_pago,$materno_pago, $domicilio,  $nombre_difunto, $codigo_n,
                                                                     $bloque, $nro_nicho, $fila,
                                                                     $servicio_hijos,
-                                                                    $cantidades, $cajero, $request->descripcion_exhumacion, $nombre_adjudicatario, $ci_adjudicatario, $request->observacion );
+                                                                    $cantidades, $cajero, $nombre_adjudicatario, $ci_adjudicatario, $request->observacion );
 
                                                                     if($response['status']==true){
                                                                         $fur = $response['response'];
                                                                     }
+                                                        }
+                                                        if(!empty($tblobs)){
+                                                            $descripcion_exhumacion=  implode(', ', $tblobs);
+
                                                         }
 
                                                 $serv = new ServicioNicho;
@@ -1518,8 +1522,8 @@ class ServiciosController extends Controller
                                                 $serv->estado_pago=$estado_pago;
                                                 $serv->fecha_pago=$fecha_pago;
                                                 $serv->estado='ACTIVO';
-                                                $serv->observacion=$request->observacion;
-                                                $serv->det_exhum=$request->descripcion_exhumacion?? '';
+                                                $serv->observacion=$descripcion_exhumacion;
+                                                $serv->det_exhum=$descripcion_exhumacion?? '';
                                                 $serv->ubicacion_id=0;
 
                                                 $serv->save();
