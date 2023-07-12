@@ -43,7 +43,7 @@ class ServicioNicho extends Model
 
     public function GenerarFur($ci, $nombre, $primer_apellido,
     $ap_materno, $direccion, $nombre_difunto, $codigo,
-     $bloque, $nicho, $fila, $servicios_cementery , $cantidades, $cajero, $desc_exhum,  $nombre_adjudicatario, $ci_adjudicatario, $observacion)
+     $bloque, $nicho, $fila, $servicios_cementery , $cantidades, $cajero,   $nombre_adjudicatario, $ci_adjudicatario, $observacion)
      {
 
 
@@ -67,10 +67,10 @@ class ServicioNicho extends Model
                   'servicios_cementery' => $servicios_cementery,
                   'cantidad' => $cantidades,
                   'cajero'=>$cajero,
-                  'desc_exhum'=>$desc_exhum,
+
                   'nombre_adjudicatario'=>$nombre_adjudicatario,
                   'ci_adjudicatario'=>$ci_adjudicatario,
-                  'observacion'=>$observacion
+                  'tblobs'=>$observacion
               ],
               'headers' => $headers,
           ]);

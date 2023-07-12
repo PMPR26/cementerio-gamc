@@ -8,6 +8,20 @@
 
 @section('content_header')
     <h1 class="p-2 bg-gradient-blue">Formulario de solicitud de servicios</h1>
+    <style>
+        table {
+          border-collapse: collapse;
+        }
+
+        td, th {
+          border: 1px solid #ddd;
+          padding: 8px;
+        }
+
+        .drag-handle {
+          cursor: move;
+        }
+      </style>
 @stop
 
 @section('content')
@@ -391,25 +405,26 @@
 
                     </div>
                 </div>
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-12 p-2 bg-gradient-gray" id="section_exhum" style="display:none">
                         <label for="det_exhumacion">Detalle Exhumación</label>
                         <textarea name="det_exhumacion" id="det_exhumacion"  class="form-control"></textarea>
                     </div>
-                </div>
+                </div> --}}
 
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-12" id="section_obs">
 
                         <label for="observacion">Observacion</label>
                         <textarea id="observacion" col="100%" row="2" class="form-control"></textarea>
 
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="card">
                     <div class="card-header" id="detalle">
                         <h4>DETALLE DE SERVICIOS SOLICITADOS</h4>
+                        <p class="bg-info opacity-75 p-4">Verifica el orden de los servicios solicitados, si no esta de acuerdo a lo solicitado haz click sobre la fila que deseas mover y arrastra a la posicion deseada</p>
                         <table id=tableServices>
                             <thead>
                                 <tr>
@@ -420,6 +435,8 @@
                                     <td class="w-auto text-center">CANTIDAD</td>
                                     <td class="w-auto text-center">PRECIO</td>
                                     <td class="w-auto text-center">SUBTOTAL</td>
+                                    <td class="w-auto text-center">OBS.</td>
+
                                 </tr>
                             </thead>
                             <tbody id="list_detalle">
@@ -690,7 +707,7 @@ $(document).ready(function ()
            // console.log("split info"+inf);
                 $('.row_ren').remove();
             //list_detalle
-                var row='<tr class="w-auto row_ren">'+
+                var row='<tr class="w-auto row_ren"  draggable="true" class="drag-handle">'+
                        '<td class="w-auto text-center service">'+srv+'</td>'+
                        '<td class="w-auto text-center service_txt">'+txt_srv+'</td>'+
                         '<td class="w-auto text-center service_hijo " >'+ cuenta+' </td>'+
@@ -698,6 +715,8 @@ $(document).ready(function ()
                         '<td class="w-auto text-center cantidad_row">'+cantidad+'</td>'+
                         '<td class="w-auto text-center precio_srv">'+precio_ren+'</td>'+
                         '<td class="w-auto text-center subtotal">'+subtotal+'</td>'+
+                        '<td class="w-auto text-center tblobs"></td>'+
+
                         '</tr>';
                 $('#list_detalle').append(row);
                 calcularMonto();
@@ -712,55 +731,43 @@ $(document).ready(function ()
                  }
         });
 
-        $(document).on('click', '.service_child', function(e){
-            var monto=0;
-            var cantidad=1;
-            var subtotal=0;
+        $(document).on('click', '.service_child', function(e) {
+            var monto = 0;
+            var cantidad = 1;
+            var subtotal = 0;
 
             $('#list_detalle').empty();
-            $( ".service_child" ).each(function( index ) {
-                console.log( index + ": " + $( this ).val() );
-                var ar= ($( this ).val()).split('-');
-                    var ar1=(ar[1]).split('=>');
-                if ($(this).is(':checked') ) {
-                    var ar= ($( this ).val()).split('-');
-                    var ar1=(ar[1]).split('=>');
-                    //  precio.push(ar[3]);
-                     subtotal=cantidad*ar[3];
-                  if(ar1[1]==642){
+            $(".service_child").each(function(index) {
+                console.log(index + ": " + $(this).val());
+                var ar = $(this).val().split('-');
+                var ar1 = ar[1].split('=>');
+                if ($(this).is(':checked')) {
+                    var ar = $(this).val().split('-');
+                    var ar1 = ar[1].split('=>');
+                    subtotal = cantidad * ar[3];
+                    if (ar1[1] == 642) {
 
-                     }
-                     else{
-                     var html='<tr class="row_'+ar[0]+'">'
-                     +'<td class="w-auto text-center service">'+ar[0]+'</td>'
-                     +'<td class="w-auto text-center service_txt">'+ar1[0]+'</td>'
-                     +'<td class="w-auto text-center service_hijo">'+ar1[1]+'</td>'
-                     +'<td class="w-auto text-center service_hijo_txt">'+ar[2]+'</td>'
-                     +'<td class="w-auto text-center cantidad_row">'+cantidad+'</td>'
-                     +'<td class="w-auto text-center precio_srv">'+ar[3]+'</td>'
-                     +'<td class="w-auto text-center subtotal">'+subtotal+'</td></tr>';
-                     $('#list_detalle').append(html);
-
+                    } else {
+                        var html = '<tr class="row_' + ar[0] + ' dynamic-row">'
+                            + '<td class="w-auto text-center service">' + ar[0] + '</td>'
+                            + '<td class="w-auto text-center service_txt">' + ar1[0] + '</td>'
+                            + '<td class="w-auto text-center service_hijo">' + ar1[1] + '</td>'
+                            + '<td class="w-auto text-center service_hijo_txt">' + ar[2] + '</td>'
+                            + '<td class="w-auto text-center cantidad_row">' + cantidad + '</td>'
+                            + '<td class="w-auto text-center precio_srv">' + ar[3] + '</td>'
+                            + '<td class="w-auto text-center subtotal">' + subtotal + '</td>'
+                            + '<td class="w-auto text-center tblobs" contenteditable></td>'
+                            +'</tr>';
+                        $('#list_detalle').append(html);
+                        addDragHandlers($('#list_detalle .row_' + ar[0] + '.dynamic-row')[0]);
                     }
-                }else{
-
-                   // $('#list_detalle .row_'+ar[0]+'').remove();
-
+                } else {
+                    // $('#list_detalle .row_'+ar[0]+'').remove();
                 }
             });
             calcularMonto();
-            // console.log("cuenta servicio");
-            // console.log(serv);
-            // console.log("texto servicio");
-            // console.log(serv_txt);
-            // console.log("cuenta  servicio hijo" );
-            // console.log(serv_hijos);
-            // console.log("texto  servicio hijo" );
-            // console.log(serv_hijos_txt);
-
-
-
         });
+
         /************* metodo que recorre toda la grilla resumen de servicios adquiridos y calcula el total adeudado ******/
         function calcularMonto(){
             var suma=0;
@@ -792,6 +799,8 @@ $(document).ready(function ()
                                                 txt_serv: e.querySelector('.service_hijo_txt').innerText,
                                                 precio: e.querySelector('.precio_srv').innerText,
                                                 cantidad: e.querySelector('.cantidad_row').innerText,
+                                                tblobs: e.querySelector('.tblobs').innerText,
+
                                       };
                                       servicios_adquiridos.push(fila);
                         });
@@ -1298,8 +1307,8 @@ $(document).ready(function ()
                                    'materno_pago':$('#materno_pago').val(),
                                    'ci_pago':$('#ci_pago').val(),
                                    'pago_por':$('#pago_tercero').val(),
-                                   'descripcion_exhumacion':$('#det_exhumacion').val(),
-                                   'observacion':$('#observacion').val(),
+                                //    'descripcion_exhumacion':$('#det_exhumacion').val(),
+                                //    'observacion':$('#observacion').val(),
                                    'servicios_adquiridos':servicios_adquiridos,
                                    'monto':$('#totalServ').html(),
                                    'monto_renov':  $('#monto_renov').val(),
@@ -1882,6 +1891,35 @@ $(document).ready(function ()
                                }
                            })
                   }
+
+
+
+                  function addDragHandlers(elem) {
+    elem.draggable = true;
+
+    elem.addEventListener('dragstart', handleDragStart, false);
+    elem.addEventListener('dragover', handleDragOver, false);
+    elem.addEventListener('drop', handleDrop, false);
+}
+
+function handleDragStart(event) {
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/html', this.outerHTML);
+    dragSrcElement = this;
+}
+
+function handleDragOver(event) {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+}
+
+function handleDrop(event) {
+    event.preventDefault();
+    if (dragSrcElement !== this) {
+        this.parentNode.removeChild(dragSrcElement);
+        this.insertAdjacentElement('beforebegin', dragSrcElement);
+    }
+}
 
     </script>
 
