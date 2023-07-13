@@ -49,6 +49,7 @@ class ServiciosController extends Controller
                 'servicio_nicho.tipo_servicio',
                 'servicio_nicho.servicio',
                 'servicio_nicho.fur',
+                'servicio_nicho.tipo',
                 'servicio_nicho.monto',
                 'servicio_nicho.nombrepago as nombre_resp',
                 'servicio_nicho.paternopago as primerap_resp',
@@ -362,12 +363,16 @@ class ServiciosController extends Controller
                                 if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'){
 
                                         if( $cantidadEnNicho !=false){
+                                            $cant_ant=$cantidadEnNicho;
                                             return response([
                                                 'status'=> false,
                                                 'response'=>"temporal_ocupado"
                                             ],200);
                                         }else{
                                             $cant=1;
+                                            $cant_ant=0;
+
+
                                         }
                                     }else if($servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='1982'){
                                         if($difuntoEnNicho==false && $request->tipo_nicho== "TEMPORAL")
@@ -441,13 +446,7 @@ class ServiciosController extends Controller
                                     $pago_renovaciones="SI";
                                 }
 
-                            // if($servi==$desc_ex[1] && isset($request->descripcion_exhumacion)){
-                            //     $ntexto= explode('-',$explode_txt);
-                            //     // dd( $ntexto);
-                            //     $txt_replace=$ntexto[0]."-".$desc_ex[0]."-".$ntexto[2]." Bs.";
-                            //     $texto_servicio= $texto_servicio.$separador.  $txt_replace;
-                            //     // dd( $texto_servicio);
-                            // }else{
+
                                 $texto_servicio= $texto_servicio.$separador. $servi['txt_serv']." Bs.";
                                  $estado_nicho="OCUPADO";
 
@@ -471,16 +470,10 @@ class ServiciosController extends Controller
                                         $upnicho->estado_nicho=$estado_nicho;
                                     }
                                     if(isset($pago_renovaciones) ){
-
-
                                             if($pago_renovaciones=="SI"){
                                                 $upnicho->renovacion=$request->nro_renovacion;
                                                 $upnicho->monto_renov=$request->monto_renov;
-
-
                                               }
-
-
                                     }
                                     $upnicho->estado="ACTIVO";
                                     $upnicho->cantidad_cuerpos=$cant;
@@ -535,6 +528,7 @@ class ServiciosController extends Controller
                                                 $nicho->estado_nicho =$estado_nicho;
                                                 $nicho->estado ='ACTIVO';
                                                 $nicho->cantidad_cuerpos =$cant;
+                                                $nicho->cantidad_anterior =$cant_ant;
                                                 $nicho->user_id = auth()->id();
                                                 $nicho->save();
                                                 $nicho->id;
@@ -892,7 +886,7 @@ class ServiciosController extends Controller
         $responsable->save();
         return $responsable->id;
     }
-
+//imprimir preliquidacion para nichos
     public function generatePDF(Request $request) {
         //    return($request->codigo_nicho); die();
                    $codigo_nicho=$request->codigo_nicho;
@@ -900,22 +894,25 @@ class ServiciosController extends Controller
                         $tablelocal=DB::table('servicio_nicho')
                         ->select('servicio_nicho.*')
                         ->where('id','=',$request->id)
+                        // ->where('tipo','=',$request->tipo)
                         ->orderBy('id','DESC')
                         ->first();
-
-                        $datos_ubicacion=$tablelocal->ubicacion_id;
-                        $tipo_ubicacion=$tablelocal->tipo;
-                        $det_exhum=$tablelocal->det_exhum;
+// dd($tablelocal->tipo);
+                        $datos_ubicacion=$tablelocal->ubicacion_id??'';
+                        $tipo_ubicacion=$tablelocal->tipo??'';
+                        $det_exhum=$tablelocal->det_exhum ??'';
                         $responsable_difunto_id=$tablelocal->responsable_difunto_id;
                         // dd( $det_exhum);
 
-                        if($tipo_ubicacion=="CRIPTA" || $tipo_ubicacion== "MAUSOLEO" ){
-                            $sq=CriptaMausoleoResp::where('cripta_mausoleo_responsable.cripta_mausole_id', '=',$datos_ubicacion )
-                            ->join('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
-                            ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
-                            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp."  C.I.: ".$sq->ci_resp;
-                        }
-                        else if($tipo_ubicacion=="NICHO"){
+                        // if($tipo_ubicacion=="CRIPTA" || $tipo_ubicacion== "MAUSOLEO" ){
+                        //     $sq=CriptaMausoleoResp::where('cripta_mausoleo_responsable.cripta_mausole_id', '=',$datos_ubicacion )
+                        //     ->join('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
+                        //     ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
+                        //     $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp."  C.I.: ".$sq->ci_resp;
+                        // }
+                        // else
+
+                        if($tipo_ubicacion=="NICHO"){
                             $sq=Nicho::where('nicho.id', '=',$datos_ubicacion )
                             ->join('responsable_difunto', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
                             ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
@@ -1001,10 +998,100 @@ class ServiciosController extends Controller
         }
 
 
-        // $miArray = new stdClass();
-        // $convertedObj[$k] = $this->ToObject($miArray);
-        // $data['miArray']= $convertedObj;
+       //imprimir preliquidacion para criptas mausoleos
 
+    public function generatePDFCM(Request $request) {
+        //    return($request->codigo_nicho); die();
+                       $codigo_nicho=$request->codigo_nicho;
+                        $tab=[];
+                        $tablelocal=DB::table('servicio_nicho')
+                        ->select('servicio_nicho.*')
+                        ->where('id','=',$request->id)
+                        // ->where('tipo','=',$request->tipo)
+                        ->orderBy('id','DESC')
+                        ->first();
+// dd($tablelocal->tipo);
+                        $datos_ubicacion=$tablelocal->ubicacion_id??'';
+                        $tipo_ubicacion=$tablelocal->tipo??'';
+                        $det_exhum=$tablelocal->det_exhum ??'';
+                        $responsable_difunto_id=$tablelocal->responsable_difunto_id;
+
+
+                        if($tipo_ubicacion=="CRIPTA" || $tipo_ubicacion== "MAUSOLEO" ){
+                            $sq=CriptaMausoleoResp::where('cripta_mausoleo_responsable.cripta_mausole_id', '=',$datos_ubicacion )
+                            ->join('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
+                            ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
+                            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp."  C.I.: ".$sq->ci_resp;
+                        }
+
+
+                        if(($request->fur=="0" ||$request->fur==0 ) &&  $request->id!=null )
+                        {
+                            if ($tablelocal) {
+                                $tab['fur']= $tablelocal->fur;
+                                $tab['nombre']= $tablelocal->nombrepago." ". $tablelocal->paternopago." ".$tablelocal->maternopago??'';
+                                $tab['ci']= $tablelocal->ci;
+
+
+                                $observacion= $tablelocal->observacion;
+                                $tab['cobrosDetalles']= [];
+                                $id_s=explode(',', $tablelocal->servicio_id );
+                                foreach( $id_s as  $key => $value ){
+
+                                            $headers =  ['Content-Type' => 'application/json'];
+                                            $client = new Client();
+
+                                            // $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/'.trim($id_s[$key]).'', [
+                                                $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/generate-servicios-nicho/'.trim($id_s[$key]).'', [
+                                            'json' => [
+                                                ],
+                                                'headers' => $headers,
+                                            ]);
+                                            $data = json_decode((string) $response->getBody(), true);
+
+
+                                        if($data['status']==true){
+
+                                            $tab['cobrosDetalles'][$key]['cuenta']=$data['response'][0]['cuenta'];
+                                            $tab['cobrosDetalles'][$key]['detalle']=$data['response'][0]['descripcion'];
+                                            $tab['cobrosDetalles'][$key]['monto']=0;
+
+                                            }
+                                    }
+
+
+                                    $table = json_decode(json_encode($tab));
+
+                                $pdf = PDF::setPaper('A4', 'landscape');
+                                $pdf = PDF::loadView('servicios/reportServCM', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp' ));
+                                return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
+                            }
+
+                    }  else{
+                                    $arrayBusqueda = [];
+                                    $arrayBusqueda[] = (string)2;
+                                    $arrayBusqueda[] = (string)$request->fur;
+                                    $arrayBusquedaString = json_encode($arrayBusqueda);
+                                    //$response = Http::asForm()->post('http://192.168.104.117/cb-dev/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+                                    // $response = Http::asForm()->post('http://192.168.104.117/cb-dev/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+                                    $response = Http::asForm()->post(env('URL_SEARCH_FUR'), [
+
+                                        'buscar' => $arrayBusquedaString
+                                    ]);
+
+
+                                    if ($response->successful()) {
+                                        if($response->object()->status == true) {
+                                            $table = $response->object()->data->cobrosVarios[0];
+                                            $observacion= $tablelocal->observacion;
+
+                                            $pdf = PDF::setPaper('A4', 'landscape');
+                                            $pdf = PDF::loadView('servicios/reportServCM', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp'));
+                                            return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
+                                        }
+                                }
+                        }
+        }
 
 
             public function generateCiDif(){
@@ -1021,48 +1108,6 @@ class ServiciosController extends Controller
 
 
 
-
-    // public function GenerarFur(
-    //     $ci,
-    //     $nombre,
-    //     $primer_apellido,
-    //     $ap_materno,
-    //     $direccion,
-    //     $telefono,
-    //     $nombre_difunto,
-    //     $codigo,
-    //     $bloque,
-    //     $nicho,
-    //     $fila,
-    //     $servicios_cementery
-    // ) {
-
-    //     $headers =  ['Content-Type' => 'application/json'];
-    //     $client = new Client();
-    //     $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementery', [
-    //     //$response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementery', [
-
-    //         'json' => [
-    //             'ci' => $ci,
-    //             'nombre' => $nombre,
-    //             'primer_apellido' => $primer_apellido,
-    //             'ap_materno' => $ap_materno,
-    //             'direccion' => $direccion,
-    //             'telefono' => $telefono,
-    //             'nombre_difunto' => $nombre_difunto,
-    //             'codigo' => $codigo,
-    //             'bloque' => $bloque,
-    //             'fila' => $fila,
-    //             'nicho' => $nicho,
-    //             'servicios_cementery' => $servicios_cementery
-
-    //         ],
-    //         'headers' => $headers,
-    //     ]);
-    //     $fur_response = json_decode((string) $response->getBody(), true);
-
-    //     return $fur_response;
-    // }
 
     public function precioRenov(){
 
@@ -1568,6 +1613,8 @@ class ServiciosController extends Controller
         ]);
     }
 
+    public function anularFur(Request $request){
 
+    }
 
 }
