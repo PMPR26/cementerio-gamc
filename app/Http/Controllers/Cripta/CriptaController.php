@@ -337,13 +337,13 @@ class CriptaController extends Controller
                     'status'=> true,
                     'response'=> $cripta_id
                 ],200);
-    }
-    else{
-        return response([
-            'status'=> false,
-            'response'=> "La Cripta ya fue registrada"
-        ],201);
-    }
+        }
+        else{
+            return response([
+                'status'=> false,
+                'response'=> "La Cripta ya fue registrada"
+            ],201);
+        }
     }
 
 
@@ -472,6 +472,15 @@ class CriptaController extends Controller
                                         $ci_dif=$value['ci'];
                                     }
 
+                                    // dd($value['fecha_nacimiento']);
+
+                                    if($value['fecha_nacimiento']=="null"){
+                                        $fecha_nac=null;
+                                    }
+                                    else{
+                                        $fecha_nac=$value['fecha_nacimiento'];
+                                    }
+
                                     $existe=$this->buscarDifunto( $ci_dif, $value['nombres'],
                                     $value['primer_apellido'],$value['segundo_apellido'], $value['fecha_nacimiento']);
                                     // dd($existe);
@@ -481,7 +490,7 @@ class CriptaController extends Controller
                                             $dif->nombres = $value['nombres'];
                                             $dif->primer_apellido = $value['primer_apellido'];
                                             $dif->segundo_apellido = $value['segundo_apellido'];
-                                            $dif->fecha_nacimiento = $value['fecha_nacimiento']?? null;
+                                            $dif->fecha_nacimiento = $fecha_nac;
                                             $dif->fecha_defuncion = $value['fecha_defuncion'];
                                             $dif->certificado_defuncion = $value['ceresi']??'';
                                             $dif->causa = trim(strtoupper($value['causa']))??'';
@@ -502,7 +511,7 @@ class CriptaController extends Controller
                                                 "segundo_apellido"=>$value['segundo_apellido'],
                                                 "ceresi"=>$value['ceresi'],
                                                 "tipo"=>$value['tipo'],
-                                                "fecha_nacimiento"=>$value['fecha_nacimiento'] ?? null,
+                                                "fecha_nacimiento"=>$fecha_nac,
                                                 "fecha_defuncion"=>$value['fecha_defuncion'],
                                                 "causa"=>trim(strtoupper($value['causa'])),
                                                 "funeraria"=>trim(strtoupper($value['funeraria'])),
@@ -519,7 +528,7 @@ class CriptaController extends Controller
                                             $up_dif->nombres = $value['nombres'];
                                             $up_dif->primer_apellido = $value['primer_apellido'];
                                             $up_dif->segundo_apellido = $value['segundo_apellido'];
-                                            $up_dif->fecha_nacimiento = $value['fecha_nacimiento'] ?? null;
+                                            $up_dif->fecha_nacimiento = $fecha_nac;
                                             $up_dif->fecha_defuncion = $value['fecha_defuncion'];
                                             $up_dif->certificado_defuncion = $value['ceresi'];
                                             $up_dif->causa = $value['causa'];
@@ -540,7 +549,7 @@ class CriptaController extends Controller
                                                 "segundo_apellido"=>$value['segundo_apellido'],
                                                 "ceresi"=>$value['ceresi'],
                                                 "tipo"=>$value['tipo'],
-                                                "fecha_nacimiento"=>$value['fecha_nacimiento'] ?? null,
+                                                "fecha_nacimiento"=>$fecha_nac,
                                                 "fecha_defuncion"=>$value['fecha_defuncion'],
                                                 "causa"=>trim(strtoupper($value['causa'])),
                                                 "funeraria"=>trim(strtoupper($value['funeraria'])),
@@ -879,6 +888,7 @@ class CriptaController extends Controller
             }
 
             public function saveServiceCripta(Request $request){
+                // dd($request->tblobs);
                 $this->validate($request, [
                     'id_cripta_mausoleo' => 'required',
                     'servicios' => 'required',
@@ -904,6 +914,8 @@ class CriptaController extends Controller
                 $tipo_servicio_txt="";
                 $servicio_hijos="";
                 $txt_servicio_hijos="";
+                $tblobs="";
+
 
 
                 // si es inhumacion o exhumacion actualizar array de difuntos y estado de la unidad
@@ -929,9 +941,9 @@ class CriptaController extends Controller
 
                 $response=$obj->GenerarFurCM($request->ci, $request->nombrepago, $request->paternopago,
                 $request->maternopago, $request->domicilio, $request->codigo_unidad,
-                $request->servicio_hijos , $cantidades, $cajero, $desc_exhum, $adjudicatario, $request->observacion);
+                $request->servicio_hijos , $cantidades, $cajero,  $adjudicatario, $request->tblobs);
 
-
+// dd( $response);
                 if($response['status']==true){
                     $fur = $response['response'];
                     //dd($fur);
@@ -980,6 +992,16 @@ class CriptaController extends Controller
                     }
 
                 }
+                foreach($request->tblobs as $key => $value)
+                {
+                    if($key == 0 || $key == (count( $request->difuntos)))
+                    {
+                        $txt_tblobs=$tblobs.$value;
+                    }else{
+                        $$txt_tblobs=$tblobs.", ".$value;
+                    }
+
+                }
 
                // dd($request->resp_id);//
                 // insertar el pago en tabla servicio nicho
@@ -998,7 +1020,7 @@ class CriptaController extends Controller
                     $serv->maternopago=$request->maternopago;
                     $serv->ci=$request->ci;
                     $serv->pago_por=$request->pago_por;
-                    $serv->observacion=$request->observacion;
+                    $serv->observacion=$txt_tblobs;
                     $serv->tipo=$request->tipo_registro;
                     $serv->ubicacion_id =$request->id_cripta_mausoleo ;
                     $serv->save();
