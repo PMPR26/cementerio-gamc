@@ -169,8 +169,15 @@
                         <button type="button" class="btn btn-warning" value="{{ $cripta->id }}" id="btn_add_difunto" title="Adicionar Difunto"><i class="fa fa-user-plus"></i></button>
                         <button type="button" class="btn btn-danger" value="{{ $cripta->id }}" id="btn_up_pay_info" title="Actualizar información de  pagos servicios"><i class="fa fa-refresh"></i></button>
 
-                        <button type="button" class="btn btn-success" value="{{ $cripta->id }}" id="btn_pay_cm" title="Pagar servicios"><i class="fa fa-money"></i></button>
 
+                        @if (auth()->check())
+                           @php( $user = auth()->user())
+                            @php($rolUsuario = $user->role)
+                        @endif
+                            @if($rolUsuario != "APOYO")
+
+                            <button type="button" class="btn btn-success" value="{{ $cripta->id }}" id="btn_pay_cm" title="Pagar servicios"><i class="fa fa-money"></i></button>
+                            @endif
                     </td>
                 </tr>
             @endforeach
@@ -2453,27 +2460,23 @@ $("#cert_defuncion_p").dropzone({
                                 //console.log("caddd");
                                 //console.log(cad);
                                 $('.detalle_servicios').show();
-                                $('#servicios-data').append('<tr><td class="dt_id_tipo_cuenta">'+cad[0]+'</td><td class="dt_txt_tipo_cuenta">'+cod_serv[0]+'</td><td class="dt_id_serv">'+cod_serv[1]+'</td><td class="dt_txt_serv">'+cad[2]+'</td><td class="dt_precio_unitario">'+cad[3]+' Bs.</p>');
+                                $('#servicios-data').append('<tr class="row_' + cad[0] + ' dynamic-row"><td class="dt_id_tipo_cuenta">'+cad[0]+'</td><td class="dt_txt_tipo_cuenta">'+cod_serv[0]+'</td><td class="dt_id_serv">'+cod_serv[1]+'</td><td class="dt_txt_serv">'+cad[2]+'</td><td class="dt_precio_unitario">'+cad[3]+' Bs.</td><td class="dt_obs" contenteditable></td></tr>');
                                  acum = parseFloat(acum) + parseFloat(cad[3]);
                                  $('#totalServ').html(acum);
                               //  console.log("///------//");
                                 console.log(acum);
                                 //console.log("///------//");
-
+                                addDragHandlers($('#servicios-data .row_' + cad[0] + '.dynamic-row')[0]);
                            }
 
                         });
-                        // $('#totalServ').html(acum);
-                        // $('#totalservicios').val(acum)
 
-                        // monto=((info[1]).split('-'))[2];
-                        // $('#servicios-data').append('<p>'+((info[1]).split('-'))[1]+' ..................'+monto+'</p>');
-                        // acum=parseFloat(acum)+parseFloat(monto);
-                        // $('#totalServ').html(acum);
                     }
 
 
-                // function guardar pagos servicios
+    /*************************************************************************************************************************/
+    /****************************************************** function guardar pagos servicios**********************************/
+    /************************************************************************************************************************/
                 $(document).on('click', '#modal_save_pagos_cm', function(e)
                 {
                     e.preventDefault();
@@ -2486,6 +2489,8 @@ $("#cert_defuncion_p").dropzone({
                     let servicio_hijos = [];
                     let txt_servicio_hijos = [];
                     let precio = [];
+                    let tblobs = [];
+
                     let sel_exhumado="";
                     let difuntos = [];
 
@@ -2497,6 +2502,7 @@ $("#cert_defuncion_p").dropzone({
                                                 dt_id_serv: e.querySelector('.dt_id_serv').innerText,
                                                 dt_txt_serv: e.querySelector('.dt_txt_serv').innerText,
                                                 dt_precio_unitario: e.querySelector('.dt_precio_unitario').innerText,
+                                                tblobs: e.querySelector('.dt_obs').innerText
                                       };
                                  servicios.push(fila);
 
@@ -2519,10 +2525,13 @@ $("#cert_defuncion_p").dropzone({
                                             let row_precio = {
                                                 dt_precio_unitario: e.querySelector('.dt_precio_unitario').innerText,
                                             };
+                                            let row_tblobs =e.querySelector('.dt_obs').innerText;
                                             tipo_servicio.push(row_tipo_servicio);
                                             tipo_servicio_txt.push(row_tipo_servicio_txt);
                                             servicio_hijos.push(row_servicio_hijos);
                                             txt_servicio_hijos.push(row_txt_servicio_hijos);
+                                            tblobs.push(row_tblobs);
+
 
                         });
 
@@ -2571,6 +2580,7 @@ $("#cert_defuncion_p").dropzone({
                                                 'tipo_servicio_txt': tipo_servicio_txt,
                                                  'servicio_hijos':servicio_hijos,
                                                 'txt_servicio_hijos': txt_servicio_hijos,
+                                                'tblobs': tblobs,
                                                 'total_monto': monto_total,
                                                 'difuntos': difuntos,
                                                 'codigo_unidad': codigo_unidad,
@@ -3214,6 +3224,31 @@ $("#cert_defuncion_p").dropzone({
                 });
 
             });
+                function addDragHandlers(elem) {
+                    elem.draggable = true;
 
+                    elem.addEventListener('dragstart', handleDragStart, false);
+                    elem.addEventListener('dragover', handleDragOver, false);
+                    elem.addEventListener('drop', handleDrop, false);
+                }
+
+                function handleDragStart(event) {
+                    event.dataTransfer.effectAllowed = 'move';
+                    event.dataTransfer.setData('text/html', this.outerHTML);
+                    dragSrcElement = this;
+                }
+
+                function handleDragOver(event) {
+                    event.preventDefault();
+                    event.dataTransfer.dropEffect = 'move';
+                }
+
+                function handleDrop(event) {
+                    event.preventDefault();
+                    if (dragSrcElement !== this) {
+                        this.parentNode.removeChild(dragSrcElement);
+                        this.insertAdjacentElement('beforebegin', dragSrcElement);
+                    }
+                }
     </script>
     @stop

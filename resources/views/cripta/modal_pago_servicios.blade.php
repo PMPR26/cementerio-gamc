@@ -267,6 +267,8 @@
                                                 <td>Tipo Servicio</td>
                                                 <td>Servicio</td>
                                                 <td>Precio</td>
+                                                <td>Observacion</td>
+
                                             </tr>
                                         </thead>
                                         <tbody id="servicios-data">
