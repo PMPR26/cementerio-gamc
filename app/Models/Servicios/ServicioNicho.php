@@ -212,64 +212,14 @@ class ServicioNicho extends Model
                 $data->save();
 
                 //vincular con  responsable
-                $id_resp_dif=$this->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n, 'OCUPADO', $id_nicho);
+                $rf = new ResponsableDifunto();
+                $id_resp_dif=$rf->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n, 'OCUPADO', $id_nicho);
 
 
                 return $id_resp_dif;
             }
 
 
-            public function insDifuntoResp($request, $difuntoid, $idresp, $codigo_n, $estado_nicho, $id_nicho){
-
-                $dif = new ResponsableDifunto ;
-                $dif->responsable_id = $idresp;
-                $dif->difunto_id = $difuntoid;
-                $dif->codigo_nicho = $codigo_n;
-                $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;
-                $dif->tiempo = $request->tiempo;
-                $dif->nicho_id = $id_nicho;
-
-                if($estado_nicho=="LIBRE"){
-                    $dif->estado_nicho = $estado_nicho;
-                    $dif->fecha_liberacion= date("Y-m-d H:i:s");
-                  }
-
-
-
-                    $dif->gestion_renov=null;
-                    $dif->nro_renovacion=0;
-                    $dif->monto_ultima_renov=0;
-
-                $dif->estado = 'ACTIVO';
-                $dif->user_id = auth()->id();
-                $dif->save();
-                $dif->id;
-                return  $dif->id;
-
-            }
-
-
-        public function updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n,  $estado_nicho ){
-
-            $dif= ResponsableDifunto::where('responsable_id', $idresp)
-                               ->where('difunto_id', $difuntoid)
-                               ->where('codigo_nicho', $codigo_n)->first();
-            $dif->responsable_id = $idresp;
-            $dif->difunto_id = $difuntoid;
-            $dif->codigo_nicho = $codigo_n;
-            $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;
-            $dif->tiempo = $request->tiempo;
-            if($estado_nicho=="LIBRE"){
-                $dif->estado_nicho = $estado_nicho;
-                $dif->fecha_liberacion= date("Y-m-d H:i:s");
-                }
-
-            $dif->estado = 'ACTIVO';
-            $dif->user_id = auth()->id();
-            $dif->save();
-            $dif->id;
-            return  $dif->id;
-        }
 
 
 

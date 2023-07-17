@@ -356,7 +356,6 @@ class ServiciosController extends Controller
                     $separador=" ";
                     foreach($request->servicios_adquiridos as $key=>$servi)
                     {
-
                         // dd($servi['txt_tipo_servicio']);
                         if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'  || $servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='1982')
                         { //inhumaciones
@@ -412,8 +411,7 @@ class ServiciosController extends Controller
                                     $texto_servicio = $texto_servicio. $separador. $servi['txt_serv']." Bs.";
                         }else if($servi['serv'] == '645' || $servi['serv'] =='644' || $servi['serv'] == '629' || $servi['serv'] == '628')
                         {  //exhumaciones
-                            $cant_ant= $cantidadEnNicho;
-
+                                    $cant_ant= $cantidadEnNicho;
                                         if($difuntoEnNicho==false)
                                         {
                                             $estado_nicho="EXHUMADO";
@@ -444,17 +442,16 @@ class ServiciosController extends Controller
                                             $cant= 0;
                                         }
                                         $texto_servicio= $texto_servicio.$separador.$servi['txt_serv']." Bs.";
-                                }
+                         }
                         else{
-                                if($servi['serv'] == '642'){
+                               if($servi['serv'] == '642'){
                                     $pago_renovaciones="SI";
                                 }
-
 
                                 $texto_servicio= $texto_servicio.$separador. $servi['txt_serv']." Bs.";
                                  $estado_nicho="OCUPADO";
 
-                        }
+                            }
 
                     } //end for each
                     /// datos de nicho para caso de cremacion para externo
@@ -465,8 +462,8 @@ class ServiciosController extends Controller
                     }
                     else{
 
-                        $existeNicho = Nicho::where('codigo', $codigo_n)->first();
-
+                                $existeNicho = Nicho::where('codigo', $codigo_n)->first();
+                                // dd($existeNicho->id);
                                 if ($existeNicho != null) {
                                     $id_nicho = $existeNicho->id;
                                     $upnicho= Nicho::where('id',  $id_nicho)->first();
@@ -538,11 +535,8 @@ class ServiciosController extends Controller
                                                 $nicho->id;
                                                 $id_nicho = $nicho->id;
                                             }
-                                     // end nicho
-
-
-
-                  }
+                                             // end nicho
+                    }
                          //step1: nicho buscar si existe registrado el nicho recuperar el id  sino existe registrarlo
 
 
@@ -588,6 +582,8 @@ class ServiciosController extends Controller
                         $idresp = $existeResponsable->id;
                         $this->updateResponsable($request, $idresp);
                     }
+
+
                     if($request->ci_resp==null || !isset($request->ci_resp) || $request->ci_resp==""){
                         $sqresp=Responsable::WhereRaw('id=\''.trim($idresp).'\'')->select('ci')->first();
                         $ci_adjudicatario=$sqresp->ci;
@@ -598,38 +594,36 @@ class ServiciosController extends Controller
 
                        /********recuperar datos de la persona que realizo el pago, si es el propietario o un tercer responsable */
 
-            if ($request->pago_por != "responsable") {
-                $pago_por = "Tercera persona";
-                $nombre_pago = trim(strtoupper($request->name_pago));
-                $paterno_pago = trim(strtoupper($request->paterno_pago));
-                $materno_pago =  trim(strtoupper($request->materno_pago));
-                $ci = $request->ci_pago;
-                $domicilio = "SIN ESPECIFICACION";
-            } else {
-                        $pago_por = "Titular responsable";
-                        $nombre_pago =  trim(strtoupper($request->nombres_resp));
-                        if ($request->paterno_resp == "") {
-                            $paterno_pago = "NO DEFINIDO";
-                        } else {
-                            $paterno_pago =  trim(strtoupper($request->paterno_resp));
-                        }
-                        if ($request->domicilio == "") {
-                            $domicilio = "NO DEFINIDO";
-                        } else {
-                            $domicilio = trim(strtoupper($request->domicilio));
-                        }
+                    if ($request->pago_por != "responsable") {
+                        $pago_por = "Tercera persona";
+                        $nombre_pago = trim(strtoupper($request->name_pago));
+                        $paterno_pago = trim(strtoupper($request->paterno_pago));
+                        $materno_pago =  trim(strtoupper($request->materno_pago));
+                        $ci = $request->ci_pago;
+                        $domicilio = "SIN ESPECIFICACION";
+                    } else {
+                                $pago_por = "Titular responsable";
+                                $nombre_pago =  trim(strtoupper($request->nombres_resp));
+                                if ($request->paterno_resp == "") {
+                                    $paterno_pago = "NO DEFINIDO";
+                                } else {
+                                    $paterno_pago =  trim(strtoupper($request->paterno_resp));
+                                }
+                                if ($request->domicilio == "") {
+                                    $domicilio = "NO DEFINIDO";
+                                } else {
+                                    $domicilio = trim(strtoupper($request->domicilio));
+                                }
 
-                        $materno_pago =  trim(strtoupper($request->materno_resp)) ?? '';
-                        $ci = $ci_adjudicatario;
-            }
+                                $materno_pago =  trim(strtoupper($request->materno_resp)) ?? '';
+                                $ci = $ci_adjudicatario;
+                    }
 
 
                     //end responsable
 
                     //insertar tbl responsable_difunto
                     if (isset($difuntoid) && isset($idresp)) {
-
-
 
                         $rf = new ResponsableDifunto();
                         $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid );
@@ -651,7 +645,6 @@ class ServiciosController extends Controller
                                                     $fur=0;
                                                     $estado_pago=true;
                                                     $fecha_pago= date("Y-m-d h:i:s");
-
                                                 }
                                                 else{
                                                     $estado_pago=false;
@@ -1367,7 +1360,12 @@ class ServiciosController extends Controller
                 ->where('id',auth()->id())
                 ->first();
                 $cajero= $datos_cajero->user_sinot;
-
+                $codigo_n="0";
+                $id_nicho="0";
+                $bloque=0;
+                $nro_nicho=0;
+                $fila=0;
+                $tipo="EXTERNO";
 
             //******************** recuperar los servicios adquiridos ***** */
             if (!empty($request->servicios_adquiridos) && is_array($request->servicios_adquiridos))
@@ -1375,12 +1373,7 @@ class ServiciosController extends Controller
 
                     /// datos de nicho para caso de cremacion para externo
 
-                        $codigo_n="0";
-                        $id_nicho="0";
-                        $bloque=0;
-                        $nro_nicho=0;
-                        $fila=0;
-                        $tipo="EXTERNO";
+
 
                         $observacion=$request->observacion;
 
