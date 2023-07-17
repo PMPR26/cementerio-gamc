@@ -315,7 +315,7 @@ class ServiciosController extends Controller
                 /***generando el codigo del nicho ** */
                 $codigo_n = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
                 $cant=0;
-                // dd($request->servicios_adquiridos[0]['tipo_servicio']);
+
                 $tipo_servicio=[];
                 $txt_tipo_servicio=[];
                 $servicio_hijos=[];
@@ -351,6 +351,7 @@ class ServiciosController extends Controller
                     $cantidadEnNicho=$this->contarDifuntoEnNicho($codigo_n);
                     $difuntoEnNicho=$this->buscarDifuntoEnNicho($request);
                     // $explode_txt=$request->servicio_hijos_txt;
+
                     $texto_servicio="";
                     $separador=" ";
                     foreach($request->servicios_adquiridos as $key=>$servi)
@@ -359,6 +360,8 @@ class ServiciosController extends Controller
                         // dd($servi['txt_tipo_servicio']);
                         if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'  || $servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='1982')
                         { //inhumaciones
+                            $cant_ant= $cantidadEnNicho;
+
                                     $estado_nicho="OCUPADO";
                                 if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'){
 
@@ -371,10 +374,9 @@ class ServiciosController extends Controller
                                         }else{
                                             $cant=1;
                                             $cant_ant=0;
-
-
                                         }
                                     }else if($servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='1982'){
+
                                         if($difuntoEnNicho==false && $request->tipo_nicho== "TEMPORAL")
                                         {
                                                 $cantidadEnNicho=$this->contarDifuntoEnNicho($codigo_n);
@@ -410,6 +412,8 @@ class ServiciosController extends Controller
                                     $texto_servicio = $texto_servicio. $separador. $servi['txt_serv']." Bs.";
                         }else if($servi['serv'] == '645' || $servi['serv'] =='644' || $servi['serv'] == '629' || $servi['serv'] == '628')
                         {  //exhumaciones
+                            $cant_ant= $cantidadEnNicho;
+
                                         if($difuntoEnNicho==false)
                                         {
                                             $estado_nicho="EXHUMADO";
@@ -625,21 +629,19 @@ class ServiciosController extends Controller
                     //insertar tbl responsable_difunto
                     if (isset($difuntoid) && isset($idresp)) {
 
+
+
                         $rf = new ResponsableDifunto();
                         $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid );
 
                         if ($existeRespDif != null) {
-                            $iddifuntoResp = $this->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
+                            $iddifuntoResp = $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
                         } else {
-                            $iddifuntoResp = $this->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
+                            $iddifuntoResp = $rf->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho, $id_nicho);
                         }
                     }
 
-
                         //insert pago
-
-
-
                                                 if($request->reg=="reg"){
                                                     $fur=$request->nrofur;
                                                     $estado_pago=true;
@@ -724,7 +726,7 @@ class ServiciosController extends Controller
                                                 }
                                                 else{
 
-                                                    $this->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n,  $estado_nicho);
+                                                    $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n,  $estado_nicho);
 
                                                 }
                                             return response([
@@ -745,47 +747,7 @@ class ServiciosController extends Controller
             }
     }
 
-    public function insDifuntoResp($request, $difuntoid, $idresp, $codigo_n, $estado_nicho){
 
-        $dif = new ResponsableDifunto ;
-        $dif->responsable_id = $idresp;
-        $dif->difunto_id = $difuntoid;
-        $dif->codigo_nicho = $codigo_n;
-        $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;
-        $dif->tiempo = $request->tiempo;
-        if($estado_nicho=="LIBRE"){
-            $dif->estado_nicho = $estado_nicho;
-            $dif->fecha_liberacion= date("Y-m-d H:i:s");
-            }
-
-        $dif->estado = 'ACTIVO';
-        $dif->user_id = auth()->id();
-        $dif->save();
-        $dif->id;
-        return  $dif->id;
-
-    }
-
-        public function updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n,  $estado_nicho ){
-            $dif= ResponsableDifunto::where('responsable_id', $idresp)
-                               ->where('difunto_id', $difuntoid)
-                               ->where('codigo_nicho', $codigo_n)->first();
-            $dif->responsable_id = $idresp;
-            $dif->difunto_id = $difuntoid;
-            $dif->codigo_nicho = $codigo_n;
-            $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;
-            $dif->tiempo = $request->tiempo;
-            if($estado_nicho=="LIBRE"){
-                $dif->estado_nicho = $estado_nicho;
-                $dif->fecha_liberacion= date("Y-m-d H:i:s");
-                }
-
-            $dif->estado = 'ACTIVO';
-            $dif->user_id = auth()->id();
-            $dif->save();
-            $dif->id;
-            return  $dif->id;
-        }
 
 
     public function insertDifunto($request){
@@ -1413,7 +1375,8 @@ class ServiciosController extends Controller
 
                     /// datos de nicho para caso de cremacion para externo
 
-                        $codigo_n="00000";
+                        $codigo_n="0";
+                        $id_nicho="0";
                         $bloque=0;
                         $nro_nicho=0;
                         $fila=0;
@@ -1500,9 +1463,9 @@ class ServiciosController extends Controller
                         $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid );
 
                         if ($existeRespDif != null) {
-                            $iddifuntoResp = $this->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $tipo);
+                            $iddifuntoResp = $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $tipo);
                         } else {
-                            $iddifuntoResp = $this->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $tipo);
+                            $iddifuntoResp = $rf->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $tipo, $id_nicho);
                         }
                     }
                         //insert pago
