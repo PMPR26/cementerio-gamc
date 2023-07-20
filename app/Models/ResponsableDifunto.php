@@ -38,8 +38,8 @@ class ResponsableDifunto extends Model
                 ->select('responsable_difunto.*')
                 ->where(['responsable_id' => trim($idresp) , 'difunto_id' => trim($difuntoid), 'estado' => "ACTIVO" ])
                 ->first();
-              //  dd($respdif);
-                if($respdif!=null){
+
+                if($respdif!=null || !empty($respdif)){
                     return $respdif->id;
 
                 }else{
