@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class Responsable extends Model
 {
@@ -129,5 +130,44 @@ class Responsable extends Model
         $q= Responsable::where('id', $id_resp)->first();
         $ci_responsable=$q->ci;
         return $ci_responsable;
+    }
+
+    public function searchResponsable(Request $request){
+        // dd($request->search_resp);
+        if(isset($request->ci_resp) && ($request->ci_resp!=null || $request->ci_resp!='')){
+            $existeResponsable = Responsable::whereRaw('ci=\''. trim($request->ci_resp).'\'')
+            ->orderBy('id', 'desc')
+            ->first();
+
+        }else if(isset($request->materno_resp) && ($request->materno_resp!=null || $request->materno_resp!='')){
+            $existeResponsable = Responsable::whereRaw('nombres=\''. trim($request->nombres_resp).'\'')
+            ->whereRaw('primer_apellido=\''.trim($request->paterno_resp).'\'')
+            ->whereRaw('segundo_apellido=\''.trim($request->materno_resp).'\'')
+            ->orderBy('id', 'desc')
+            ->first();
+        }
+        else if(isset($request->fechanac_resp) && ($request->fechanac_resp!=null || $request->fechanac_resp!='') && ($request->materno_resp==null || $request->materno_resp=='')){
+            $existeResponsable = Responsable::whereRaw('nombres=\''. trim($request->nombres_resp).'\'')
+            ->whereRaw('primer_apellido=\''.trim($request->paterno_resp).'\'')
+            ->whereRaw('fecha_nacimiento=\''.trim($request->fechanac_resp).'\'')
+            ->orderBy('id', 'desc')
+            ->first();
+        }
+        else if(isset($request->fechanac_resp) && ($request->fechanac_resp!=null || $request->fechanac_resp!='') && ($request->materno_resp!=null || $request->materno_resp!='')){
+            $existeResponsable = Responsable::whereRaw('nombres=\''. trim($request->nombres_resp).'\'')
+            ->whereRaw('primer_apellido=\''.trim($request->paterno_resp).'\'')
+            ->whereRaw('segundo_apellido=\''.trim($request->materno_resp).'\'')
+            ->whereRaw('fecha_nacimiento=\''.trim($request->fechanac_resp).'\'')
+            ->orderBy('id', 'desc')
+            ->first();
+        }else{
+            $existeResponsable = Responsable::whereRaw('nombres=\''. trim($request->nombres_resp).'\'')
+            ->whereRaw('primer_apellido=\''.trim($request->paterno_resp).'\'')
+            ->orderBy('id', 'desc')
+            ->first();
+        }
+
+                 // dd($existeResponsable);
+                 return $existeResponsable;
     }
 }
