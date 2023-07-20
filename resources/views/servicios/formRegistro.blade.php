@@ -1320,7 +1320,19 @@ $(document).ready(function ()
 
                                }),
                                success: function(data_response) {
-                                   swal.fire({
+                                if(data_response.status==false){
+                                    // temporal_ocupado
+                                    swal.fire({
+                                   title: "Precausion!",
+                                   text: "!El nicho se encuentra ocupado, debe liberar el nicho!",
+                                   type: "warning",
+                                   timer: 2000,
+                                   showCancelButton: false,
+                                   showConfirmButton: false
+                                   });
+
+                                }else{
+                                    swal.fire({
                                    title: "Guardado!",
                                    text: "!Registro realizado con éxito!",
                                    type: "success",
@@ -1332,6 +1344,8 @@ $(document).ready(function ()
                                     //    location.reload();
                                     window.location.href = "/servicios/servicios"
                                    }, 2000);
+                                }
+
                                    //toastr["success"]("Registro realizado con éxito!");
                                },
                                error: function (error) {

@@ -2,12 +2,15 @@
 
 namespace App\Models\Servicios;
 
+use App\Models\Nicho;
+use App\Models\ResponsableDifunto;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+
 
 use Illuminate\Http\Exceptions;
 
@@ -194,6 +197,26 @@ class ServicioNicho extends Model
 
             public function actualizarPago(Request $request){
 
+            }
+
+
+
+
+            public function ocuparNichoTemporal($request,$difuntoid, $idresp, $codigo_n, $estado_nicho, $id_nicho){
+
+                $nicho=New Nicho;
+                $data= $nicho::where('id', $id_nicho)->first();
+                $data->estado_nicho="OCUPADO";
+                $data->cantidad_anterior=$data->cantidad_cuerpos;
+                $data->cantidad_cuerpos=1;
+                $data->save();
+
+                //vincular con  responsable
+                $rf = new ResponsableDifunto();
+                $id_resp_dif=$rf->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n, 'OCUPADO', $id_nicho);
+
+
+                return $id_resp_dif;
             }
 
 
