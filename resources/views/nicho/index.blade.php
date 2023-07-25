@@ -23,7 +23,6 @@
         <button id="new-nicho" type="button" class="btn btn-info col-sm-12" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Nicho</button>
         </div>
         </div>
-
     </div>
  </div>
 
@@ -68,16 +67,19 @@
                             <td>{{ $nicho->estado_nicho }}</td>
                             <td>
                                 <button type="button" class="btn btn-info" value="{{ $nicho->id }}" id="btn-editar" title="Editar nicho"><i class="fas fa-edit"></i></button>
-
+                                <form action="{{ route('nicho.free') }}" method="POST" target="blank">
+                                    @csrf
+                                    <input type="hidden" name="codigo_nicho" value={{ $nicho->codigo }}>
+                                    <input type="hidden" name="id" value={{ $nicho->id }}>
+                                    <button type='submit' class="btn btn-danger"><i
+                                            class="fa fa-unlock"></i></button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
-
-
-
 
         @include('nicho.modalRegister')
 

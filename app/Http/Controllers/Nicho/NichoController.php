@@ -225,5 +225,11 @@ class NichoController extends Controller
 
     }
 
+    public function liberarNicho(Request $request){
+        // dd("legaaaaaaaaaaaaaaa");
+        $n=new Nicho;
+        $n->liberarNicho($request);
+        return redirect()->route('nicho');
+    }
 
 }
