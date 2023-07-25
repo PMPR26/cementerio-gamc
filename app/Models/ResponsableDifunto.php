@@ -90,12 +90,13 @@ class ResponsableDifunto extends Model
                         "difunto.genero as genero_dif",
                         "difunto.certificado_file", //certificado_defuncion
                         "difunto.funeraria",
-                       "nicho.tipo as tipo_nicho",
+                        "nicho.tipo as tipo_nicho",
                         "nicho.codigo as nicho",
                         "nicho.codigo_anterior as anterior",
                         "bloque.codigo as bloque",
                         "cuartel.codigo as cuartel",
                         "nicho.nro_nicho",
+                        "responsable_difunto.fecha_adjudicacion as fecha_ingreso_nicho",
                         "nicho.cantidad_cuerpos")
                         ->leftJoin('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
                         ->leftJoin('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
@@ -131,6 +132,7 @@ class ResponsableDifunto extends Model
 
 
         public function updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n,  $estado_nicho ){
+            // dd($request->fecha_ingreso_nicho);
 
             $dif= ResponsableDifunto::where('responsable_id', $idresp)
                                ->where('difunto_id', $difuntoid)
@@ -138,7 +140,7 @@ class ResponsableDifunto extends Model
             $dif->responsable_id = $idresp;
             $dif->difunto_id = $difuntoid;
             $dif->codigo_nicho = $codigo_n;
-            $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;
+            $dif->fecha_adjudicacion = $request->fecha_ingreso_nicho ?? null;
             $dif->tiempo = $request->tiempo;
             if($estado_nicho=="LIBRE"){
                 $dif->estado_nicho = $estado_nicho;
@@ -159,7 +161,7 @@ class ResponsableDifunto extends Model
             $dif->responsable_id = $idresp;
             $dif->difunto_id = $difuntoid;
             $dif->codigo_nicho = $codigo_n;
-            $dif->fecha_adjudicacion = $request->fechadef_dif ?? null;
+            $dif->fecha_adjudicacion = $request->fecha_ingreso_nicho ?? null;
             $dif->tiempo = $request->tiempo;
             $dif->nicho_id = $id_nicho;
 
@@ -174,6 +176,30 @@ class ResponsableDifunto extends Model
                 $dif->nro_renovacion=0;
                 $dif->monto_ultima_renov=0;
 
+            $dif->estado = 'ACTIVO';
+            $dif->user_id = auth()->id();
+            $dif->save();
+            $dif->id;
+            return  $dif->id;
+
+        }
+        public function registrar_asignacion($request ,$difuntoid, $idresp, $codigo_nuevo_nicho, $estado_nicho, $id_nicho,  $tipo_nicho){
+            $dif = new ResponsableDifunto ;
+            $dif->responsable_id = $idresp;
+            $dif->difunto_id = $difuntoid;
+            $dif->codigo_nicho = $codigo_nuevo_nicho;
+            $dif->fecha_adjudicacion = $request->nueva_fecha_ingreso ?? null;
+             if($tipo_nicho=="TEMPORAL"){
+                $dif->tiempo = $request->tiempo;
+             }else{
+                $dif->tiempo=30;
+             }
+
+            $dif->nicho_id = $id_nicho;
+            $dif->estado_nicho = 'OCUPADO';
+            $dif->gestion_renov=null;
+            $dif->nro_renovacion=0;
+            $dif->monto_ultima_renov=0;
             $dif->estado = 'ACTIVO';
             $dif->user_id = auth()->id();
             $dif->save();
