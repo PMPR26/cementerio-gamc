@@ -456,12 +456,12 @@ class RelevamientoController extends Controller
                         $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid );
 
                     if ($existeRespDif != null) {
-                        $iddifuntoResp = $this->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
+                        $iddifuntoResp = $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
                     } else {
-                        $iddifuntoResp = $this->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
+                        $iddifuntoResp = $rf->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho, $id_nicho);
                     }
                 }else{
-                    $iddifuntoResp = $this->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
+                    $iddifuntoResp = $rf->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho, $id_nicho);
                 }
 
             }
@@ -473,51 +473,51 @@ class RelevamientoController extends Controller
 
     }
 
-    public function insDifuntoResp($request, $difuntoid, $idresp, $codigo_n, $estado_nicho){
+    // public function insDifuntoResp($request, $difuntoid, $idresp, $codigo_n, $estado_nicho){
 
-        $dif = new ResponsableDifunto ;
-        $dif->responsable_id = $idresp;
-        $dif->difunto_id = $difuntoid;
-        $dif->codigo_nicho = $codigo_n;
-        $dif->fecha_adjudicacion = $request->fecha_ingreso_nicho ?? null;
-        $dif->tiempo = $request->tiempo;
+    //     $dif = new ResponsableDifunto ;
+    //     $dif->responsable_id = $idresp;
+    //     $dif->difunto_id = $difuntoid;
+    //     $dif->codigo_nicho = $codigo_n;
+    //     $dif->fecha_adjudicacion = $request->fecha_ingreso_nicho ?? null;
+    //     $dif->tiempo = $request->tiempo;
 
-            $dif->estado_nicho = 'OCUPADO';
+    //         $dif->estado_nicho = 'OCUPADO';
 
-        $dif->estado = 'ACTIVO';
-        $dif->nro_renovacion = $request->nro_renovacion ?? null;
-        $dif->monto_ultima_renov = $request->monto_ultima_renov ?? null;
-        $dif->gestion_renov = $request->gestion_renov  ?? null   ;
+    //     $dif->estado = 'ACTIVO';
+    //     $dif->nro_renovacion = $request->nro_renovacion ?? null;
+    //     $dif->monto_ultima_renov = $request->monto_ultima_renov ?? null;
+    //     $dif->gestion_renov = $request->gestion_renov  ?? null   ;
 
-        $dif->user_id = auth()->id();
-        $dif->save();
-        $dif->id;
-        return  $dif->id;
+    //     $dif->user_id = auth()->id();
+    //     $dif->save();
+    //     $dif->id;
+    //     return  $dif->id;
 
-    }
+    // }
 
-        public function updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n,  $estado_nicho){
-            $dif= ResponsableDifunto::where('responsable_id', $idresp)
-                               ->where('difunto_id', $difuntoid)
-                               ->where('codigo_nicho', $codigo_n)->first();
-            $dif->responsable_id = $idresp;
-            $dif->difunto_id = $difuntoid;
-            $dif->codigo_nicho = $codigo_n;
-            $dif->fecha_adjudicacion = $request->fecha_ingreso_nicho ?? null;
-            $dif->tiempo = $request->tiempo;
-            if($estado_nicho=="LIBRE"){
-                $dif->estado_nicho = $estado_nicho;
-                $dif->fecha_liberacion= date("Y-m-d H:i:s");
-                }
-            $dif->estado = 'ACTIVO';
-            $dif->user_id = auth()->id();
-            $dif->nro_renovacion = $request->nro_renovacion ?? null;
-            $dif->monto_ultima_renov = $request->monto_ultima_renov ?? null;
-            $dif->gestion_renov = $request->gestion_renov  ?? null   ;
-            $dif->save();
-            $dif->id;
-            return  $dif->id;
-        }
+        // public function updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n,  $estado_nicho){
+        //     $dif= ResponsableDifunto::where('responsable_id', $idresp)
+        //                        ->where('difunto_id', $difuntoid)
+        //                        ->where('codigo_nicho', $codigo_n)->first();
+        //     $dif->responsable_id = $idresp;
+        //     $dif->difunto_id = $difuntoid;
+        //     $dif->codigo_nicho = $codigo_n;
+        //     $dif->fecha_adjudicacion = $request->fecha_ingreso_nicho ?? null;
+        //     $dif->tiempo = $request->tiempo;
+        //     if($estado_nicho=="LIBRE"){
+        //         $dif->estado_nicho = $estado_nicho;
+        //         $dif->fecha_liberacion= date("Y-m-d H:i:s");
+        //         }
+        //     $dif->estado = 'ACTIVO';
+        //     $dif->user_id = auth()->id();
+        //     $dif->nro_renovacion = $request->nro_renovacion ?? null;
+        //     $dif->monto_ultima_renov = $request->monto_ultima_renov ?? null;
+        //     $dif->gestion_renov = $request->gestion_renov  ?? null   ;
+        //     $dif->save();
+        //     $dif->id;
+        //     return  $dif->id;
+        // }
 
 
         public function insertDifunto($request){

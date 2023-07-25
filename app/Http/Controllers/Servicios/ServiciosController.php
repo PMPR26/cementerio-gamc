@@ -114,6 +114,101 @@ class ServiciosController extends Controller
 
     public function buscar_nicho(Request $request)
     {
+        // dd( $request);
+
+        $sql = DB::table('responsable_difunto')
+            ->select(DB::raw('
+               responsable_difunto.*,
+               responsable.segundo_apellido as segap_resp,
+               responsable.fecha_nacimiento as nacimiento_resp,
+               responsable.telefono,
+               responsable.celular,
+               responsable.estado_civil as ecivil_resp,
+               responsable.genero as genero_resp,
+               responsable.email as email_resp,
+               responsable.domicilio as domicilio_resp,
+               responsable.ci as ci_resp,
+               responsable.nombres as nombre_resp,
+               responsable.primer_apellido as paterno_resp,
+               responsable.segundo_apellido as segap_resp,
+               difunto.ci as ci_dif,
+               difunto.nombres as nombre_dif,
+               difunto.primer_apellido as primerap_dif,
+               difunto.segundo_apellido as segap_dif,
+               difunto.fecha_nacimiento as nacimiento_dif,
+               difunto.fecha_defuncion as fecha_def_dif,
+               difunto.causa as causa_dif,
+               difunto.tipo as tipo_dif,
+               difunto.certificado_defuncion,
+               difunto.genero as genero_dif,
+               difunto.certificado_file,
+               difunto.funeraria,
+               servicio_nicho.fur,
+                CONCAT(servicio_nicho.nombrepago , \' \',servicio_nicho.paternopago, \' \', servicio_nicho.maternopago) AS razon,
+               servicio_nicho.ci as ci_pago,
+               servicio_nicho.fecha_pago as fecha_pago,
+               servicio_nicho.monto as monto,
+               servicio_nicho.nro_renovacion,
+               servicio_nicho.monto_renovacion,
+               servicio_nicho.fecha_registro as fecha_pago,
+               servicio_nicho.servicio as servicios,
+               responsable_difunto.fecha_adjudicacion as fecha_ingreso_nicho,
+               nicho.tipo as tipo_nicho,
+               nicho.codigo as nicho,
+               nicho.codigo_anterior as anterior,
+               bloque.codigo as bloque,
+               cuartel.codigo as cuartel,
+               nicho.nro_nicho,
+               nicho.estado_nicho as estado_nicho,
+               nicho.cantidad_cuerpos
+                ') )
+            ->leftJoin('servicio_nicho', 'servicio_nicho.codigo_nicho', '=', 'responsable_difunto.codigo_nicho')
+            ->leftJoin('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
+            ->leftJoin('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
+            ->join('nicho', 'nicho.codigo', '=', 'responsable_difunto.codigo_nicho')
+            ->leftJoin('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
+            ->leftJoin('bloque', 'bloque.id', '=', 'nicho.bloque_id')
+            ->where('responsable_difunto.estado', 'ACTIVO')
+            ->where('bloque.codigo', '=',''. $request->bloque.'')
+            ->where('nicho.nro_nicho', '=',''. $request->nicho.'')
+            ->where('nicho.fila', '=', $request->fila)
+            ->orderBy('servicio_nicho.id', 'DESC')
+            ->orderBy('nicho.id', 'DESC')
+            ->orderBy('responsable_difunto.id', 'DESC')
+            ->first();
+
+            // dd($sql);
+
+            if($sql){
+                $mensaje=true;
+            }
+            else{
+                $r=$this->buscar_nicho_liberado($request);
+                if($r){
+                    $mensaje= "liberado";
+                    $sql=json_decode($r->getContent());
+                }else{
+                   $mensaje= false;
+                }
+            }
+
+            $resp= [
+                "mensaje" => $mensaje,
+                "response"=>$sql
+                ];
+
+             return response()->json($resp);
+
+    }
+
+
+
+    //buscar si el nicho ya fue registrado y liberado para evitar sacar datos de la base antigua
+
+
+    public function buscar_nicho_liberado(Request $request)
+    {
+
 
         $sql = DB::table('responsable_difunto')
             ->select(DB::raw('
@@ -135,7 +230,7 @@ class ServiciosController extends Controller
                difunto.primer_apellido as primerap_dif,
                difunto.segundo_apellido as segap_dif,
                difunto.segundo_apellido as segap_dif,
-               difunto.fecha_nacimiento as nacimiento_dif,
+               difunto.fecha_nacimiento as fecha_nac_dif,
                difunto.fecha_defuncion as fecha_def_dif,
                difunto.causa as causa_dif,
                difunto.tipo as tipo_dif,
@@ -143,25 +238,18 @@ class ServiciosController extends Controller
                difunto.genero as genero_dif,
                difunto.certificado_file,
                difunto.funeraria,
-               servicio_nicho.fur,
-                CONCAT(servicio_nicho.nombrepago , \' \',servicio_nicho.paternopago, \' \', servicio_nicho.maternopago) AS razon,
-               servicio_nicho.ci as ci_pago,
-               servicio_nicho.fecha_pago as fecha_pago,
-               servicio_nicho.monto as monto,
-               servicio_nicho.nro_renovacion,
-               servicio_nicho.monto_renovacion,
-               servicio_nicho.fecha_registro as fecha_pago,
-               servicio_nicho.servicio as servicios,
-
                nicho.tipo as tipo_nicho,
                nicho.codigo as nicho,
+               nicho.estado_nicho as estado_nicho,
                nicho.codigo_anterior as anterior,
                bloque.codigo as bloque,
                cuartel.codigo as cuartel,
                nicho.nro_nicho,
-               nicho.cantidad_cuerpos
+               nicho.cantidad_cuerpos,
+               responsable_difunto.fecha_adjudicacion as fecha_ingreso_nicho
+
                 ') )
-            ->join('servicio_nicho', 'servicio_nicho.codigo_nicho', '=', 'responsable_difunto.codigo_nicho')
+            // ->leftjoin('servicio_nicho', 'servicio_nicho.codigo_nicho', '=', 'responsable_difunto.codigo_nicho')
             ->leftJoin('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
             ->leftJoin('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
             ->join('nicho', 'nicho.codigo', '=', 'responsable_difunto.codigo_nicho')
@@ -170,8 +258,11 @@ class ServiciosController extends Controller
             ->where('bloque.codigo', '=',''. $request->bloque.'')
             ->where('nicho.nro_nicho', '=',''. $request->nicho.'')
             ->where('nicho.fila', '=', $request->fila)
-            ->orderBy('servicio_nicho.id', 'DESC')
+            ->where('nicho.estado', 'ACTIVO')
+            ->orderBy('nicho.id', 'DESC')
+            ->orderBy('responsable_difunto.id', 'DESC')
             ->first();
+
 
             if($sql){
                 $mensaje=true;
@@ -188,7 +279,6 @@ class ServiciosController extends Controller
              return response()->json($resp);
 
     }
-
 
 
     //service update pay from sinot
@@ -234,7 +324,7 @@ class ServiciosController extends Controller
 
     public function createNewServicios(Request $request)
     {
-        // dd($request->servicios_adquiridos);
+        // dd($request->fecha_ingreso_nicho);
         // $explode_txt=explode("Bs.",$request->servicio_hijos_txt);
       //  $explode_txt=$request->servicio_hijos_txt;
         // dd($explode_txt);
@@ -362,7 +452,7 @@ class ServiciosController extends Controller
                             $cant_ant= $cantidadEnNicho;
 
                                     $estado_nicho="OCUPADO";
-                                if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'){
+                                    if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'){
 
                                         if( $cantidadEnNicho !=false){
                                             $cant_ant=$cantidadEnNicho;
@@ -455,12 +545,12 @@ class ServiciosController extends Controller
 
                     } //end for each
                     /// datos de nicho para caso de cremacion para externo
-                    if($request->externo=="externo"){
-                        $codigo_n="00000" ;
-                        $estado_nicho="EXTERNO";
-                        $codigo_nicho = $codigo_n;
-                    }
-                    else{
+                    // if($request->externo=="externo"){
+                    //     $codigo_n="00000" ;
+                    //     $estado_nicho="EXTERNO";
+                    //     $codigo_nicho = $codigo_n;
+                    // }
+                    // else{
 
                                 $existeNicho = Nicho::where('codigo', $codigo_n)->first();
                                 // dd($existeNicho->id);
@@ -536,20 +626,13 @@ class ServiciosController extends Controller
                                                 $id_nicho = $nicho->id;
                                             }
                                              // end nicho
-                    }
+                    // }
                          //step1: nicho buscar si existe registrado el nicho recuperar el id  sino existe registrarlo
 
 
                         // step2: register difunto --- si id_difunto id_difunto es null insertar difunto insertar responsable
-                        $existeDifunto =DB::table('difunto')->whereRaw('nombres=\''.trim(mb_strtoupper($request->nombres_dif, 'UTF-8')).'\'')
-                        ->whereRaw('primer_apellido=\''.trim(mb_strtoupper($request->paterno_dif, 'UTF-8')).'\'')
-                        ->whereRaw('segundo_apellido=\''.trim(mb_strtoupper($request->materno_dif, 'UTF-8')).'\'')
-                        // ->whereRaw('fecha_nacimiento=\''.trim($request->fechanac_dif).'\'')
-                        ->whereRaw('fecha_defuncion=\''.trim($request->fecha_def_dif).'\'')
-                        ->select()
-                        ->first();
-
-
+                        $d=New Difunto;
+                        $existeDifunto=$d->searchDifunto($request);
 
                         // dd($existeDifunto);
                         if ( !$existeDifunto ||  $existeDifunto == null) {
@@ -563,12 +646,8 @@ class ServiciosController extends Controller
 
                     // end difunto
                     // step4: register responsable -- si el responsable
-                    $existeResponsable = Responsable::whereRaw('nombres=\''. trim($request->nombres_resp).'\'')
-                    ->whereRaw('primer_apellido=\''.trim($request->paterno_resp).'\'')
-                    ->whereRaw('segundo_apellido=\''.trim($request->materno_resp).'\'')
-                    ->OrWhereRaw('ci=\''.trim($request->ci_resp).'\'')
-                    ->first();
-
+                    $r=New Responsable;
+                    $existeResponsable=$r->searchResponsable($request);
                         // dd($existeResponsable);
 
                     if (!$existeResponsable ||  $existeResponsable == null) {
@@ -634,6 +713,20 @@ class ServiciosController extends Controller
                             $iddifuntoResp = $rf->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho, $id_nicho);
                         }
                     }
+                    // if(isset($responsable_id) ){
+                    //     $difres= ResponsableDifunto::where('responsable_id', $responsable_id)
+                    //     ->where('difunto_id', $difunto_id)
+                    //    ->first();
+
+
+                    //      $difres->estado_nicho = $estado_nicho ?? '';
+                    //      $difres->save();
+                    // }
+                    // else{
+
+                    //     $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n,  $estado_nicho);
+
+                    // }
 
                         //insert pago
                                                 if($request->reg=="reg"){
@@ -704,24 +797,21 @@ class ServiciosController extends Controller
                                                     $serv->nro_renovacion=$request->nro_renovacion;
                                                 }
                                                 $serv->save();
-                                                // return  $serv->id;
-                                                // return $fur;
 
 
-                                                if(isset($responsable_id) ){
-                                                    $difres= ResponsableDifunto::where('responsable_id', $responsable_id)
-                                                    ->where('difunto_id', $difunto_id)
-                                                   ->first();
-
-
-                                                     $difres->estado_nicho = $estado_nicho ?? '';
-                                                     $difres->save();
+                                                if($request->asignar_difunto_nicho=="asignado")
+                                                {
+                                                    $n=New Nicho;
+                                                    $nuevo_nicho= $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
+// dd( $codigo_nuevo_nicho);
+                                                       $rf = new ResponsableDifunto ;
+                                                       $rf->registrar_asignacion($request ,$difuntoid, $idresp, $nuevo_nicho->codigo, $estado_nicho, $nuevo_nicho->id, $nuevo_nicho->tipo_nicho);
+                                                        $lib=New Nicho;
+                                                        $liberar=$lib->liberarNichoAsignacion($id_nicho, $codigo_n);
                                                 }
-                                                else{
 
-                                                    $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n,  $estado_nicho);
 
-                                                }
+
                                             return response([
                                                 'status'=> true,
                                                 'response'=> $serv->id
@@ -1573,4 +1663,14 @@ class ServiciosController extends Controller
 
     }
 
-}
+
+    // public function registrar_asignacion(Request $request){
+
+    //     $codigo_nuevo_nicho=$request->cuartel_nuevo.".".$request->bloque_nuevo.".".$request->nicho_nuevo.".".$request->fila_nuevo;
+    //     $rf = new ResponsableDifunto ;
+    //     $rf->registrar_asignacion($request ,$difuntoid, $idresp, $codigo_nuevo_nicho, $estado_nicho, $id_nicho);
+    //         return $resp;
+    //     }
+    }
+
+

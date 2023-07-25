@@ -112,6 +112,8 @@ Route::group(['prefix' => 'nicho', 'middleware' => 'auth'], function () {
     Route::get('/get-nicho/{id}', 'App\Http\Controllers\Nicho\NichoController@getNicho')->name('nicho.get');
     Route::put('/update-nicho', 'App\Http\Controllers\Nicho\NichoController@updateNicho')->name('nicho.update');
     Route::post('/get-bloqueid', 'App\Http\Controllers\Nicho\NichoController@getBloqueid')->name('bloqueid.get');
+    //nicho.liberar.temp
+    Route::post('/liberar-nicho', 'App\Http\Controllers\Nicho\NichoController@liberarNicho')->name('nicho.free');
 
 });
 
@@ -155,9 +157,17 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::post('/buscar-renovacion', [App\Http\Controllers\Servicios\ServiciosController::class,'buscarRenovacion'])->name('buscar.renovacion');
     Route::get('/cargarFormrel', [App\Http\Controllers\Servicios\RelevamientoController::class,'cargarFormrel'])->name('load.formrel');
     Route::post('/buscar_nichorel', [App\Http\Controllers\Servicios\RelevamientoController::class, 'buscar_nichorel'])->name('buscar.nicho.rel');
+    Route::post('/buscar_nicho_liberado', [App\Http\Controllers\Servicios\RelevamientoController::class, 'buscar_nicho_liberado'])->name('buscar.nicho.liberado');
+    Route::post('/registrar-asignacion', [App\Http\Controllers\Servicios\ServiciosController::class,'registrar_asignacion'])->name('registrar.asignacion');
+
+
+
 
     Route::get('/relevamiento', [App\Http\Controllers\Servicios\RelevamientoController::class,'index'])->name('relev');
     Route::post('/new-relevamiento', [App\Http\Controllers\Servicios\RelevamientoController::class,'createNewRelev'])->name('new.relevamiento');
+    // Route::post('/registrar_asignacion', [App\Http\Controllers\Servicios\ServiciosController::class,'registrar_asignacion'])->name('registrar.asignacion');
+
+    //registrar_asignacion
     Route::post('/get-serv-hijos', [App\Http\Controllers\Servicios\ServiciosController::class,'getServHijos'])->name('get.serv');
 
 

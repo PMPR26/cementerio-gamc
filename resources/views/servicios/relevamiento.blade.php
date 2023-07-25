@@ -639,7 +639,11 @@
                                 }),
                                 success: function(data)
                                 {
-                                    if (data.mensaje) {
+
+                                    console.log("busquedaaa");
+
+                                    console.log(data);
+                                    if (data.mensaje==true) {
                                         $('#sp').empty();
                                         $('#origen').val('tabla_nueva');
                                         console.log(data);
@@ -684,7 +688,86 @@
                                                             } else if (data.response.tiempo == 5) {
                                                                 $('#tipo_dif').val('ADULTO')
                                                             }
-                                    } else {
+                                    }
+                                    else if (data.mensaje=="liberado") {
+                                        $('#sp').empty();
+                                        $('#origen').val('tabla_nueva');
+                                        console.log(data);
+                                        // cargar campos del los forms
+                                        $('#cuartel').val(data.response.cuartel);
+                                        $('#anterior').val(data.response.anterior);
+                                        $('#tipo_nicho').val(data.response.tipo_nicho);
+                                        $('#search_dif').val("");
+                                        $('#nombres_dif').val("");
+                                        $('#paterno_dif').val("");
+                                        $('#materno_dif').val("");
+                                        $('#fechanac_dif').val("");
+                                        $('#fecha_def_dif').val("");
+                                        $('#fecha_ingreso_nicho').val("");
+                                        // $('#causa').val(data.response.causa_dif);
+                                        $('#causa').val("").trigger('change');
+                                        $('#sereci').val("");
+                                        $('#tipo_dif').val("");
+                                        $('#genero_dif').val("");
+
+                                        if(data.response.tipo_nicho=="TEMPORAL"){
+
+
+                                                    $('#search_resp').val("");
+                                                    $('#nombres_resp').val("");
+                                                    $('#paterno_resp').val("");
+                                                    $('#materno_resp').val("");
+                                                    $('#fechanac_resp').val("");
+                                                    $('#telefono').val("");
+                                                    $('#celular').val("");
+                                                    $('#ecivil').val("");
+                                                    $('#email').val("");
+                                                    $('#domicilio').val("");
+                                                    $('#genero_resp').val("");
+                                                    $('#razon').html("");
+                                                    $('#tiemp').html("");
+                                                    $('#tiempo').val("");
+
+                                                    $('#cant_cuerpos').val(0);
+                                                    $('#cuerpos').html(data.response.cantidad_cuerpos);
+                                                    $('#funeraria').html("");
+                                                    $('#url-certification').html(data.response.certificado_file);
+
+                                                                        if (data.response.tiempo == 2) {
+                                                                            $('#tipo_dif').val('PARVULO')
+                                                                        } else if (data.response.tiempo == 5) {
+                                                                            $('#tipo_dif').val('ADULTO')
+                                                                        }
+                                            }
+                                            else{
+                                                        $('#search_resp').val(data.response.ci_resp);
+                                                        $('#nombres_resp').val(data.response.nombre_resp);
+                                                        $('#paterno_resp').val(data.response.paterno_resp);
+                                                        $('#materno_resp').val(data.response.segap_resp);
+                                                        $('#fechanac_resp').val(data.response.nacimiento_resp);
+                                                        $('#telefono').val(data.response.telefono);
+                                                        $('#celular').val(data.response.celular);
+                                                        $('#ecivil').val(data.response.ecivil_resp);
+                                                        $('#email').val(data.response.email_resp);
+                                                        $('#domicilio').val(data.response.domicilio_resp);
+                                                        $('#genero_resp').val(data.response.genero_resp);
+                                                        $('#razon').html(data.response.razon);
+                                                        $('#tiemp').html(data.response.tiempo);
+                                                        $('#tiempo').val(data.response.tiempo);
+
+                                                        $('#cant_cuerpos').val(data.response.cantidad_cuerpos);
+                                                        $('#cuerpos').html(data.response.cantidad_cuerpos);
+                                                        $('#funeraria').html(data.response.funeraria);
+                                                        $('#url-certification').html(data.response.certificado_file);
+
+                                                                    if (data.response.tiempo == 2) {
+                                                                        $('#tipo_dif').val('PARVULO')
+                                                                    } else if (data.response.tiempo == 5) {
+                                                                        $('#tipo_dif').val('ADULTO')
+                                                                    }
+
+                                            }
+                                    } else if (data.mensaje==false){
                                         $.ajax({
                                             headers: {
                                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
@@ -990,7 +1073,7 @@
                             'fechadef_dif': $('#fechadef_dif').val(),
                             'fecha_def_dif': $('#fecha_def_dif').val(),
                             'causa': $('#causa').val(),
-                            'ecivil_dif': $('#ecivil_dif').val(),
+                            // 'ecivil_dif': $('#ecivil_dif').val(),
                             'tipo_dif': $('#tipo_dif').val(),
                             'genero_dif': $('#genero_dif').val(),
                             'ci_resp': $('#search_resp').val(),
@@ -1036,6 +1119,7 @@
                             // 'externo':$('#externo').val(),
                             'funeraria':$('#funeraria').val(),
                             'urlcertificacion':$('#url-certificacion').val(),
+                            "asignar_difunto_nicho":null,
                             // 'cant':$('#cant_cuerpos').val()
                         }),
                         success: function(data_response) {
