@@ -15,10 +15,13 @@ use App\Models\Cripta;
 use App\Models\Servicios;
 
 use App\Models\Mantenimiento;
+use App\Models\CriptaMausoleoResp;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\DB;
+
 use GuzzleHttp\Exception\RequestException;
 use PDF;
 use Illuminate\Support\Facades\Http;
@@ -30,13 +33,22 @@ class MantenimientoController extends Controller
     }
 
     public function index(){
-        $mant= Mantenimiento::select('mantenimiento.*',  DB::raw('CONCAT(mantenimiento.nombrepago , \' \',mantenimiento.paternopago, \' \', mantenimiento.maternopago ) AS nombre'))
-                ->leftJoin('responsable', 'responsable.id', '=', 'mantenimiento.respdifunto_id')
-                ->where('mantenimiento.estado', 'ACTIVO')
-                ->orderBy('id', 'DESC')
-                 ->get();
+        if (auth()->check()) {
+            $user = auth()->user();
+            $rolUsuario = $user->role;
 
-        return view('mantenimiento/index', compact('mant'));
+            }
+
+            if($rolUsuario == "APOYO"){
+                return view('restringidos/no_autorizado');
+            }else{
+                    $mant= Mantenimiento::select('mantenimiento.*',  DB::raw('CONCAT(mantenimiento.nombrepago , \' \',mantenimiento.paternopago, \' \', mantenimiento.maternopago ) AS nombre'))
+                        ->leftJoin('responsable', 'responsable.id', '=', 'mantenimiento.respdifunto_id')
+                        ->where('mantenimiento.estado', 'ACTIVO')
+                        ->orderBy('id', 'DESC')
+                        ->get();
+                     return view('mantenimiento/index', compact('mant'));
+                }
     }
 
     public function createPay(){
@@ -44,7 +56,9 @@ class MantenimientoController extends Controller
         $headers =  ['Content-Type' => 'application/json'];
         $client = new Client();
 
-        $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/525', [
+        // $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/525', [
+        $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/generate-servicios-nicho/525', [
+
         'json' => [
             ],
             'headers' => $headers,
@@ -136,6 +150,7 @@ class MantenimientoController extends Controller
             //step1: nicho buscar si existe registrado el nicho recuperar el id  sino existe registrarlo
             $codigo_n=$request->cuartel.".".$request->bloque.".".$request->nro_nicho.".".$request->fila;
             $existeNicho= Nicho::where('codigo', $codigo_n)->first();
+            // dd( $existeNicho);
 
             if($existeNicho!=null){
                 $id_nicho=$existeNicho->id;
@@ -219,11 +234,15 @@ class MantenimientoController extends Controller
                     ->first();
 
                             if($request->id_responsable=="" || !$existeResponsable){
-                                //insertar difunto
+                                 $respon=New Responsable;
                                  $idresp=$this->insertResponsable($request);
+                                 $adjudicatario=$request->nombres_resp." ".$request->paterno_resp??''." ".$request->materno_resp??'';
+                                 $ci_adjudicatario=$respon->getCiResp($idresp);
                             }else{
                                 $idresp=$request->id_responsable;
                                 $this->updateResponsable($request, $idresp);
+                                $adjudicatario=$request->nombres_resp." ".$request->paterno_resp??''." ".$request->materno_resp??'';
+                                $ci_adjudicatario= $idresp;
 
                             }
                     //end responsable
@@ -287,7 +306,8 @@ class MantenimientoController extends Controller
 
                                                             $response=$obj->GenerarFur($ci, $nombre_pago, $paterno_pago,
                                                             $materno_pago, $domicilio,  $nombre_difunto, $codigo_n,
-                                                            $request->bloque, $request->nro_nicho, $request->fila, $servicio_cementery, $cantgestiones, $cajero, null );
+                                                            $request->bloque, $request->nro_nicho, $request->fila, $servicio_cementery, $cantgestiones, $cajero, null,
+                                                             $adjudicatario, $ci_adjudicatario, $request->observacion );
 
                                                             if($response['status']==true){
                                                                 $fur = $response['response'];
@@ -316,7 +336,7 @@ class MantenimientoController extends Controller
                                                 $mant->id_usuario_caja = auth()->id();
                                                 $mant->ultimo_pago=$ultimo_pago;
                                                 $mant->estado='ACTIVO';
-                                                $mant->observacion=$request->observacion;
+                                                $mant->observacion=$request->observacion??'';
                                                 $mant->tipo_ubicacion="NICHO";
                                                 $mant->id_ubicacion=$id_nicho;
                                                 $mant->codigo_ubicacion=$id_nicho;
@@ -478,12 +498,35 @@ class MantenimientoController extends Controller
           ->select('mantenimiento.*')
           ->first();
 
+
+
+
+          $datos_ubicacion=$table->id_ubicacion;
+          $tipo_ubicacion=$table->tipo_ubicacion;
+          $observacion=$table->observacion;
+        //   dd( $datos_ubicacion);
+
+        if($tipo_ubicacion=="CRIPTA" || $tipo_ubicacion== "MAUSOLEO" ){
+            $sq=CriptaMausoleoResp::where('cripta_mausoleo_responsable.cripta_mausole_id', '=',$datos_ubicacion )
+            ->join('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
+            ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
+            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp."  C.I.: ".$sq->ci_resp;
+        }
+        else{
+            $sq=Nicho::where('nicho.id', '=',$datos_ubicacion )
+            ->join('responsable_difunto', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
+            ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
+            ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
+            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp ."  C.I.: ".$sq->ci_resp;
+        }
+          $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp ."  C.I.: ".$sq->ci_resp;
+
         //  dd($table);
                 //     $td=$table->getOriginal();
 
 
                     $pdf = PDF::setPaper('A4', 'landscape');
-                    $pdf = PDF::loadView('mantenimiento/reportMant', compact('table'));
+                    $pdf = PDF::loadView('mantenimiento/reportMant', compact('table', 'resp', 'observacion'));
                     return  $pdf-> stream("preliquidacion_mantenimiento.pdf", array("Attachment" => false));
 
             }
@@ -556,7 +599,7 @@ class MantenimientoController extends Controller
         if($request->isJson()){
             $this->validate($request,[
                 "fur"=> 'required',
-                "id_usuario_caja" => 'required'
+                // "id_usuario_caja" => 'required'
             ]);
 
             $pago = Mantenimiento::select('id', 'fur')
@@ -567,7 +610,7 @@ class MantenimientoController extends Controller
                 Mantenimiento::where('fur', trim($request->fur))
                 ->update([
                    'pagado' => true,
-                   'id_usuario_caja' => $request->id_usuario_caja,
+                //    'id_usuario_caja' => $request->id_usuario_caja,
                    'fecha_pago'=> date('Y-m-d h:i:s')
                 ]);
                 return response([
@@ -597,7 +640,9 @@ class MantenimientoController extends Controller
         $arrayBusqueda[] = (string)2;
         $arrayBusqueda[] = (string)$request->fur;
         $arrayBusquedaString = json_encode($arrayBusqueda);
-        $response = Http::asForm()->post('http://192.168.104.117/cobrosnotributarios/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+        // $response = Http::asForm()->post('http://192.168.104.117/cobrosnotributarios/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+            $response = Http::asForm()->post(env('URL_SEARCH_FUR'), [
+
             'buscar' => $arrayBusquedaString
         ]);
         if ($response->successful()) {
@@ -757,7 +802,9 @@ class MantenimientoController extends Controller
     $headers =  ['Content-Type' => 'application/json'];
     $client = new Client();
 
-    $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/526', [
+    // $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/526', [
+    $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/generate-servicios-nicho/526', [
+
     'json' => [
         ],
         'headers' => $headers,
@@ -898,7 +945,7 @@ public function pagoMantenimientoCM(Request $request){
               'cantidad'=> 'required',
               'codigo_unidad'=> 'required',
               'resp_id'=> 'required',
-              'ci'=> 'required',
+            //   'ci'=> 'required',
               'nombrepago'=> 'required',
               'paternopago'=> 'required',
               'pago_por'=> 'required',
@@ -911,7 +958,7 @@ public function pagoMantenimientoCM(Request $request){
               'cantidad.required'=> 'Debe seleccionar al menos una gestion a pagar',
               'codigo_unidad.required'=> 'El codigo de la unidad es requerido',
               'resp_id.required'=> 'La unidad debe estar asignada a un responsable',
-              'ci.required'=> 'El ci de la persona que realiza el pago es requerido',
+            //   'ci.required'=> 'El ci de la persona que realiza el pago es requerido',
                'nombrepago.required'=> 'El campo nombre del responsable es obligatorio',
                'paternopago.required'=> 'El campo apellido paterno del responsable  es obligatorio',
                'pago_por.required'=> 'Debe especificar si el pago se esta realizando por el propietario o un tercero',
@@ -952,7 +999,7 @@ public function pagoMantenimientoCM(Request $request){
                     $obj= new ServicioNicho;
                     $response=$obj->GenerarFurCM($request->ci, $request->nombrepago, $request->paternopago,
                     $request->maternopago, $request->domicilio, $request->codigo_unidad,
-                    $servicio_hijos , $cantidades, $cajero, null);
+                    $servicio_hijos , $cantidades, $cajero,  null, $request->resp_id, $request->observacion);
 
 
                     if($response['status']==true){
@@ -1008,4 +1055,26 @@ public function pagoMantenimientoCM(Request $request){
 
       }
     }
+
+
+    public function verificarPagoMant(Request $request){
+        $service=New ServicioNicho;
+        $estado_pago=$service->buscarFur($request);
+
+        if($estado_pago->estado_pago=="AC"){
+            $this->updatePayMant($request);
+            $this-> updateFechaPago($request->fur,$estado_pago->fecha_pago);
+        }
+        return $estado_pago;
+    }
+
+    public function updateFechaPago($fur, $fecha){
+        ServicioNicho::where('fur', trim($fur))
+        ->update([
+            'estado_pago' => true,
+            //'id_usuario_caja' => $request->id_usuario_caja,
+            'fecha_pago' => $fecha
+        ]);
+    }
+
 }

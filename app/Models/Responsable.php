@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class Responsable extends Model
 {
@@ -15,13 +16,13 @@ class Responsable extends Model
         'nombres',
         'primer_apellido',
         'segundo_apellido',
-        'fecha_nacimiento',
+        // 'fecha_nacimiento',
         'telefono',
         'celular',
-        'estado_civil',
+        // 'estado_civil',
         'genero',
-        'email',
-        'domicilio',
+        // 'email',
+        // 'domicilio',
         'estado',
         'user_id',
         'created_at'
@@ -52,6 +53,7 @@ class Responsable extends Model
     }
 
     public function insertResponsable($request){
+        // dd("llega  sdasd");
         if(!isset($request->ci_resp) || $request->ci_resp==null || $request->ci_resp==''){
             $resp=new Responsable;
             $ci_resp=$resp->generateCiResponsable();
@@ -68,9 +70,9 @@ class Responsable extends Model
         $responsable->genero = $request->genero_resp ?? null;
         $responsable->telefono = $request->telefono ?? null;
         $responsable->celular = $request->celular ?? null;
-        $responsable->estado_civil = $request->ecivil ?? null;
-        $responsable->domicilio = $request->domicilio;
-        $responsable->email = $request->email ?? null;
+        // $responsable->estado_civil = $request->ecivil ?? null;
+        // $responsable->domicilio = $request->domicilio;
+        // $responsable->email = $request->email ?? null;
         $responsable->estado = 'ACTIVO';
         $responsable->user_id = auth()->id();
         $responsable->save();
@@ -82,7 +84,7 @@ class Responsable extends Model
 
 
 
-    public function updateResponsable($request, $difuntoid){
+    public function updateResponsableByDif($request, $difuntoid){
         if($request->ci_resp==null ||$request->ci_resp=="" ){
             $respons = new Responsable;  // correct
 
@@ -99,13 +101,73 @@ class Responsable extends Model
         $responsable->genero = $request->genero_resp;
         $responsable->telefono = $request->telefono ?? null;
         $responsable->celular = $request->celular ?? null;
-        $responsable->estado_civil = $request->ecivil ?? null;
-        $responsable->domicilio = $request->domicilio ?? null;
-        $responsable->email = $request->email ?? null;
+        // $responsable->estado_civil = $request->ecivil ?? null;
+        // $responsable->domicilio = $request->domicilio ?? null;
+        // $responsable->email = $request->email ?? null;
         $responsable->estado = $request->estado ??'ACTIVO';
         $responsable->user_id = auth()->id();
         $responsable->save();
         return $responsable->id;
     }
 
+    public function updateResponsable($request, $id_resp){
+
+        $responsable= Responsable::where('id', $id_resp)->first();
+        // dd($responsable);
+        $responsable->ci=$request->ci_resp;
+        $responsable->nombres=trim(mb_strtoupper($request->nombres_resp,'UTF-8'));
+        $responsable->primer_apellido= trim(mb_strtoupper($request->paterno_resp,'UTF-8'));
+        $responsable->segundo_apellido=trim(mb_strtoupper($request->materno_resp,'UTF-8'))?? '';
+        $responsable->genero=$request->genero_resp ?? '';
+        $responsable->telefono=$request->telefono ?? 0;
+        $responsable->celular=$request->celular ?? 0;
+        $responsable->updated_at=date("Y-m-d H:i:s");
+        $responsable->save();
+        return $responsable->id;
+    }
+
+    public function getCiResp($id_resp){
+        $q= Responsable::where('id', $id_resp)->first();
+        $ci_responsable=$q->ci;
+        return $ci_responsable;
+    }
+
+    public function searchResponsable(Request $request){
+        // dd($request->search_resp);
+        if(isset($request->ci_resp) && ($request->ci_resp!=null || $request->ci_resp!='')){
+            $existeResponsable = Responsable::whereRaw('ci=\''. trim($request->ci_resp).'\'')
+            ->orderBy('id', 'desc')
+            ->first();
+
+        }else if(isset($request->materno_resp) && ($request->materno_resp!=null || $request->materno_resp!='')){
+            $existeResponsable = Responsable::whereRaw('nombres=\''. trim($request->nombres_resp).'\'')
+            ->whereRaw('primer_apellido=\''.trim($request->paterno_resp).'\'')
+            ->whereRaw('segundo_apellido=\''.trim($request->materno_resp).'\'')
+            ->orderBy('id', 'desc')
+            ->first();
+        }
+        else if(isset($request->fechanac_resp) && ($request->fechanac_resp!=null || $request->fechanac_resp!='') && ($request->materno_resp==null || $request->materno_resp=='')){
+            $existeResponsable = Responsable::whereRaw('nombres=\''. trim($request->nombres_resp).'\'')
+            ->whereRaw('primer_apellido=\''.trim($request->paterno_resp).'\'')
+            ->whereRaw('fecha_nacimiento=\''.trim($request->fechanac_resp).'\'')
+            ->orderBy('id', 'desc')
+            ->first();
+        }
+        else if(isset($request->fechanac_resp) && ($request->fechanac_resp!=null || $request->fechanac_resp!='') && ($request->materno_resp!=null || $request->materno_resp!='')){
+            $existeResponsable = Responsable::whereRaw('nombres=\''. trim($request->nombres_resp).'\'')
+            ->whereRaw('primer_apellido=\''.trim($request->paterno_resp).'\'')
+            ->whereRaw('segundo_apellido=\''.trim($request->materno_resp).'\'')
+            ->whereRaw('fecha_nacimiento=\''.trim($request->fechanac_resp).'\'')
+            ->orderBy('id', 'desc')
+            ->first();
+        }else{
+            $existeResponsable = Responsable::whereRaw('nombres=\''. trim($request->nombres_resp).'\'')
+            ->whereRaw('primer_apellido=\''.trim($request->paterno_resp).'\'')
+            ->orderBy('id', 'desc')
+            ->first();
+        }
+
+                 // dd($existeResponsable);
+                 return $existeResponsable;
+    }
 }

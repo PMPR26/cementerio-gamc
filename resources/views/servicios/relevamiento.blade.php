@@ -162,7 +162,7 @@
                             <div class="col-sm-12 col-md-2 col-xl-2">
                                 <label>Fecha Ingreso al nicho</label>
                                 <input type="date"
-                                    class="form-control clear" id="fechadef_dif" autocomplete="off">
+                                    class="form-control clear" id="fecha_ingreso_nicho" autocomplete="off">
                             </div>
 
                             {{-- <div class="col-sm-12 col-md-3 col-xl-3">
@@ -229,6 +229,8 @@
                                 <select name="tiempo" id="tiempo" class="form-control">
                                     <option value="2">2</option>
                                     <option value="5">5</option>
+                                    <option value="30">30</option>
+
 
                                 </select>
 
@@ -637,7 +639,11 @@
                                 }),
                                 success: function(data)
                                 {
-                                    if (data.mensaje) {
+
+                                    console.log("busquedaaa");
+
+                                    console.log(data);
+                                    if (data.mensaje==true) {
                                         $('#sp').empty();
                                         $('#origen').val('tabla_nueva');
                                         console.log(data);
@@ -649,10 +655,11 @@
                                         $('#nombres_dif').val(data.response.nombre_dif);
                                         $('#paterno_dif').val(data.response.primerap_dif);
                                         $('#materno_dif').val(data.response.segap_dif);
-                                        $('#fechanac_dif').val(data.response.nacimiento_dif);
+                                        $('#fechanac_dif').val(data.response.fecha_nac_dif);
                                         $('#fecha_def_dif').val(data.response.fecha_def_dif);
-                                        $('#fechadef_dif').val(data.response.fechadef_dif);
-                                        $('#causa').val(data.response.causa_dif);
+                                        $('#fecha_ingreso_nicho').val(data.response.fecha_ingreso_nicho);
+                                        // $('#causa').val(data.response.causa_dif);
+                                        $('#causa').val(data.response.causa_dif).trigger('change');
                                         $('#sereci').val(data.response.certificado_defuncion);
                                         $('#tipo_dif').val(data.response.tipo_dif);
                                         $('#genero_dif').val(data.response.genero_dif);
@@ -669,6 +676,8 @@
                                         $('#genero_resp').val(data.response.genero_resp);
                                         $('#razon').html(data.response.razon);
                                         $('#tiemp').html(data.response.tiempo);
+                                        $('#tiempo').val(data.response.tiempo);
+
                                         $('#cant_cuerpos').val(data.response.cantidad_cuerpos);
                                         $('#cuerpos').html(data.response.cantidad_cuerpos);
                                         $('#funeraria').html(data.response.funeraria);
@@ -679,7 +688,86 @@
                                                             } else if (data.response.tiempo == 5) {
                                                                 $('#tipo_dif').val('ADULTO')
                                                             }
-                                    } else {
+                                    }
+                                    else if (data.mensaje=="liberado") {
+                                        $('#sp').empty();
+                                        $('#origen').val('tabla_nueva');
+                                        console.log(data);
+                                        // cargar campos del los forms
+                                        $('#cuartel').val(data.response.cuartel);
+                                        $('#anterior').val(data.response.anterior);
+                                        $('#tipo_nicho').val(data.response.tipo_nicho);
+                                        $('#search_dif').val("");
+                                        $('#nombres_dif').val("");
+                                        $('#paterno_dif').val("");
+                                        $('#materno_dif').val("");
+                                        $('#fechanac_dif').val("");
+                                        $('#fecha_def_dif').val("");
+                                        $('#fecha_ingreso_nicho').val("");
+                                        // $('#causa').val(data.response.causa_dif);
+                                        $('#causa').val("").trigger('change');
+                                        $('#sereci').val("");
+                                        $('#tipo_dif').val("");
+                                        $('#genero_dif').val("");
+
+                                        if(data.response.tipo_nicho=="TEMPORAL"){
+
+
+                                                    $('#search_resp').val("");
+                                                    $('#nombres_resp').val("");
+                                                    $('#paterno_resp').val("");
+                                                    $('#materno_resp').val("");
+                                                    $('#fechanac_resp').val("");
+                                                    $('#telefono').val("");
+                                                    $('#celular').val("");
+                                                    $('#ecivil').val("");
+                                                    $('#email').val("");
+                                                    $('#domicilio').val("");
+                                                    $('#genero_resp').val("");
+                                                    $('#razon').html("");
+                                                    $('#tiemp').html("");
+                                                    $('#tiempo').val("");
+
+                                                    $('#cant_cuerpos').val(0);
+                                                    $('#cuerpos').html(data.response.cantidad_cuerpos);
+                                                    $('#funeraria').html("");
+                                                    $('#url-certification').html(data.response.certificado_file);
+
+                                                                        if (data.response.tiempo == 2) {
+                                                                            $('#tipo_dif').val('PARVULO')
+                                                                        } else if (data.response.tiempo == 5) {
+                                                                            $('#tipo_dif').val('ADULTO')
+                                                                        }
+                                            }
+                                            else{
+                                                        $('#search_resp').val(data.response.ci_resp);
+                                                        $('#nombres_resp').val(data.response.nombre_resp);
+                                                        $('#paterno_resp').val(data.response.paterno_resp);
+                                                        $('#materno_resp').val(data.response.segap_resp);
+                                                        $('#fechanac_resp').val(data.response.nacimiento_resp);
+                                                        $('#telefono').val(data.response.telefono);
+                                                        $('#celular').val(data.response.celular);
+                                                        $('#ecivil').val(data.response.ecivil_resp);
+                                                        $('#email').val(data.response.email_resp);
+                                                        $('#domicilio').val(data.response.domicilio_resp);
+                                                        $('#genero_resp').val(data.response.genero_resp);
+                                                        $('#razon').html(data.response.razon);
+                                                        $('#tiemp').html(data.response.tiempo);
+                                                        $('#tiempo').val(data.response.tiempo);
+
+                                                        $('#cant_cuerpos').val(data.response.cantidad_cuerpos);
+                                                        $('#cuerpos').html(data.response.cantidad_cuerpos);
+                                                        $('#funeraria').html(data.response.funeraria);
+                                                        $('#url-certification').html(data.response.certificado_file);
+
+                                                                    if (data.response.tiempo == 2) {
+                                                                        $('#tipo_dif').val('PARVULO')
+                                                                    } else if (data.response.tiempo == 5) {
+                                                                        $('#tipo_dif').val('ADULTO')
+                                                                    }
+
+                                            }
+                                    } else if (data.mensaje==false){
                                         $.ajax({
                                             headers: {
                                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
@@ -733,8 +821,10 @@
                                                         $('#razon').html(data.response.datos_difuntos[0]
                                                             .razon);
                                                         $('#pag_con').val(pg);
-                                                        $('#causa').val(data.response.datos_difuntos[0]
-                                                            .causa_fall);
+                                                        // $('#causa').val(data.response.datos_difuntos[0]
+                                                        //     .causa_fall);
+                                                            $('#causa').val(data.response.datos_difuntos[0]
+                                                            .causa_fall).trigger('change');
                                                         $('#nombres_dif').val(data.response
                                                             .datos_difuntos[0].difunto);
                                                         var t = data.response.datos_difuntos[0]
@@ -983,7 +1073,7 @@
                             'fechadef_dif': $('#fechadef_dif').val(),
                             'fecha_def_dif': $('#fecha_def_dif').val(),
                             'causa': $('#causa').val(),
-                            'ecivil_dif': $('#ecivil_dif').val(),
+                            // 'ecivil_dif': $('#ecivil_dif').val(),
                             'tipo_dif': $('#tipo_dif').val(),
                             'genero_dif': $('#genero_dif').val(),
                             'ci_resp': $('#search_resp').val(),
@@ -991,7 +1081,7 @@
                             'nombres_resp': $('#nombres_resp').val(),
                             'paterno_resp': $('#paterno_resp').val(),
                             'materno_resp': $('#materno_resp').val(),
-                           // 'fechanac_resp': $('#fechanac_resp').val(),
+                            'fecha_ingreso_nicho': $('#fecha_ingreso_nicho').val(),
                             'telefono': $('#telefono').val(),
                             'celular': $('#celular').val(),
                            // 'ecivil': $('#ecivil').val(),
@@ -1029,6 +1119,7 @@
                             // 'externo':$('#externo').val(),
                             'funeraria':$('#funeraria').val(),
                             'urlcertificacion':$('#url-certificacion').val(),
+                            "asignar_difunto_nicho":null,
                             // 'cant':$('#cant_cuerpos').val()
                         }),
                         success: function(data_response) {
@@ -1036,7 +1127,7 @@
                             if(data_response.status==false){
                                     swal.fire({
                                     title: "Precaución!",
-                                    text: "El difunto ya se encuentra registrado en otro nicho",
+                                    text:  data_response.message, //"El difunto ya se encuentra registrado en otro nicho",
                                     type: "warning",
                                     timer: 2000,
                                     showCancelButton: false,
@@ -1055,7 +1146,7 @@
                             });
                             setTimeout(function() {
 
-                                window.location.href = "{{ route('relev') }}";
+                                // window.location.href = "{{ route('relev') }}";
 
 
                             }, 2000);
@@ -1416,123 +1507,123 @@
             });
 
 
-            $(document).on('keyup', '#renov_ant', function() {
-              $('#totalServ').html(0);
-              $('#totalservicios').val(0);
-             $('#monto_renov').val(0);
+            // $(document).on('keyup', '#renov_ant', function() {
+            //   $('#totalServ').html(0);
+            //   $('#totalservicios').val(0);
+            //  $('#monto_renov').val(0);
 
 
-               buscarUltimaRenovacion();
-            //    calcularPrice();
-                consolidado();
-            })
+            //    buscarUltimaRenovacion();
+            // //    calcularPrice();
+            //     consolidado();
+            // })
 
 
-            function calcRenov() {
-                $('#totalServ').html(0);
-                $('#totalservicios').val(0);
-                $('#monto_renov').val(0);
-                var precio_ant = $('#precio_renov_ant').val();
-                var porcentaje = 0;
-                var cuota_ant = 0;
-                var cuota1 = $('#precio_renov').val();
-                var acum = 0;
+            // function calcRenov() {
+            //     $('#totalServ').html(0);
+            //     $('#totalservicios').val(0);
+            //     $('#monto_renov').val(0);
+            //     var precio_ant = $('#precio_renov_ant').val();
+            //     var porcentaje = 0;
+            //     var cuota_ant = 0;
+            //     var cuota1 = $('#precio_renov').val();
+            //     var acum = 0;
 
-                for (var i = 0; i < $('#renov').val(); i++) {
-                    //   alert(i);
-                    if (i == 0) {
-                        cuota = cuota1;
-                        cuota_ant = cuota1;
-                    } else {
-                        porcentaje = cuota_ant * (20 / 100);
-                        cuota = parseFloat(cuota_ant) + parseFloat(porcentaje);
-                        cuota_ant = cuota;
-                    }
+            //     for (var i = 0; i < $('#renov').val(); i++) {
+            //         //   alert(i);
+            //         if (i == 0) {
+            //             cuota = cuota1;
+            //             cuota_ant = cuota1;
+            //         } else {
+            //             porcentaje = cuota_ant * (20 / 100);
+            //             cuota = parseFloat(cuota_ant) + parseFloat(porcentaje);
+            //             cuota_ant = cuota;
+            //         }
 
-                    acum = parseFloat(acum) + parseFloat(cuota);
+            //         acum = parseFloat(acum) + parseFloat(cuota);
 
-                }
+            //     }
 
-                $('#monto_renov').val(acum);
+            //     $('#monto_renov').val(acum);
 
-                consolidado();
+            //     consolidado();
 
-            }
+            // }
 
-            function consolidado() {
-                // totalServ
-                var totalgral = 0;
-                var acum = 0;
+            // function consolidado() {
+            //     // totalServ
+            //     var totalgral = 0;
+            //     var acum = 0;
 
-                console.log("monto renov" + $('#monto_renov').val());
+            //     console.log("monto renov" + $('#monto_renov').val());
 
-                console.log($('#totalservicios').val());
-                if ($('#monto_renov').val() != 0 || $('#monto_renov').val() != null ) {
+            //     console.log($('#totalservicios').val());
+            //     if ($('#monto_renov').val() != 0 || $('#monto_renov').val() != null ) {
 
-                    $('.costo').each(function(index) {
-                        acum = parseFloat(acum) + parseFloat($(this).val());
-                    });
-                    totalgral = parseFloat($('#monto_renov').val()) + parseFloat(acum);
-                    $('#totalServ').html(totalgral);
-                    $('#totalservicios').val(totalgral);
-                }
-                else{
-                    $('.costo').each(function(index) {
-                        acum = parseFloat(acum) + parseFloat($(this).val());
-                    });
-                    $('#totalServ').html(acum);
-                    $('#totalservicios').val(acum);
-                }
-                if ($('#gratis').is(':checked')) {
-                    $('#totalServ').html(0);
-                    $('#totalservicios').val(0);
-                }
-            }
+            //         $('.costo').each(function(index) {
+            //             acum = parseFloat(acum) + parseFloat($(this).val());
+            //         });
+            //         totalgral = parseFloat($('#monto_renov').val()) + parseFloat(acum);
+            //         $('#totalServ').html(totalgral);
+            //         $('#totalservicios').val(totalgral);
+            //     }
+            //     else{
+            //         $('.costo').each(function(index) {
+            //             acum = parseFloat(acum) + parseFloat($(this).val());
+            //         });
+            //         $('#totalServ').html(acum);
+            //         $('#totalservicios').val(acum);
+            //     }
+            //     if ($('#gratis').is(':checked')) {
+            //         $('#totalServ').html(0);
+            //         $('#totalservicios').val(0);
+            //     }
+            // }
 
-            function buscarUltimaRenovacion(){
-                $.ajax({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                            'Content-Type': 'application/json'
-                        },
-                        url: "{{ route('buscar.renovacion') }}",
-                        method: 'POST',
-                        dataType: 'json',
-                        data: JSON.stringify({
-                            "cuartel":$('#cuartel').val(),
-                              "bloque": $('#bloque').val(),
-                               "nicho": $('#nro_nicho').val(),
-                                "fila":$('#fila').val()
-                        }),
-                        success: function(data) {
+            // function buscarUltimaRenovacion(){
+            //     $.ajax({
+            //             headers: {
+            //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            //                 'Content-Type': 'application/json'
+            //             },
+            //             url: "{{ route('buscar.renovacion') }}",
+            //             method: 'POST',
+            //             dataType: 'json',
+            //             data: JSON.stringify({
+            //                 "cuartel":$('#cuartel').val(),
+            //                   "bloque": $('#bloque').val(),
+            //                    "nicho": $('#nro_nicho').val(),
+            //                     "fila":$('#fila').val()
+            //             }),
+            //             success: function(data) {
 
-                            if(data.status==true){
-                                $('#renov_ant').val(data.data.nro_renovacion);
-                                 $('#precio_renov_ant').val(data.data.monto_renovacion);
-                                 var rn=parseInt($('#renov_ant').val()) + parseInt(1);
-                                 $('#renov').val(rn);
-                            }
-                           else {
-                                var renov_ant = $('#renov_ant').val();
-                                    if (renov_ant == 0) {
-                                        var precio = $('#precio_renov').val();
-                                        $('#precio_renov_ant').val(precio);
-                                        anios_ren = $('#aniosdeuda').val();
-                                        if (anios_ren <= 0 && anios_ren =="" ) {
-                                            $('#renov').val(1);
-                                        }
-                                        // else if(anios_ren!=""){
-                                        //     $('#renov').val(anios_ren);
-                                        // }
-                                     }
-                                }
+            //                 if(data.status==true){
+            //                     $('#renov_ant').val(data.data.nro_renovacion);
+            //                      $('#precio_renov_ant').val(data.data.monto_renovacion);
+            //                      var rn=parseInt($('#renov_ant').val()) + parseInt(1);
+            //                      $('#renov').val(rn);
+            //                 }
+            //                else {
+            //                     var renov_ant = $('#renov_ant').val();
+            //                         if (renov_ant == 0) {
+            //                             var precio = $('#precio_renov').val();
+            //                             $('#precio_renov_ant').val(precio);
+            //                             anios_ren = $('#aniosdeuda').val();
+            //                             if (anios_ren <= 0 && anios_ren =="" ) {
+            //                                 $('#renov').val(1);
+            //                             }
+            //                             // else if(anios_ren!=""){
+            //                             //     $('#renov').val(anios_ren);
+            //                             // }
+            //                          }
+            //                     }
 
-                                calcRenov();
-                                //consolidado();
-                            }
-                });
+            //                     calcRenov();
+            //                     //consolidado();
+            //                 }
+            //     });
 
-            }
+            // }
 
 
 

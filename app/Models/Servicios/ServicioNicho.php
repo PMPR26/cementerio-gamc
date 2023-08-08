@@ -2,11 +2,18 @@
 
 namespace App\Models\Servicios;
 
+use App\Models\Nicho;
+use App\Models\ResponsableDifunto;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+
+
+use Illuminate\Http\Exceptions;
+
 class ServicioNicho extends Model
 {
     use HasFactory;
@@ -39,8 +46,10 @@ class ServicioNicho extends Model
 
     public function GenerarFur($ci, $nombre, $primer_apellido,
     $ap_materno, $direccion, $nombre_difunto, $codigo,
-     $bloque, $nicho, $fila, $servicios_cementery , $cantidades, $cajero, $desc_exhum)
+     $bloque, $nicho, $fila, $servicios_cementery , $cantidades, $cajero,   $nombre_adjudicatario, $ci_adjudicatario, $observacion)
      {
+
+
 // dd( $servicios_cementery);
           $headers =  ['Content-Type' => 'application/json'];
           $client = new Client();
@@ -61,7 +70,10 @@ class ServicioNicho extends Model
                   'servicios_cementery' => $servicios_cementery,
                   'cantidad' => $cantidades,
                   'cajero'=>$cajero,
-                  'desc_exhum'=>$desc_exhum
+
+                  'nombre_adjudicatario'=>$nombre_adjudicatario,
+                  'ci_adjudicatario'=>$ci_adjudicatario,
+                  'tblobs'=>$observacion
               ],
               'headers' => $headers,
           ]);
@@ -75,13 +87,18 @@ class ServicioNicho extends Model
 
       public function GenerarFurCM($ci, $nombre, $primer_apellido,
       $ap_materno, $direccion, $codigo,
-       $servicios_cementery , $cantidades, $cajero, $desc_exhum)
+       $servicios_cementery , $cantidades, $cajero,  $adjudicatario, $tblobs)
         {
-      //   dd( $desc_exhum)
+      //
+    //   dd( $ci." ". $nombre." ". $primer_apellido." ".$ap_materno ." ".$direccion ." ".$codigo);
+    //   dd( $servicios_cementery );
+    //   dd($cantidades);
+    //   dd($cajero." ". $adjudicatario);
+    //   dd($tblobs);
             $headers =  ['Content-Type' => 'application/json'];
             $client = new Client();
-            $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCM', [
-        //    $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementery', [
+            // $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCM', [
+           $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryCM', [
 
                 'json' => [
                     'ci' => $ci,
@@ -89,15 +106,12 @@ class ServicioNicho extends Model
                     'primer_apellido' => $primer_apellido,
                     'ap_materno' => $ap_materno,
                     'direccion' => $direccion,
-                    // 'nombre_difunto' => $nombre_difunto,
                     'codigo' => $codigo,
-                    // 'bloque' => $bloque,
-                    // 'fila' => $fila,
-                    // 'nicho' => $nicho,
                     'servicios_cementery' => $servicios_cementery,
                     'cantidad' => $cantidades,
                     'cajero'=>$cajero,
-                    'desc_exhum'=>$desc_exhum
+                    'adjudicatario'=>$adjudicatario,
+                    'tblobs'=>$tblobs
                 ],
                 'headers' => $headers,
             ]);
@@ -118,6 +132,94 @@ class ServicioNicho extends Model
                 //$sevicio = json_decode((string) $response->getBody(), true);
                 return $response;
         }
+
+
+          //verificar pago qr
+          public function verificarPagos(Request $request){
+            // URL_BASE_APIPAY
+            $fur=(string)$request->fur;
+            // dd( $fur);
+
+                try {
+                    $response = Http::withHeaders([
+                        'Content-Type' => 'application/json',
+                        'Authorization' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM0MTE5NTc1LWI1NTItNGIxOC04MDA0LTAwYmVlY2NhNGM3MCIsImlhdCI6MTY4ODE2MDE4M30.w6Cav55fRELcRSHBInz7xdIX7_yNyL95FgvAr1t7Suw',
+                    ])
+                        ->get(env('URL_BASE_APIPAY').'/qr/verificar', [
+                            'fur'=>$fur
+                        ]);
+
+                        dd( $response->json());
+                        return response([
+                            'status' => false,
+                            'data' => $response->json()
+                        ], 200);
+
+                } catch (RequestException $re) {
+                    return response([
+                        'status' => false,
+                        'message' => 'Error al procesar su solicitud'
+                    ], 201);
+                }
+
+            }
+
+            public function buscarFur(Request $request) {
+                $arrayBusqueda = [];
+                $arrayBusqueda[] = (string)2;
+                $arrayBusqueda[] = (string)$request->fur;
+                $arrayBusquedaString = json_encode($arrayBusqueda);
+
+                $url=env('URL_SEARCH_FUR');
+                                // $response = Http::asForm()->post('http://192.168.104.117/cobrosnotributarios/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+
+                   try{
+                    $response = Http::asForm()->post($url, [
+                        'buscar' => $arrayBusquedaString
+                    ]);
+                   // return $response->object()->data->cobrosVarios[0];
+
+                    if ($response->successful()) {
+                        if($response->object()->status == true) {
+                            $dato = $response->object()->data->cobrosVarios[0];
+                            return $dato;
+                        }
+                   }
+
+                } catch (RequestException $e) {
+                    return response([
+                        'status' => false,
+                        'message' => 'Error al procesar su solicitud'. $e->getMessage()
+                    ], 201);
+                }
+            }
+
+
+            public function actualizarPago(Request $request){
+
+            }
+
+
+
+
+            public function ocuparNichoTemporal($request,$difuntoid, $idresp, $codigo_n, $estado_nicho, $id_nicho){
+
+                $nicho=New Nicho;
+                $data= $nicho::where('id', $id_nicho)->first();
+                $data->estado_nicho="OCUPADO";
+                $data->cantidad_anterior=$data->cantidad_cuerpos;
+                $data->cantidad_cuerpos=1;
+                $data->save();
+
+                //vincular con  responsable
+                $rf = new ResponsableDifunto();
+                $id_resp_dif=$rf->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n, 'OCUPADO', $id_nicho);
+
+
+                return $id_resp_dif;
+            }
+
+
 
 
 

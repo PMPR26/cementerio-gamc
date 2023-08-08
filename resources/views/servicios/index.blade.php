@@ -27,11 +27,13 @@
 
                     <tr role="row">
                         <th scope="col">#</th>
-                        <th scope="col">CÓDIGO NICHO</th>
-                        <th scope="col">RESPONSABLE PAGO</th>
+                        <th scope="col">TIPO</th>
+                        <th scope="col">CÓDIGO </th>
+                        <th scope="col">SOLICITANTE</th>
                         <th scope="col">SERVICIOS</th>
                         <th scope="col">MONTO</th>
                         <th scope="col">FUR</th>
+                        <th scope="col">VERIFICAR PAGO</th>
                         <th scope="col">ESTADO PAGO</th>
                         <th scope="col">Opciones</th>
                     </tr>
@@ -43,11 +45,15 @@
 
                         <tr>
                             <td scope="row">{{ $count++ }}</td>
+                            <td>{{ $serv->tipo??'' }}</td>
                             <td>{{ $serv->codigo_nicho??'' }}</td>
                             <td>{{ $serv->nombre_resp??' '   }} {{   $serv->primerap_resp??''    }}   {{    $serv->segap_resp??'' }}</td>
                             <td>{{ $serv->servicio?? '' }}</td>
                             <td>{{ $serv->monto ?? '0' }}</td>
                             <td>{{ $serv->fur }}</td>
+
+                            <td><button class="btn btn-warning verificar_pago" data-id="{{ $serv->serv_id }}" value="{{ $serv->fur }}"><i
+                                    class="fas fa-check-square fa-2x  accent-blue " ></i></button></td>
                             <td>@if( $serv->estado_pago==false)
                                @php( print_r( 'PENDIENTE'))
                             @else
@@ -55,7 +61,19 @@
                             @endif
                         </td>
                             <td>
+                                @if($serv->tipo=="NICHO" || $serv->tipo=="EXTERNO" || $serv->tipo=="EXTERNO GRATUITO" )
                                 <form action="{{ route('serv.generatePDF') }}" method="GET" target="blank">
+                                    @csrf
+                                    <input type="hidden" name="codigo_nicho" value={{ $serv->codigo_nicho }}>
+                                    <input type="hidden" name="id" value={{ $serv->serv_id }}>
+                                    <input type="hidden" name="tipo" value={{ $serv->tipo }}>
+                                    <input type="hidden" name="fur" value={{ $serv->fur }}>
+
+                                    <button type='submit' class="btn btn-info "><i
+                                            class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
+                                </form>
+                                @elseif ($serv->tipo=="CRIPTA" || $serv->tipo=="MAUSOLEO" )
+                                <form action="{{ route('serv.generatePDFCM') }}" method="GET" target="blank">
                                     @csrf
                                     <input type="hidden" name="codigo_nicho" value={{ $serv->codigo_nicho }}>
                                     <input type="hidden" name="id" value={{ $serv->serv_id }}>
@@ -63,6 +81,16 @@
 
                                     <button type='submit' class="btn btn-info "><i
                                             class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
+                                </form>
+                                @endif
+                                <form action="{{ route('serv.anularFur') }}" method="GET" target="blank">
+                                    @csrf
+                                    <input type="hidden" name="codigo_nicho" value={{ $serv->codigo_nicho }}>
+                                    <input type="hidden" name="id" value={{ $serv->serv_id }}>
+                                    <input type="hidden" name="fur" value={{ $serv->fur }}>
+
+                                    <button type='submit' class="btn btn-danger"><i
+                                            class="fas fa-trash fa-2x"></i></button>
                                 </form>
 
 
@@ -122,7 +150,7 @@
             "sInfoEmpty": "",
             "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
             "sInfoPostFix": "",
-            "sSearch": 'Buscar Datos Por CI:',
+            "sSearch": 'Buscar',
             "sUrl": "",
             "sInfoThousands": ",",
             "sLoadingRecords": "Cargando...",
@@ -148,6 +176,89 @@
 
 
     });
+
+
+    /*******************VERIFICAR PAGO*****************/
+
+    $(document).on('click', '.verificar_pago', function(e){
+            e.preventDefault();
+
+            var fur = $(this).val();
+            var servicios_id= $(this).attr('data-id');
+            verificarQR(fur, servicios_id);
+        })
+
+
+
+
+        function verificarQR(fur, servicios_id) {
+
+            Swal.fire({
+                title: 'Verificando Pago!',
+                html: `Espere un momento`,
+                didOpen: () => {
+                    Swal.showLoading();
+                  //  new Promise((resolve, reject) => {
+                        $.ajax({
+                            url:"{{route('verificar.pago')}}",
+                            type: "POST",
+                            headers: {
+                                   'Content-Type':'application/json',
+                                   'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                               },
+                            data: JSON.stringify({
+                                 fur: fur,
+                            }),
+                            cache: false,
+                            contentType: "application/json; charset=utf-8",
+                            dataType: 'json',
+                            success: function(data) {
+                                console.log("respuesta verificacion");
+
+                                console.log(data.estado_pago);
+                                // console.log(data);
+                                // return false;
+                                // alert(data.data.ok);
+                                // alert(data.data.pagado);
+
+                                if(data.estado_pago=="AC")
+                                 {
+                                                Swal.fire(
+                                                    'Pago realizado',
+                                                    `El pago del fur ${fur} ya fue realizado`,
+                                                    'success'
+                                                            )
+                                                    .then(() => {
+                                                            location.reload();
+                                                        });
+                                            }else{
+                                                Swal.fire(
+                                                    'Pago no realizado',
+                                                    'Realiza el pago con la aplicación de tu banco de preferencia o en cajas',
+                                                    'info'
+                                                            )
+                                                    .then(() => {
+                                                            return false;
+                                                        });
+                                            }
+
+                                            // $('.verificar_pago').show();
+                                            $('.spiner_revision').hide();
+
+                            },
+                            error: function(resp) {
+                                Swal.fire(
+                                    'Error de verificación',
+                                    'Intente nuevamente, Si el problema continua notifica a soporte',
+                                    'error'
+                                );
+                            }
+                        });
+                  //  });
+                },
+            });
+        }
+
 
 
     </script>

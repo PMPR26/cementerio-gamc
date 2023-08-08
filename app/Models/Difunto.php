@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+
 
 class Difunto extends Model
 {
@@ -128,6 +130,42 @@ class Difunto extends Model
         //buscar difunto en cripta/mausoleo
 
 
+    }
+
+    public function searchDifunto(Request $request){
+          if($request->ci_dif !=null){
+                $existeDifunto=Difunto::where("ci", "=", trim($request->ci_dif))->where("estado", "=", 'ACTIVO')->orderBy('id', 'desc')
+                ->first();
+             }
+             else if($request->fecha_def_dif== null || $request->fecha_def_dif==''){
+                if($request->materno_dif==null || $request->materno_dif==''){
+                    $existeDifunto =Difunto::whereRaw('nombres=\''.trim(mb_strtoupper($request->nombres_dif, 'UTF-8')).'\'')
+                    ->whereRaw('primer_apellido=\''.trim(mb_strtoupper($request->paterno_dif, 'UTF-8')).'\'')
+                    ->select()
+                    ->first();
+                }else{
+                    $existeDifunto =Difunto::whereRaw('nombres=\''.trim(mb_strtoupper($request->nombres_dif, 'UTF-8')).'\'')
+                    ->whereRaw('primer_apellido=\''.trim(mb_strtoupper($request->paterno_dif, 'UTF-8')).'\'')
+                    ->whereRaw('segundo_apellido=\''.trim(mb_strtoupper($request->materno_dif, 'UTF-8')).'\'')
+                    ->select()
+                    ->first();
+                }
+
+            }else if(($request->materno_dif== null || $request->materno_dif=='') &&( $request->fecha_def_dif !='' || $request->fecha_def_dif !=null )){
+                        $existeDifunto =Difunto::whereRaw('nombres=\''.trim(mb_strtoupper($request->nombres_dif, 'UTF-8')).'\'')
+                    ->whereRaw('primer_apellido=\''.trim(mb_strtoupper($request->paterno_dif, 'UTF-8')).'\'')
+                    ->whereRaw('fecha_defuncion=\''.trim($request->fecha_def_dif).'\'')
+                    ->select()
+                    ->first();
+            }else{
+                $existeDifunto =Difunto::whereRaw('nombres=\''.trim(mb_strtoupper($request->nombres_dif, 'UTF-8')).'\'')
+                ->whereRaw('primer_apellido=\''.trim(mb_strtoupper($request->paterno_dif, 'UTF-8')).'\'')
+                ->whereRaw('segundo_apellido=\''.trim(mb_strtoupper($request->materno_dif, 'UTF-8')).'\'')
+                ->whereRaw('fecha_defuncion=\''.trim($request->fecha_def_dif).'\'')
+                ->select()
+                ->first();
+            }
+            return $existeDifunto;
     }
 
 

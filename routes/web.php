@@ -31,7 +31,7 @@ use App\Models\User;
         ]);
 
                 //usar este una vez se tenga las estadisticas
-                return view('home');
+             //   return view('home');
             }else{
                 return redirect('login');
             }
@@ -75,7 +75,7 @@ Route::group(['prefix' => 'bloque', 'middleware' => 'auth'], function () {
     Route::put('/update-cripta', [App\Http\Controllers\Cripta\CriptaController::class,'updateCripta'])->name('cripta.update');
     Route::get('mausoleo-notable-pdf', [App\Http\Controllers\Cripta\CriptaController::class, 'printMausoleoNotables'])->name('mausoleosNotables');
     Route::get('cripta-notable-pdf', [App\Http\Controllers\Cripta\CriptaController::class, 'printCriptaNotables'])->name('criptasNotables');
-    //Route::post('/save-pay-cm', [App\Http\Controllers\Cripta\CriptaController::class, 'savePaycm'])->name('save.service.pay.cm');
+    // Route::post('/save-pay-cm', [App\Http\Controllers\Cripta\CriptaController::class, 'savePaycm'])->name('save.service.pay.cm');
 
 
 
@@ -112,6 +112,8 @@ Route::group(['prefix' => 'nicho', 'middleware' => 'auth'], function () {
     Route::get('/get-nicho/{id}', 'App\Http\Controllers\Nicho\NichoController@getNicho')->name('nicho.get');
     Route::put('/update-nicho', 'App\Http\Controllers\Nicho\NichoController@updateNicho')->name('nicho.update');
     Route::post('/get-bloqueid', 'App\Http\Controllers\Nicho\NichoController@getBloqueid')->name('bloqueid.get');
+    //nicho.liberar.temp
+    Route::post('/liberar-nicho', 'App\Http\Controllers\Nicho\NichoController@liberarNicho')->name('nicho.free');
 
 });
 
@@ -130,15 +132,24 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::group(['prefix' => 'servicios', 'middleware' => 'auth'], function () {
     Route::get('/servicios', [App\Http\Controllers\Servicios\ServiciosController::class,'index'])->name('serv');
     Route::post('/new-servicio', [App\Http\Controllers\Servicios\ServiciosController::class,'createNewServicios'])->name('new.servicio');
+    Route::post('/new-servicio-externo', [App\Http\Controllers\Servicios\ServiciosController::class,'createNewServiciosExterno'])->name('new.servicio.externo');
+
     Route::post('/buscar_nicho', [App\Http\Controllers\Servicios\ServiciosController::class, 'buscar_nicho'])->name('buscar.nicho');
     Route::get('/cargarForm', [App\Http\Controllers\Servicios\ServiciosController::class,'cargarForm'])->name('load.form');
     Route::get('/cargarMantenimiento', [App\Http\Controllers\Servicios\ServiciosController::class,'cargarMantenimiento'])->name('load.mant');
     Route::get('/renovacion', [App\Http\Controllers\Servicios\ServiciosController::class,'precioRenov'])->name('precio.renovacion');
     Route::get('generate-pdf', [App\Http\Controllers\Servicios\ServiciosController::class, 'generatePDF'])->name('serv.generatePDF')->middleware('auth');
+    Route::get('generate-pdf-cm', [App\Http\Controllers\Servicios\ServiciosController::class, 'generatePDFCM'])->name('serv.generatePDFCM')->middleware('auth');
+
+    Route::get('anular-fur', [App\Http\Controllers\Servicios\ServiciosController::class, 'anularFur'])->name('serv.anularFur')->middleware('auth');
+
     Route::post('/new-serviciocm', [App\Http\Controllers\Servicios\ServiciosController::class,'createNewServicioscm'])->name('new.serviciocm');
     Route::post('/get-nro-renov',  [App\Http\Controllers\Servicios\ServiciosController::class,'getNroRenov'])->name('get.nro.renov');
     Route::post('/completar', [App\Http\Controllers\Servicios\ServiciosController::class, 'autocompletar'])->name('completar.datos');
     Route::post('/completar-info-nicho', [App\Http\Controllers\Servicios\ServiciosController::class, 'completarInfoNicho'])->name('completar.info.nicho');
+    Route::post('/verificarPago',[App\Http\Controllers\Servicios\ServiciosController::class,'verificarPago'])->name('verificar.pago');
+    Route::post('/listar_difuntos', [App\Http\Controllers\Servicios\ServiciosController::class, 'lista_difuntos'])->name('listar.difuntos');
+
 
 
 
@@ -147,9 +158,17 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::post('/buscar-renovacion', [App\Http\Controllers\Servicios\ServiciosController::class,'buscarRenovacion'])->name('buscar.renovacion');
     Route::get('/cargarFormrel', [App\Http\Controllers\Servicios\RelevamientoController::class,'cargarFormrel'])->name('load.formrel');
     Route::post('/buscar_nichorel', [App\Http\Controllers\Servicios\RelevamientoController::class, 'buscar_nichorel'])->name('buscar.nicho.rel');
+    Route::post('/buscar_nicho_liberado', [App\Http\Controllers\Servicios\RelevamientoController::class, 'buscar_nicho_liberado'])->name('buscar.nicho.liberado');
+    Route::post('/registrar-asignacion', [App\Http\Controllers\Servicios\ServiciosController::class,'registrar_asignacion'])->name('registrar.asignacion');
+
+
+
 
     Route::get('/relevamiento', [App\Http\Controllers\Servicios\RelevamientoController::class,'index'])->name('relev');
     Route::post('/new-relevamiento', [App\Http\Controllers\Servicios\RelevamientoController::class,'createNewRelev'])->name('new.relevamiento');
+    // Route::post('/registrar_asignacion', [App\Http\Controllers\Servicios\ServiciosController::class,'registrar_asignacion'])->name('registrar.asignacion');
+
+    //registrar_asignacion
     Route::post('/get-serv-hijos', [App\Http\Controllers\Servicios\ServiciosController::class,'getServHijos'])->name('get.serv');
 
 
@@ -194,6 +213,8 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
       Route::post('/save-up-pay-info', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'relevamientoPagoMant'])->name('save.uppay.info');
       Route::get('/get-mantenimiento/{id}',  [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'getMantenimiento'])->name('mantenimiento.get');
       Route::get('/form-paycm', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'indexcm'])->name('paycm_mant');
+      Route::post('/verificarPagoMant',[App\Http\Controllers\Mantenimiento\MantenimientoController::class,'verificarPagoMant'])->name('verificar.pago.mant');
+
 //getInfoPayCm
       Route::get('/getServicioMant', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'getInfoPayCm'])->name('get.services.mant');
       Route::post('/pago-matenimiento', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'pagoMantenimientoCM'])->name('pay.mant.cm');

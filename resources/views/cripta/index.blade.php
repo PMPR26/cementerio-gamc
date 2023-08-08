@@ -92,7 +92,7 @@
                 <th scope="col">Bloque</th>
                 <th scope="col">Sitio</th>
                 <th scope="col">Familia</th>
-                <th scope="col">Propietario</th>
+                <th scope="col">Adjudicatario</th>
                 <th scope="col">Documentos Recibidos</th>
                 <th scope="col">Superficie</th>
                 <th scope="col">Enterratorio Ocupados</th>
@@ -130,10 +130,10 @@
                         <?php
                             if($cripta->documentos_recibidos !=null || !empty($cripta->documentos_recibidos)){
                                 $v=json_decode($cripta->documentos_recibidos, true);
-                                echo "<psan>resolucion nro. " .$v['resolucion']. " ,  ".$v['bienes_m']. ", ci del propietario ".$v['ci'] ?? ''. ", ".$v['planos_aprobados']."  </span><br>";
+                                echo "<psan>resolucion nro. " .$v['resolucion']. " , Bienes: ".$v['bienes_m'].", Planos aprobados ".$v['planos_aprobados'].", ci del adjudicatario ".$v['ci'] ?? ''. "  </span><br>";
                                     if(isset($v['foto_resolucion'])){if($v['foto_resolucion']!=null ){echo "<span>|<a href='" .$v['foto_resolucion']. "'> Resolución </a>|</span>"; }}
                                     if(isset($v['foto_titulo'])){if($v['foto_titulo']!=null ){echo "<span>|<a href='" .$v['foto_titulo']. "'> Titulo de propiedad </a>|</span>"; }}
-                                    if(isset($v['foto_prop_ci'])){if($v['foto_prop_ci']!=null ){echo "<span>|<a href='" .$v['foto_prop_ci']. "'> ci propietario </a>|</span>"; }}
+                                    if(isset($v['foto_prop_ci'])){if($v['foto_prop_ci']!=null ){echo "<span>|<a href='" .$v['foto_prop_ci']. "'> ci adjudicatario </a>|</span>"; }}
                                     if(isset($v['foto_planos'])){if($v['foto_planos']!=null ){echo "<span>|<a href='" .$v['foto_planos']. "'> Planos aprobados </a>|</span>"; }}
                             }
                     ?>
@@ -169,8 +169,15 @@
                         <button type="button" class="btn btn-warning" value="{{ $cripta->id }}" id="btn_add_difunto" title="Adicionar Difunto"><i class="fa fa-user-plus"></i></button>
                         <button type="button" class="btn btn-danger" value="{{ $cripta->id }}" id="btn_up_pay_info" title="Actualizar información de  pagos servicios"><i class="fa fa-refresh"></i></button>
 
-                        <button type="button" class="btn btn-success" value="{{ $cripta->id }}" id="btn_pay_cm" title="Pagar servicios"><i class="fa fa-money"></i></button>
 
+                        @if (auth()->check())
+                           @php( $user = auth()->user())
+                            @php($rolUsuario = $user->role)
+                        @endif
+                            @if($rolUsuario != "APOYO")
+
+                            <button type="button" class="btn btn-success" value="{{ $cripta->id }}" id="btn_pay_cm" title="Pagar servicios"><i class="fa fa-money"></i></button>
+                            @endif
                     </td>
                 </tr>
             @endforeach
@@ -278,7 +285,8 @@
                                     if(data.status!=null )
                                     {
                                         $('#cod_cm_info').html(data.response.cripta.codigo);
-                                        $('#resp_cm_info').html(data.response.responsable.nombres+" "+data.response.responsable.primer_apellido+" "+data.response.responsable.segundo_apellido);
+                                        var segundo_apellido=data.response.responsable.segundo_apellido ? data.response.responsable.segundo_apellido : '';
+                                        $('#resp_cm_info').html(data.response.responsable.nombres+" "+data.response.responsable.primer_apellido+" "+segundo_apellido);
                                         $('#respdifunto_id_cm_info').html(data.response.responsable.id);
 
                                     }//end if
@@ -342,7 +350,7 @@
                 else {
                     swal.fire({
                         title: "Precaución!",
-                        text: "!Debe definir si el pago se hizo por tercera persona o por el propietario!",
+                        text: "!Debe definir si el pago se hizo por tercera persona o por el adjudicatario!",
                         type: "error",
                         // timer: 2000,
                         showCancelButton: false,
@@ -541,6 +549,62 @@
 
 
             $(document).on('click', '#btn-editar', function(){
+
+                // $('#foto_actual').empty();
+                // $('#foto_actual').hide();
+                $('.clear').val('');
+                $(".select-cuartel").val('').trigger('change');
+                $('#cod-cripta').val('');
+                $('#cod_cripta_ant').val('');
+                $('#cripta-name').val('');
+                $('#bloque').val('');
+                $('#cod-sitio').val('');
+                $('#superficie').val('');
+                $('#construido').val(''),
+                $('#enterratorios_ocupados').val(0),
+                $('#total_enterratorios').val(0),
+
+                $('#osarios').val(0),
+                $('#total_osarios').val(0),
+
+                $('#cenisarios').val(0),
+
+                $('#observaciones').val(''),
+                $('#url-foto').val(''),
+                $('#domicilio').val(''),
+                $('#genero').val(''),
+                $('#telefono').val(''),
+
+                //reset documentos recibidos
+                $('#foto_resol').html('');
+                $('#foto_title').html('');
+                $('#foto_prop').html('');
+                $('#foto_planos_ap').html('');
+
+
+
+                $('#familia').val('');
+                $('#tipo_cripta').val('');
+                $('#resolucion').prop('checked', false);
+
+                $('#ci').prop('checked', false);
+                $('#nro_ci').val(''),
+                $('#nro_resolucion').val(''),
+                $('#notable').val(''),
+                $('#altura').val(''),
+
+                $('#dni').val(''),
+                $('#adjudicacion').val(''),
+                $('#nro_resolucion').hide();
+                $('#nro_ci').hide();
+                $('#txt_resolucion').hide();
+                $('#obs_resolucion').prop('checked', false);
+
+                $('#planos_aprobados').prop('checked', false);
+                $('#bienes_m').prop('checked', false);
+
+
+
                 $('#cmform').find("input[type=text], input[type=checkbox], textarea,  tel").val("");
                 $('#cmform').find("input[type=number]").val("0");
                 $('#cmform').find("select[name=notable]").val("");
@@ -633,7 +697,7 @@
                                             $('#foto_title').hide();
                                     }
 
-                                // ci propietario
+                                // ci adjudicatario
                                  if(ar.foto_prop_ci!=null){
                                     $('#url_foto_prop').val(ar.foto_prop_ci)  ;
                                     $('#foto_prop').append('<a href="'+ ar.foto_prop_ci+'" target="_blank">Ver foto actual </a>');
@@ -686,7 +750,10 @@
 
 
             $(document).on('click','#new-cripta', function(){
+                $('#foto_actual').empty();
+                $('#foto_actual').hide();
 
+                $('.clear').val('');
                 $(".select-cuartel").val('').trigger('change');
                 $('#cod-cripta').val('');
                 $('#cod_cripta_ant').val('');
@@ -709,6 +776,12 @@
                 $('#genero').val(''),
                 $('#telefono').val(''),
 
+                //reset documentos recibidos
+                $('#foto_resol').html('');
+                $('#foto_title').html('');
+                $('#foto_prop').html('');
+                $('#foto_planos_ap').html('');
+
 
                 $('#btn-cripta-editar').hide(300);
                 $('#btn-cripta').show(300);
@@ -727,12 +800,13 @@
                 $('#nro_resolucion').hide();
                 $('#nro_ci').hide();
                 $('#txt_resolucion').hide();
-                $('#txt_resolucion').prop('checked', false);
+                $('#obs_resolucion').prop('checked', false);
 
                 $('#planos_aprobados').prop('checked', false);
                 $('#bienes_m').prop('checked', false);
 
                 $('#modal-cripta').modal('show');
+
 
 
 
@@ -781,6 +855,7 @@
                     if ($("#ci").is(":checked")) { var ci=$('#nro_ci').val(); $('#digital_documents').show(); } else { var ci="FALTA";}
                     if ($("#bienes_m").is(":checked")) { var bienes_m="BIENES M";} else { var bienes_m="FALTA";}
                     if ($("#planos_aprobados").is(":checked")) { var planos_aprobados="PLANOS A"; $('#digital_documents').show(); } else { var planos_aprobados="FALTA";}
+                    if ($("#obs_resolucion").is(":checked")) { var obs_resolucion=$('#txt_resolucion').val(); } else { var obs_resolucion="FALTA";}
 
                     if($('#notable :selected').text()=="SELECCIONAR"){ var field_notable=null;}else{ var field_notable= $('#notable :selected').val(); }
 
@@ -1530,14 +1605,6 @@ $("#cert_defuncion_p").dropzone({
                                                                 }, 2000);
                                             }
                                 }
-                              /*   error: function (error) {
-                                    if(error.status == 422){
-                                        Object.keys(error.responseJSON.errors).forEach(function(k){
-                                        toastr["error"](error.responseJSON.errors[k]);
-                                        //console.log(k + ' - ' + error.responseJSON.errors[k]);
-                                        });
-                                    }
-                                } */
                     });
                 });
 
@@ -1712,7 +1779,7 @@ $("#cert_defuncion_p").dropzone({
                                                 'difuntos': difuntos,
                                             }),
                                             success: function(data)
-                                            {// console.log("entraaaa");
+                                            { console.log("entraaaa");
                                                  console.log(data);
                                                                 if(data.status==true){
                                                                     swal.fire({
@@ -1829,7 +1896,8 @@ $("#cert_defuncion_p").dropzone({
                                 if(data.response.responsable !=null)
                                 {
                                         $('#cod_cm').html(data.response.cripta.codigo);
-                                        $('#resp_cm').html(data.response.responsable.nombres+" "+data.response.responsable.primer_apellido+" "+data.response.responsable.segundo_apellido);
+                                        var segundo_apellido=data.response.responsable.segundo_apellido ? data.response.responsable.segundo_apellido : '';
+                                        $('#resp_cm').html(data.response.responsable.nombres+" "+data.response.responsable.primer_apellido+" "+segundo_apellido);
                                         $('#resp_cm_id').html(data.response.responsable.id);
                                         $('#tipo_registro').html(data.response.cripta.tipo_registro);
                                         var array_difuntos = jQuery.parseJSON(data.response.cripta.difuntos);
@@ -1852,16 +1920,18 @@ $("#cert_defuncion_p").dropzone({
                                             data: JSON.stringify({
                                                             }),
                                             success: function(data) {
-                                                 //console.log("gggggggggggg");
-                                                //console.log(data.response);
+                                                console.log("gggggggggggg");
+                                                console.log(data.response);
                                                 $.each(data.response, function(key,val)
                                                 {
                                                           // console.log(val.descripcion );
                                                     // alert($('#tabla_difunto_row_pay').children().length);
                                                         if($('#tabla_difunto_row_pay').children().length>0)
                                                         {
-                                                        // if(val.cuenta=='15224370' || val.cuenta=='15224330' || val.cuenta=='15224380' || val.cuenta=='15224300' || val.cuenta=='15224390' ){}
-                                                        // else{
+                                                      //  if(val.cuenta=='15224370' || val.cuenta=='15224330' || val.cuenta=='15224380' || val.cuenta=='15224300' || val.cuenta=='15224390' ){}
+                                                       // else{
+                                                          if( val.cuenta=='15224330'  ){}
+                                                        else{
                                                             var html='<div class="form-check '+val.cuenta+'">'+
                                                                         '<input class="form-check-input" type="checkbox" id="'+val.cuenta+'" name="serv[tipo_servicio]" value="'+val.cuenta+'-'+val.descripcion+'"  onclick="cargar_sevicios_hijos(this)">'+
                                                                         '<label class="form-check-label labelservice" for="'+val.cuenta+'">'+val.descripcion+'</label>'+
@@ -1880,7 +1950,10 @@ $("#cert_defuncion_p").dropzone({
                                                                             $('#modal_save_pagos_cm').prop('disabled', false)
 
                                                                         }
-                                                       // }
+
+
+
+                                                        }
                                                         }
                                                         else{
                                                             if(val.cuenta=="15224150" || val.cuenta=="15224250" || val.cuenta=="15224410" ){
@@ -1935,7 +2008,7 @@ $("#cert_defuncion_p").dropzone({
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
-                                url: "{{ env('URL_MULTISERVICE') }}/api/v1/cementerio/generate-all-servicios-cm",
+                                url: "https://multiserv.cochabamba.bo/api/v1/cementerio/generate-all-servicios-cm",
                                 async: false,
                                 data: JSON.stringify({
                                     'data': cuenta
@@ -1960,16 +2033,16 @@ $("#cert_defuncion_p").dropzone({
                                             else{
 
 
-                                                        // if (value.num_sec == '526' || value.num_sec == '525' ||
-                                                        //     value.num_sec == '629' || value.num_sec == '631') {}
-                                                        //         else {
+                                                        if (value.num_sec == '526' || value.num_sec == '525' ||
+                                                            value.num_sec == '629' || value.num_sec == '631') {}
+                                                                else {
                                                                     // console.log("asdas");
                                                                     var html='<div class="form-check">'+
                                                                     '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs." onclick="seleccionar_hijos_list()" >'+
                                                                     '<label class="form-check-label childservice" for="'+value.num_sec+'">'+value.descripcion+' - ' + value.monto1 +'- Bs.</label>'+
                                                                     '</div>';
                                                                     $('#serv_hijos'+cuenta+'').append(html);
-                                                                    // }
+                                                                    }
                                                 }
 
                                     });
@@ -1980,20 +2053,6 @@ $("#cert_defuncion_p").dropzone({
             }
         }
 
-
-        //seleccionar cremacion
-          $(document).on('click', '#1990', function(){
-            if($(this).is(":checked")){
-                $('.section_difunto').show();
-                $('#cremacion_txt').val('SI');
-                $('#modal_save_pagos_cm').prop('disabled', true);
-            }
-            else{
-                $('.section_difunto').hide();
-                $('#cremacion_txt').val('NO');
-                $('#modal_save_pagos_cm').prop('disabled', false);
-            }
-          });
         // funcion para enlistar servicios seleccionados y calcular total acumulado
 
         function seleccionar_hijos_list(){
@@ -2401,27 +2460,23 @@ $("#cert_defuncion_p").dropzone({
                                 //console.log("caddd");
                                 //console.log(cad);
                                 $('.detalle_servicios').show();
-                                $('#servicios-data').append('<tr><td class="dt_id_tipo_cuenta">'+cad[0]+'</td><td class="dt_txt_tipo_cuenta">'+cod_serv[0]+'</td><td class="dt_id_serv">'+cod_serv[1]+'</td><td class="dt_txt_serv">'+cad[2]+'</td><td class="dt_precio_unitario">'+cad[3]+' Bs.</p>');
+                                $('#servicios-data').append('<tr class="row_' + cad[0] + ' dynamic-row"><td class="dt_id_tipo_cuenta">'+cad[0]+'</td><td class="dt_txt_tipo_cuenta">'+cod_serv[0]+'</td><td class="dt_id_serv">'+cod_serv[1]+'</td><td class="dt_txt_serv">'+cad[2]+'</td><td class="dt_precio_unitario">'+cad[3]+' Bs.</td><td class="dt_obs" contenteditable></td></tr>');
                                  acum = parseFloat(acum) + parseFloat(cad[3]);
                                  $('#totalServ').html(acum);
                               //  console.log("///------//");
                                 console.log(acum);
                                 //console.log("///------//");
-
+                                addDragHandlers($('#servicios-data .row_' + cad[0] + '.dynamic-row')[0]);
                            }
 
                         });
-                        // $('#totalServ').html(acum);
-                        // $('#totalservicios').val(acum)
 
-                        // monto=((info[1]).split('-'))[2];
-                        // $('#servicios-data').append('<p>'+((info[1]).split('-'))[1]+' ..................'+monto+'</p>');
-                        // acum=parseFloat(acum)+parseFloat(monto);
-                        // $('#totalServ').html(acum);
                     }
 
 
-                // function guardar pagos servicios
+    /*************************************************************************************************************************/
+    /****************************************************** function guardar pagos servicios**********************************/
+    /************************************************************************************************************************/
                 $(document).on('click', '#modal_save_pagos_cm', function(e)
                 {
                     e.preventDefault();
@@ -2434,21 +2489,24 @@ $("#cert_defuncion_p").dropzone({
                     let servicio_hijos = [];
                     let txt_servicio_hijos = [];
                     let precio = [];
+                    let tblobs = [];
+
                     let sel_exhumado="";
                     let difuntos = [];
 
                        document.querySelectorAll('.detalle_servicios tbody tr').forEach(function(e)
-                        {
-                            let fila = {
+                            {
+                                 let fila = {
                                                 dt_id_tipo_cuenta: e.querySelector('.dt_id_tipo_cuenta').innerText,
                                                 dt_txt_tipo_cuenta: e.querySelector('.dt_txt_tipo_cuenta').innerText,
                                                 dt_id_serv: e.querySelector('.dt_id_serv').innerText,
                                                 dt_txt_serv: e.querySelector('.dt_txt_serv').innerText,
                                                 dt_precio_unitario: e.querySelector('.dt_precio_unitario').innerText,
+                                                tblobs: e.querySelector('.dt_obs').innerText
                                       };
-                            servicios.push(fila);
+                                 servicios.push(fila);
 
-                            let row_tipo_servicio = {
+                                            let row_tipo_servicio = {
                                                 dt_id_tipo_cuenta: e.querySelector('.dt_id_tipo_cuenta').innerText,
                                             };
 
@@ -2467,10 +2525,13 @@ $("#cert_defuncion_p").dropzone({
                                             let row_precio = {
                                                 dt_precio_unitario: e.querySelector('.dt_precio_unitario').innerText,
                                             };
+                                            let row_tblobs =e.querySelector('.dt_obs').innerText;
                                             tipo_servicio.push(row_tipo_servicio);
                                             tipo_servicio_txt.push(row_tipo_servicio_txt);
                                             servicio_hijos.push(row_servicio_hijos);
                                             txt_servicio_hijos.push(row_txt_servicio_hijos);
+                                            tblobs.push(row_tblobs);
+
 
                         });
 
@@ -2519,6 +2580,7 @@ $("#cert_defuncion_p").dropzone({
                                                 'tipo_servicio_txt': tipo_servicio_txt,
                                                  'servicio_hijos':servicio_hijos,
                                                 'txt_servicio_hijos': txt_servicio_hijos,
+                                                'tblobs': tblobs,
                                                 'total_monto': monto_total,
                                                 'difuntos': difuntos,
                                                 'codigo_unidad': codigo_unidad,
@@ -2529,14 +2591,16 @@ $("#cert_defuncion_p").dropzone({
                                                 'maternopago': $('#cm_maternopago').val(),
                                                 'observacion': $('#cm_observacion').val(),
                                                 'pago_por' : $('#tipo_resp').val(),
-                                                'domicilio' : $('#cm_domicilio').val(),
+                                                'ci_resp':$('#resp_cm_id').html(),
+                                                'nombre_resp':$('#resp_cm').html(),
                                                 'sel_exhumado':sel_exhumado,
-                                                'tipo_registro':$('#tipo_registro').html(),
+                                                'tipo_registro': $('#tipo_registro').html(),
+                                                'domicilio' : $('#cm_domicilio').val()? $('#cm_domicilio').val() : 'NO DEFINIDO'
                                             }),
                                             success: function(data)
                                             {
-                                               // console.log("r5espuesta de servicios");
-                                               // console.log(data);
+
+                                                console.log(data);
                                                 if(data.status==true){
                                                     swal.fire({
                                                         title: "Exito!",
@@ -2564,15 +2628,37 @@ $("#cert_defuncion_p").dropzone({
 
 
                                             },
-                                            error: function (error) {
+                                            error :function( data )
+                                            {
+                                                if( data.status === 422 ) {
+                                                    var msg="";
+                                                    var errors = $.parseJSON(data.responseText);
+                                                    $.each(errors, function (key, value) {
+                                                        // console.log(key+ " " +value);
+                                                    $('#response').addClass("alert alert-danger");
 
-                                                if(error.status == 422){
-                                                    Object.keys(error.responseJSON.errors).forEach(function(k){
-                                                    toastr["error"](error.responseJSON.errors[k]);
-                                                    //console.log(k + ' - ' + error.responseJSON.errors[k]);
+                                                        if($.isPlainObject(value)) {
+                                                            $.each(value, function (key, value) {
+                                                                console.log(key+ " " +value);
+                                                                 msg=msg+value+", ";
+                                                           // $('#response').show().append(value+"<br/>");
+
+                                                            });
+                                                            swal.fire({
+                                                                title: "Precaución!",
+                                                                text:msg,
+                                                                type: "error",
+                                                                timer: 10000,
+                                                                showCancelButton: false,
+                                                                showConfirmButton: true
+                                                                });
+                                                                return false;
+                                                        }
+                                                        /*else{
+                                                        $('#response').show().append(value+"<br/>"); //this is my div with messages
+                                                        }*/
                                                     });
                                                 }
-
                                             }
 
 
@@ -2782,7 +2868,7 @@ $("#cert_defuncion_p").dropzone({
                 },
                 sending: function(file, xhr, formData){
                             formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
-                            formData.append('collector', 'cementerio ci propietario');
+                            formData.append('collector', 'cementerio ci adjudicatario');
                             formData.append('nro_documento', $('#nro_ci').val());
 
                         },
@@ -3138,6 +3224,31 @@ $("#cert_defuncion_p").dropzone({
                 });
 
             });
+                function addDragHandlers(elem) {
+                    elem.draggable = true;
 
+                    elem.addEventListener('dragstart', handleDragStart, false);
+                    elem.addEventListener('dragover', handleDragOver, false);
+                    elem.addEventListener('drop', handleDrop, false);
+                }
+
+                function handleDragStart(event) {
+                    event.dataTransfer.effectAllowed = 'move';
+                    event.dataTransfer.setData('text/html', this.outerHTML);
+                    dragSrcElement = this;
+                }
+
+                function handleDragOver(event) {
+                    event.preventDefault();
+                    event.dataTransfer.dropEffect = 'move';
+                }
+
+                function handleDrop(event) {
+                    event.preventDefault();
+                    if (dragSrcElement !== this) {
+                        this.parentNode.removeChild(dragSrcElement);
+                        this.insertAdjacentElement('beforebegin', dragSrcElement);
+                    }
+                }
     </script>
     @stop
