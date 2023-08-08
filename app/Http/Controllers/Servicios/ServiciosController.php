@@ -409,6 +409,8 @@ class ServiciosController extends Controller
                 /***generando el codigo del nicho ** */
                 $codigo_n = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
                 $cant=0;
+                $cant_ant=0;
+
 
                 $tipo_servicio=[];
                 $txt_tipo_servicio=[];

@@ -1457,6 +1457,7 @@ $(document).ready(function ()
         $(document).on('click','#btn_guardar_servicio', function(){
                 makeArrayServices();
                 validarInfoEnviada();
+
                 if ($('#servicio_externo').is(":checked")){
                     registrarServicioExterno();
                  }
@@ -1925,6 +1926,21 @@ $(document).ready(function ()
             }
 
             function validarInfoEnviada(){
+
+                var cuartel= $('#cuartel option:selected').text();
+                    if(cuartel=="Seleccione un cuartel"){
+                        swal.fire({
+                                    title: "Precaucion!",
+                                    text: "!Complete el campo cuartel",
+                                    type: "warning",
+                                  //  timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: true
+                                    });
+                                    setTimeout(function() {
+                                       return false;
+                                    }, 2000);
+                    }
             //   if($('#fechanac_resp').val() =="" || !$('#fechanac_resp').val()){
             //     swal.fire({
             //                         title: "Precaucion!",
