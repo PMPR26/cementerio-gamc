@@ -487,7 +487,7 @@
                                         </div>
                                     </div>
 
-                                    <button type="button" class="btn btn-warning btn_nueva_asignacion">Confirmar Ingreso</button>
+                                    {{-- <button type="button" class="btn btn-warning btn_nueva_asignacion">Confirmar Ingreso</button> --}}
                                   </form>
                             </div>
                         </div>
@@ -2228,66 +2228,66 @@ function handleDrop(event) {
                 });
 
 
-    $(document).on('click', '.btn_nueva_asignacion', function(e){
-        e.preventDefault();
-        $.ajax({
-                    type: 'POST',
-                        headers: {
-                            'Content-Type':'application/json',
-                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
-                        },
-                        url: "{{ route('registrar.asignacion') }}",
-                        async: false,
-                        data: JSON.stringify({
-                                    'cuartel_nuevo': $('#select_cuartel_nuevo').val(),
-                                    'bloque_nuevo': $('#bloque_nuevo').val(),
-                                    'nicho_nuevo': $('#nuevo_nicho').val(),
-                                    'fila_nuevo': $('#nueva_fila').val(),
-                                    'tipo_nicho':  $('#tipo_nicho').val(),
-                                   'anterior':  $('#anterior').val(),
-                                   'ci_dif':  $('#search_dif').val(),
-                                   'nombres_dif':  $('#nombres_dif').val(),
-                                   'paterno_dif':  $('#paterno_dif').val(),
-                                   'materno_dif':  $('#materno_dif').val(),
-                                   'fechanac_dif':  $('#fechanac_dif').val(),
-                                   'fecha_def_dif':  $('#fechadef_dif').val(),
-                                   'causa':  $('#causa').val(),
-                                   'tipo_dif':  $('#tipo_dif').val(),
-                                   'genero_dif':  $('#genero_dif').val(),
-                                   'ci_resp':  $('#search_resp').val(),
-                                   'nombres_resp':  $('#nombres_resp').val(),
-                                   'paterno_resp':  $('#paterno_resp').val(),
-                                   'materno_resp':  $('#materno_resp').val(),
-                                   'fechanac_resp':  $('#fechanac_resp').val(),
-                                   'telefono':  $('#telefono').val(),
-                                   'celular':  $('#celular').val(),
-                                   'genero_resp':  $('#genero_resp').val(),
-                                   'pag_con':  $('#pag_con').val(),
-                                   'tiempo':  $('#tiempo').val(),
-                                   'nueva_fecha_ingreso':$('#nueva_fecha_ingreso').val(),
+    // $(document).on('click', '.btn_nueva_asignacion', function(e){
+    //     e.preventDefault();
+    //     $.ajax({
+    //                 type: 'POST',
+    //                     headers: {
+    //                         'Content-Type':'application/json',
+    //                         'X-CSRF-TOKEN':'{{ csrf_token() }}',
+    //                     },
+    //                     url: "{{ route('registrar.asignacion') }}",
+    //                     async: false,
+    //                     data: JSON.stringify({
+    //                                 'cuartel_nuevo': $('#select_cuartel_nuevo').val(),
+    //                                 'bloque_nuevo': $('#bloque_nuevo').val(),
+    //                                 'nicho_nuevo': $('#nuevo_nicho').val(),
+    //                                 'fila_nuevo': $('#nueva_fila').val(),
+    //                                 'tipo_nicho':  $('#tipo_nicho').val(),
+    //                                'anterior':  $('#anterior').val(),
+    //                                'ci_dif':  $('#search_dif').val(),
+    //                                'nombres_dif':  $('#nombres_dif').val(),
+    //                                'paterno_dif':  $('#paterno_dif').val(),
+    //                                'materno_dif':  $('#materno_dif').val(),
+    //                                'fechanac_dif':  $('#fechanac_dif').val(),
+    //                                'fecha_def_dif':  $('#fechadef_dif').val(),
+    //                                'causa':  $('#causa').val(),
+    //                                'tipo_dif':  $('#tipo_dif').val(),
+    //                                'genero_dif':  $('#genero_dif').val(),
+    //                                'ci_resp':  $('#search_resp').val(),
+    //                                'nombres_resp':  $('#nombres_resp').val(),
+    //                                'paterno_resp':  $('#paterno_resp').val(),
+    //                                'materno_resp':  $('#materno_resp').val(),
+    //                                'fechanac_resp':  $('#fechanac_resp').val(),
+    //                                'telefono':  $('#telefono').val(),
+    //                                'celular':  $('#celular').val(),
+    //                                'genero_resp':  $('#genero_resp').val(),
+    //                                'pag_con':  $('#pag_con').val(),
+    //                                'tiempo':  $('#tiempo').val(),
+    //                                'nueva_fecha_ingreso':$('#nueva_fecha_ingreso').val(),
 
-                                   'monto_renov':  0,
-                                   'nro_renovacion':0,
-                                   'monto_ultima_renov' :  0,
-                                   'gestion_renov' : 0 ,
-                                   'sereci':$('#sereci').val(),
-                                   'gratis':$('#gratis').val(),
-                                   'observacion': $('#observacion').val(),
-                                    'funeraria':$('#funeraria').val(),
-                                    'urlcertificacion':$('#url-certificacion').val(),
-                                    'asignar_difunto_nicho':$('#asignar_difunto_nicho').val(),
-                                   'add_difunto':$('#add_difunto').val(),
-                                   /****/
-
-
-                        }),
-                        success: function(response) {
-                          console.log(response);
-                        }
-                });
+    //                                'monto_renov':  0,
+    //                                'nro_renovacion':0,
+    //                                'monto_ultima_renov' :  0,
+    //                                'gestion_renov' : 0 ,
+    //                                'sereci':$('#sereci').val(),
+    //                                'gratis':$('#gratis').val(),
+    //                                'observacion': $('#observacion').val(),
+    //                                 'funeraria':$('#funeraria').val(),
+    //                                 'urlcertificacion':$('#url-certificacion').val(),
+    //                                 'asignar_difunto_nicho':$('#asignar_difunto_nicho').val(),
+    //                                'add_difunto':$('#add_difunto').val(),
+    //                                /****/
 
 
-    });
+    //                     }),
+    //                     success: function(response) {
+    //                       console.log(response);
+    //                     }
+    //             });
+
+
+    // });
 
 
         function mostrar_lista_difuntos(){
