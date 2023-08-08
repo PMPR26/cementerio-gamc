@@ -95,6 +95,7 @@ class ResponsableDifunto extends Model
                         "nicho.codigo_anterior as anterior",
                         "bloque.codigo as bloque",
                         "cuartel.codigo as cuartel",
+                        "cuartel.id as cuartel_id",
                         "nicho.nro_nicho",
                         "responsable_difunto.fecha_adjudicacion as fecha_ingreso_nicho",
                         "nicho.cantidad_cuerpos")
@@ -145,6 +146,8 @@ class ResponsableDifunto extends Model
             if($estado_nicho=="LIBRE"){
                 $dif->estado_nicho = $estado_nicho;
                 $dif->fecha_liberacion= date("Y-m-d H:i:s");
+                }else{
+                    $dif->estado_nicho = $estado_nicho;
                 }
 
             $dif->estado = 'ACTIVO';
@@ -168,6 +171,10 @@ class ResponsableDifunto extends Model
             if($estado_nicho=="LIBRE"){
                 $dif->estado_nicho = $estado_nicho;
                 $dif->fecha_liberacion= date("Y-m-d H:i:s");
+                $dif->estado = 'INACTIVO';
+              }
+              else{
+                $dif->estado_nicho = $estado_nicho;
               }
 
 
@@ -176,7 +183,7 @@ class ResponsableDifunto extends Model
                 $dif->nro_renovacion=0;
                 $dif->monto_ultima_renov=0;
 
-            $dif->estado = 'ACTIVO';
+
             $dif->user_id = auth()->id();
             $dif->save();
             $dif->id;
@@ -206,6 +213,27 @@ class ResponsableDifunto extends Model
             $dif->id;
             return  $dif->id;
 
+        }
+
+        public function lista_difuntos_perpetuo($codigo_nicho){
+
+            $sql=DB::table('responsable_difunto')->select()->where('codigo_nicho', $codigo_nicho)
+                             ->where('responsable_difunto.estado', 'ACTIVO')
+                             ->where('difunto.estado', 'ACTIVO')
+                             ->join('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
+                             ->get();
+                                if($sql || !empty($sql)){
+                                    $respu= [
+                                        "status" => true,
+                                        "response"=>$sql
+                                        ];
+                                }else{
+                                    $respu= [
+                                        "status" => false,
+                                        "message"=>"No se encontrarion cuerpos en el nicho"
+                                        ];
+                                }
+                            return response()->json($respu);
         }
 
 

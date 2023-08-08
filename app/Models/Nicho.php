@@ -39,7 +39,7 @@ class Nicho extends Model
 
 
         $bloque_cod=Bloque::where('codigo','=', $bloque)->select()->first();
-                $sql=Nicho::whereRaw('nro_nicho=\''.trim($nro_nicho).'\'')
+        $sql=Nicho::whereRaw('nro_nicho=\''.trim($nro_nicho).'\'')
         ->whereRaw('fila=\''.trim($fila).'\'')
         ->whereRaw('bloque_id=\''.trim( $bloque_cod->id).'\'')
         ->leftJoin('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
