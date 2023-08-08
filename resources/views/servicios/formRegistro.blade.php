@@ -731,8 +731,8 @@ $(document).ready(function ()
                                 $('#serv-hijos-'+cuenta+'').empty();
                                 $.each(data_response.response, function(index, value) {
 
-                                    // if (value.num_sec == '526' || value.num_sec == '525' || value.num_sec == '630' || value.num_sec == '628' ) {}
-                                    // else {
+                                    if (value.num_sec == '526' || value.num_sec == '525' ) {}
+                                     else {
                                                 // console.log("asdas");
                                                 var html='<div class="form-check">'+
                                                 '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ id_cuenta +'-'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs."  >'+
@@ -743,7 +743,7 @@ $(document).ready(function ()
                                                     var contenedor_renov='<div id="contenedor_renov" ></div>';
                                                     $('#serv-hijos-'+cuenta+'').append(contenedor_renov);
                                                     }
-                                        // }
+                                        }
 
                                 });
                             }
