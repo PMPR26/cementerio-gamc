@@ -94,8 +94,17 @@
                     <div class="card complementoBusqueda"  >
                         <div class="row">
                             <div class="col-sm-12 col-md-3 col-xl-3">
-                                <label>Cuartel</label>
-                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="cuartel" >
+                                <label for="inputEmail4">Cuartel</label>
+                                {{-- <label>Cuartel</label>
+                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="cuartel" > --}}
+                                <select  class="form-control cuartel" name="cuartel"  id="cuartel" style="width: 100%" >
+                                    <option selected disabled>Seleccione un cuartel</option>
+                                            @foreach ($cuarteles as $cuart)
+                                            <option value="{{ $cuart->id }}">{{ $cuart->codigo }}</option>
+                                            @endforeach
+                                    </select>
+
+
                             </div>
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
@@ -129,6 +138,29 @@
                                  </label>
                             </div>
                         </div>
+
+                        <div class="row seccion_list_difuntos" style="display:none">
+                            <div class="card-header col-md-6 col-xl-6">
+                                <h4> Lista de difuntos en nicho en nicho</h4>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-xl-6 p-4">
+                                <table id="list_difuntos">
+                                    <thead>
+                                      <tr>
+                                        <th>Nro Documento Identidad</th>
+                                        <th>Nombre Completo</th>
+                                        <th>Fecha Defuncion</th>
+                                        <th>Fecha Ingreso al nicho</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <!-- Aquí se agregarán las filas con los datos del array JSON -->
+                                    </tbody>
+                                  </table>
+                            </div>
+                        </div>
+
+
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-sm-12 col-md-3 col-xl-3">
@@ -466,7 +498,7 @@
                     <div class="card-header" id="detalle">
                         <h4>DETALLE DE SERVICIOS SOLICITADOS</h4>
                         <p class="bg-info opacity-75 p-4">Verifica el orden de los servicios solicitados, si no esta de acuerdo a lo solicitado haz click sobre la fila que deseas mover y arrastra a la posicion deseada</p>
-                        <table id=tableServices>
+                        <table id="tableServices">
                             <thead>
                                 <tr>
                                     <td class="w-auto text-center">CUENTA T.SERV</td>
@@ -768,42 +800,150 @@ $(document).ready(function ()
                  }
         });
 
+        // $(document).on('click', '.service_child', function(e) {
+        //     var monto = 0;
+        //     var cantidad = 1;
+        //     var subtotal = 0;
+
+        //     $('#list_detalle').empty();
+        //     $(".service_child").each(function(index) {
+        //         console.log(index + ": " + $(this).val());
+        //         var ar = $(this).val().split('-');
+        //         var ar1 = ar[1].split('=>');
+        //         if ($(this).is(':checked')) {
+        //             var ar = $(this).val().split('-');
+        //             var ar1 = ar[1].split('=>');
+        //             subtotal = cantidad * ar[3];
+        //             if (ar1[1] == 642) {
+
+        //             } else {
+        //                 var html = '<tr class="row_' + ar[0] + ' dynamic-row">'
+        //                     + '<td class="w-auto text-center service">' + ar[0] + '</td>'
+        //                     + '<td class="w-auto text-center service_txt">' + ar1[0] + '</td>'
+        //                     + '<td class="w-auto text-center service_hijo">' + ar1[1] + '</td>'
+        //                     + '<td class="w-auto text-center service_hijo_txt">' + ar[2] + '</td>'
+        //                     + '<td class="w-auto text-center cantidad_row">' + cantidad + '</td>'
+        //                     + '<td class="w-auto text-center precio_srv">' + ar[3] + '</td>'
+        //                     + '<td class="w-auto text-center subtotal">' + subtotal + '</td>'
+        //                     + '<td class="w-auto text-center tblobs" contenteditable></td>'
+        //                     +'</tr>';
+        //                 $('#list_detalle').append(html);
+        //                 addDragHandlers($('#list_detalle .row_' + ar[0] + '.dynamic-row')[0]);
+        //             }
+        //         } else {
+        //             // $('#list_detalle .row_'+ar[0]+'').remove();
+        //         }
+        //     });
+        //     calcularMonto();
+        // });
+
+
+        /********************MODIFICACION CREACION TABLA DE SERVICIOS SELECCIONADOS ****************************************/
         $(document).on('click', '.service_child', function(e) {
             var monto = 0;
             var cantidad = 1;
             var subtotal = 0;
 
-            $('#list_detalle').empty();
-            $(".service_child").each(function(index) {
-                console.log(index + ": " + $(this).val());
+            // $('#list_detalle').empty();
+            // $(".service_child").each(function(index) {
+                // console.log(index + ": " + $(this).val());
                 var ar = $(this).val().split('-');
                 var ar1 = ar[1].split('=>');
-                if ($(this).is(':checked')) {
-                    var ar = $(this).val().split('-');
-                    var ar1 = ar[1].split('=>');
-                    subtotal = cantidad * ar[3];
-                    if (ar1[1] == 642) {
+                console.log('ar[0]--->' +ar[0]);
 
-                    } else {
-                        var html = '<tr class="row_' + ar[0] + ' dynamic-row">'
-                            + '<td class="w-auto text-center service">' + ar[0] + '</td>'
-                            + '<td class="w-auto text-center service_txt">' + ar1[0] + '</td>'
-                            + '<td class="w-auto text-center service_hijo">' + ar1[1] + '</td>'
-                            + '<td class="w-auto text-center service_hijo_txt">' + ar[2] + '</td>'
-                            + '<td class="w-auto text-center cantidad_row">' + cantidad + '</td>'
-                            + '<td class="w-auto text-center precio_srv">' + ar[3] + '</td>'
-                            + '<td class="w-auto text-center subtotal">' + subtotal + '</td>'
-                            + '<td class="w-auto text-center tblobs" contenteditable></td>'
-                            +'</tr>';
-                        $('#list_detalle').append(html);
-                        addDragHandlers($('#list_detalle .row_' + ar[0] + '.dynamic-row')[0]);
+                console.log(ar1[1]+ ' --' +ar1[0]);
+                var buscarValor= buscarValorEnTabla(ar1[1]);
+                console.log("buscar fila "+buscarValor);
+                if(buscarValor==null){
+                            if ($(this).is(':checked')) {
+                                var ar = $(this).val().split('-');
+                                var ar1 = ar[1].split('=>');
+                                subtotal = cantidad * ar[3];
+
+
+                                                if (ar1[1] == 642) {
+
+                                                } else {
+                                                    var html = '<tr class="row_' + ar[0] + ' dynamic-row">'
+                                                        + '<td class="w-auto text-center service">' + ar[0] + '</td>'
+                                                        + '<td class="w-auto text-center service_txt">' + ar1[0] + '</td>'
+                                                        + '<td class="w-auto text-center service_hijo">' + ar1[1] + '</td>'
+                                                        + '<td class="w-auto text-center service_hijo_txt">' + ar[2] + '</td>'
+                                                        + '<td class="w-auto text-center cantidad_row">' + cantidad + '</td>'
+                                                        + '<td class="w-auto text-center precio_srv">' + ar[3] + '</td>'
+                                                        + '<td class="w-auto text-center subtotal">' + subtotal + '</td>'
+                                                        + '<td class="w-auto text-center tblobs" contenteditable></td>'
+                                                        +'</tr>';
+                                                    $('#list_detalle').append(html);
+                                                    addDragHandlers($('#list_detalle .row_' + ar[0] + '.dynamic-row')[0]);
+                                                }
+                            }
+                }else{
+                    if ($(this).is(':checked')) {
+
+                    }else{
+                        $('#list_detalle .row_'+ar[0]+'').remove();
                     }
-                } else {
-                    // $('#list_detalle .row_'+ar[0]+'').remove();
                 }
-            });
+            // });
             calcularMonto();
         });
+
+        //************************************BUSCAR ROW EN TABLA DE SERVICIOS Y DEVOLVER POSISCION E ID **************************/
+
+       // Función para buscar un valor en la tabla
+        function buscarValorEnTabla(valor) {
+
+            var tabla = $("#tableServices");
+            var encontrado = false;
+            var filaEncontrada;
+            var posicionEncontrada;
+
+            console.log("valor busqueda-------------->"+valor);
+
+            // Recorrer todas las filas del tbody
+            tabla.find('tbody tr').each(function(filaIndex) {
+            var fila = $(this);
+            console.log('this fila**************'+fila);
+
+                    // Recorrer todas las celdas de la fila
+                    fila.find('td').each(function(columnaIndex) {
+                        var celda = $(this);
+                        var contenidoCelda = celda.text();
+                        console.log('this contenidoCelda**************'+contenidoCelda);
+
+                        // Compara el contenido de la celda con el valor buscado
+                        if (contenidoCelda === valor) {
+                        console.log(valor+'==========='+contenidoCelda);
+
+                        encontrado = true;
+                        filaEncontrada = fila;
+                        posicionEncontrada = [filaIndex, columnaIndex];
+                        // Si encuentras el valor, puedes detener los bucles
+                        return false; // Esto sale del bucle de las celdas
+                        }
+                    });
+
+                // Si ya se encontró el valor, sale del bucle de las filas
+                if (encontrado) {
+                    return false;
+                }
+            });
+
+                    // Devuelve el resultado de la búsqueda
+                    if (encontrado) {
+                        console.log("fila----------------->"+fila);
+                        console.log("posicion----------------->"+posicionEncontrada);
+
+                    return {
+                        fila: filaEncontrada,
+                        posicion: posicionEncontrada
+                    };
+            } else {
+            return null; // El valor no fue encontrado en la tabla
+            }
+        }
+
 
         /************* metodo que recorre toda la grilla resumen de servicios adquiridos y calcula el total adeudado ******/
         function calcularMonto(){
@@ -998,6 +1138,10 @@ $(document).ready(function ()
                     $('#pag_con').val();
                     $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
                     $('#form').hide();
+                    var tablaBody = $("#list_difuntos tbody");
+                                // Limpia el contenido actual de la tabla
+                                tablaBody.empty();
+
                     var bloque = $('#bloque').val();
                     var nicho = $('#nro_nicho').val();
                     var fila = $('#fila').val();
@@ -1036,20 +1180,24 @@ $(document).ready(function ()
                                 "fila": fila
                             }),
                             success: function(data) {
-                             $('#buscar').prop('disabled', false);
+                                $('#buscar').prop('disabled', false);
 
                                 console.log(data.mensaje);
                                 if (data.mensaje==true) {
                                     $('#sp').hide();
                                     $('#contenido').show();
-                                        $('#sp').empty();
+                                    $('#sp').empty();
                                     console.log(data);
                                     // cargar campos del los forms
                                     $('#origen').val('tabla_nueva');
                                     //setear campos difuntos
-                                     $('#cuartel').val(data.response.cuartel);
+                                     $('#cuartel').val(data.response.cuartel_id).trigger("change");
                                      $('#anterior').val(data.response.anterior);
                                      $('#tipo_nicho').val(data.response.tipo_nicho);
+                                     // CARGAR LISTA DE DIFUTNOS A LA SECCION seccion_list_difuntos
+                                     if(data.response.tipo_nicho=="PERPETUO"){
+                                        mostrar_lista_difuntos();
+                                     }
 
                                             if(data.response.estado_nicho=="LIBRE"){
                                                     $('#search_dif').val("");
@@ -1117,7 +1265,7 @@ $(document).ready(function ()
                                     $('#sp').hide();
                                     $('#contenido').show();
                                           if(!data.response.response || data.response.response == null ||data.response.response==""){
-                                                console.log("sdasdas");
+                                                // console.log("sdasdas");
                                                  var estado_nicho="";
                                                  var fecha_liberacion="";
                                             }
@@ -1349,6 +1497,7 @@ $(document).ready(function ()
                     registrarServicioExterno();
                  }
                  else{
+
                     return  $.ajax({
                                type: 'POST',
                                headers: {
@@ -1361,7 +1510,7 @@ $(document).ready(function ()
 
                                    'nro_nicho': $('#nro_nicho').val(),
                                    'bloque':  $('#bloque').val(),
-                                   'cuartel':  $('#cuartel').val(),
+                                   'cuartel':  $('#cuartel option:selected').text(), //$('#cuartel').val().trigger("change"),
                                    'fila':  $('#fila').val(),
                                    'tipo_nicho':  $('#tipo_nicho').val(),
                                    'columna':  $('#columna').val(),
@@ -1430,7 +1579,7 @@ $(document).ready(function ()
                                    });
                                    setTimeout(function() {
                                     //    location.reload();
-                                    window.location.href = "/servicios/servicios"
+                                    // window.location.href = "/servicios/servicios"
                                    }, 2000);
                                 }
 
@@ -1578,7 +1727,6 @@ $(document).ready(function ()
         else{
         var type ="responsable";
         dats=  buscar_ci_resp(ci,type);
-            // console.log("entra a esteeeeeeeeeeeeeeeee"+dats);
         }
 
         });
@@ -1725,15 +1873,11 @@ $(document).ready(function ()
                                     }),
                                     success: function(data)
                                     {
-
-
                                             if(data.info!=null)
                                             {
-                                                $('#cuartel').val(data.info.codigo);
+                                                $('#cuartel').val(data.info.cuartel_id).trigger("change");
                                                 $('#anterior').val(data.info.codigo_anterior);
-
                                             }
-
                                     }
 
                      });
@@ -1981,7 +2125,7 @@ $(document).ready(function ()
                                    });
                                    setTimeout(function() {
                                     //    location.reload();
-                                    window.location.href = "/servicios/servicios"
+                                    // window.location.href = "/servicios/servicios"
                                    }, 2000);
                                    //toastr["success"]("Registro realizado con éxito!");
                                },
@@ -2046,6 +2190,11 @@ function handleDrop(event) {
             $(".select_cuartel_nuevo").select2({
                             width: 'resolve', // need to override the changed default
             });
+
+               // select cuartel for search
+               $(".cuartel").select2({
+                            width: 'resolve', // need to override the changed default
+              });
 
             $("#bloque_nuevo").select2({
                 width: 'resolve', // need to override the changed default
@@ -2140,6 +2289,41 @@ function handleDrop(event) {
 
     });
 
+
+        function mostrar_lista_difuntos(){
+
+            $('#seccion_list_difuntos').show();
+                 $.ajax({
+                    type: 'POST',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: "{{ route('listar.difuntos') }}",
+                        async: false,
+                        data: JSON.stringify({
+                                   'nro_nicho': $('#nro_nicho').val(),
+                                   'bloque':  $('#bloque').val(),
+                                   'cuartel_id': $('#cuartel option:selected').val(),
+                                   'cuartel': $('#cuartel option:selected').text(),
+                                   'nicho': $('#nro_nicho').val(),
+                                   'fila':  $('#fila').val(),
+                                   'tipo_nicho':  $('#tipo_nicho').val(),
+                            }),
+                        success: function(datos) {
+                          console.log(datos.response);
+                          var tablaBody = $("#list_difuntos tbody");
+                                // Limpia el contenido actual de la tabla
+                                tablaBody.empty();
+
+                                // Recorre el array JSON y agrega una fila por cada objeto
+                                $.each(datos.response, function(index, item) {
+                                var fila = "<tr><td>" + item.ci + "</td><td>" + item.nombres +" "+item.primer_apellido +" "+item.segundo_apellido+ "</td><td>" + item.fecha_defuncion + "</td><td>" + item.fecha_adjudicacion + "</td></tr>";
+                                tablaBody.append(fila);
+                                });
+                        }
+                    });
+        }
     </script>
 
     @stop
