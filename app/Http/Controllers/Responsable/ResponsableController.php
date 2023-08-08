@@ -36,7 +36,7 @@ class ResponsableController extends Controller
                 // 'fecha_nacimiento' => 'required',
                 // 'telefono' => 'digits:7|numeric',
                 // 'domicilio' => 'required',
-                'genero_resp' => 'required'
+                //'genero_resp' => 'required'
             ], [
                 'nombres_resp.required'  => 'El campo nombre de responsable es obligatorio!',
                 // 'ci.required'    => 'El campo cedula de identidad es obligatorio!',

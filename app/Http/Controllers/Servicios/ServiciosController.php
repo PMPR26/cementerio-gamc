@@ -158,6 +158,8 @@ class ServiciosController extends Controller
                nicho.codigo_anterior as anterior,
                bloque.codigo as bloque,
                cuartel.codigo as cuartel,
+               cuartel.id as cuartel_id,
+
                nicho.nro_nicho,
                nicho.estado_nicho as estado_nicho,
                nicho.cantidad_cuerpos
@@ -244,6 +246,8 @@ class ServiciosController extends Controller
                nicho.codigo_anterior as anterior,
                bloque.codigo as bloque,
                cuartel.codigo as cuartel,
+               cuartel.id as cuartel_id,
+
                nicho.nro_nicho,
                nicho.cantidad_cuerpos,
                responsable_difunto.fecha_adjudicacion as fecha_ingreso_nicho
@@ -340,24 +344,24 @@ class ServiciosController extends Controller
                     'nombres_dif' => 'required',
                     'paterno_dif'=> 'required',
                     'tipo_dif'=> 'required',
-                    'genero_dif'=> 'required',
+                    // 'genero_dif'=> 'required',
                 //   'ci_resp' => 'required',
                     'nombres_resp' => 'required',
                     'paterno_resp'=> 'required',
                     // 'domicilio'=> 'required',
-                    'genero_resp'=> 'required',
+                    // 'genero_resp'=> 'required',
                     'servicios_adquiridos' => 'required',
                 ], [
                     // 'ci_dif.required' => 'El campo ci del difunto es obligatorio, si no tiene documento presione el boton "generar carnet provisional  (icono lapiz)" para asignarle un numero provisional',
                     'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
                     'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
                     'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
-                    'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
+                    // 'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
                     // 'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
                     'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
                     'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
                     // 'domicilio.required'=> 'El campo domicilio es obligatorio',
-                    'genero_resp.required'=> 'El campo genero del responsable es obligatorio',
+                    // 'genero_resp.required'=> 'El campo genero del responsable es obligatorio',
                     'servicios_adquiridos.required' => 'Debe seleccionar al menos un tipo de servicio',
                     // 'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
                 ]);
@@ -373,12 +377,12 @@ class ServiciosController extends Controller
                         'nombres_dif' => 'required',
                         'paterno_dif'=> 'required',
                         'tipo_dif'=> 'required',
-                        'genero_dif'=> 'required',
+                        // 'genero_dif'=> 'required',
                         // 'ci_resp' => 'required',
                         'nombres_resp' => 'required',
                         'paterno_resp'=> 'required',
                         // 'domicilio'=> 'required',
-                        'genero_resp'=> 'required',
+                        // 'genero_resp'=> 'required',
                         'servicios_adquiridos' => 'required',
                         // 'servicio_hijos' => 'required',
                     ], [
@@ -391,12 +395,12 @@ class ServiciosController extends Controller
                         'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
                         'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
                         'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
-                        'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
+                        // 'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
                         // 'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
                         'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
                         'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
                         // 'domicilio.required'=> 'El campo domicilio es obligatorio',
-                        'genero_resp.required'=> 'El campo genero del responsable es obligatorio',
+                        // 'genero_resp.required'=> 'El campo genero del responsable es obligatorio',
                         'servicios_adquiridos.required' => 'Debe seleccionar al menos un tipo servicio',
                         // 'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
                     ]);
@@ -425,7 +429,7 @@ class ServiciosController extends Controller
                     array_push($tblobs, $value['tblobs']);
 
                 }
-        // dd($txt_servicios_hijos);
+                  // dd($txt_servicios_hijos);
 
                 /**** recuperar datos del cajero para registrar el pago  *****/
                 $datos_cajero=User::select()
@@ -433,22 +437,24 @@ class ServiciosController extends Controller
                 ->first();
                 $cajero= $datos_cajero->user_sinot;
 
-
             //******************** recuperar los servicios adquiridos ***** */
             if (!empty($request->servicios_adquiridos) && is_array($request->servicios_adquiridos))
             {
-
                     $cantidadEnNicho=$this->contarDifuntoEnNicho($codigo_n);
                     $difuntoEnNicho=$this->buscarDifuntoEnNicho($request);
+                    $cant=$cantidadEnNicho;
                     // $explode_txt=$request->servicio_hijos_txt;
 
                     $texto_servicio="";
                     $separador=" ";
                     foreach($request->servicios_adquiridos as $key=>$servi)
                     {
-                        // dd($servi['txt_tipo_servicio']);
-                        if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'  || $servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='1982')
+
+                        // print_r($servi['serv']);
+                        if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'  || $servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='1982' || $servi['serv']=='630' || $servi['serv']=='631')
                         { //inhumaciones
+                            // dd("inhum"+$cantidadEnNicho);
+
                             $cant_ant= $cantidadEnNicho;
 
                                     $estado_nicho="OCUPADO";
@@ -501,29 +507,31 @@ class ServiciosController extends Controller
                                     $texto_servicio = $texto_servicio. $separador. $servi['txt_serv']." Bs.";
                         }else if($servi['serv'] == '645' || $servi['serv'] =='644' || $servi['serv'] == '629' || $servi['serv'] == '628')
                         {  //exhumaciones
-                                    $cant_ant= $cantidadEnNicho;
-                                        if($difuntoEnNicho==false)
-                                        {
-                                            $estado_nicho="EXHUMADO";
-                                            // $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // .
-                                            $det_exhum=$servi['tblobs'];
+                            // dd($cantidadEnNicho);
 
-                                        }
-                                        else{
+                                        $cant_ant= $cantidadEnNicho;
+                                        // if($difuntoEnNicho==false)
+                                        // {
+                                        //     $estado_nicho="EXHUMADO";
+                                        //     // $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // .
+                                        //     $det_exhum=$servi['tblobs'];
 
-                                            $responsable_id=$difuntoEnNicho->responsable_id;
-                                            $difunto_id=$difuntoEnNicho->difunto_id;
-                                            $estado_nicho="EXHUMADO";
-                                            // $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // .
-                                            $det_exhum=$servi['tblobs'];
-                                        }
+                                        // }
+                                        // else{
+
+                                        //     $responsable_id=$difuntoEnNicho->responsable_id;
+                                        //     $difunto_id=$difuntoEnNicho->difunto_id;
+                                        //     $estado_nicho="EXHUMADO";
+                                        //     // $observacion="Exhumado en fecha".date('d/m/Y')." solicitante exhumación (". $pago_por. ") " .$nombre_pago. " ". $paterno_pago ." ".$materno_pago. " ci: ".$ci; // .
+                                        //     $det_exhum=$servi['tblobs'];
+                                        // }
 
 
-                                        if( $cantidadEnNicho == 1 ){
+                                        if( $cantidadEnNicho == 1 && $request->tipo_nicho== "TEMPORAL" ){
                                             $estado_nicho="LIBRE";
                                             $cant= $cantidadEnNicho -1;
                                         }
-                                        else if( $cantidadEnNicho >= 1){
+                                        else if( $cantidadEnNicho >= 1 ){
                                             $estado_nicho="OCUPADO";
                                             $cant = $cantidadEnNicho -1;
                                         }
@@ -534,6 +542,8 @@ class ServiciosController extends Controller
                                         $texto_servicio= $texto_servicio.$separador.$servi['txt_serv']." Bs.";
                          }
                         else{
+                            // dd("other"+$cantidadEnNicho);
+
                                if($servi['serv'] == '642'){
                                     $pago_renovaciones="SI";
                                 }
@@ -703,7 +713,7 @@ class ServiciosController extends Controller
 
                     //insertar tbl responsable_difunto
                     if (isset($difuntoid) && isset($idresp)) {
-
+// dd($estado_nicho);
                         $rf = new ResponsableDifunto();
                         $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid );
 
@@ -1406,24 +1416,24 @@ class ServiciosController extends Controller
                     'nombres_dif' => 'required',
                     'paterno_dif'=> 'required',
                     'tipo_dif'=> 'required',
-                    'genero_dif'=> 'required',
+                    // 'genero_dif'=> 'required',
                 //   'ci_resp' => 'required',
                     'nombres_resp' => 'required',
                     'paterno_resp'=> 'required',
                     // 'domicilio'=> 'required',
-                    'genero_resp'=> 'required',
+                    // 'genero_resp'=> 'required',
                     'servicios_adquiridos' => 'required',
                 ], [
                     // 'ci_dif.required' => 'El campo ci del difunto es obligatorio, si no tiene documento presione el boton "generar carnet provisional  (icono lapiz)" para asignarle un numero provisional',
                     'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
                     'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
                     'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
-                    'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
+                    // 'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
                     // 'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
                     'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
                     'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
                     // 'domicilio.required'=> 'El campo domicilio es obligatorio',
-                    'genero_resp.required'=> 'El campo genero del responsable es obligatorio',
+                    // 'genero_resp.required'=> 'El campo genero del responsable es obligatorio',
                     'servicios_adquiridos.required' => 'Debe seleccionar al menos un tipo de servicio',
                     // 'servicio_hijos.required' => 'Debe seleccionar al menos un servicio',
                 ]);
@@ -1664,13 +1674,17 @@ class ServiciosController extends Controller
     }
 
 
-    // public function registrar_asignacion(Request $request){
+    public function lista_difuntos(Request $request){
 
-    //     $codigo_nuevo_nicho=$request->cuartel_nuevo.".".$request->bloque_nuevo.".".$request->nicho_nuevo.".".$request->fila_nuevo;
-    //     $rf = new ResponsableDifunto ;
-    //     $rf->registrar_asignacion($request ,$difuntoid, $idresp, $codigo_nuevo_nicho, $estado_nicho, $id_nicho);
-    //         return $resp;
-    //     }
+
+        $nicho= New Nicho;
+        $codigo_nicho= $request->cuartel.".".$request->bloque.".".$request->nicho.".".$request->fila;
+
+         $rf = new ResponsableDifunto ;
+         $difuntos=  $rf->lista_difuntos_perpetuo($codigo_nicho);
+
+         return $difuntos;
+        }
     }
 
 
