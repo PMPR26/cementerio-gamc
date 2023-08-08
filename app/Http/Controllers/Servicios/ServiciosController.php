@@ -464,7 +464,7 @@ class ServiciosController extends Controller
                                             $cant_ant=$cantidadEnNicho;
                                             return response([
                                                 'status'=> false,
-                                                'response'=>"temporal_ocupado"
+                                                'message'=>"temporal_ocupado"
                                             ],200);
                                         }else{
                                             $cant=1;
@@ -683,62 +683,62 @@ class ServiciosController extends Controller
 
                        /********recuperar datos de la persona que realizo el pago, si es el propietario o un tercer responsable */
 
-                    if ($request->pago_por != "responsable") {
-                        $pago_por = "Tercera persona";
-                        $nombre_pago = trim(strtoupper($request->name_pago));
-                        $paterno_pago = trim(strtoupper($request->paterno_pago));
-                        $materno_pago =  trim(strtoupper($request->materno_pago));
-                        $ci = $request->ci_pago;
-                        $domicilio = "SIN ESPECIFICACION";
-                    } else {
-                                $pago_por = "Titular responsable";
-                                $nombre_pago =  trim(strtoupper($request->nombres_resp));
-                                if ($request->paterno_resp == "") {
-                                    $paterno_pago = "NO DEFINIDO";
+                                if ($request->pago_por != "responsable") {
+                                    $pago_por = "Tercera persona";
+                                    $nombre_pago = trim(strtoupper($request->name_pago));
+                                    $paterno_pago = trim(strtoupper($request->paterno_pago));
+                                    $materno_pago =  trim(strtoupper($request->materno_pago));
+                                    $ci = $request->ci_pago;
+                                    $domicilio = "SIN ESPECIFICACION";
                                 } else {
-                                    $paterno_pago =  trim(strtoupper($request->paterno_resp));
+                                            $pago_por = "Titular responsable";
+                                            $nombre_pago =  trim(strtoupper($request->nombres_resp));
+                                            if ($request->paterno_resp == "") {
+                                                $paterno_pago = "NO DEFINIDO";
+                                            } else {
+                                                $paterno_pago =  trim(strtoupper($request->paterno_resp));
+                                            }
+                                            if ($request->domicilio == "") {
+                                                $domicilio = "NO DEFINIDO";
+                                            } else {
+                                                $domicilio = trim(strtoupper($request->domicilio));
+                                            }
+
+                                            $materno_pago =  trim(strtoupper($request->materno_resp)) ?? '';
+                                            $ci = $ci_adjudicatario;
                                 }
-                                if ($request->domicilio == "") {
-                                    $domicilio = "NO DEFINIDO";
-                                } else {
-                                    $domicilio = trim(strtoupper($request->domicilio));
-                                }
-
-                                $materno_pago =  trim(strtoupper($request->materno_resp)) ?? '';
-                                $ci = $ci_adjudicatario;
-                    }
 
 
-                    //end responsable
+                                  //end responsable
 
-                    //insertar tbl responsable_difunto
-                    if (isset($difuntoid) && isset($idresp)) {
-// dd($estado_nicho);
-                        $rf = new ResponsableDifunto();
-                        $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid );
+                                    //insertar tbl responsable_difunto
+                                    if (isset($difuntoid) && isset($idresp)) {
+                                        // dd($estado_nicho);
+                                        $rf = new ResponsableDifunto();
+                                        $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid );
 
-                        if ($existeRespDif != null) {
-                            $iddifuntoResp = $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
-                        } else {
-                            $iddifuntoResp = $rf->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho, $id_nicho);
-                        }
-                    }
-                    // if(isset($responsable_id) ){
-                    //     $difres= ResponsableDifunto::where('responsable_id', $responsable_id)
-                    //     ->where('difunto_id', $difunto_id)
-                    //    ->first();
+                                        if ($existeRespDif != null) {
+                                            $iddifuntoResp = $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
+                                        } else {
+                                            $iddifuntoResp = $rf->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho, $id_nicho);
+                                        }
+                                    }
+                                            // if(isset($responsable_id) ){
+                                            //     $difres= ResponsableDifunto::where('responsable_id', $responsable_id)
+                                            //     ->where('difunto_id', $difunto_id)
+                                            //    ->first();
 
 
-                    //      $difres->estado_nicho = $estado_nicho ?? '';
-                    //      $difres->save();
-                    // }
-                    // else{
+                                            //      $difres->estado_nicho = $estado_nicho ?? '';
+                                            //      $difres->save();
+                                            // }
+                                            // else{
 
-                    //     $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n,  $estado_nicho);
+                                            //     $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n,  $estado_nicho);
 
-                    // }
+                                            // }
 
-                        //insert pago
+                                                //insert pago
                                                 if($request->reg=="reg"){
                                                     $fur=$request->nrofur;
                                                     $estado_pago=true;
@@ -812,20 +812,37 @@ class ServiciosController extends Controller
                                                 if($request->asignar_difunto_nicho=="asignado")
                                                 {
                                                     $n=New Nicho;
-                                                    $nuevo_nicho= $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
-// dd( $codigo_nuevo_nicho);
-                                                       $rf = new ResponsableDifunto ;
-                                                       $rf->registrar_asignacion($request ,$difuntoid, $idresp, $nuevo_nicho->codigo, $estado_nicho, $nuevo_nicho->id, $nuevo_nicho->tipo_nicho);
+                                                    $nuevo_n= $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
+                                                    $nuevo_nicho= json_decode($nuevo_n->getContent(), true);
+                                                   // dd($nuevo_nicho['nicho']);
+                                                    if($nuevo_nicho['status']==true){
+                                                        $rf = new ResponsableDifunto ;
+                                                       $rf->registrar_asignacion($request ,$difuntoid, $idresp, $nuevo_nicho['nicho']['codigo'], $estado_nicho, $nuevo_nicho['nicho']['id'], $nuevo_nicho['nicho']['tipo']);
                                                         $lib=New Nicho;
                                                         $liberar=$lib->liberarNichoAsignacion($id_nicho, $codigo_n);
+                                                    }
+                                                    else{
+                                                        return response([
+                                                            'status'=> false,
+                                                            'message'=> $nuevo_nicho['message']
+                                                        ],201);
+                                                    }
+
                                                 }
 
 
+                                                return response([
+                                                    'status'=> true,
+                                                    'response'=> $serv->id,
+                                                    'message'=>"El registro se ha realizado con éxito..!!"
+                                                ],200);
 
-                                            return response([
-                                                'status'=> true,
-                                                'response'=> $serv->id
-                                            ],201);
+
+                             }else{
+                                return response([
+                                    'status'=> false,
+                                    'message'=> "Debe seleccionar al menos un servicio"
+                                ],201);
                              }
 
 
@@ -1443,6 +1460,7 @@ class ServiciosController extends Controller
                 $txt_tipo_servicio=[];
                 $servicio_hijos=[];
                 $txt_servicios_hijos=[];
+                $tblobs=[];
                 $cantidad=[];
 
 
@@ -1472,12 +1490,7 @@ class ServiciosController extends Controller
             {
 
                     /// datos de nicho para caso de cremacion para externo
-
-
-
                         $observacion=$request->observacion;
-
-
                         // step2: register difunto --- si id_difunto id_difunto es null insertar difunto insertar responsable
                         $existeDifunto =DB::table('difunto')->whereRaw('nombres=\''.trim(mb_strtoupper($request->nombres_dif, 'UTF-8')).'\'')
                         ->whereRaw('primer_apellido=\''.trim(mb_strtoupper($request->paterno_dif, 'UTF-8')).'\'')
@@ -1586,11 +1599,13 @@ class ServiciosController extends Controller
                                                                     }
 
                                                                     $nombre_adjudicatario= $request->nombre_resp." ".$request->paterno_resp." ".$request->materno_resp;
-                                                                    $ci_adjudicatario=
+                                                                    $ci_adjudicatario=$request->ci_resp;
+
+
                                                                     $response=$obj->GenerarFur($ci,$nombre_pago,$paterno_pago,$materno_pago, $domicilio,  $nombre_difunto, $codigo_n,
-                                                                    $bloque, $nro_nicho, $fila,
-                                                                    $servicio_hijos,
-                                                                    $cantidades, $cajero, $nombre_adjudicatario, $ci_adjudicatario, $request->observacion );
+                                                                    $bloque, $nro_nicho, $fila, $servicio_hijos, $cantidades, $cajero,
+                                                                    $nombre_adjudicatario, $ci_adjudicatario , $tblobs);
+
 
                                                                     if($response['status']==true){
                                                                         $fur = $response['response'];

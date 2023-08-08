@@ -800,42 +800,6 @@ $(document).ready(function ()
                  }
         });
 
-        // $(document).on('click', '.service_child', function(e) {
-        //     var monto = 0;
-        //     var cantidad = 1;
-        //     var subtotal = 0;
-
-        //     $('#list_detalle').empty();
-        //     $(".service_child").each(function(index) {
-        //         console.log(index + ": " + $(this).val());
-        //         var ar = $(this).val().split('-');
-        //         var ar1 = ar[1].split('=>');
-        //         if ($(this).is(':checked')) {
-        //             var ar = $(this).val().split('-');
-        //             var ar1 = ar[1].split('=>');
-        //             subtotal = cantidad * ar[3];
-        //             if (ar1[1] == 642) {
-
-        //             } else {
-        //                 var html = '<tr class="row_' + ar[0] + ' dynamic-row">'
-        //                     + '<td class="w-auto text-center service">' + ar[0] + '</td>'
-        //                     + '<td class="w-auto text-center service_txt">' + ar1[0] + '</td>'
-        //                     + '<td class="w-auto text-center service_hijo">' + ar1[1] + '</td>'
-        //                     + '<td class="w-auto text-center service_hijo_txt">' + ar[2] + '</td>'
-        //                     + '<td class="w-auto text-center cantidad_row">' + cantidad + '</td>'
-        //                     + '<td class="w-auto text-center precio_srv">' + ar[3] + '</td>'
-        //                     + '<td class="w-auto text-center subtotal">' + subtotal + '</td>'
-        //                     + '<td class="w-auto text-center tblobs" contenteditable></td>'
-        //                     +'</tr>';
-        //                 $('#list_detalle').append(html);
-        //                 addDragHandlers($('#list_detalle .row_' + ar[0] + '.dynamic-row')[0]);
-        //             }
-        //         } else {
-        //             // $('#list_detalle .row_'+ar[0]+'').remove();
-        //         }
-        //     });
-        //     calcularMonto();
-        // });
 
 
         /********************MODIFICACION CREACION TABLA DE SERVICIOS SELECCIONADOS ****************************************/
@@ -2070,16 +2034,14 @@ $(document).ready(function ()
                                async: false,
                                data: JSON.stringify({
 
-
-                                   'tipo_nicho':  $('#tipo_nicho').val(),
-                                    'ci_dif':  $('#search_dif').val(),
+                                   'ci_dif':  $('#search_dif').val(),
                                    'nombres_dif':  $('#nombres_dif').val(),
                                    'paterno_dif':  $('#paterno_dif').val(),
                                    'materno_dif':  $('#materno_dif').val(),
                                    'fechanac_dif':  $('#fechanac_dif').val(),
                                    'fecha_def_dif':  $('#fechadef_dif').val(),
                                    'causa':  $('#causa').val(),
-                                //    'ecivil_dif':  $('#ecivil_dif').val(),
+                                   'fecha_ingreso_nicho':  $('#fecha_ingreso_nicho').val(),
                                    'tipo_dif':  $('#tipo_dif').val(),
                                    'genero_dif':  $('#genero_dif').val(),
                                    'ci_resp':  $('#search_resp').val(),
@@ -2089,9 +2051,6 @@ $(document).ready(function ()
                                    'fechanac_resp':  $('#fechanac_resp').val(),
                                    'telefono':  $('#telefono').val(),
                                    'celular':  $('#celular').val(),
-                                //    'ecivil':  $('#ecivil').val(),
-                                //    'email':  $('#email').val(),
-                                //    'domicilio':  $('#domicilio').val(),
                                    'genero_resp':  $('#genero_resp').val(),
                                    'pag_con':  $('#pag_con').val(),
                                    'tiempo':  $('#tiempo').val(),
@@ -2100,17 +2059,16 @@ $(document).ready(function ()
                                    'materno_pago':$('#materno_pago').val(),
                                    'ci_pago':$('#ci_pago').val(),
                                    'pago_por':$('#pago_tercero').val(),
-                                //    'descripcion_exhumacion':$('#det_exhumacion').val(),
-                                   'observacion':$('#observacion').val(),
                                    'servicios_adquiridos':servicios_adquiridos,
                                    'monto':$('#totalServ').html(),
                                    'monto_renov':  $('#monto_renov').val(),
-                                //    'gestion_renov':  $('#gestion_renov').val(),
+
+                                   'nueva_fecha_ingreso':$('#nueva_fecha_ingreso').val(),
+
                                    'nro_renovacion':$('#renov').val(),
                                    'sereci':$('#sereci').val(),
                                    'gratis':$('#gratis').val(),
                                    'asignar_difunto_nicho':$('#asignar_difunto_nicho').val(),
-
                                    'add_difunto':$('#add_difunto').val(),
 
                                }),
@@ -2125,7 +2083,7 @@ $(document).ready(function ()
                                    });
                                    setTimeout(function() {
                                     //    location.reload();
-                                    // window.location.href = "/servicios/servicios"
+                                    window.location.href = "/servicios/servicios"
                                    }, 2000);
                                    //toastr["success"]("Registro realizado con éxito!");
                                },
@@ -2147,7 +2105,6 @@ $(document).ready(function ()
                                            });
                                            setTimeout(function() {
                                                location.reload();
-                                            // window.location.href =  "{{URL::to('serv')}} " //"{{ route('serv') }}";
 
                                            }, 2000);
                                    }
