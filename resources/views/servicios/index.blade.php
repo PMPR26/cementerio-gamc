@@ -317,8 +317,8 @@
                                                                     }else{
                                                                         Swal.fire(
                                                                             'Proceso fallado',
-                                                                            'No se pudo realizar la anulación del FUR',
-                                                                            ''+data.message+''
+                                                                            ` ${data.message}`,
+
                                                                                     )
                                                                             .then(() => {
                                                                                     return false;
