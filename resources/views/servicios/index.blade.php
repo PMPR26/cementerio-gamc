@@ -83,6 +83,8 @@
                                             class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
                                 </form>
                                 @endif
+                                @if( $serv->estado_pago==false)
+
                                 <form action="{{ route('serv.anularFur') }}" method="GET" target="blank">
                                     @csrf
                                     <input type="hidden" name="codigo_nicho"  id="codigo_nicho_del" value={{ $serv->codigo_nicho }}>
@@ -92,7 +94,7 @@
                                     <button type='button' class="btn btn-danger anular"><i
                                             class="fas fa-trash fa-2x"></i></button>
                                 </form>
-
+                                @endif
 
                             </td>
                         </tr>
