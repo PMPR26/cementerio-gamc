@@ -1687,7 +1687,11 @@ class ServiciosController extends Controller
     }
 
     public function anularFur(Request $request){
-
+       // todo: terminar modulo
+       //dd($request);
+       $sn=New ServicioNicho;
+       $serv=$sn->anularServicio($request);
+       return $serv;
     }
 
 

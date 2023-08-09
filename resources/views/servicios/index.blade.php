@@ -265,7 +265,7 @@
             var id = $('#id_serv_del').val();
             var fur = $('#fur_del').val();
                 Swal.fire({
-                        title: 'Esta seguro de eliminar el registro?',
+                        title: 'Esta seguro de anular el registro?',
                         showDenyButton: true,
                         showCancelButton: true,
                         confirmButtonText: 'Realizar',
