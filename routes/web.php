@@ -141,7 +141,7 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::get('generate-pdf', [App\Http\Controllers\Servicios\ServiciosController::class, 'generatePDF'])->name('serv.generatePDF')->middleware('auth');
     Route::get('generate-pdf-cm', [App\Http\Controllers\Servicios\ServiciosController::class, 'generatePDFCM'])->name('serv.generatePDFCM')->middleware('auth');
 
-    Route::get('anular-fur', [App\Http\Controllers\Servicios\ServiciosController::class, 'anularFur'])->name('serv.anularFur')->middleware('auth');
+    Route::post('anular-fur', [App\Http\Controllers\Servicios\ServiciosController::class, 'anularFur'])->name('serv.anularFur')->middleware('auth');
 
     Route::post('/new-serviciocm', [App\Http\Controllers\Servicios\ServiciosController::class,'createNewServicioscm'])->name('new.serviciocm');
     Route::post('/get-nro-renov',  [App\Http\Controllers\Servicios\ServiciosController::class,'getNroRenov'])->name('get.nro.renov');
