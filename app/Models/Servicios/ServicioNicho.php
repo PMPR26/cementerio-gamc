@@ -224,7 +224,7 @@ class ServicioNicho extends Model
             public function anularServicio(Request $request){
 
                $a= $this->anular_fur( $request);
-                 if($a['fur_estado']== "IN" || $a['fur_estado']== "IN" ){
+                 if($a['fur_estado']== "IN"  ){
                     $data= ServicioNicho::where('id', $request->id)->first();
                     $data->estado="INACTIVO";
                     $data->save();
@@ -240,7 +240,9 @@ class ServicioNicho extends Model
                 // 2do si no esta pagado llamar servicio multiserv http://192.168.220.117:8006/api/v1/cementerio/anular-fur para inactivar el fur
                 $headers =  ['Content-Type' => 'application/json'];
                 $client = new Client();
-                $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/anular-fur', [
+                 $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/anular-fur', [
+                //$response = $client->post( 'http://192.168.220.117:8006/api/v1/cementerio/anular-fur', [
+
                   'json' => [
                         'fur' => $request->fur
                     ],

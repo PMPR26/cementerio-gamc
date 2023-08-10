@@ -263,9 +263,9 @@
 
         $(document).on('click', '.anular', function(e){
             e.preventDefault();
-            var id= $(this).attr('id');
+            var fur= $(this).attr('id');
 
-            var fur = $(this).attr('data-id');
+            var id = $(this).attr('data-id');
             console.log('id: '+id+" fur: "+fur);
                 Swal.fire({
                         title: 'Esta seguro de anular el registro?',
