@@ -313,6 +313,8 @@ class MantenimientoController extends Controller
                                                 $mant = new Mantenimiento;
                                                 $mant->gestion =implode(', ', $request->sel);
                                                 $mant->fur=$fur;
+                                                $mant->date_in=date('Y-m-d');
+
                                                 $mant->date_in=$request->fechadef_dif;
                                                 $mant->respdifunto_id=$iddifuntoResp;
                                                 $mant->precio_sinot= $request->precio_sinot;
@@ -1067,5 +1069,14 @@ public function pagoMantenimientoCM(Request $request){
             'fecha_pago' => $fecha
         ]);
     }
+
+
+    public function anularFurMant(Request $request){
+        // todo: terminar modulo
+        //dd($request);
+        $sn=New Mantenimiento;
+        $serv=$sn->anularServicio($request);
+        return $serv;
+     }
 
 }
