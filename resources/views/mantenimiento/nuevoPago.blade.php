@@ -446,6 +446,44 @@
                         <h4>GESTIONES ADEUDADAS</h4>
                         <div class="row">
                             <div class="col-sm-12 col-md-12 col-xl-12">Pago por {{ $descrip }}</div>
+                        </div>
+
+                            <div class="row" id="contenedor_pagos" style="padding-top: 15px;">
+
+                                <div class="col-2"> <label for="ultima_gestion_pagada">Ultima Gestion Pagada anterior</label><input type="number" name="ultima_gestion_pagada" value="0" id="ultima_gestion_pagada" class="form-control"></div>
+
+                                <div class="col-3"> <label for="gestiones_pagadas">Ultima Gestion Pagada actual</label><input type="text" name="gestiones_pagadas" value="0" id="gestiones_pagadas" readonly class="form-control"></div>
+                                <div class="col-2"> <label for="cantidad">Cantidad</label><input type="number" name="cantidad" value="0" id="cantidad_ges" class="form-control" readonly><input type="hidden" name="gestiones_act" value="0" id="gestiones_act" class="form-control"></div>
+                                <div class="col-2"> <label for="total_pago_gestiones">Total a pagar</label><input type="text" readonly name="total_pago_gestiones" value="0" id="total_pago_gestiones" class="form-control"></div>
+
+                                <div class="col-3"> <label for="gestiones_pagadas">Ver Gestiones Adeudadas<input type="checkbox" name="adeudado" value="0" id="gestiones_adeudadas" class="form-control"></label>
+                                    <input type="hidden" name="ultimo_pago" value="" id="ultimo_pago_ges" readonly class="form-control"></div>
+                            </div>
+
+
+                            <div class="row">
+                            <div class="col-sm-12 col-md-12 col-xl-12" id="conservacion" >
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"> CUOTA</th>
+                                            <th scope="col"> GESTION</th>
+                                            <th scope="col"> MONTO</th>
+                                            <th scope="col"> SELECCIONAR</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="row-cuota">
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3">Total</td>
+                                            <td id="total"></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-sm-6 col-md-6 col-xl-6"> Regularizar Transaccion  &nbsp;&nbsp;&nbsp;  <input type="checkbox"
                                     name="reg" id="reg" value="reg" style="width: 30px; height:30px"></div>
                             <div class="col-sm-6 col-md-6 col-xl-6" id="fur_reg" style="display: none"> FUR <input
@@ -453,26 +491,7 @@
                         </div>
                     </div>
 
-                    <div class="card-body" id="conservacion" style="display:none">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col"> CUOTA</th>
-                                    <th scope="col"> GESTION</th>
-                                    <th scope="col"> MONTO</th>
-                                    <th scope="col"> SELECCIONAR</th>
-                                </tr>
-                            </thead>
-                            <tbody id="row-cuota">
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="3">Total</td>
-                                    <td id="total"></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+
                 </div>
 
 
@@ -521,55 +540,9 @@
 
             }
 
-            // calcular total a pagar
-
-            $(document).on('click', '.sel', function() {
-                var sum = 0;
-                var prev = 0;
-                var next = 0;
-                var current = 0;
-                let cpago = [];
-                $('.sel').each(function(index) {
-                    current = $(this).val();
-                    next = parseInt(current) + parseInt(1);
-                    if ($(this).is(':checked')) {
-                        sum = parseFloat(sum) + parseFloat($('#precio_sinot').val());
-
-                        cpago.push($(this).val());
-
-                        $('#' + next + '').prop('disabled', false);
-                    } else {
-                        revisarCheck($(this).val());
-                    }
-
-                });
-                $('#total').html(sum);
-                $('#txttotal').val(sum);
-                console.log(cpago)
-
-            });
-
-            // validacion seccion consecutiva
-            function revisarCheck(valor) {
-                var next = parseInt(valor) + parseInt(1);
-                if ($('#' + next + '').is(':checked')) {
-                    swal.fire({
-                        title: "Precaucion!",
-                        text: "!El pago de las cuotas debe ser consecutivo!",
-                        type: "warning",
-                        //  timer: 2000,
-                        showCancelButton: false,
-                        showConfirmButton: true
-                    });
 
 
-                    setTimeout(function() {
-                        return false;
-                    }, 2000);
-                    // $('#' + valor + '').prop('checked', true);
-                    $(".sel").prop("checked", false);
-                }
-            }
+
 
 
 
@@ -667,7 +640,8 @@
                             $('#difunto_search').val(data.datos.id_dif);
                             $('#responsable_search').val(data.datos.id_resp);
                             $('#comprob').html(data.datos.fur);
-                            gestionesAdeudadas(data.datos.ultimo_pago);
+                            // gestionesAdeudadas(data.datos.ultimo_pago);
+                            $('#ultima_gestion_pagada').val(data.datos.ultimo_pago);
 
                         } else {
                             $.ajax({
@@ -742,7 +716,8 @@
                                                 $('#tiempo').val(data.response
                                                     .datos_difuntos[0].tiempo);
 
-                                                gestionesAdeudadas(pg);
+                                                 //gestionesAdeudadas(pg);
+                                                 $('#ultima_gestion_pagada').val(pg);
 
                                                 $('#pago_cont').html(pg);
                                                 $('#pago_cont_ant').html(pg);
@@ -892,64 +867,6 @@
                     }, 2000);
                 }
             }
-
-
-            // calcular nro de gestiones adeudadas
-            function gestionesAdeudadas(ultpago) {
-                $('#conservacion').show();
-
-                $('#row-cuota').empty();
-                var fecha = new Date();
-                var year = fecha.getFullYear();
-                var gest = year - ultpago;
-
-                if (gest > 0) {
-                    drawBox(gest, ultpago);
-                } else {
-                    $('#infoPlazo').html('El nicho no tiene deudas pendientes');
-                    swal.fire({
-                        title: "Notificación!",
-                        text: "El nicho no tiene deudas pendientes!",
-                        type: "success",
-                        showCancelButton: false,
-                        showConfirmButton: true
-                    });
-
-                    setTimeout(function() {
-                        return false;
-                    }, 2000);
-                }
-            }
-
-            function drawBox(gest, anio) {
-                var html = "";
-
-                for (var i = 1; i < gest; i++) {
-                    var c = parseInt(anio) + parseInt(i);
-
-                    if (i == 1) {
-                        html = '<tr>' +
-                            '<td scope="row" >' + i + '</td> ' +
-                            '<td>' + c + '</td> ' +
-                            '<td>' + $('#precio_sinot').val() + '</td> ' +
-                            '<td> <input type="checkbox" style="width:30px;  height: 30px;" name="sel[]" class="sel"  id="' +
-                            c + '" value="' + c + '"></td> ' +
-                            '</tr>';
-                        $('#row-cuota').append(html);
-                    } else {
-                        html = '<tr>' +
-                            '<td scope="row" >' + i + '</td> ' +
-                            '<td>' + c + '</td> ' +
-                            '<td>' + $('#precio_sinot').val() + '</td> ' +
-                            '<td> <input type="checkbox" style="width:30px;  height: 30px;" name="sel[]" class="sel" value="' +
-                            c + '"  id="' + c + '" disabled></td> ' +
-                            '</tr>';
-                        $('#row-cuota').append(html);
-                    }
-
-                }
-            }
-
 
 
 
@@ -1483,6 +1400,167 @@
             $(document).on('click' ,  'button[aria-describedby="select2-causa-container"] span', function(){
                    $('#causa option:selected').remove();
             })
+
+
+
+
+             // calcular nro de gestiones adeudadas
+             function gestionesAdeudadas(ultpago) {
+                $('#conservacion').show();
+
+                $('#row-cuota').empty();
+                var fecha = new Date();
+                var year = fecha.getFullYear();
+                var gest = year - ultpago;
+
+                if (gest > 0) {
+                    drawBox(gest, ultpago);
+                } else {
+                    $('#infoPlazo').html('El nicho no tiene deudas pendientes');
+                    swal.fire({
+                        title: "Notificación!",
+                        text: "El nicho no tiene deudas pendientes!",
+                        type: "success",
+                        showCancelButton: false,
+                        showConfirmButton: true
+                    });
+
+                    setTimeout(function() {
+                        return false;
+                    }, 2000);
+                }
+            }
+            /**************************** funcion para dibujar las gestiones *******************/
+            function drawBox(gest, anio) {
+                var html = "";
+
+                for (var i = 1; i < gest; i++) {
+                    var c = parseInt(anio) + parseInt(i);
+
+                    if (i == 1) {
+                        html = '<tr>' +
+                            '<td scope="row" >' + i + '</td> ' +
+                            '<td>' + c + '</td> ' +
+                            '<td>' + $('#precio_sinot').val() + '</td> ' +
+                            '<td> <input type="checkbox" style="width:30px;  height: 30px;" name="sel[]" class="sel"  id="' +
+                            c + '" value="' + c + '"></td> ' +
+                            '</tr>';
+                        $('#row-cuota').append(html);
+                    } else {
+                        html = '<tr>' +
+                            '<td scope="row" >' + i + '</td> ' +
+                            '<td>' + c + '</td> ' +
+                            '<td>' + $('#precio_sinot').val() + '</td> ' +
+                            '<td> <input type="checkbox" style="width:30px;  height: 30px;" name="sel[]" class="sel" value="' +
+                            c + '"  id="' + c + '" disabled></td> ' +
+                            '</tr>';
+                        $('#row-cuota').append(html);
+                    }
+
+                }
+            }
+
+
+            /*****************************control generar lista de cuotas por gestiones adeudadas****************************************************/
+            $(document).on('click', '#gestiones_adeudadas', function(e){
+                var ultpago=$('#ultima_gestion_pagada').val();
+                if(ultpago==0){
+                    swal.fire({
+                                title: "Precaución!",
+                                text: "Debe ingresar la ultima gestion pagada ejm. 2022 !",
+                                type: "warning",
+                                showCancelButton: false,
+                                showConfirmButton: true
+                            });
+
+                            setTimeout(function() {
+                                return false;
+                            }, 2000);
+
+                }
+                else{
+                    if ($(this).is(':checked')) {
+                          gestionesAdeudadas(ultpago);
+                        }
+                        else{
+                            $('#row-cuota').empty();
+                            $('#conservacion').hide();
+
+                        }
+                    }
+            });
+
+            /************************limpiar cuotas **********************************/
+            $(document).on('click', '#ultima_gestion_pagada', function(e){
+                if ($('#gestiones_adeudadas').is(':checked')) {
+                    $('#gestiones_adeudadas').prop('checked', false);
+                    $('#row-cuota').empty();
+                    $('#conservacion').hide();
+                }
+            })
+
+                // calcular total a pagar
+
+                $(document).on('click', '.sel', function() {
+                var sum = 0;
+                var prev = 0;
+                var next = 0;
+                var current = 0;
+                let cpago = [];
+                var cont=0;
+                var ges_pag="";
+                $('.sel').each(function(index) {
+                    current = $(this).val();
+                    next = parseInt(current) + parseInt(1);
+                    if ($(this).is(':checked')) {
+                        sum = parseFloat(sum) + parseFloat($('#precio_sinot').val());
+                        console.log("sum----"+sum);
+                        console.log("pagooo----"+$(this).val());
+
+                        cpago.push($(this).val());
+                        ges_pag=ges_pag+" "+$(this).val();
+                        console.log("ges_pag----"+ges_pag);
+                        cont++;
+                        $('#gestiones_pagadas').val(ges_pag);
+
+                        $('#cantidad_ges').val(cont);
+                        $('#ultimo_pago_ges').val($(this).val());
+                        $('#total_pago_gestiones').val(sum);
+
+                        $('#' + next + '').prop('disabled', false);
+
+                    } else {
+                        revisarCheck($(this).val());
+                    }
+
+                });
+                $('#total').html(sum);
+                $('#txttotal').val(sum);
+                console.log(cpago)
+
+            });
+
+            // validacion seccion consecutiva
+            function revisarCheck(valor) {
+                var next = parseInt(valor) + parseInt(1);
+                if ($('#' + next + '').is(':checked')) {
+                    swal.fire({
+                        title: "Precaucion!",
+                        text: "!El pago de las cuotas debe ser consecutivo!",
+                        type: "warning",
+                        //  timer: 2000,
+                        showCancelButton: false,
+                        showConfirmButton: true
+                    });
+
+
+                    setTimeout(function() {
+                        return false;
+                    }, 2000);
+                    // $('#' + valor + '').prop('checked', true);
+                    $(".sel").prop("checked", false);
+                }
+            }
 
     </script>
 
