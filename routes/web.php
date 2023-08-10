@@ -148,6 +148,7 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::post('/completar', [App\Http\Controllers\Servicios\ServiciosController::class, 'autocompletar'])->name('completar.datos');
     Route::post('/completar-info-nicho', [App\Http\Controllers\Servicios\ServiciosController::class, 'completarInfoNicho'])->name('completar.info.nicho');
     Route::post('/verificarPago',[App\Http\Controllers\Servicios\ServiciosController::class,'verificarPago'])->name('verificar.pago');
+
     Route::post('/listar_difuntos', [App\Http\Controllers\Servicios\ServiciosController::class, 'lista_difuntos'])->name('listar.difuntos');
 
 
@@ -214,6 +215,8 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
       Route::get('/get-mantenimiento/{id}',  [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'getMantenimiento'])->name('mantenimiento.get');
       Route::get('/form-paycm', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'indexcm'])->name('paycm_mant');
       Route::post('/verificarPagoMant',[App\Http\Controllers\Mantenimiento\MantenimientoController::class,'verificarPagoMant'])->name('verificar.pago.mant');
+      Route::post('anular-fur-mant', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'anularFurMant'])->name('mant.anularFur')->middleware('auth');
+
 
 //getInfoPayCm
       Route::get('/getServicioMant', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'getInfoPayCm'])->name('get.services.mant');

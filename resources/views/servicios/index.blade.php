@@ -85,15 +85,10 @@
                                 @endif
                                 @if( $serv->estado_pago==false)
 
-                                {{-- <form action="{{ route('serv.anularFur') }}" method="GET" target="blank">
-                                    @csrf
-                                    <input type="hidden" name="codigo_nicho"  id="codigo_nicho_del" value={{ $serv->codigo_nicho }}>
-                                    <input type="hidden" name="id"  id="{{ $serv->serv_id }}" value={{ $serv->serv_id }}>
-                                    <input type="hidden" name="fur" id="{{ $serv->fur }}"  value={{ $serv->fur }}> --}}
 
                                     <button type='button' class="btn btn-danger anular"  id="{{ $serv->fur }}"  data-id="{{ $serv->serv_id }}"><i
                                             class="fas fa-trash fa-2x"></i></button>
-                                {{-- </form> --}}
+
                                 @endif
 
                             </td>
