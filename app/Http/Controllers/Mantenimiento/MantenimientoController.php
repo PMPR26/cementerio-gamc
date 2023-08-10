@@ -208,13 +208,8 @@ class MantenimientoController extends Controller
                      // end nicho
 // dd($id_nicho);
                  // step2: register difunto --- si id_difunto id_difunto es null insertar difunto insertar responsable
-                 $existeDifunto =DB::table('difunto')->whereRaw('nombres=\''.trim(mb_strtoupper($request->nombres_dif, 'UTF-8')).'\'')
-                 ->whereRaw('primer_apellido=\''.trim(mb_strtoupper($request->paterno_dif, 'UTF-8')).'\'')
-                 ->whereRaw('segundo_apellido=\''.trim(mb_strtoupper($request->materno_dif, 'UTF-8')).'\'')
-                 ->whereRaw('fecha_nacimiento=\''.trim($request->fechanac_dif).'\'')
-                 ->whereRaw('fecha_defuncion=\''.trim($request->fecha_def_dif).'\'')
-                 ->select()
-                 ->first();
+                 $d=New Difunto;
+                 $existeDifunto=$d->searchDifunto($request);
                  if($request->id_difunto==""  || !$existeDifunto){
                         //insertar difunto
                          $difuntoid=$this->insertDifunto($request);
@@ -226,12 +221,8 @@ class MantenimientoController extends Controller
                     // end difunto
                     // step4: register responsable -- si el responsable
                     // $existeResponsable= Responsable::where('ci', $request->ci_resp)->first();
-                    $existeResponsable = Responsable::whereRaw('nombres=\''. trim($request->nombres_resp).'\'')
-                    ->whereRaw('primer_apellido=\''.trim($request->paterno_resp).'\'')
-                    ->whereRaw('segundo_apellido=\''.trim($request->materno_resp).'\'')
-                    ->whereRaw('fecha_nacimiento=\''.trim($request->fechanac_resp).'\'')
-                    ->orWhereRaw('ci=\''.$request->ci_resp.'\'')
-                    ->first();
+                    $r=New Responsable;
+                    $existeResponsable=$r->searchResponsable($request);
 
                             if($request->id_responsable=="" || !$existeResponsable){
                                  $respon=New Responsable;
@@ -412,7 +403,7 @@ class MantenimientoController extends Controller
          $dif->certificado_defuncion = $request->sereci;
          $dif->causa = trim(mb_strtoupper($request->causa, 'UTF-8'));
          $dif->tipo = $request->tipo_dif;
-         $dif->genero = $request->genero_dif;
+         $dif->genero = $request->genero_dif ?? '';
          $dif->certificado_file = $request->urlcertificacion;
          $dif->funeraria =trim(mb_strtoupper($request->funeraria, 'UTF-8'));
          $dif->estado = 'ACTIVO';
@@ -435,7 +426,7 @@ class MantenimientoController extends Controller
          $difunto->certificado_defuncion = $request->sereci;
          $difunto->causa =  trim(mb_strtoupper($request->causa, 'UTF-8'));
          $difunto->tipo = $request->tipo_dif;
-         $difunto->genero = $request->genero_dif;
+         $difunto->genero = $request->genero_dif?? '';
          $difunto->certificado_file = $request->urlcertificacion;
          $difunto->funeraria = trim(mb_strtoupper($request->funeraria, 'UTF-8'));
          $difunto->estado = 'ACTIVO';
@@ -451,12 +442,12 @@ class MantenimientoController extends Controller
          $responsable->nombres =  trim(mb_strtoupper($request->nombres_resp, 'UTF-8'));
          $responsable->primer_apellido = trim(mb_strtoupper($request->paterno_resp, 'UTF-8'));
          $responsable->segundo_apellido =  trim(mb_strtoupper($request->materno_resp, 'UTF-8'));
-         $responsable->fecha_nacimiento = $request->fechanac_resp ?? '';
-         $responsable->genero = $request->genero_resp;
+         $responsable->fecha_nacimiento = $request->fechanac_resp ?? null;
+         $responsable->genero = $request->genero_resp ?? '';
          $responsable->telefono = $request->telefono;
          $responsable->celular = $request->celular;
          $responsable->estado_civil = $request->ecivil ?? '';
-         $responsable->domicilio = $request->domicilio;
+         $responsable->domicilio = $request->domicilio?? '';
          $responsable->email = $request->email ?? '';
          $responsable->estado = 'ACTIVO';
          $responsable->user_id = auth()->id();
@@ -472,13 +463,13 @@ class MantenimientoController extends Controller
          $responsable->nombres =  trim(mb_strtoupper($request->nombres_resp, 'UTF-8'));
          $responsable->primer_apellido = trim(mb_strtoupper($request->paterno_resp, 'UTF-8'));
          $responsable->segundo_apellido =  trim(mb_strtoupper($request->materno_resp, 'UTF-8'));
-         $responsable->fecha_nacimiento = $request->fechanac_resp ?? '';
-         $responsable->genero = $request->genero_resp;
+         $responsable->fecha_nacimiento = $request->fechanac_resp ?? null;
+         $responsable->genero = $request->genero_resp ?? '';
          $responsable->telefono = $request->telefono;
          $responsable->celular = $request->celular;
          $responsable->estado_civil = $request->ecivil ??'';
-         $responsable->domicilio = $request->domicilio;
-        $responsable->email = $request->email ??  '';
+         $responsable->domicilio = $request->domicilio?? '';
+         $responsable->email = $request->email ??  '';
          $responsable->estado = 'ACTIVO';
          $responsable->user_id = auth()->id();
          $responsable->save();
