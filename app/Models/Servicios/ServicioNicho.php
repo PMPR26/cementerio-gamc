@@ -120,6 +120,40 @@ class ServicioNicho extends Model
         }
 
 
+
+ //fur mantenimiento
+      public function GenerarFurCMant($ci, $nombre, $primer_apellido,
+      $ap_materno, $direccion, $codigo,
+       $servicios_cementery , $cantidades, $cajero,  $adjudicatario, $tblobs, $superficie)
+        {
+
+            $headers =  ['Content-Type' => 'application/json'];
+            $client = new Client();
+             $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCM', [
+            //  $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryCMant', [
+
+                'json' => [
+                    'ci' => $ci,
+                    'nombre' => $nombre,
+                    'primer_apellido' => $primer_apellido,
+                    'ap_materno' => $ap_materno,
+                    'direccion' => $direccion,
+                    'codigo' => $codigo,
+                    'servicios_cementery' => $servicios_cementery,
+                    'cantidad' => $cantidades,
+                    'cajero'=>$cajero,
+                    'adjudicatario'=>$adjudicatario,
+                    'tblobs'=>$tblobs,
+                    'superficie'=>$superficie
+                ],
+                'headers' => $headers,
+            ]);
+            $fur_response = json_decode((string) $response->getBody(), true);
+            return $fur_response;
+        }
+
+
+
         public function getSevHijosByFather(Request $request){
                 $headers =  ['Content-Type' => 'application/json'];
                 $client = new Client();

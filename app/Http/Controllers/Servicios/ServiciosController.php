@@ -44,21 +44,29 @@ class ServiciosController extends Controller
             if($rolUsuario == "APOYO"){
                 return view('restringidos/no_autorizado');
             }else{
-                $servicio=DB::table('servicio_nicho')
-                ->select(  'servicio_nicho.codigo_nicho',
-                'servicio_nicho.tipo_servicio',
-                'servicio_nicho.servicio',
-                'servicio_nicho.fur',
-                'servicio_nicho.tipo',
-                'servicio_nicho.monto',
-                'servicio_nicho.nombrepago as nombre_resp',
-                'servicio_nicho.paternopago as primerap_resp',
-                'servicio_nicho.maternopago as segap_dif',
-                'servicio_nicho.estado_pago',
-                'servicio_nicho.id as serv_id')
-                ->where('servicio_nicho.estado','ACTIVO')
-                ->orderBy('servicio_nicho.id', 'DESC')
-                ->get();
+                $currentMonth = now()->format('m'); // Get the current month in MM format
+                $currentYear = now()->format('Y');  // Get the current year in YYYY format
+
+                $servicio = DB::table('servicio_nicho')
+                    ->select(
+                        'servicio_nicho.codigo_nicho',
+                        'servicio_nicho.tipo_servicio',
+                        'servicio_nicho.servicio',
+                        'servicio_nicho.fur',
+                        'servicio_nicho.tipo',
+                        'servicio_nicho.monto',
+                        'servicio_nicho.nombrepago as nombre_resp',
+                        'servicio_nicho.paternopago as primerap_resp',
+                        'servicio_nicho.maternopago as segap_dif',
+                        'servicio_nicho.estado_pago',
+                        'servicio_nicho.id as serv_id'
+                    )
+                    ->where('servicio_nicho.estado', 'ACTIVO')
+                    ->whereRaw("DATE_PART('month', servicio_nicho.created_at) = ?", [$currentMonth])
+                    ->whereRaw("DATE_PART('year', servicio_nicho.created_at) = ?", [$currentYear])
+                    ->orderBy('servicio_nicho.id', 'DESC')
+                    ->get();
+
                return view('servicios/index', ['servicio' => $servicio]);
             }
 
@@ -1096,6 +1104,10 @@ class ServiciosController extends Controller
                             ->join('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
                             ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
                             $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp."  C.I.: ".$sq->ci_resp;
+
+                            $dat= Cripta::where('cripta_mausoleo.id', '=',$datos_ubicacion )
+                            ->select()->first();
+                            $datoSitio= json_decode($dat, true);
                         }
 
 
@@ -1105,8 +1117,6 @@ class ServiciosController extends Controller
                                 $tab['fur']= $tablelocal->fur;
                                 $tab['nombre']= $tablelocal->nombrepago." ". $tablelocal->paternopago." ".$tablelocal->maternopago??'';
                                 $tab['ci']= $tablelocal->ci;
-
-
                                 $observacion= $tablelocal->observacion;
                                 $tab['cobrosDetalles']= [];
                                 $id_s=explode(',', $tablelocal->servicio_id );
@@ -1137,7 +1147,7 @@ class ServiciosController extends Controller
                                     $table = json_decode(json_encode($tab));
 
                                 $pdf = PDF::setPaper('A4', 'landscape');
-                                $pdf = PDF::loadView('servicios/reportServCM', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp' ));
+                                $pdf = PDF::loadView('servicios/reportServCM', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp', 'datoSitio' ));
                                 return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                             }
 
@@ -1160,7 +1170,7 @@ class ServiciosController extends Controller
                                             $observacion= $tablelocal->observacion;
 
                                             $pdf = PDF::setPaper('A4', 'landscape');
-                                            $pdf = PDF::loadView('servicios/reportServCM', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp'));
+                                            $pdf = PDF::loadView('servicios/reportServCM', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp', 'datoSitio'));
                                             return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                                         }
                                 }

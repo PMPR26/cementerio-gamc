@@ -42,11 +42,17 @@ class MantenimientoController extends Controller
             if($rolUsuario == "APOYO"){
                 return view('restringidos/no_autorizado');
             }else{
-                    $mant= Mantenimiento::select('mantenimiento.*',  DB::raw('CONCAT(mantenimiento.nombrepago , \' \',mantenimiento.paternopago, \' \', mantenimiento.maternopago ) AS nombre'))
-                        ->leftJoin('responsable', 'responsable.id', '=', 'mantenimiento.respdifunto_id')
-                        ->where('mantenimiento.estado', 'ACTIVO')
-                        ->orderBy('id', 'DESC')
-                        ->get();
+                $currentMonth = now()->format('m'); // Get the current month in MM format
+                $currentYear = now()->format('Y');  // Get the current year in YYYY format
+
+                $mant = Mantenimiento::select('mantenimiento.*', DB::raw('CONCAT(mantenimiento.nombrepago , \' \',mantenimiento.paternopago, \' \', mantenimiento.maternopago ) AS nombre'))
+                    ->leftJoin('responsable', 'responsable.id', '=', 'mantenimiento.respdifunto_id')
+                    ->where('mantenimiento.estado', 'ACTIVO')
+                    ->whereRaw("DATE_PART('month', mantenimiento.created_at) = ?", [$currentMonth])
+                    ->whereRaw("DATE_PART('year', mantenimiento.created_at) = ?", [$currentYear])
+                    ->orderBy('id', 'DESC')
+                    ->distinct()
+                    ->get();
                      return view('mantenimiento/index', compact('mant'));
                 }
     }
@@ -478,53 +484,6 @@ class MantenimientoController extends Controller
          return $responsable->id;
      }
 
-    public function generatePDF(Request $request)
-    {
-
-          $table = DB::table('mantenimiento')
-          ->where('mantenimiento.id', $request->id)
-          ->where('mantenimiento.estado', 'ACTIVO')
-
-    //      ->Join('responsable_difunto' , 'responsable_difunto.id','=', 'mantenimiento.respdifunto_id')
-       //   ->Join('difunto' , 'difunto.id','=', 'responsable_difunto.difunto_id')
-
-          ->select('mantenimiento.*')
-          ->first();
-
-
-
-
-          $datos_ubicacion=$table->id_ubicacion;
-          $tipo_ubicacion=$table->tipo_ubicacion;
-          $observacion=$table->observacion;
-        //   dd( $datos_ubicacion);
-
-        if($tipo_ubicacion=="CRIPTA" || $tipo_ubicacion== "MAUSOLEO" ){
-            $sq=CriptaMausoleoResp::where('cripta_mausoleo_responsable.cripta_mausole_id', '=',$datos_ubicacion )
-            ->join('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
-            ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
-            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp."  C.I.: ".$sq->ci_resp;
-        }
-        else{
-            $sq=Nicho::where('nicho.id', '=',$datos_ubicacion )
-            ->join('responsable_difunto', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
-            ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
-            ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
-            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp ."  C.I.: ".$sq->ci_resp;
-        }
-          $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp ."  C.I.: ".$sq->ci_resp;
-
-        //  dd($table);
-                //     $td=$table->getOriginal();
-
-
-                    $pdf = PDF::setPaper('A4', 'landscape');
-                    $pdf = PDF::loadView('mantenimiento/reportMant', compact('table', 'resp', 'observacion'));
-                    return  $pdf-> stream("preliquidacion_mantenimiento.pdf", array("Attachment" => false));
-
-            }
-
-
 
 
             /// buscar en la base local
@@ -827,7 +786,9 @@ public function indexcm(Request $request){
     (!isset($request->select_cuartel_search) && !isset($request->bloque_search) && !isset($request->sitio_search))){
      $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
      'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios', 'cripta_mausoleo.notable',
-     'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos', 'mantenimiento.ultimo_pago',
+     'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos',
+     'cripta_mausoleo.ultima_gestion_pagada as ultimo_pago',
+
     'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo','cripta_mausoleo.familia','cripta_mausoleo_responsable.estado as estado_rel_resp',
      DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
      'cuartel.codigo as cuartel_codigo','bloque.codigo as bloque_nombre')
@@ -835,7 +796,7 @@ public function indexcm(Request $request){
      ->leftJoin('bloque','bloque.id', '=', 'cripta_mausoleo.bloque_id' )
     ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
     ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )
-    ->leftJoin('mantenimiento','mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id' )
+   // ->leftJoin('mantenimiento','mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id' )
     ->where('cripta_mausoleo.estado', 'ACTIVO')
     ->orderBy('cripta_mausoleo.id', 'DESC')
     ->orderBy('tipo_registro', 'DESC')
@@ -866,7 +827,9 @@ public function indexcm(Request $request){
 
      $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
      'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios', 'cripta_mausoleo.notable',
-     'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos', 'mantenimiento.ultimo_pago',
+     'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos',
+         'cripta_mausoleo.ultima_gestion_pagada as ultimo_pago',
+
     'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo','cripta_mausoleo.familia','cripta_mausoleo_responsable.estado as estado_rel_resp',
      DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
      'cuartel.codigo as cuartel_codigo','bloque.codigo as bloque_nombre')
@@ -874,7 +837,7 @@ public function indexcm(Request $request){
      ->leftJoin('bloque','bloque.id', '=', 'cripta_mausoleo.bloque_id' )
     ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
     ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )
-    ->leftJoin('mantenimiento','mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id' )
+   // ->leftJoin('mantenimiento','mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id' )
     ->where('cripta_mausoleo.estado', 'ACTIVO')
     ->where($condicion)
     ->orderBy('cripta_mausoleo.id', 'DESC')
@@ -906,27 +869,7 @@ public function indexcm(Request $request){
 // save pago mantenimiento criptas mausoleo
 
 public function pagoMantenimientoCM(Request $request){
-   /* 'id_cripta_mausoleo': id,
-    'cuenta': cuenta,
-    'descripcion': descripcion,
-    'ultima_gestion_actual': ultima_gestion_actual,
-     'gestiones_act':gestiones_act,
-     'cantidad':cantidad,
-    'total_monto': monto_total,
-    'codigo_unidad': codigo_unidad,
-    'resp_id':$('#resp_cm_id').html(),
-    'ci': $('#cm_ci').val(),
-    'nombrepago': $('#cm_nombre_pago').val(),
-    'paternopago': $('#cm_paternopago').val(),
-    'maternopago': $('#cm_maternopago').val(),
-    'observacion': $('#cm_observacion').val(),
-    'pago_por' : $('#tipo_resp').val(),
-    'domicilio' : $('#cm_domicilio').val(),
-    'cm_observacion':cm_observacion,
-    'tipo_registro':$('#tipo_registro').html(),*/
-
-
-       // dd($request);
+         // dd($request);
       if($request->isJson())
       {
           $this->validate($request, [
@@ -938,7 +881,7 @@ public function pagoMantenimientoCM(Request $request){
               'cantidad'=> 'required',
               'codigo_unidad'=> 'required',
               'resp_id'=> 'required',
-            //   'ci'=> 'required',
+              'superficie'=> 'required',
               'nombrepago'=> 'required',
               'paternopago'=> 'required',
               'pago_por'=> 'required',
@@ -951,7 +894,7 @@ public function pagoMantenimientoCM(Request $request){
               'cantidad.required'=> 'Debe seleccionar al menos una gestion a pagar',
               'codigo_unidad.required'=> 'El codigo de la unidad es requerido',
               'resp_id.required'=> 'La unidad debe estar asignada a un responsable',
-            //   'ci.required'=> 'El ci de la persona que realiza el pago es requerido',
+               'superficie.required'=> 'Complete la informacion de la superficie de la ubicacion, vaya a la ficha de llenado de criptas / mausoleos',
                'nombrepago.required'=> 'El campo nombre del responsable es obligatorio',
                'paternopago.required'=> 'El campo apellido paterno del responsable  es obligatorio',
                'pago_por.required'=> 'Debe especificar si el pago se esta realizando por el propietario o un tercero',
@@ -987,12 +930,11 @@ public function pagoMantenimientoCM(Request $request){
                     ->where('id',auth()->id())
                     ->first();
                     $cajero= $datos_cajero->user_sinot;
-                    $cantidades[0]=$request->cantidad;
-                    $servicio_hijos[0]=$request->num_sec;
+                    $cantidades=$request->cantidad;
+                    $servicio_hijos=$request->num_sec;
                     $obj= new ServicioNicho;
-                    $response=$obj->GenerarFurCM($request->ci, $request->nombrepago, $request->paternopago,
-                    $request->maternopago, $request->domicilio, $request->codigo_unidad,
-                    $servicio_hijos , $cantidades, $cajero,  null, $request->resp_id, $request->observacion);
+                    $response=$obj->GenerarFurCMant($request->ci, $request->nombrepago, $request->paternopago, $request->maternopago, $request->domicilio, $request->codigo_unidad,
+                    $servicio_hijos , $cantidades, $cajero, $request->resp_id, $request->observacion , $request->superficie);
 
 
                     if($response['status']==true){
@@ -1078,5 +1020,156 @@ public function pagoMantenimientoCM(Request $request){
         $serv=$sn->anularServicio($request);
         return $serv;
      }
+
+
+       //imprimir preliquidacion para criptas mausoleos
+
+    public function generatePDFCM(Request $request) {
+                         //    return($request->codigo_nicho); die();
+                       $codigo_nicho=$request->codigo_nicho;
+                        $tab=[];
+                        $tablelocal=DB::table('mantenimiento')
+                        ->select('mantenimiento.*')
+                        ->where('id','=',$request->id)
+                        // ->where('tipo','=',$request->tipo)
+                        ->orderBy('id','DESC')
+                        ->first();
+                            //dd($tablelocal->tipo_ubicacion);
+                        $datos_ubicacion=$tablelocal->id_ubicacion??'';
+                        $tipo_ubicacion=$tablelocal->tipo_ubicacion??'';
+                        $det_exhum=$tablelocal->det_exhum ??'';
+                        $responsable_difunto_id=$tablelocal->respdifunto_id;
+                        $pago_por= $tablelocal->pago_por;
+
+
+                        if($tipo_ubicacion=="CRIPTA" || $tipo_ubicacion== "MAUSOLEO" ){
+                            $sq=CriptaMausoleoResp::where('cripta_mausoleo_responsable.cripta_mausole_id', '=',$datos_ubicacion )
+                            ->join('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
+                            ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
+                            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp."  C.I.: ".$sq->ci_resp;
+
+                            $dat= Cripta::where('cripta_mausoleo.id', '=',$datos_ubicacion )
+                            ->select()->first();
+                            $datoSitio= json_decode($dat, true);
+
+                        }
+
+                        if(($request->fur=="0" ||$request->fur==0 ) &&  $request->id!=null )
+                        {
+                            if ($tablelocal) {
+                                $tab['fur']= $tablelocal->fur;
+                                $tab['nombre']= $tablelocal->nombrepago." ". $tablelocal->paternopago." ".$tablelocal->maternopago??'';
+                                $tab['ci']= $tablelocal->ci;
+                                $observacion= $tablelocal->observacion;
+                                $tab['cobrosDetalles']= [];
+                                $id_s= $tablelocal->cuenta_servicio;
+
+
+                                            $headers =  ['Content-Type' => 'application/json'];
+                                            $client = new Client();
+
+                                            // $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/'.trim($id_s[$key]).'', [
+                                                $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/generate-servicios-nicho/'.trim($id_s).'', [
+                                            'json' => [
+                                                ],
+                                                'headers' => $headers,
+                                            ]);
+                                            $data = json_decode((string) $response->getBody(), true);
+
+                                        if($data['status']==true){
+                                            $tab['cobrosDetalles']['cuenta']=$data['response'][0]['cuenta'];
+                                            $tab['cobrosDetalles']['detalle']=$data['response'][0]['descripcion'];
+                                            $tab['cobrosDetalles']['monto']=0;
+                                            }
+
+
+
+                                    $table = json_decode(json_encode($tab));
+
+                                $pdf = PDF::setPaper('A4', 'landscape');
+                                $pdf = PDF::loadView('mantenimiento/reportServCM', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp', 'datoSitio' ,  'pago_por'));
+                                return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
+                            }
+
+                    }  else{
+                                    $arrayBusqueda = [];
+                                    $arrayBusqueda[] = (string)2;
+                                    $arrayBusqueda[] = (string)$request->fur;
+                                    $arrayBusquedaString = json_encode($arrayBusqueda);
+                                    //$response = Http::asForm()->post('http://192.168.104.117/cb-dev/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+                                    // $response = Http::asForm()->post('http://192.168.104.117/cb-dev/web/index.php?r=tramites/ws-mt-comprobante-valores/busqueda', [
+                                    $response = Http::asForm()->post(env('URL_SEARCH_FUR'), [
+
+                                        'buscar' => $arrayBusquedaString
+                                    ]);
+                                        $data=json_decode($response->body()) ;
+
+
+                                    if ($response->successful()) {
+                                        if($response->object()->status == true) {
+                                            $table = $data->data->cobrosVarios[0];
+                                            $observacion= $tablelocal->observacion;
+
+                                            $pdf = PDF::setPaper('A4', 'landscape');
+                                            $pdf = PDF::loadView('mantenimiento/reportServCM', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp', 'datoSitio',  'pago_por'));
+                                            return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
+                                        }
+                                }
+                        }
+        }
+
+
+
+
+    public function generatePDF(Request $request)
+    {
+
+          $table = DB::table('mantenimiento')
+          ->where('mantenimiento.id', $request->id)
+          ->where('mantenimiento.estado', 'ACTIVO')
+
+    //      ->Join('responsable_difunto' , 'responsable_difunto.id','=', 'mantenimiento.respdifunto_id')
+       //   ->Join('difunto' , 'difunto.id','=', 'responsable_difunto.difunto_id')
+
+          ->select('mantenimiento.*')
+          ->first();
+
+
+
+
+          $datos_ubicacion=$table->id_ubicacion;
+          $tipo_ubicacion=$table->tipo_ubicacion;
+          $observacion=$table->observacion;
+                        $pago_por= $table->pago_por;
+
+        //   dd( $datos_ubicacion);
+
+        if($tipo_ubicacion=="CRIPTA" || $tipo_ubicacion== "MAUSOLEO" ){
+            $sq=CriptaMausoleoResp::where('cripta_mausoleo_responsable.cripta_mausole_id', '=',$datos_ubicacion )
+            ->join('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
+            ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
+            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp."  C.I.: ".$sq->ci_resp;
+        }
+        else{
+            $sq=Nicho::where('nicho.id', '=',$datos_ubicacion )
+            ->join('responsable_difunto', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
+            ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
+            ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
+            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp ."  C.I.: ".$sq->ci_resp;
+        }
+          $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp ."  C.I.: ".$sq->ci_resp;
+
+        //  dd($table);
+                //     $td=$table->getOriginal();
+
+
+                    $pdf = PDF::setPaper('A4', 'landscape');
+                    $pdf = PDF::loadView('mantenimiento/reportMant', compact('table', 'resp', 'observacion'));
+                    return  $pdf-> stream("preliquidacion_mantenimiento.pdf", array("Attachment" => false));
+
+            }
+
+
+
 
 }

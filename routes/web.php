@@ -216,6 +216,8 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
       Route::get('/form-paycm', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'indexcm'])->name('paycm_mant');
       Route::post('/verificarPagoMant',[App\Http\Controllers\Mantenimiento\MantenimientoController::class,'verificarPagoMant'])->name('verificar.pago.mant');
       Route::post('anular-fur-mant', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'anularFurMant'])->name('mant.anularFur')->middleware('auth');
+       Route::get('generate-pdf-cm-mant', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'generatePDFCM'])->name('mant.generatePDFCM')->middleware('auth');
+
 
 
 //getInfoPayCm

@@ -24,23 +24,25 @@ class CriptaController extends Controller
         // dd($request);
         if(($request->select_cuartel_search==null && $request->bloque_search ==null && $request->sitio_search ==null) ||
            (!isset($request->select_cuartel_search) && !isset($request->bloque_search) && !isset($request->sitio_search))){
-            $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
-            'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios', 'cripta_mausoleo.notable',
-            'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos',
-            'mantenimiento.ultimo_pago',
-           'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo','cripta_mausoleo.familia','cripta_mausoleo_responsable.estado as estado_rel_resp',
+            $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo', 'superficie', 'cripta_mausoleo.estado',
+            'tipo_registro', 'enterratorios_ocupados', 'total_enterratorios', 'osarios', 'total_osarios', 'cenisarios', 'cripta_mausoleo.notable',
+            'cripta_mausoleo_responsable.documentos_recibidos', 'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos',
+            'cripta_mausoleo.ultima_gestion_pagada as ultimo_pago',
+            'cripta_mausoleo.sitio', 'cripta_mausoleo.codigo_antiguo', 'cripta_mausoleo.familia', 'cripta_mausoleo_responsable.estado as estado_rel_resp',
             DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
-            'cuartel.codigo as cuartel_codigo','bloque.codigo as bloque_nombre')
-            ->Join('cuartel','cuartel.id', '=', 'cripta_mausoleo.cuartel_id' )
-            ->leftJoin('bloque','bloque.id', '=', 'cripta_mausoleo.bloque_id' )
-           ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
-           ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )
-           ->leftJoin('mantenimiento','mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id' )
-           ->where('cripta_mausoleo.estado', 'ACTIVO')
-           ->orderBy('cripta_mausoleo.id', 'DESC')
-           ->orderBy('tipo_registro', 'DESC')
-           ->orderBy('cripta_mausoleo.codigo', 'DESC')
-           ->get();
+            'cuartel.codigo as cuartel_codigo', 'bloque.codigo as bloque_nombre')
+            ->join('cuartel', 'cuartel.id', '=', 'cripta_mausoleo.cuartel_id')
+            ->leftJoin('bloque', 'bloque.id', '=', 'cripta_mausoleo.bloque_id')
+            ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id', '=', 'cripta_mausoleo.id')
+            ->leftJoin('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
+          //  ->leftJoin('mantenimiento', 'mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id')
+            ->where('cripta_mausoleo.estado', 'ACTIVO')
+            ->orderBy('cripta_mausoleo.id', 'DESC')
+            ->orderBy('tipo_registro', 'DESC')
+            ->orderBy('cripta_mausoleo.codigo', 'DESC')
+            ->distinct() // Add the DISTINCT keyword here
+            ->get();
+
         }
         else{
             // dd($request);
@@ -66,7 +68,9 @@ class CriptaController extends Controller
 
             $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
             'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios', 'cripta_mausoleo.notable',
-            'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos', 'mantenimiento.ultimo_pago',
+            'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos',
+            'cripta_mausoleo.ultima_gestion_pagada as ultimo_pago',
+
            'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo','cripta_mausoleo.familia','cripta_mausoleo_responsable.estado as estado_rel_resp',
             DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
             'cuartel.codigo as cuartel_codigo','bloque.codigo as bloque_nombre')
@@ -74,12 +78,13 @@ class CriptaController extends Controller
             ->leftJoin('bloque','bloque.id', '=', 'cripta_mausoleo.bloque_id' )
            ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
            ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )
-           ->leftJoin('mantenimiento','mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id' )
+           //->leftJoin('mantenimiento','mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id' )
            ->where('cripta_mausoleo.estado', 'ACTIVO')
            ->where($condicion)
            ->orderBy('cripta_mausoleo.id', 'DESC')
            ->orderBy('tipo_registro', 'DESC')
            ->orderBy('cripta_mausoleo.codigo', 'DESC')
+           ->distinct()
            ->get();
 
         }
@@ -131,20 +136,22 @@ class CriptaController extends Controller
                     ]);
 
             // $existe_resp=Responsable::where('ci', $request->ci_resp)->first();
-            if($request->materno_resp==null || $request->materno_resp=="")
+         /*   if($request->materno_resp==null || $request->materno_resp=="")
             {
                 $existe_resp=Responsable::whereRaw('nombres=\''. trim($request->nombres_resp).'\' and primer_apellido=\''.trim($request->paterno_resp).'\' ')
                 ->orwhere('ci','=', $request->ci_resp)
                         ->select()
                         ->first();
 
+
             }else{
                 $existe_resp=Responsable::whereRaw('nombres=\''. trim($request->nombres_resp).'\' and primer_apellido=\''.trim($request->paterno_resp).'\' and segundo_apellido=\''.trim($request->materno_resp).'\'')
                 ->orwhere('ci','=', $request->ci_resp)
                         ->select()
                         ->first();
-            }
-
+            }*/
+            $bResp=New Responsable;
+            $existe_resp=$bResp->searchResponsable($request);
             // si se envian datos del propietario del mausoleo o cripta entonces se busca en la tabla responsable para actualizar datos y no duplicar
             // caso contrario se insterta
             if (!$existe_resp ||  $existe_resp == null) {
@@ -483,7 +490,7 @@ class CriptaController extends Controller
 
                                     $existe=$this->buscarDifunto( $ci_dif, $value['nombres'],
                                     $value['primer_apellido'],$value['segundo_apellido'], $value['fecha_nacimiento']);
-                                    // dd($existe);
+                                     dd($existe);
                                         if($existe==false)
                                         {
                                             $dif->ci = $ci_dif;
@@ -491,7 +498,7 @@ class CriptaController extends Controller
                                             $dif->primer_apellido = $value['primer_apellido'];
                                             $dif->segundo_apellido = $value['segundo_apellido'];
                                             $dif->fecha_nacimiento = $fecha_nac;
-                                            $dif->fecha_defuncion = $value['fecha_defuncion'];
+                                            $dif->fecha_defuncion = $value['fecha_defuncion']?? null;
                                             $dif->certificado_defuncion = $value['ceresi']??'';
                                             $dif->causa = trim(strtoupper($value['causa']))??'';
                                             $dif->tipo = $value['tipo'];
@@ -512,7 +519,7 @@ class CriptaController extends Controller
                                                 "ceresi"=>$value['ceresi'],
                                                 "tipo"=>$value['tipo'],
                                                 "fecha_nacimiento"=>$fecha_nac,
-                                                "fecha_defuncion"=>$value['fecha_defuncion'],
+                                                "fecha_defuncion"=>$value['fecha_defuncion']??null,
                                                 "causa"=>trim(strtoupper($value['causa'])),
                                                 "funeraria"=>trim(strtoupper($value['funeraria'])),
                                                 "genero"=>$value['genero'],
@@ -626,8 +633,7 @@ class CriptaController extends Controller
                     {
                         if($ci!=null){
                             if($value['ci'] == $ci && $value['nombres'] == $nombres
-                              && $value['primer_apellido'] == $primer_apellido && $value['segundo_apellido'] == $segundo_apellido
-                              && $value['fecha_nacimiento'] == $fecha_nacimiento  && $value['fecha_defuncion'] == $fecha_defuncion){
+                              && $value['primer_apellido'] == $primer_apellido ){
                                 // unset($ar_difuntos[$key]);
                                 $resp++;
                             }
@@ -635,7 +641,7 @@ class CriptaController extends Controller
                         else{
                             if($value['nombres'] == $nombres
                             && $value['primer_apellido'] == $primer_apellido && $value['segundo_apellido'] == $segundo_apellido
-                            && $value['fecha_nacimiento'] == $fecha_nacimiento  && $value['fecha_defuncion'] == $fecha_defuncion){
+                            && $value['fecha_defuncion'] == $fecha_defuncion){
                                 //    unset($ar_difuntos[$key]);
                                 $resp++;
                               }
@@ -671,16 +677,17 @@ class CriptaController extends Controller
     }
 
     public function VerificarIngresoExistenteNicho(Request $request)
-    {  $resp=0;
+    {
+        //dd($request);
+        $resp=0;
         if($request->ci != null){
-            if($request->segundo_apellido=='' || $request->segundo_apellido== null){
+            if($request->materno=='' || $request->materno== null){
                 $nicho=DB::table('responsable_difunto')
                 ->leftjoin('difunto',  'difunto.id','=','responsable_difunto.difunto_id' )
                 ->where('responsable_difunto.estado', 'ACTIVO')
                 ->where('difunto.ci',''.$request->ci.'')
-                ->where('difunto.nombres',''.$request->nombres.'')
-                ->where('difunto.primer_apellido',''.$request->primer_apellido.'')
-                ->where('difunto.fecha_nacimiento',''.$request->fecha_nacimiento.'')
+                ->where('difunto.nombres',''.$request->nombre.'')
+                ->where('difunto.primer_apellido',''.$request->paterno.'')
                 ->where('difunto.fecha_defuncion',''.$request->fecha_defuncion.'')
                 // ->where('responsable_difunto.estado_nicho','!=', 'OCUPADO')
                 ->orderBy('responsable_difunto.id', 'DESC' )
@@ -690,10 +697,9 @@ class CriptaController extends Controller
                 ->leftjoin('difunto',  'difunto.id','=','responsable_difunto.difunto_id' )
                 ->where('responsable_difunto.estado', 'ACTIVO')
                 ->where('difunto.ci',''.$request->ci.'')
-                ->where('difunto.nombres',''.$request->nombres.'')
-                ->where('difunto.primer_apellido',''.$request->primer_apellido.'')
-                ->where('difunto.segundo_apellido',''.$request->segundo_apellido.'')
-                ->where('difunto.fecha_nacimiento',''.$request->fecha_nacimiento.'')
+                ->where('difunto.nombres',''.$request->nombre.'')
+                ->where('difunto.primer_apellido',''.$request->paterno.'')
+                ->where('difunto.segundo_apellido',''.$request->materno.'')
                 ->where('difunto.fecha_defuncion',''.$request->fecha_defuncion.'')
                 // ->where('responsable_difunto.estado_nicho','!=', 'OCUPADO')
                 ->orderBy('responsable_difunto.id', 'DESC' )
@@ -702,14 +708,13 @@ class CriptaController extends Controller
 
         }
         else{
-            if($request->segundo_apellido=='' || $request->segundo_apellido== null){
+            if($request->materno=='' || $request->materno== null){
 
             $nicho=DB::table('responsable_difunto')
             ->leftjoin('difunto',  'difunto.id','=','responsable_difunto.difunto_id' )
             ->where('responsable_difunto.estado', 'ACTIVO')
-            ->where('difunto.nombres',''.$request->nombres.'')
-            ->where('difunto.primer_apellido',''.$request->primer_apellido.'')
-            ->where('difunto.fecha_nacimiento',$request->fecha_nacimiento)
+            ->where('difunto.nombres',''.$request->nombre.'')
+            ->where('difunto.primer_apellido',''.$request->paterno.'')
             ->where('difunto.fecha_defuncion',$request->fecha_defuncion)
             // ->where('responsable_difunto.estado_nicho', 'OCUPADO')
             ->orderBy('responsable_difunto.id', 'DESC' )
@@ -719,10 +724,9 @@ class CriptaController extends Controller
                     $nicho=DB::table('responsable_difunto')
                     ->leftjoin('difunto',  'difunto.id','=','responsable_difunto.difunto_id' )
                     ->where('responsable_difunto.estado', 'ACTIVO')
-                    ->where('difunto.nombres',''.$request->nombres.'')
-                    ->where('difunto.primer_apellido',''.$request->primer_apellido.'')
-                    ->where('difunto.segundo_apellido',''.$request->segundo_apellido.'')
-                    ->where('difunto.fecha_nacimiento',$request->fecha_nacimiento)
+                    ->where('difunto.nombres',''.$request->nombre.'')
+                    ->where('difunto.primer_apellido',''.$request->paterno.'')
+                    ->where('difunto.segundo_apellido',''.$request->materno.'')
                     ->where('difunto.fecha_defuncion',$request->fecha_defuncion)
                     // ->where('responsable_difunto.estado_nicho', 'OCUPADO')
                     ->orderBy('responsable_difunto.id', 'DESC' )

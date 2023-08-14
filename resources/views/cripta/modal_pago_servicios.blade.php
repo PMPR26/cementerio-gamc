@@ -29,6 +29,13 @@
                                             <label>Responsable :</label>
                                             <p id="resp_cm_id" style="display:none" class="clear"></p>
                                             <p id="resp_cm" class="clear"></p>
+                                            <input type="hidden" name="resp_cm_nombre" id="resp_cm_nombre">
+                                            <input type="hidden" name="resp_cm_paterno" id="resp_cm_paterno">
+                                            <input type="hidden" name="resp_cm_materno" id="resp_cm_materno">
+                                            <input type="hidden" name="resp_cm_ci" id="resp_cm_ci">
+
+
+
                                         </div>
                                     </div>
                                     <div class="col-12">
@@ -47,7 +54,7 @@
                                                             <th>cereci</th>
                                                             <th>tipo</th>
                                                             <th>Fecha Nacimiento</th>
-                                                            <th>Edad</th>
+                                                            <th>Fecha Ingreso</th>
                                                             <th>Fecha Defunción</th>
                                                             <th>Causa</th>
                                                             <th>Funeraria</th>
@@ -106,10 +113,10 @@
                 <div class="card row" id="contenedor_dif_serv" style="padding-top: 15px;">
                 </div>
 
-                <div class="col-sm-12 col-md-12 col-lg-12">
+               {{--  <div class="col-sm-12 col-md-12 col-lg-12">
                     <label>Observación / detalles:</label>
                     <textarea name="cm_observacion" class="form-control clear" id="cm_observacion" cols="100" rows="3"></textarea>
-                </div>
+                </div> --}}
 
 
 
@@ -164,6 +171,12 @@
                                         <div class="form-group">
                                             <label>Fecha de defunción :</label>
                                             <input type="date"  class="form-control clear" placeholder="fecha de defuncion" max="{{ date('Y-m-d') }}" id="mdpfecha_defuncion"  >
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Fecha de ingreso :</label>
+                                            <input type="date"  class="form-control clear" placeholder="fecha de ingreso" max="{{ date('Y-m-d') }}" id="mdpfecha_ingreso"  >
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
@@ -266,7 +279,10 @@
                                                 <td>Cuenta Servicio</td>
                                                 <td>Tipo Servicio</td>
                                                 <td>Servicio</td>
+                                                <td>Cantidad</td>
+
                                                 <td>Precio</td>
+                                                <td>Subtotal</td>
                                                 <td>Observacion</td>
 
                                             </tr>

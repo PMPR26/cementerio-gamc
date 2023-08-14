@@ -418,7 +418,7 @@
                                         $('#cod_cm_info').html(data.response.cripta.codigo);
                                         $('#resp_cm_info').html(data.response.responsable.nombres+" "+data.response.responsable.primer_apellido+" "+data.response.responsable.segundo_apellido);
                                         $('#respdifunto_id_cm_info').html(data.response.responsable.id);
-                                        $('#ultima_gestion_pagada').val(data.response.cripta.ultima_gestion_pagada);
+                                       // $('#ultima_gestion_pagada_info').val(data.response.cripta.ultima_gestion_pagada);
 
 
                                     }//end if
@@ -1744,9 +1744,9 @@ $("#cert_defuncion_p").dropzone({
                                         data: JSON.stringify({
                                             'cripta_mausoleo_id': $('#id_cripta_mausoleo_modal').val(),
                                             'ci': $('#mdci').val(),
-                                            'nombres': $('#mdnombre').val(),
-                                            'primer_apellido': $('#mdprimer_apellido').val(),
-                                            'segundo_apellido': $('#mdsegundo_apellido').val(),
+                                            'nombre': $('#mdnombre').val(),
+                                            'paterno': $('#mdprimer_apellido').val(),
+                                            'materno': $('#mdsegundo_apellido').val(),
                                             'fecha_nacimiento': $('#mdfecha_nacimiento').val(),
                                             'fecha_defuncion': $('#mdfecha_defuncion').val()
                                         }),
@@ -1932,6 +1932,8 @@ $("#cert_defuncion_p").dropzone({
                         // ageMonth = age.getMonth(); // Accurate calculation of the month part of the age
                         // ageDay = age.getDate();    // Approximate calculation of the day part of the age
                     }
+
+
 /********************************************************************************/
 /*********************abrir modal pagar servicio ********************************/
 /********************************************************************************/
@@ -1965,6 +1967,7 @@ $("#cert_defuncion_p").dropzone({
                                         $('#familia').html(data.response.cripta.familia);
                                         $('#tipo_registro').html(data.response.cripta.tipo_registro);
                                         $('#superficie').html(data.response.cripta.superficie);
+                                        $('#ultima_gestion_pagada').val(data.response.cripta.ultima_gestion_pagada);
                                         var array_difuntos = jQuery.parseJSON(data.response.cripta.difuntos);
                                          $('#difuntos_cm1').html(data.response.cripta.difuntos);
                                         $.each(array_difuntos, function(key,val)
@@ -2170,8 +2173,9 @@ $("#cert_defuncion_p").dropzone({
             });
         }
         // adicionar datos del difunto a inhumar
-            $(document).on('click', '#boton_dif_inhum', function(e){
+         /*   $(document).on('click', '#boton_dif_inhum', function(e){
                 e.preventDefault();
+
                 var id=$('#id_cripta_mausoleo_modal_pay').val();
                 let dif_in = [];
                 var ci= document.getElementById('mdpci').value;
@@ -2180,9 +2184,22 @@ $("#cert_defuncion_p").dropzone({
                 var segundo_apellido =  document.getElementById('mdpsegundo_apellido').value;
                 var fecha_nacimiento =  document.getElementById('mdpfecha_nacimiento').value;
                 var fecha_defuncion =  document.getElementById('mdpfecha_defuncion').value;
+                var fecha_ingreso =  document.getElementById('mdpfecha_ingreso').value;
 
 
-
+                if(fecha_defuncion=='' ||  fecha_defuncion==null){
+                    swal.fire({
+                                                                            title: "Precaucion!",
+                                                                            text: "!Debe completar la fecha de defuncion!",
+                                                                            type: "warning",
+                                                                            timer: 2000,
+                                                                            showCancelButton: false,
+                                                                            showConfirmButton: false
+                                                                        });
+                                                                        setTimeout(function() {
+                                                                           return false
+                                                                        }, 2000);
+                }
 
                         if( document.getElementById('causa_p').value=='undefined'
                         || document.getElementById('causa_p').value==''  ){
@@ -2211,6 +2228,8 @@ $("#cert_defuncion_p").dropzone({
                                                 fecha_nacimiento:  document.getElementById('mdpfecha_nacimiento').value,
                                                 edad: document.getElementById('mdpsegundo_apellido').value,
                                                 fecha_defuncion:  document.getElementById('mdpfecha_defuncion').value,
+                                                fecha_ingreso:  document.getElementById('mdpfecha_ingreso').value,
+
                                                 causa:causa_select,
                                                 funeraria:  fun_select,
                                                 genero: document.getElementById('mdpgenero').value,
@@ -2247,15 +2266,26 @@ $("#cert_defuncion_p").dropzone({
                                                         }
                                             }
                                             else{
-                                                    //mostrar mensaje de advertencia que el difunto esta en otra ubicacion
+                                                swal.fire({
+                                                                            title: "Precaucion!",
+                                                                            text: "!El difunto ya se encuentra en otra ubicacion!",
+                                                                            type: "warning",
+                                                                            timer: 2000,
+                                                                            showCancelButton: false,
+                                                                            showConfirmButton: false
+                                                                        });
+                                                                        setTimeout(function() {
+                                                                           return false
+                                                                        }, 2000);
                                             }
 
             });
+*/
             function add_to_list_difunto(dif_in, id_tabla_body, class_tabla, cond, key)
             {
 
 
-                                  if(dif_in.nombres=="" && dif_in.primer_apellido== "" && dif_in.fecha_nacimiento=="" && dif_in.fecha_defuncion=="" )
+                                  if(dif_in.nombres=="" && dif_in.primer_apellido== ""  && dif_in.fecha_defuncion=="" )
                                   {
                                                                   swal.fire({
                                                                             title: "Precaucion!",
@@ -2269,8 +2299,30 @@ $("#cert_defuncion_p").dropzone({
                                                                            return false
                                                                         }, 2000);
                                   }
-                                  else{
+                                  else  if(dif_in.fecha_nacimiento==""){
                                       var row=    ' <tr class="row-dif">'
+                                            +     '<td id="cond'+key+'" class="data-condicion">'+cond+ ' </td>'
+                                            +     '<td id="ci'+key+'" class="data-ci">'+dif_in.ci+ ' </td>'
+                                            +     '<td id="nombre'+key+'" class="data-nombre">'+dif_in.nombres+ '</td>'
+                                            +     '<td id="pat'+key+'" class="data-pat">'+dif_in.primer_apellido+ '</td>'
+                                            +     '<td id="mat'+key+'" class="data-mat">'+dif_in.segundo_apellido+ '</td>'
+                                            +     '<td id="cereci'+key+'" class="data-ceresi">'+dif_in.ceresi+ '</td>'
+                                            +     '<td id="tipo'+key+'" class="data-tipo">'+dif_in.tipo+ '</td>'
+                                            +     '<td id="edad'+key+'" class="data-edad">'+dif_in.edad+ '</td>'
+                                            +     '<td id="def'+key+'" class="data-def">'+dif_in.fecha_defuncion+ '</td>'
+                                            +     '<td id="causa'+key+'" class="data-causa">'+dif_in.causa+ '</td>'
+                                            +     '<td id="fun'+key+'" class="data-fun">'+dif_in.funeraria+ '</td>'
+                                            +     '<td id="genero'+key+'" class="data-genero">'+dif_in.genero+ '</td>'
+                                            +     '<td id="enl'+key+'" class="data"><a href="'+dif_in.url+'" target="_blank" >Ver adjunto</a></td>'
+                                            +     '<td id="url'+key+'" class="data-url" >'+dif_in.url+'</td>'
+                                            +     '<td class="data"> <a href="#" id="remove_new"  onClick="$(this).parent().parent().remove();   "> <i class="fas fa-trash wine fa-2x"></i></a></td>';
+                                            +     '</tr>';
+                                            $('.'+class_tabla+'').show();
+                                      $('#'+id_tabla_body+'').append(row);
+                                      $('#modal_save_pagos_cm').prop('disabled', false);
+                                  }
+                                  else{
+                                    var row=    ' <tr class="row-dif">'
                                             +     '<td id="cond'+key+'" class="data-condicion">'+cond+ ' </td>'
                                             +     '<td id="ci'+key+'" class="data-ci">'+dif_in.ci+ ' </td>'
                                             +     '<td id="nombre'+key+'" class="data-nombre">'+dif_in.nombres+ '</td>'
@@ -2288,6 +2340,7 @@ $("#cert_defuncion_p").dropzone({
                                             +     '<td id="url'+key+'" class="data-url" >'+dif_in.url+'</td>'
                                             +     '<td class="data"> <a href="#" id="remove_new"  onClick="$(this).parent().parent().remove();   "> <i class="fas fa-trash wine fa-2x"></i></a></td>';
                                             +     '</tr>';
+
                                       $('.'+class_tabla+'').show();
                                       $('#'+id_tabla_body+'').append(row);
                                       $('#modal_save_pagos_cm').prop('disabled', false);
@@ -2484,7 +2537,8 @@ $("#cert_defuncion_p").dropzone({
                     }
 
 
-                // function guardar pagos servicios
+              /*************************************************************************************************/
+              /*******************metodo para enviar datos de pago mantenimiento *******************************/
                 $(document).on('click', '#modal_save_pagos_cm', function(e)
                 {
                     e.preventDefault();
@@ -2514,6 +2568,8 @@ $("#cert_defuncion_p").dropzone({
                                                  'cantidad':cantidad,
                                                 'total_monto': monto_total,
                                                 'codigo_unidad': codigo_unidad,
+                                                'superficie': $('#superficie').html(),
+
                                                 'resp_id':$('#resp_cm_id').html(),
                                                 'familia':$('#familia').html(),
                                                 'ci': $('#cm_ci').val(),
