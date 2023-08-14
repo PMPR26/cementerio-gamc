@@ -81,9 +81,8 @@
         </div>
        </div>
 
-       <table id="cripta-data" class="table table-striped table-bordered responsive" role="grid"
-    aria-describedby="example">
-    <thead class="bg-table-header">
+       <table id="cripta-data"  class="table table-striped table-bordered responsive" role="grid" aria-describedby="example">
+    <thead  class="bg-table-header">
             <tr role="row">
                 <th scope="col">#</th>
                 <th scope="col">Tipo</th>
@@ -1679,9 +1678,9 @@ $("#cert_defuncion_p").dropzone({
                                         data: JSON.stringify({
                                             'cripta_mausoleo_id': $('#id_cripta_mausoleo_modal').val(),
                                             'ci': $('#mdci').val(),
-                                            'nombres': $('#mdnombre').val(),
-                                            'primer_apellido': $('#mdprimer_apellido').val(),
-                                            'segundo_apellido': $('#mdsegundo_apellido').val(),
+                                            'nombre': $('#mdnombre').val(),
+                                            'paterno': $('#mdprimer_apellido').val(),
+                                            'materno': $('#mdsegundo_apellido').val(),
                                             'fecha_nacimiento': $('#mdfecha_nacimiento').val(),
                                             'fecha_defuncion': $('#mdfecha_defuncion').val()
                                         }),
@@ -1900,6 +1899,20 @@ $("#cert_defuncion_p").dropzone({
                                         $('#resp_cm').html(data.response.responsable.nombres+" "+data.response.responsable.primer_apellido+" "+segundo_apellido);
                                         $('#resp_cm_id').html(data.response.responsable.id);
                                         $('#tipo_registro').html(data.response.cripta.tipo_registro);
+                                        $('#resp_cm_nombre').val(data.response.responsable.nombres);
+                                        $('#resp_cm_paterno').val(data.response.responsable.primer_apellido);
+                                        $('#resp_cm_materno').val(data.response.responsable.segundo_apellido);
+                                        $('#resp_cm_ci').val(data.response.responsable.ci);
+                                        $('#tipo_resp').val('Titular_responsable');
+                                        $('#cm_ci').val(data.response.responsable.ci);
+                                        $('#cm_nombre_pago').val(data.response.responsable.nombres);
+                                        $('#cm_paternopago').val(data.response.responsable.primer_apellido);
+                                        $('#cm_maternopago').val(data.response.responsable.segundo_apellido);
+
+
+
+
+
                                         var array_difuntos = jQuery.parseJSON(data.response.cripta.difuntos);
                                          $('#difuntos_cm1').html(data.response.cripta.difuntos);
                                         $.each(array_difuntos, function(key,val)
@@ -1933,7 +1946,7 @@ $("#cert_defuncion_p").dropzone({
                                                           if( val.cuenta=='15224330'  ){}
                                                         else{
                                                             var html='<div class="form-check '+val.cuenta+'">'+
-                                                                        '<input class="form-check-input" type="checkbox" id="'+val.cuenta+'" name="serv[tipo_servicio]" value="'+val.cuenta+'-'+val.descripcion+'"  onclick="cargar_sevicios_hijos(this)">'+
+                                                                        '<input class="form-check-input services_origin" type="checkbox" id="'+val.cuenta+'" name="serv[tipo_servicio]" value="'+val.cuenta+'-'+val.descripcion+'"  onclick="cargar_sevicios_hijos(this)">'+
                                                                         '<label class="form-check-label labelservice" for="'+val.cuenta+'">'+val.descripcion+'</label>'+
                                                                         '<div id="serv_hijos'+val.cuenta+'"></div>'
                                                                         '</div>';
@@ -2050,6 +2063,8 @@ $("#cert_defuncion_p").dropzone({
                             });
             }else{
                 $('#serv_hijos'+cuenta+'').empty();
+                $('#servicios-data .row_'+cuenta+'').remove();
+                calcularMonto();
             }
         }
 
@@ -2063,7 +2078,7 @@ $("#cert_defuncion_p").dropzone({
             var acum=0;
             var monto=0;
 
-            $('#servicios-data').empty();
+           // $('#servicios-data').empty();
             $('.service_child').each(function( index ) {
 
                         if($(this).is(":checked"))
@@ -2141,7 +2156,8 @@ $("#cert_defuncion_p").dropzone({
                             }
 
                         }
-                calcularPrice();
+                        drawRow();
+                calcularMonto();
 
             });
         }
@@ -2180,6 +2196,22 @@ $("#cert_defuncion_p").dropzone({
                 var segundo_apellido =  document.getElementById('mdpsegundo_apellido').value;
                 var fecha_nacimiento =  document.getElementById('mdpfecha_nacimiento').value;
                 var fecha_defuncion =  document.getElementById('mdpfecha_defuncion').value;
+                var fecha_ingreso =  document.getElementById('mdpfecha_ingreso').value;
+
+                if(fecha_defuncion=='' ||  fecha_defuncion==null){
+                    console.log("fecha def "+fecha_defuncion+ "fecha ongrso"+fecha_ingreso );
+                    swal.fire({
+                              title: "Precaucion!",
+                              text: "!Debe completar la fecha de defuncion!",
+                              type: "warning",
+                              timer: 2000,
+                              showCancelButton: false,
+                              showConfirmButton: false
+                          });
+
+                             return false
+
+                }
 
                 if( document.getElementById('causa_p').value=='undefined'
                 || document.getElementById('causa_p').value==''  ){
@@ -2205,8 +2237,10 @@ $("#cert_defuncion_p").dropzone({
                                                 ceresi:  document.getElementById('mdpcertificado_defuncion').value,
                                                 tipo:  document.getElementById('mdptipo').value,
                                                 fecha_nacimiento:  document.getElementById('mdpfecha_nacimiento').value,
-                                                edad: document.getElementById('mdpsegundo_apellido').value,
+                                               // edad: document.getElementById('mdpsegundo_apellido').value,
                                                 fecha_defuncion:  document.getElementById('mdpfecha_defuncion').value,
+                                                fecha_ingreso:  document.getElementById('mdpfecha_ingreso').value,
+
                                                 causa:causa_select,
                                                 funeraria:  fun_select,
                                                 genero: document.getElementById('mdpgenero').value,
@@ -2244,7 +2278,20 @@ $("#cert_defuncion_p").dropzone({
                                             }
                                             else{
                                                     //mostrar mensaje de advertencia que el difunto esta en otra ubicacion
-                                            }
+
+                                                            swal.fire({
+                                                                            title: "Precaucion!",
+                                                                            text: "!El difunto ya se encuentra en otra ubicacion!",
+                                                                            type: "warning",
+                                                                            timer: 2000,
+                                                                            showCancelButton: false,
+                                                                            showConfirmButton: false
+                                                                        });
+                                                                        setTimeout(function() {
+                                                                           return false
+                                                                        }, 2000);
+
+                                                                    }
 
             });
             function add_to_list_difunto(dif_in, id_tabla_body, class_tabla, cond, key)
@@ -2275,7 +2322,8 @@ $("#cert_defuncion_p").dropzone({
                                             +     '<td id="cereci'+key+'" class="data-ceresi">'+dif_in.ceresi+ '</td>'
                                             +     '<td id="tipo'+key+'" class="data-tipo">'+dif_in.tipo+ '</td>'
                                             +     '<td id="nac'+key+'" class="data-nac">'+dif_in.fecha_nacimiento+ '</td>'
-                                            +     '<td id="edad'+key+'" class="data-edad">'+calcularEdad(dif_in.fecha_nacimiento)+'</td>'
+                                            +     '<td id="ingreso'+key+'" class="data-ingreso">'+dif_in.fecha_ingreso+ '</td>'
+                                           // +     '<td id="edad'+key+'" class="data-edad">'+calcularEdad(dif_in.fecha_nacimiento)+'</td>'
                                             +     '<td id="def'+key+'" class="data-def">'+dif_in.fecha_defuncion+ '</td>'
                                             +     '<td id="causa'+key+'" class="data-causa">'+dif_in.causa+ '</td>'
                                             +     '<td id="fun'+key+'" class="data-fun">'+dif_in.funeraria+ '</td>'
@@ -2307,7 +2355,8 @@ $("#cert_defuncion_p").dropzone({
                  }
 
                  document.getElementById("inhumacion").value="NO";
-                 calcularPrice();
+                 drawRow();
+                 calcularMonto();
             });
 
 
@@ -2373,10 +2422,11 @@ $("#cert_defuncion_p").dropzone({
                                     +'<th> GENERO </th>'
                                     // +'<th> CERESI </th>'
                                     +'<th> FECHA NACIMIENTO </th>'
+                                    +'<th> FECHA INGRESO </th>'
                                     +'<th> FECHA DEFUNCION </th>'
-                                    // +'<th> FUNERARIA</th>'
-                                    // +'<th> CAUSA</th>'
-                                    // +'<th> TIPO</th>'
+                                     +'<th> FUNERARIA</th>'
+                                     +'<th> CAUSA</th>'
+                                     +'<th> TIPO</th>'
 
                                     +'</tr>'
                                 + '</thead>'
@@ -2396,7 +2446,9 @@ $("#cert_defuncion_p").dropzone({
                                             +     '<td class="data-genero">'+value.genero+ '</td>'
                                             +     '<td class="data-ceresi">'+value.ceresi+ '</td>'
                                             +     '<td class="data-nac">'+value.fecha_nacimiento+ '</td>'
-                                            +     '<td class="data-edad">'+calcularEdad(value.fecha_nacimiento)+'</td>'
+                                            +     '<td class="data-ingreso">'+value.fecha_ingreso+ '</td>'
+
+                                           // +     '<td class="data-edad">'+calcularEdad(value.fecha_nacimiento)+'</td>'
                                             +     '<td class="data-def">'+value.fecha_defuncion+ '</td>'
                                             +     '<td class="data-fun">'+value.funeraria+ '</td>'
                                             +     '<td class="data-causa">'+value.causa+ '</td>'
@@ -2447,32 +2499,142 @@ $("#cert_defuncion_p").dropzone({
 
 
             // metodo que calcula el monto de los servicios solicitados
-                function calcularPrice()
+                function drawRow()
                     {
                         var acum = 0;
-                        $('#totalServ').html(0);
-                        $('#servicios-data').empty();
-                        $('.service_child').each(function(index, value) {
-                            if($(this).is(":checked")){
-                                var cad=($(this).val()).split("-");
-                                var cod_serv=(cad[1]).split("=>");
+                        var cantidad=1;
 
-                                //console.log("caddd");
-                                //console.log(cad);
-                                $('.detalle_servicios').show();
-                                $('#servicios-data').append('<tr class="row_' + cad[0] + ' dynamic-row"><td class="dt_id_tipo_cuenta">'+cad[0]+'</td><td class="dt_txt_tipo_cuenta">'+cod_serv[0]+'</td><td class="dt_id_serv">'+cod_serv[1]+'</td><td class="dt_txt_serv">'+cad[2]+'</td><td class="dt_precio_unitario">'+cad[3]+' Bs.</td><td class="dt_obs" contenteditable></td></tr>');
-                                 acum = parseFloat(acum) + parseFloat(cad[3]);
-                                 $('#totalServ').html(acum);
-                              //  console.log("///------//");
-                                console.log(acum);
-                                //console.log("///------//");
-                                addDragHandlers($('#servicios-data .row_' + cad[0] + '.dynamic-row')[0]);
-                           }
+                       // $('#servicios-data').empty();
+                        $('.service_child').each(function(index, value) {
+                            var cad=($(this).val()).split("-");
+                            var cod_serv=(cad[1]).split("=>");
+                            console.log("cad  "+cad);
+                            console.log("cod_serv  "+cod_serv[1]);
+
+
+
+                            var buscarValor= buscarValorEnTabla(cod_serv[1]);
+                            console.log("buscar fila "+buscarValor + "index  "+index);
+
+                            if(buscarValor==null){
+                                 console.log("no encontrado  ");
+                                        if($(this).is(":checked")){
+                                        //console.log("caddd");
+                                        //console.log(cad);
+                                        $('.detalle_servicios').show();
+                                        subtotal = cantidad * cad[3];
+                                        $('#servicios-data').append('<tr class="row_' + cad[0] + ' dynamic-row"><td class="dt_id_tipo_cuenta">'+cad[0]+'</td><td class="dt_txt_tipo_cuenta">'+cod_serv[0]+'</td><td class="dt_id_serv">'+cod_serv[1]+'</td><td class="dt_txt_serv">'+cad[2]+'</td><td class="dt_cantidad">'+cantidad+' Bs.</td><td class="dt_precio_unitario">'+cad[3]+' Bs.</td><td class="dt_subtotal">'+subtotal+' </td><td class="dt_obs" contenteditable></td></tr>');
+                                       // acum = parseFloat(acum) + parseFloat(cad[3]);
+                                       // $('#totalServ').html(acum);
+                                    //  console.log("///------//");
+                                      //  console.log("acum....."+acum);
+                                        //console.log("///------//");
+                                        addDragHandlers($('#servicios-data .row_' + cad[0] + '.dynamic-row')[0]);
+                                }
+
+                            }
+                            else{
+                                console.log(" encontrado  ");
+
+                                    if ($(this).is(':checked')) {
+                                       // acum = parseFloat(acum) + parseFloat(cad[3]);
+
+                                        }else{
+                                            console.log("no seleccionadp "+cad[0]);
+                                            //  acum = parseFloat(acum) - parseFloat(cad[3]);
+
+                                            $('.row_'+ cad[0]+'').remove();
+                                        }
+                                }
 
                         });
 
+
                     }
 
+                  /*  $(document).on('click', '.services_origin', function(e){
+                        e.preventDefault();
+                        console.log("father"+ $(this).attr('id'));
+                                  if ($(this).is(':checked')) {
+                                       // acum = parseFloat(acum) + parseFloat(cad[3]);
+
+                                        }else{
+
+                                            //  acum = parseFloat(acum) - parseFloat(cad[3]);
+
+                                            $('.row_'+ cad[0]+'').remove();
+                                        }
+                        calcularMonto();
+                    })*/
+
+
+/************* metodo que recorre toda la grilla resumen de servicios adquiridos y calcula el total adeudado ******/
+function calcularMonto(){
+            var suma=0;
+            $('#totalServ').html("");
+            $( ".dt_subtotal" ).each(function( index ) {
+                console.log( index + ": " + $( this ).val() );
+                suma=parseInt(suma) + parseInt($( this ).html());
+            });
+            $('#totalServ').html(suma);
+            $('#totalservicios').val(suma);
+
+            return suma;
+        }
+
+
+                     // Función para buscar un valor en la tabla
+        function buscarValorEnTabla(valor) {
+
+            var tabla = $(".detalle_servicios");
+            var encontrado = false;
+            var filaEncontrada;
+            var posicionEncontrada;
+
+            console.log("valor busqueda-------------->"+valor);
+
+            // Recorrer todas las filas del tbody
+            tabla.find('tbody tr').each(function(filaIndex) {
+            var fila = $(this);
+          //  console.log('this fila**************'+fila);
+
+                    // Recorrer todas las celdas de la fila
+                    fila.find('td').each(function(columnaIndex) {
+                        var celda = $(this);
+                        var contenidoCelda = celda.text();
+                  //      console.log('this contenidoCelda**************'+contenidoCelda);
+
+                        // Compara el contenido de la celda con el valor buscado
+                        if (contenidoCelda === valor) {
+                       // console.log(valor+'==========='+contenidoCelda);
+
+                        encontrado = true;
+                        filaEncontrada = fila;
+                        posicionEncontrada = [filaIndex, columnaIndex];
+                        // Si encuentras el valor, puedes detener los bucles
+                        return false; // Esto sale del bucle de las celdas
+                        }
+                    });
+
+                // Si ya se encontró el valor, sale del bucle de las filas
+                if (encontrado) {
+                    return false;
+                }
+            });
+
+                    // Devuelve el resultado de la búsqueda
+                    if (encontrado) {
+                     //   console.log("fila----------------->"+fila);
+                      //  console.log("posicion----------------->"+posicionEncontrada);
+
+                    return {
+                        fila: filaEncontrada,
+                        posicion: posicionEncontrada
+                    };
+            } else {
+            return null; // El valor no fue encontrado en la tabla
+            }
+        }
 
     /*************************************************************************************************************************/
     /****************************************************** function guardar pagos servicios**********************************/
@@ -2551,7 +2713,7 @@ $("#cert_defuncion_p").dropzone({
                                                 ceresi: e.querySelector('.data-ceresi').innerText,
                                                 tipo: e.querySelector('.data-tipo').innerText,
                                                 fecha_nacimiento: e.querySelector('.data-nac').innerText,
-                                                edad: e.querySelector('.data-edad').innerText,
+                                                ingreso: e.querySelector('.data-ingreso').innerText,
                                                 fecha_defuncion: e.querySelector('.data-def').innerText,
                                                 causa: e.querySelector('.data-causa').innerText,
                                                 funeraria: e.querySelector('.data-fun').innerText,
@@ -2589,13 +2751,14 @@ $("#cert_defuncion_p").dropzone({
                                                 'nombrepago': $('#cm_nombre_pago').val(),
                                                 'paternopago': $('#cm_paternopago').val(),
                                                 'maternopago': $('#cm_maternopago').val(),
-                                                'observacion': $('#cm_observacion').val(),
+                                               // 'observacion': $('#cm_observacion').val(),
                                                 'pago_por' : $('#tipo_resp').val(),
                                                 'ci_resp':$('#resp_cm_id').html(),
                                                 'nombre_resp':$('#resp_cm').html(),
                                                 'sel_exhumado':sel_exhumado,
                                                 'tipo_registro': $('#tipo_registro').html(),
-                                                'domicilio' : $('#cm_domicilio').val()? $('#cm_domicilio').val() : 'NO DEFINIDO'
+                                                'domicilio' : $('#cm_domicilio').val()? $('#cm_domicilio').val() : 'NO DEFINIDO',
+
                                             }),
                                             success: function(data)
                                             {
@@ -3169,7 +3332,7 @@ $("#cert_defuncion_p").dropzone({
                                     +'<th> GENERO </th>'
                                     +'<th> CERESI </th>'
                                     +'<th> FECHA NACIMIENTO </th>'
-                                    +'<th> EDAD </th>'
+                                    +'<th> FECHA INGRESO </th>'
                                     +'<th> FECHA DEFUNCION </th>'
                                     +'<th> FUNERARIA</th>'
                                     +'<th> CAUSA</th>'
@@ -3194,7 +3357,8 @@ $("#cert_defuncion_p").dropzone({
                                             +     '<td class="data-genero">'+value.genero+ '</td>'
                                             +     '<td class="data-ceresi">'+value.ceresi+ '</td>'
                                             +     '<td class="data-nac">'+value.fecha_nacimiento+ '</td>'
-                                            +     '<td class="data-edad">'+calcularEdad(value.fecha_nacimiento)+'</td>'
+                                            +     '<td class="data-ingreso">'+value.fecha_ingreso+ '</td>'
+                                         //   +     '<td class="data-edad">'+calcularEdad(value.fecha_nacimiento)+'</td>'
                                             +     '<td class="data-def">'+value.fecha_defuncion+ '</td>'
                                             +     '<td class="data-fun">'+value.funeraria+ '</td>'
                                             +     '<td class="data-causa">'+value.causa+ '</td>'
@@ -3250,5 +3414,23 @@ $("#cert_defuncion_p").dropzone({
                         this.insertAdjacentElement('beforebegin', dragSrcElement);
                     }
                 }
+
+
+
+                $(document).on('change', '#tipo_resp', function(e){
+                    e.preventDefault();
+                    if($('#tipo_resp').val()=='Titular_responsable'){
+                            $('#cm_ci').val($('#resp_cm_ci').val());
+                            $('#cm_nombre_pago').val($('#resp_cm_nombre').val());
+                            $('#cm_paternopago').val($('#resp_cm_paterno').val());
+                            $('#cm_maternopago').val($('#resp_cm_materno').val());
+                    }
+                    else if($('#tipo_resp').val()=='Tercero_responsable'){
+                        $('#cm_ci').val("");
+                        $('#cm_nombre_pago').val("");
+                        $('#cm_paternopago').val("");
+                        $('#cm_maternopago').val("");
+                    }
+                })
     </script>
     @stop

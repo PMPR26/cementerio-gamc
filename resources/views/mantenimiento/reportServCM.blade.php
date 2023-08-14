@@ -129,8 +129,9 @@
     <!-- Envuelva el contenido de su PDF dentro de una etiqueta principal -->
     <main>
         <pre>
-               {{-- @php(print_r($datoSitio['superficie']))
+               {{-- @php(print_r($table->cobrosDetalles->cuenta))
                @php(die()) --}}
+
         </pre>
 
 
@@ -153,15 +154,17 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td width="100%" colspan="2">Nombre Adjudicatario: {{ucwords($resp ?? '' )}}  </td>
-
+                        <td width="100%" colspan="2">Nombre: {{ucwords($resp ?? '' )}}  </td>
                     </tr>
-
+                    @if($pago_por=="Tercero_responsable")
                     <tr>
                         <td width="100%" colspan="2">Pagado por: {{ucwords($table->nombre ?? '' )}} C.I.:{{ $table->ci ??'' }}   </td>
 
                     </tr>
+                    @endif
                     <tr>
+                         {{--   @php(print_r($table->cobrosDetalles[0]->cuenta))
+                                @php(die())--}}
                         @if($table->fur==0)
                         <td width="60%" colspan="2"><b>SERVICO GRATUITO</b></td>
                         @endif
@@ -184,29 +187,29 @@
 
 
                         <tr class="thead">
-                            <td width="10%" align="left">NRO</td>
+                            <td width="5%" align="left">NRO</td>
                             <td width="10%" align="left">CUENTA</td>
-                            <td width="50%" align="center">CONCEPTO</td>
-                            <td width="10%" align="right">P.U.</td>
-                            <td width="10%" align="right">CANTIDAD</td>
+                            <td width="5%" align="right">CANTIDAD</td>
+                            <td width="70%" align="center">DETALLE</td>
+                            {{-- <td width="10%" align="right">P.U.</td> --}}
                             <td width="10%" align="right">MONTO</td>
                         </tr>
                         @php($count = 1)
                         @php($acum=0)
-                        @foreach ($table->cobrosDetalles as $cobros)
-                            <tr>
-                                <td scope="row">{{ $count++ }}</td>
 
-                                <td>{{ $cobros->cuenta  }}</td>
-                                <td width="50%" align="justify">{{ $cobros->detalle }}</td>
-                                <td width="15%" align="center">{{ $cobros->monto }} </td>
-                                <td width="5%" align="center"> 1 </td>
-                                <td width="10%" align="center">{{number_format(floatval($cobros->monto * 1), 2, ',', '.')  }}</td>
+                            <tr>
+                                <td width="5%" scope="row">{{ $count++ }}</td>
+                                <td width="10%" >{{ $table->cobrosDetalles[0]->cuenta }}</td>
+                                <td  width="5%">{{ $datoSitio['superficie']}}</td>
+                                <td width="60%" align="justify">{{ $table->cobrosDetalles[0]->detalle }} </td>
+                                {{-- <td width="10%" align="center">{{ $table->cobrosDetalles->monto }} </td> --}}
+
+                                <td width="10%" align="center">{{number_format(floatval($table->cobrosDetalles[0]->monto * 1), 2, ',', '.')  }}</td>
                             </tr>
-                                @php($acum=$acum+$cobros->monto)
-                        @endforeach
+                                @php($acum=$acum+$table->cobrosDetalles[0]->monto)
+
                         <tr class="odd">
-                            <td width="80%" align="left" colspan="5">Total </td>
+                            <td width="80%" align="left" colspan="4">Total </td>
                             <td width="10%" align="right">{{ $acum ?? '' }}</td>
                         </tr>
 

@@ -39,6 +39,7 @@
 
             <tr role="row">
                 <th scope="col">#</th>
+                <th scope="col">TIPO UBICACION</th>
                 <th scope="col">PAGO</th>
                 <th scope="col">VERIFICAR PAGO</th>
                 <th scope="col">FUR</th>
@@ -55,6 +56,7 @@
             @foreach ($mant as $mant)
                 <tr>
                     <td scope="row">{{ $count++ }}</td>
+                    <td scope="row">{{ $mant->tipo_ubicacion }}</td>
 
                     <td>{{ $mant->pagado == true ? 'Pagado' : 'Pendiente' }}</td>
 
@@ -68,12 +70,24 @@
                     <td>{{ $mant->observacion }}</td>
                     <td>
 
-                        <form action="{{ route('generatePDF') }}" method="GET" target="blank">
-                            @csrf
-                            <input type="hidden" name="id" value={{ $mant->id }}>
-                            <button type='sumit' class="btn btn-info "><i
-                                    class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
-                        </form>
+                        @if($mant->tipo_ubicacion=="CRIPTA" || $mant->tipo_ubicacion=="MAUSOLEO")
+                                <form action="{{ route('mant.generatePDFCM') }}" method="GET" target="blank">
+                                    @csrf
+                                    <input type="hidden" name="id" value={{ $mant->id }}>
+                                    <input type="hidden" name="fur" value={{ $mant->fur }}>
+                                    <button type='sumit' class="btn btn-info "><i
+                                            class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
+                                </form>
+                        @else
+                            <form action="{{ route('generatePDF') }}" method="GET" target="blank">
+                                @csrf
+                                <input type="hidden" name="id" value={{ $mant->id }}>
+                                <input type="hidden" name="fur" value={{ $mant->fur }}>
+
+                                <button type='sumit' class="btn btn-info "><i
+                                        class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
+                            </form>
+                        @endif
                         @if($mant->pagado != true )
                         <button type='button' class="btn btn-danger anular"  id="{{ $mant->fur }}"  data-id="{{ $mant->id  }}"><i
                             class="fas fa-trash fa-2x"></i></button>
