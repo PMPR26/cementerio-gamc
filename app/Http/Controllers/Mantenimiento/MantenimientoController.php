@@ -96,7 +96,7 @@ class MantenimientoController extends Controller
 
     public function savePay(Request $request){
 
-    //    dd($request);
+       // dd($request);
         if($request->isJson())
         {
             $this->validate($request, [
@@ -344,7 +344,7 @@ class MantenimientoController extends Controller
                                                 $mant->observacion=$request->observacion??'';
                                                 $mant->tipo_ubicacion="NICHO";
                                                 $mant->id_ubicacion=$id_nicho;
-                                                $mant->codigo_ubicacion=$id_nicho;
+                                                $mant->codigo_ubicacion=$codigo_n;
                                                 $mant->cuenta_tipo_servicio=$request->cuenta_tipo_servicio;
                                                 $mant->cuenta_servicio=$request->cuenta_servicio;
                                                 $mant->desc_servicio=$request->text_servicio;
@@ -670,7 +670,7 @@ class MantenimientoController extends Controller
                     $rel->observacion=$request->observacion;
                     $rel->tipo_ubicacion=$request->tipo_ubicacion;
                     $rel->cuenta_tipo_servicio="15224360";
-                    $rel->cuenta_servicio="15224362";
+                    $rel->cuenta_servicio="526";
                     $rel->id_ubicacion=$request->cripta_mausoleo_id;
                     $rel->cantidad_gestiones=$request->cantidad_gestiones;
                     $rel->precio_sinot=$request->precio_sinot;
@@ -1032,7 +1032,7 @@ public function pagoMantenimientoCM(Request $request){
 
     public function generatePDFCM(Request $request) {
                          //    return($request->codigo_nicho); die();
-                       $codigo_nicho=$request->codigo_nicho;
+                     //
                         $tab=[];
                         $tablelocal=DB::table('mantenimiento')
                         ->select('mantenimiento.*')
@@ -1046,7 +1046,7 @@ public function pagoMantenimientoCM(Request $request){
                         $det_exhum=$tablelocal->det_exhum ??'';
                         $responsable_difunto_id=$tablelocal->respdifunto_id;
                         $pago_por= $tablelocal->pago_por;
-
+                        $codigo_ubicacion=$tablelocal->codigo_ubicacion;
 
                         if($tipo_ubicacion=="CRIPTA" || $tipo_ubicacion== "MAUSOLEO" ){
                             $sq=CriptaMausoleoResp::where('cripta_mausoleo_responsable.cripta_mausole_id', '=',$datos_ubicacion )
@@ -1093,7 +1093,7 @@ public function pagoMantenimientoCM(Request $request){
                                     $table = json_decode(json_encode($tab));
 
                                 $pdf = PDF::setPaper('A4', 'landscape');
-                                $pdf = PDF::loadView('mantenimiento/reportServCM', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp', 'datoSitio' ,  'pago_por'));
+                                $pdf = PDF::loadView('mantenimiento/reportServCM', compact('table','codigo_ubicacion', 'observacion', 'det_exhum', 'resp', 'datoSitio' ,  'pago_por'));
                                 return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                             }
 
@@ -1117,7 +1117,7 @@ public function pagoMantenimientoCM(Request $request){
                                             $observacion= $tablelocal->observacion;
 
                                             $pdf = PDF::setPaper('A4', 'landscape');
-                                            $pdf = PDF::loadView('mantenimiento/reportServCM', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp', 'datoSitio',  'pago_por'));
+                                            $pdf = PDF::loadView('mantenimiento/reportServCM', compact('table','codigo_ubicacion', 'observacion', 'det_exhum', 'resp', 'datoSitio',  'pago_por'));
                                             return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                                         }
                                 }
@@ -1142,13 +1142,14 @@ public function pagoMantenimientoCM(Request $request){
 
 
 
+
             $sq=Nicho::where('nicho.id', '=',$datos_ubicacion )
             ->join('responsable_difunto', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
             ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
-            ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
+            ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp', 'nicho.codigo' )->first();
             $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp ."  C.I.: ".$sq->ci_resp;
+            $codigo_nicho=$sq->codigo;
 
-        //  dd($table);
 
                     $arrayBusqueda = [];
                     $arrayBusqueda[] = (string)2;
@@ -1167,7 +1168,7 @@ public function pagoMantenimientoCM(Request $request){
                                 $observacion= $table->observacion;
 
                                 $pdf = PDF::setPaper('A4', 'landscape');
-                                $pdf = PDF::loadView('mantenimiento/reportMant', compact('table', 'resp', 'observacion', 'tableFur'));
+                                $pdf = PDF::loadView('mantenimiento/reportMant', compact('table', 'resp', 'observacion', 'tableFur', 'codigo_nicho'));
                                 return  $pdf-> stream("preliquidacion_mantenimiento.pdf", array("Attachment" => false));
                             }
                     }
