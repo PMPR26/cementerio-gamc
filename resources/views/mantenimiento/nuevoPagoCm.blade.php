@@ -1641,7 +1641,7 @@ $("#cert_defuncion_p").dropzone({
                                                                             '<td class="dtcausa">'+value['causa']+'</td>'+
                                                                             '<td class="dtfuneraria">'+value['funeraria']+'</td>'+
                                                                             '<td class="dtgenero">'+value['genero']+'</td>'+
-                                                                            '<td class="enl"><a href="'+value['url']+'" target="_blank" >Ver adjunto</a></td>'+
+                                                                            '<td class="enl"><a href="'+value['url']+'" target="_blank" class="enlace_difunto">Ver adjunto</a></td>'+
                                                                             '<td class="dturl" >'+value['url']+'</td>'+
                                                                             '<td class="dtborrar"> <a href="#" id="remove"  onClick="$(this).parent().parent().remove();"> <i class="fas fa-trash wine fa-2x"></i></a></td></tr>';
                                                                         $('#tabla_difunto_row').append(row);
@@ -1970,6 +1970,15 @@ $("#cert_defuncion_p").dropzone({
                                         $('#ultima_gestion_pagada').val(data.response.cripta.ultima_gestion_pagada);
                                         var array_difuntos = jQuery.parseJSON(data.response.cripta.difuntos);
                                          $('#difuntos_cm1').html(data.response.cripta.difuntos);
+                                         $('#resp_cm_nombre').val(data.response.responsable.nombres);
+                                         $('#resp_cm_paterno').val(data.response.responsable.primer_apellido);
+                                         $('#resp_cm_materno').val(data.response.responsable.segundo_apellido);
+                                         $('#resp_cm_ci').val(data.response.responsable.ci);
+                                         $('#tipo_resp').val('Titular_responsable');
+                                         $('#cm_ci').val(data.response.responsable.ci);
+                                         $('#cm_nombre_pago').val(data.response.responsable.nombres);
+                                         $('#cm_paternopago').val(data.response.responsable.primer_apellido);
+                                         $('#cm_maternopago').val(data.response.responsable.segundo_apellido);
                                         $.each(array_difuntos, function(key,val)
                                         {
                                             var id_tabla="tabla_difunto_row_pay";
@@ -2042,7 +2051,21 @@ $("#cert_defuncion_p").dropzone({
 
 
          });
-
+         $(document).on('change', '#tipo_resp', function(e){
+                    e.preventDefault();
+                    if($('#tipo_resp').val()=='Titular_responsable'){
+                            $('#cm_ci').val($('#resp_cm_ci').val());
+                            $('#cm_nombre_pago').val($('#resp_cm_nombre').val());
+                            $('#cm_paternopago').val($('#resp_cm_paterno').val());
+                            $('#cm_maternopago').val($('#resp_cm_materno').val());
+                    }
+                    else if($('#tipo_resp').val()=='Tercero_responsable'){
+                        $('#cm_ci').val("");
+                        $('#cm_nombre_pago').val("");
+                        $('#cm_paternopago').val("");
+                        $('#cm_maternopago').val("");
+                    }
+                })
         //funcion para cargar servicios hijos por padre
         function cargar_sevicios_hijos(obj){
 
@@ -2313,7 +2336,7 @@ $("#cert_defuncion_p").dropzone({
                                             +     '<td id="causa'+key+'" class="data-causa">'+dif_in.causa+ '</td>'
                                             +     '<td id="fun'+key+'" class="data-fun">'+dif_in.funeraria+ '</td>'
                                             +     '<td id="genero'+key+'" class="data-genero">'+dif_in.genero+ '</td>'
-                                            +     '<td id="enl'+key+'" class="data"><a href="'+dif_in.url+'" target="_blank" >Ver adjunto</a></td>'
+                                            +     '<td id="enl'+key+'" class="data"><a href="'+dif_in.url+'" target="_blank" class="enlace_difunto"  >Ver adjunto</a></td>'
                                             +     '<td id="url'+key+'" class="data-url" >'+dif_in.url+'</td>'
                                             +     '<td class="data"> <a href="#" id="remove_new"  onClick="$(this).parent().parent().remove();   "> <i class="fas fa-trash wine fa-2x"></i></a></td>';
                                             +     '</tr>';
@@ -2336,7 +2359,7 @@ $("#cert_defuncion_p").dropzone({
                                             +     '<td id="causa'+key+'" class="data-causa">'+dif_in.causa+ '</td>'
                                             +     '<td id="fun'+key+'" class="data-fun">'+dif_in.funeraria+ '</td>'
                                             +     '<td id="genero'+key+'" class="data-genero">'+dif_in.genero+ '</td>'
-                                            +     '<td id="enl'+key+'" class="data"><a href="'+dif_in.url+'" target="_blank" >Ver adjunto</a></td>'
+                                            +     '<td id="enl'+key+'" class="data"><a href="'+dif_in.url+'" target="_blank" class="enlace_difunto">Ver adjunto</a></td>'
                                             +     '<td id="url'+key+'" class="data-url" >'+dif_in.url+'</td>'
                                             +     '<td class="data"> <a href="#" id="remove_new"  onClick="$(this).parent().parent().remove();   "> <i class="fas fa-trash wine fa-2x"></i></a></td>';
                                             +     '</tr>';
@@ -2348,6 +2371,19 @@ $("#cert_defuncion_p").dropzone({
 
 
             }
+
+
+            $(document).on('click', '.enlace_difunto', function(e){
+                e.preventDefault();
+                var enl=$(this).attr('href');
+                if(enl=="" || enl==null){
+                    Swal.fire(
+                       'Precaución!',
+                       'No existe documento adjunto, se recomienda complementar la información.',
+                       'warning'
+                   )
+                }
+            })
 
             $(document).on('click', '#remove_new', function(e)
             {

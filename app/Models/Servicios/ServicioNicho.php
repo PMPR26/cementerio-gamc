@@ -121,7 +121,7 @@ class ServicioNicho extends Model
 
 
 
- //fur mantenimiento
+ //fur mantenimiento criptas
       public function GenerarFurCMant($ci, $nombre, $primer_apellido,
       $ap_materno, $direccion, $codigo,
        $servicios_cementery , $cantidades, $cajero,  $adjudicatario, $tblobs, $superficie)
@@ -129,7 +129,7 @@ class ServicioNicho extends Model
 
             $headers =  ['Content-Type' => 'application/json'];
             $client = new Client();
-             $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCM', [
+             $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCMant', [
             //  $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryCMant', [
 
                 'json' => [
@@ -150,6 +150,46 @@ class ServicioNicho extends Model
             ]);
             $fur_response = json_decode((string) $response->getBody(), true);
             return $fur_response;
+        }
+
+
+        //fur mantenimiento nichos
+      public function GenerarFurMant($ci, $nombre, $primer_apellido,
+      $ap_materno, $direccion, $nombre_difunto, $codigo, $bloque, $nicho, $fila,
+       $servicios_cementery , $cantidades, $cajero,  $adjudicatario,$ci_adjudicatario, $tblobs)
+        {
+
+            $headers =  ['Content-Type' => 'application/json'];
+            $client = new Client();
+             $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryMant', [
+            //  $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryCMant', [
+
+                'json' => [
+                    'ci' => $ci,
+                    'nombre' => $nombre,
+                    'primer_apellido' => $primer_apellido,
+                    'ap_materno' => $ap_materno,
+                    'direccion' => $direccion,
+                    'codigo' => $codigo,
+                    'servicios_cementery' => $servicios_cementery,
+                    'cantidad' => $cantidades,
+                    'cajero'=>$cajero,
+                    'adjudicatario'=>$adjudicatario,
+                    'observacion'=>$tblobs,
+                    'bloque'=>$bloque,
+                    'nicho'=>$nicho,
+                    'fila'=>$fila,
+                    'nombre_difunto'=>$nombre_difunto,
+                    'ci_adjudicatario'=>$ci_adjudicatario
+
+
+
+                ],
+                'headers' => $headers,
+            ]);
+            $fur_response = json_decode((string) $response->getBody(), true);
+            return $fur_response;
+
         }
 
 
