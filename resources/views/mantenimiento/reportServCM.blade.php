@@ -171,7 +171,7 @@
                         <td width="20%">Actividad: Preliquidación</td>
                     </tr>
                     <tr>
-                        <td><b>Codigo Ubicación:  {{ $codigo_nicho }}</b></td>
+                        <td><b>Codigo Ubicación:  {{ $codigo_ubicacion }}</b></td>
                     </tr>
 
 

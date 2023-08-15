@@ -170,7 +170,7 @@
                 </td>
             </tr>
                     <tr>
-                        <td width="100%" colspan="2">Codigo nicho: {{ $table->codigo_nicho??'' }}</td>
+                        <td width="100%" colspan="4">Codigo nicho: <b>{{ $codigo_nicho??'' }}</b></td>
                     </tr>
 
                     <tr class="thead">

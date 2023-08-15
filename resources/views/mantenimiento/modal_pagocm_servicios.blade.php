@@ -18,6 +18,8 @@
                                         <div class="form-group">
                                             <label>Código:</label>
                                             <p id="cod_cm" class="clear"></p>
+                                            <p id="id_cm" class="clear"></p>
+
                                             <p id="superficie" class="clear" style="display: none"></p>
                                             <p id="tipo_registro" class="clear" style="display: none"></p>
 
