@@ -86,9 +86,9 @@ class Responsable extends Model
 
     public function updateResponsableByDif($request, $difuntoid){
         if($request->ci_resp==null ||$request->ci_resp=="" ){
-            $respons = new Responsable;  // correct
+           // $respons = new Responsable;  // correct
 
-            $ci_resp= $respons->generateCiResponsable();;
+           // $ci_resp= $respons->generateCiResponsable();;
         }else{
             $ci_resp=$request->ci_resp;
         }
@@ -114,7 +114,12 @@ class Responsable extends Model
 
         $responsable= Responsable::where('id', $id_resp)->first();
         // dd($responsable);
-        $responsable->ci=$request->ci_resp;
+        if($request->ci_resp==null || $request->ci_resp==""){
+
+        }else{
+            $responsable->ci=$request->ci_resp;
+        }
+
         $responsable->nombres=trim(mb_strtoupper($request->nombres_resp,'UTF-8'));
         $responsable->primer_apellido= trim(mb_strtoupper($request->paterno_resp,'UTF-8'));
         $responsable->segundo_apellido=trim(mb_strtoupper($request->materno_resp,'UTF-8'))?? '';

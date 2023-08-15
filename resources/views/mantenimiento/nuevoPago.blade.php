@@ -403,45 +403,6 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
-                        <div class="col-sm-6 col-md-12 col-xl-12">PAGO POR TERCERA PERSONA &nbsp;&nbsp;&nbsp; <input type="checkbox"
-                                name="person" id="person" value="responsable" style="width: 30px; height:30px"></div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row form-group-lg" id="infoperson" style="display: none">
-
-
-                            <div class="col-sm-6 col-md-2 col-xl-2">
-                                <label>Nombres</label> <input type="text" name="name_pago" id="name_pago" value=""
-                                    class="form-control">
-                            </div>
-                            <div class="col-sm-6 col-md-3 col-xl-3">
-                                <label>Primer apellido</label> <input type="text" name="paterno_pago" id="paterno_pago"
-                                    value="" class="form-control">
-                            </div>
-
-                            <div class="col-sm-6 col-md-3 col-xl-3">
-                                <label>Segundo apellido</label> <input type="text" name="materno_pago" id="materno_pago"
-                                    value="" class="form-control">
-                            </div>
-
-                            <div class="col-sm-6 col-md-4 col-xl-4">
-                                <label> C.I.:</label> <input type="text" name="ci" id="ci" value="" class="form-control">
-                            </div>
-
-
-                        </div>
-
-                        <div class="row">
-                            <div class="col-12">
-                                <label for="obs">Observaciones</label>
-                                <textarea name="observacion" id="observacion" class="form-control" cols="30" rows="3"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
                     <div class="col-sm-12 col-md-12 col-xl-12 card-header">
                         <h4>GESTIONES ADEUDADAS</h4>
                         <div class="row">
@@ -483,14 +444,58 @@
                                 </table>
                             </div>
                         </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="col-sm-6 col-md-12 col-xl-12">PAGO POR TERCERA PERSONA &nbsp;&nbsp;&nbsp; <input type="checkbox"
+                                name="person" id="person" value="responsable" style="width: 30px; height:30px"></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row form-group-lg" id="infoperson" style="display: none">
+
+                            <div class="col-sm-6 col-md-4 col-xl-4">
+                                <label> C.I.:</label> <input type="text" name="ci" id="ci" value="" class="form-control">
+                            </div>
+                            <div class="col-sm-6 col-md-2 col-xl-2">
+                                <label>Nombres</label> <input type="text" name="name_pago" id="name_pago" value=""
+                                    class="form-control">
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-xl-3">
+                                <label>Primer apellido</label> <input type="text" name="paterno_pago" id="paterno_pago"
+                                    value="" class="form-control">
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 col-xl-3">
+                                <label>Segundo apellido</label> <input type="text" name="materno_pago" id="materno_pago"
+                                    value="" class="form-control">
+                            </div>
+
+
+
+
+                        </div>
+
                         <div class="row">
-                            <div class="col-sm-6 col-md-6 col-xl-6"> Regularizar Transaccion  &nbsp;&nbsp;&nbsp;  <input type="checkbox"
-                                    name="reg" id="reg" value="reg" style="width: 30px; height:30px"></div>
-                            <div class="col-sm-6 col-md-6 col-xl-6" id="fur_reg" style="display: none"> FUR <input
-                                    type="text" name="nrofur" id="nrofur" value=""></div>
+                            <div class="col-12">
+                                <label for="obs">Observaciones</label>
+                                <textarea name="observacion" id="observacion" class="form-control" cols="30" rows="3"></textarea>
+                            </div>
                         </div>
                     </div>
+                </div>
 
+                <div class="card">
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6 col-xl-6"> Regularizar Transaccion  &nbsp;&nbsp;&nbsp;  <input type="checkbox"
+                                name="reg" id="reg" value="reg" style="width: 30px; height:30px"></div>
+                        <div class="col-sm-6 col-md-6 col-xl-6" id="fur_reg" style="display: none"> FUR <input
+                                type="text" name="nrofur" id="nrofur" value=""></div>
+                    </div>
 
                 </div>
 
@@ -873,7 +878,7 @@
             $(document).on('click', '#btn_guardar_pago', function() {
 
                 if ($('#person').is(':checked')) {
-                    if($('#name_pago').val()==""  || $('#paterno_pago').val()=="" || $('#ci').val()==""  ){
+                    if($('#name_pago').val()==""  || $('#paterno_pago').val()=="" ){
                         swal.fire({
                             title: "Completar los datos de la persona que esta realizando el pago!",
                             type: "warning",
