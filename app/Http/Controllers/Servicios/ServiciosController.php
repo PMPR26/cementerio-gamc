@@ -965,21 +965,12 @@ class ServiciosController extends Controller
                         // ->where('tipo','=',$request->tipo)
                         ->orderBy('id','DESC')
                         ->first();
-// dd($tablelocal->tipo);
+
                         $datos_ubicacion=$tablelocal->ubicacion_id??'';
                         $tipo_ubicacion=$tablelocal->tipo??'';
                         $det_exhum=$tablelocal->det_exhum ??'';
                         $responsable_difunto_id=$tablelocal->responsable_difunto_id;
                         $pago_por=$tablelocal->pago_por;
-                        // dd( $det_exhum);
-
-                        // if($tipo_ubicacion=="CRIPTA" || $tipo_ubicacion== "MAUSOLEO" ){
-                        //     $sq=CriptaMausoleoResp::where('cripta_mausoleo_responsable.cripta_mausole_id', '=',$datos_ubicacion )
-                        //     ->join('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
-                        //     ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
-                        //     $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp."  C.I.: ".$sq->ci_resp;
-                        // }
-                        // else
 
                         if($tipo_ubicacion=="NICHO"){
                             $sq=Nicho::where('nicho.id', '=',$datos_ubicacion )
@@ -1036,7 +1027,7 @@ class ServiciosController extends Controller
                                     $table = json_decode(json_encode($tab));
 
                                 $pdf = PDF::setPaper('A4', 'landscape');
-                                $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp' , 'pago_por'));
+                                $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp' , 'pago_por','tipo_ubicacion'));
                                 return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                             }
 
@@ -1057,9 +1048,8 @@ class ServiciosController extends Controller
                                         if($response->object()->status == true) {
                                             $table = $response->object()->data->cobrosVarios[0];
                                             $observacion= $tablelocal->observacion;
-
                                             $pdf = PDF::setPaper('A4', 'landscape');
-                                            $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp', 'pago_por'));
+                                            $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp', 'pago_por','tipo_ubicacion'));
                                             return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                                         }
                                 }
