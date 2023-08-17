@@ -19,46 +19,46 @@
         <a href="{{ route('load.formrel') }}" id="new-servicio" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Registro</a>
     </div>
  </div>
-  
+
         <div class="col-sm-12">
             <table id="servicio-data" class="table table-striped table-bordered responsive" role="grid"
             aria-describedby="example">
             <thead class="bg-table-header">
-               
+
                     <tr role="row">
-                        <th scope="col">#</th>  
-                        <th scope="col">CÓDIGO NICHO</th> 
-                        <th scope="col">NRO NICHO</th> 
-                        <th scope="col">FILA</th> 
-                        <th scope="col">BLOQUE</th> 
-                        <th scope="col">CUARTEL</th> 
-                        <th scope="col">RESPONSABLE</th>  
-                        <th scope="col">DIFUNTO</th>   
-                        <th scope="col">TIEMPO</th>   
-                        <th scope="col">RENOVACION</th>  
-                        <th scope="col">MONTO</th>   
-                        <th scope="col">GESTION RENOV</th>                          
+                        <th scope="col">#</th>
+                        <th scope="col">CÓDIGO NICHO</th>
+                        <th scope="col">NRO NICHO</th>
+                        <th scope="col">FILA</th>
+                        <th scope="col">BLOQUE</th>
+                        <th scope="col">CUARTEL</th>
+                        <th scope="col">RESPONSABLE</th>
+                        <th scope="col">DIFUNTO</th>
+                        <th scope="col">TIEMPO</th>
+                        <th scope="col">RENOVACION</th>
+                        <th scope="col">MONTO</th>
+                        <th scope="col">GESTION RENOV</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     @php($count = 1)
                     @foreach ($servicio as $serv)
-                               
+
                         <tr>
                             <td scope="row">{{ $count++ }}</td>
-                            <td>{{ $serv->codigo_nicho??'' }}</td>   
-                            <td>{{ $serv->nro_nicho??'' }}</td>                            
-                            <td>{{ $serv->fila??'' }}</td>    
-                            <td>{{ $serv->bloque??'' }}</td>                            
-                            <td>{{ $serv->cuartel??'' }}</td>   
-                            <td>{{ $serv->nombre_resp??'' }} {{ $serv->primerap_resp??'' }}{{ $serv->segap_resp??'' }}</td>                          
-                            <td>{{ $serv->nombre_dif??'' }} {{ $serv->primerap_dif??'' }}{{ $serv->segap_dif??'' }}</td>                           
-                            <td>{{ $serv->tiempo??'' }} </td> 
-                            <th>{{ $serv->nro_renovacion??'' }}</th>  
-                            <th>{{ $serv->monto_renov??'' }}</th>   
-                            <th>{{ $serv->gestion_renov ??'' }}</th>                            
-                            
+                            <td>{{ $serv->codigo_nicho??'' }}</td>
+                            <td>{{ $serv->nro_nicho??'' }}</td>
+                            <td>{{ $serv->fila??'' }}</td>
+                            <td>{{ $serv->bloque??'' }}</td>
+                            <td>{{ $serv->cuartel??'' }}</td>
+                            <td>{{ $serv->nombre_resp??'' }} {{ $serv->primerap_resp??'' }} {{ $serv->segap_resp??'' }}</td>
+                            <td>{{ $serv->nombre_dif??'' }} {{ $serv->primerap_dif??'' }} {{ $serv->segap_dif??'' }}</td>
+                            <td>{{ $serv->tiempo??'' }} </td>
+                            <th>{{ $serv->nro_renovacion??'' }}</th>
+                            <th>{{ $serv->monto_renov??'' }}</th>
+                            <th>{{ $serv->gestion_renov ??'' }}</th>
+
                         </tr>
                     @endforeach
                 </tbody>
@@ -66,7 +66,7 @@
         </div>
 
 
-        
+
 
         {{-- @include('servicios.modalRegister')  --}}
 
@@ -79,7 +79,7 @@
     .modal .modal-dialog {
     width: 100%;
     max-width: none;
-    
+
     margin: 0;
     }
     .modal .modal-content {
@@ -93,7 +93,7 @@
 </style>
 
 @section('js')
-    <script> 
+    <script>
     $(document).ready(function () {
         // $('#new-servicio').on('click', function(){
         //     //$('#modal-register-servicio').modal('show');
@@ -138,7 +138,7 @@
 
 
 
-  
+
     });
 
 

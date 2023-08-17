@@ -70,7 +70,6 @@ class ServicioNicho extends Model
                   'servicios_cementery' => $servicios_cementery,
                   'cantidad' => $cantidades,
                   'cajero'=>$cajero,
-
                   'nombre_adjudicatario'=>$nombre_adjudicatario,
                   'ci_adjudicatario'=>$ci_adjudicatario,
                   'tblobs'=>$observacion
@@ -78,9 +77,8 @@ class ServicioNicho extends Model
               'headers' => $headers,
           ]);
 
-
           $fur_response = json_decode((string) $response->getBody(), true);
-        //   dd( $fur_response);
+
           return $fur_response;
       }
 

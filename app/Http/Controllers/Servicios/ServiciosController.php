@@ -733,20 +733,6 @@ class ServiciosController extends Controller
                                             $iddifuntoResp = $rf->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho, $id_nicho);
                                         }
                                     }
-                                            // if(isset($responsable_id) ){
-                                            //     $difres= ResponsableDifunto::where('responsable_id', $responsable_id)
-                                            //     ->where('difunto_id', $difunto_id)
-                                            //    ->first();
-
-
-                                            //      $difres->estado_nicho = $estado_nicho ?? '';
-                                            //      $difres->save();
-                                            // }
-                                            // else{
-
-                                            //     $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n,  $estado_nicho);
-
-                                            // }
 
                                                 //insert pago
                                                 if($request->reg=="reg"){
@@ -984,6 +970,7 @@ class ServiciosController extends Controller
                         $tipo_ubicacion=$tablelocal->tipo??'';
                         $det_exhum=$tablelocal->det_exhum ??'';
                         $responsable_difunto_id=$tablelocal->responsable_difunto_id;
+                        $pago_por=$tablelocal->pago_por;
                         // dd( $det_exhum);
 
                         // if($tipo_ubicacion=="CRIPTA" || $tipo_ubicacion== "MAUSOLEO" ){
@@ -1049,7 +1036,7 @@ class ServiciosController extends Controller
                                     $table = json_decode(json_encode($tab));
 
                                 $pdf = PDF::setPaper('A4', 'landscape');
-                                $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp' ));
+                                $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp' , 'pago_por'));
                                 return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                             }
 
@@ -1072,7 +1059,7 @@ class ServiciosController extends Controller
                                             $observacion= $tablelocal->observacion;
 
                                             $pdf = PDF::setPaper('A4', 'landscape');
-                                            $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp'));
+                                            $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp', 'pago_por'));
                                             return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                                         }
                                 }
