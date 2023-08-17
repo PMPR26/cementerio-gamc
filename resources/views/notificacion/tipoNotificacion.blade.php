@@ -22,7 +22,7 @@
         @csrf
     <div class="row  p-4">
         <div class="col-12">
-          <h1>CREACION DE TIPOS DE NOTIFICACIONES</h1>
+          <h1>CREACION DE PlANTILLA DE NOTIFICACIONES</h1>
         </div>
 
         <div class="col-12">
@@ -40,7 +40,7 @@
         <div class="col-3"></div>
 
         <div class="col-6">
-            <button class="btn btn-primary btn-lg btn-block" id="btn_guardar_tipo_notificacion">Guardar</button>
+            <button class="btn btn-primary btn-lg btn-block" id="btn_guardar_tipo_notificacion">Guardar Plantilla</button>
         </div>
 
         <div class="col-3"></div>
