@@ -181,32 +181,27 @@
                                 <h4 align="left">DETALLE LIQUIDACION</h4>
                             </td>
                         </tr>
-
-
                         <tr class="thead">
-                            <td width="10%" align="left">NRO</td>
                             <td width="10%" align="left">CUENTA</td>
-                            <td width="50%" align="center">CONCEPTO</td>
-                            <td width="10%" align="right">P.U.</td>
-                            <td width="10%" align="right">CANTIDAD</td>
+                            <td width="15%" align="right">CANTIDAD</td>
+                            <td width="50%" align="center">DETALLE</td>
                             <td width="10%" align="right">MONTO</td>
                         </tr>
                         @php($count = 1)
                         @php($acum=0)
                         @foreach ($table->cobrosDetalles as $cobros)
                             <tr>
-                                <td scope="row">{{ $count++ }}</td>
-
-                                <td>{{ $cobros->cuenta  }}</td>
-                                <td width="50%" align="justify">{{ $cobros->detalle }}</td>
+                                <td  width="10%">{{ $cobros->cuenta  }}</td>
+                                <td width="15%" align="center"> 1 </td>
+                                <td width="60%" align="justify">{{ $cobros->detalle }}</td>
                                 <td width="15%" align="center">{{ $cobros->monto }} </td>
-                                <td width="5%" align="center"> 1 </td>
-                                <td width="10%" align="center">{{number_format(floatval($cobros->monto * 1), 2, ',', '.')  }}</td>
+
+
                             </tr>
                                 @php($acum=$acum+$cobros->monto)
                         @endforeach
                         <tr class="odd">
-                            <td width="80%" align="left" colspan="5">Total </td>
+                            <td width="80%" align="left" colspan="3">Total </td>
                             <td width="10%" align="right">{{ $acum ?? '' }}</td>
                         </tr>
 

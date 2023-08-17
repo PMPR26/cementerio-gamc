@@ -156,21 +156,24 @@
                         <td width="100%" colspan="2">Nombre Adjudicatario: {{ucwords($resp ?? '' )}}  </td>
 
                     </tr>
-                    @if($pago_por=="Tercera persona")
-                    <tr>
-                        <td width="100%" colspan="2">Pagado por: {{ucwords($table->nombre ?? '' )}} C.I.:{{ $table->ci ??'' }}   </td>
-                    </tr>
-                    @endif
+                        @if($pago_por=="Tercera persona")
+                        <tr>
+                            <td width="100%" colspan="2">Pagado por: {{ucwords($table->nombre ?? '' )}} C.I.:{{ $table->ci ??'' }}   </td>
+                        </tr>
+                        @endif
                     <tr>
                         @if($table->fur==0)
                         <td width="60%" colspan="2"><b>SERVICO GRATUITO</b></td>
                         @endif
                         <td width="20%">Actividad: Preliquidación</td>
                     </tr>
+
+
+                    @if($codigo_nicho!=0 )
                     <tr>
                         <td><b>Codigo Nicho:  {{ $codigo_nicho }}</b></td>
                     </tr>
-
+                    @endif
 
 
                 </table>
