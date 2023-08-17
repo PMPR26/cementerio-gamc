@@ -83,16 +83,13 @@
                                             class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
                                 </form>
                                 @endif
-                                <form action="{{ route('serv.anularFur') }}" method="GET" target="blank">
-                                    @csrf
-                                    <input type="hidden" name="codigo_nicho" value={{ $serv->codigo_nicho }}>
-                                    <input type="hidden" name="id" value={{ $serv->serv_id }}>
-                                    <input type="hidden" name="fur" value={{ $serv->fur }}>
+                                @if( $serv->estado_pago==false)
 
-                                    <button type='submit' class="btn btn-danger"><i
+
+                                    <button type='button' class="btn btn-danger anular"  id="{{ $serv->fur }}"  data-id="{{ $serv->serv_id }}"><i
                                             class="fas fa-trash fa-2x"></i></button>
-                                </form>
 
+                                @endif
 
                             </td>
                         </tr>
@@ -178,9 +175,9 @@
     });
 
 
-    /*******************VERIFICAR PAGO*****************/
+            /*******************VERIFICAR PAGO*****************/
 
-    $(document).on('click', '.verificar_pago', function(e){
+        $(document).on('click', '.verificar_pago', function(e){
             e.preventDefault();
 
             var fur = $(this).val();
@@ -191,7 +188,8 @@
 
 
 
-        function verificarQR(fur, servicios_id) {
+        function verificarQR(fur, servicios_id)
+        {
 
             Swal.fire({
                 title: 'Verificando Pago!',
@@ -216,10 +214,7 @@
                                 console.log("respuesta verificacion");
 
                                 console.log(data.estado_pago);
-                                // console.log(data);
-                                // return false;
-                                // alert(data.data.ok);
-                                // alert(data.data.pagado);
+
 
                                 if(data.estado_pago=="AC")
                                  {
@@ -258,6 +253,98 @@
                 },
             });
         }
+
+
+
+        $(document).on('click', '.anular', function(e){
+            e.preventDefault();
+            var fur= $(this).attr('id');
+
+            var id = $(this).attr('data-id');
+            console.log('id: '+id+" fur: "+fur);
+                Swal.fire({
+                        title: 'Esta seguro de anular el registro?',
+                        showDenyButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: 'Realizar',
+                        denyButtonText: `No realizar`,
+                        }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+
+                                Swal.fire({
+                                        title: 'Ejecutando la solicitud!',
+                                        html: `Espere un momento`,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        //  new Promise((resolve, reject) => {
+                                                $.ajax({
+                                                    url:"{{route('serv.anularFur')}}",
+                                                    type: "POST",
+                                                    headers: {
+                                                        'Content-Type':'application/json',
+                                                        'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                                                    },
+                                                    data: JSON.stringify({
+                                                        fur: fur,
+                                                        id: id,
+                                                    }),
+                                                    cache: false,
+                                                    contentType: "application/json; charset=utf-8",
+                                                    dataType: 'json',
+                                                    success: function(data) {
+                                                        console.log("respuesta anulacion");
+
+                                                        console.log(data.status==true);
+
+
+                                                        if(data.status==true)
+                                                        {
+                                                            Swal.fire(
+                                                                            'Proceso realizado con éxito',
+                                                                            `FUR ${fur} : ${data.message}`,
+                                                                            'success'
+                                                                                    )
+                                                                            .then(() => {
+                                                                                    location.reload();
+                                                                                });
+
+
+                                                                    }else{
+                                                                        Swal.fire(
+                                                                            'Proceso fallado',
+                                                                            ` ${data.message}`,
+
+                                                                                    )
+                                                                            .then(() => {
+                                                                                    return false;
+                                                                                });
+                                                                    }
+
+                                                                    // $('.verificar_pago').show();
+                                                                    $('.spiner_revision').hide();
+
+                                                    },
+                                                    error: function(resp) {
+                                                        Swal.fire(
+                                                            'Error de verificación',
+                                                            'Intente nuevamente, Si el problema continua notifica a soporte',
+                                                            'error'
+                                                        );
+                                                    }
+                                                });
+                                        //  });
+                                        },
+                                    });
+                                } else if (result.isDenied) {
+                            Swal.fire('Los cambios no fueron realizados', '', 'info')
+                        }
+                    })
+        })
+
+
+
+
 
 
 

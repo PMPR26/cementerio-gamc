@@ -18,6 +18,8 @@
                                         <div class="form-group">
                                             <label>Código:</label>
                                             <p id="cod_cm" class="clear"></p>
+                                            <p id="id_cm" class="clear"></p>
+
                                             <p id="superficie" class="clear" style="display: none"></p>
                                             <p id="tipo_registro" class="clear" style="display: none"></p>
 
@@ -32,6 +34,11 @@
                                             <label>Responsable :</label>
                                             <p id="resp_cm_id" style="display:none" class="clear"></p>
                                             <p id="resp_cm" class="clear"></p>
+                                            <input type="hidden" name="resp_cm_nombre" id="resp_cm_nombre">
+                                            <input type="hidden" name="resp_cm_paterno" id="resp_cm_paterno">
+                                            <input type="hidden" name="resp_cm_materno" id="resp_cm_materno">
+                                            <input type="hidden" name="resp_cm_ci" id="resp_cm_ci">
+
                                         </div>
                                     </div>
                                     <div class="col-12">

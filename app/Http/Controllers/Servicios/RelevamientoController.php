@@ -276,7 +276,7 @@ class RelevamientoController extends Controller
                     'nombres_dif' => 'required',
                     'paterno_dif'=> 'required',
                     'tipo_dif'=> 'required',
-                    'genero_dif'=> 'required',
+                    // 'genero_dif'=> 'required',
                     // 'ci_resp' => 'required',
 
                 ], [
@@ -284,7 +284,7 @@ class RelevamientoController extends Controller
                     'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
                     'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
                     'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
-                    'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
+                    // 'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
                     // 'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
 
                 ]);

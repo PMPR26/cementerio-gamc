@@ -134,12 +134,27 @@ class Nicho extends Model
 
 
     public function generarCodigoAsignacion($cuartel, $bloque, $nicho, $fila){
+       // dd($cuartel.",". $bloque.",". $nicho.",". $fila);
         $c=Cuartel::where('id', $cuartel)->first();
         $b=Bloque::where('id', $bloque)->first();
         $codigo_nuevo_nicho=$c->codigo.".".$b->codigo.".".$nicho.".".$fila;
-
+    //dd( $codigo_nuevo_nicho);
         $nicho= Nicho::where('codigo', $codigo_nuevo_nicho )->first();
-        return ($nicho);
+
+        if($nicho){
+            return response([
+                'status'=> true,
+                'nicho'=> $nicho
+             ],200);
+        }
+        else{
+            return response([
+                'status'=> false,
+                'codigo_nuevo_nicho'=> null,
+                'message'=> 'El nicho al que esta asignando aun no esta registrado, por favor dirijase a la ficha nichos y registre el nicho previamente.'
+             ],201);
+
+        }
     }
 
 

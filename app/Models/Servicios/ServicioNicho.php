@@ -70,7 +70,6 @@ class ServicioNicho extends Model
                   'servicios_cementery' => $servicios_cementery,
                   'cantidad' => $cantidades,
                   'cajero'=>$cajero,
-
                   'nombre_adjudicatario'=>$nombre_adjudicatario,
                   'ci_adjudicatario'=>$ci_adjudicatario,
                   'tblobs'=>$observacion
@@ -78,9 +77,8 @@ class ServicioNicho extends Model
               'headers' => $headers,
           ]);
 
-
           $fur_response = json_decode((string) $response->getBody(), true);
-        //   dd( $fur_response);
+
           return $fur_response;
       }
 
@@ -118,6 +116,80 @@ class ServicioNicho extends Model
             $fur_response = json_decode((string) $response->getBody(), true);
             return $fur_response;
         }
+
+
+
+ //fur mantenimiento criptas
+      public function GenerarFurCMant($ci, $nombre, $primer_apellido,
+      $ap_materno, $direccion, $codigo,
+       $servicios_cementery , $cantidades, $cajero,  $adjudicatario, $tblobs, $superficie)
+        {
+
+            $headers =  ['Content-Type' => 'application/json'];
+            $client = new Client();
+             $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCMant', [
+            //  $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryCMant', [
+
+                'json' => [
+                    'ci' => $ci,
+                    'nombre' => $nombre,
+                    'primer_apellido' => $primer_apellido,
+                    'ap_materno' => $ap_materno,
+                    'direccion' => $direccion,
+                    'codigo' => $codigo,
+                    'servicios_cementery' => $servicios_cementery,
+                    'cantidad' => $cantidades,
+                    'cajero'=>$cajero,
+                    'adjudicatario'=>$adjudicatario,
+                    'tblobs'=>$tblobs,
+                    'superficie'=>$superficie
+                ],
+                'headers' => $headers,
+            ]);
+            $fur_response = json_decode((string) $response->getBody(), true);
+            return $fur_response;
+        }
+
+
+        //fur mantenimiento nichos
+      public function GenerarFurMant($ci, $nombre, $primer_apellido,
+      $ap_materno, $direccion, $nombre_difunto, $codigo, $bloque, $nicho, $fila,
+       $servicios_cementery , $cantidades, $cajero,  $adjudicatario,$ci_adjudicatario, $tblobs)
+        {
+
+            $headers =  ['Content-Type' => 'application/json'];
+            $client = new Client();
+             $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryMant', [
+            //  $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryCMant', [
+
+                'json' => [
+                    'ci' => $ci,
+                    'nombre' => $nombre,
+                    'primer_apellido' => $primer_apellido,
+                    'ap_materno' => $ap_materno,
+                    'direccion' => $direccion,
+                    'codigo' => $codigo,
+                    'servicios_cementery' => $servicios_cementery,
+                    'cantidad' => $cantidades,
+                    'cajero'=>$cajero,
+                    'adjudicatario'=>$adjudicatario,
+                    'observacion'=>$tblobs,
+                    'bloque'=>$bloque,
+                    'nicho'=>$nicho,
+                    'fila'=>$fila,
+                    'nombre_difunto'=>$nombre_difunto,
+                    'ci_adjudicatario'=>$ci_adjudicatario
+
+
+
+                ],
+                'headers' => $headers,
+            ]);
+            $fur_response = json_decode((string) $response->getBody(), true);
+            return $fur_response;
+
+        }
+
 
 
         public function getSevHijosByFather(Request $request){
@@ -220,6 +292,38 @@ class ServicioNicho extends Model
             }
 
 
+
+            public function anularServicio(Request $request){
+
+               $a= $this->anular_fur( $request);
+                 if($a['fur_estado']== "IN"  ){
+                    $data= ServicioNicho::where('id', $request->id)->first();
+                    $data->estado="INACTIVO";
+                    $data->save();
+                    return response()->json(['status'=>true, 'message'=>'Se anuló el registro con exito']);
+                 }
+                 else{
+                    return $a;
+                 }
+            }
+
+            public function anular_fur(Request $request){
+
+                // 2do si no esta pagado llamar servicio multiserv http://192.168.220.117:8006/api/v1/cementerio/anular-fur para inactivar el fur
+                $headers =  ['Content-Type' => 'application/json'];
+                $client = new Client();
+                 $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/anular-fur', [
+                //$response = $client->post( 'http://192.168.220.117:8006/api/v1/cementerio/anular-fur', [
+
+                  'json' => [
+                        'fur' => $request->fur
+                    ],
+                    'headers' => $headers,
+                ]);
+
+                $res = json_decode((string) $response->getBody(), true);
+                return $res;
+            }
 
 
 
