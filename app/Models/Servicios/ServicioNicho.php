@@ -46,7 +46,7 @@ class ServicioNicho extends Model
 
     public function GenerarFur($ci, $nombre, $primer_apellido,
     $ap_materno, $direccion, $nombre_difunto, $codigo,
-     $bloque, $nicho, $fila, $servicios_cementery , $cantidades, $cajero,   $nombre_adjudicatario, $ci_adjudicatario, $observacion)
+     $bloque, $nicho, $fila, $servicios_cementery , $cantidades, $cajero,   $nombre_adjudicatario, $ci_adjudicatario, $observacion, $asignado, $nuevo_sitio)
      {
 
 
@@ -72,7 +72,10 @@ class ServicioNicho extends Model
                   'cajero'=>$cajero,
                   'nombre_adjudicatario'=>$nombre_adjudicatario,
                   'ci_adjudicatario'=>$ci_adjudicatario,
-                  'tblobs'=>$observacion
+                  'tblobs'=>$observacion,
+                  'asignado'=>$asignado,
+                  'nuevo_sitio'=>$nuevo_sitio
+
               ],
               'headers' => $headers,
           ]);
@@ -294,10 +297,17 @@ class ServicioNicho extends Model
 
 
             public function anularServicio(Request $request){
+                $data= ServicioNicho::where('id', $request->id)->first();
+                $verif=$this->verificarServicioAnulado($request->id);
+                $result=  json_decode($verif->getContent(), true);
+               // dd( $result['out']);
+                if( $result['in']==true){
 
-               $a= $this->anular_fur( $request);
+                }
+
+                // $a= $this->anular_fur( $request);
+
                  if($a['fur_estado']== "IN"  ){
-                    $data= ServicioNicho::where('id', $request->id)->first();
                     $data->estado="INACTIVO";
                     $data->save();
                     return response()->json(['status'=>true, 'message'=>'Se anuló el registro con exito']);
@@ -307,6 +317,30 @@ class ServicioNicho extends Model
                  }
             }
 
+            function verificarServicioAnulado($id){
+                $data= ServicioNicho::where('id', $id)->first();
+                $services=$data->servicio_id;
+                    $inhumaciones = array("530", "1981", "1980", "529", "623", "622", "1977", "1979", "1978", "1982");
+                    $exhumaciones = array("629", "631", "630", "628"); // Convertido a un array
+                    $renovacion = array("642");
+                    $mant_nicho = array("525");
+                    $mant_cm = array("526");
+
+                    $in = in_array($services, $inhumaciones);
+                    $out = in_array($services, $exhumaciones);
+                    $ren = in_array($services, $renovacion);
+                    $mnicho = in_array($services, $mant_nicho);
+                    $mcm = in_array($services, $mant_cm);
+
+                return response([
+                     'in' =>  $in,
+                     'out' =>  $out,
+                     'ren'=>  $ren,
+                     'mnicho'=> $mnicho,
+                     'mcm'=>  $mcm
+                     ], 200);
+
+            }
             public function anular_fur(Request $request){
 
                 // 2do si no esta pagado llamar servicio multiserv http://192.168.220.117:8006/api/v1/cementerio/anular-fur para inactivar el fur

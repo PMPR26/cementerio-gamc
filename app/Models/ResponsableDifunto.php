@@ -55,6 +55,32 @@ class ResponsableDifunto extends Model
 
 
     }
+//BUSCAR DIFUNTO RESPONSABLE Y NICHO EXISTENTE
+    public function searchResponsableDifNicho(Request $request ,$idresp, $difuntoid, $codigo_nicho ){
+
+        if( $difuntoid &&   $idresp  ){
+            $respdif = DB::table('responsable_difunto')
+            ->select('responsable_difunto.*')
+            ->where(['responsable_id' => trim($idresp) ,'codigo_nicho' => trim($codigo_nicho) , 'difunto_id' => trim($difuntoid), 'estado' => "ACTIVO" ])
+            ->first();
+
+            if($respdif!=null || !empty($respdif)){
+                return $respdif->id;
+
+            }else{
+                return null;
+            }
+
+
+        }else{
+
+            return null;
+        }
+
+
+
+}
+
 
     public function info($cod, $bloque, $nicho, $fila)
     {
@@ -205,8 +231,8 @@ class ResponsableDifunto extends Model
             $dif->nicho_id = $id_nicho;
             $dif->estado_nicho = 'OCUPADO';
             $dif->gestion_renov=null;
-            $dif->nro_renovacion=0;
-            $dif->monto_ultima_renov=0;
+           // $dif->nro_renovacion=0;
+           // $dif->monto_ultima_renov=0;
             $dif->estado = 'ACTIVO';
             $dif->user_id = auth()->id();
             $dif->save();
