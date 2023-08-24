@@ -426,9 +426,11 @@ class ServiciosController extends Controller
                 $txt_servicios_hijos=[];
                 $cantidad=[];
                 $tblobs=[];
-
+                $n_nicho="";
                 $pago_renovaciones="NO";
                 $permitir_ingreso_nuevo_cuerpo="NO";
+                $asignado="";
+                $nuevo_sitio="";
 
                 foreach($request->servicios_adquiridos as $value){
                     array_push($tipo_servicio, $value['tipo_servicio']);
@@ -748,6 +750,15 @@ class ServiciosController extends Controller
                                                 else{
                                                     $estado_pago=false;
                                                     $fecha_pago=null   ;
+                                                    $asignado=$request->asignar_difunto_nicho;
+                                                    $n=New Nicho;
+                                                    $nuevo_n= $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
+                                                    $nuev_nicho= json_decode($nuevo_n->getContent(), true);
+
+                                                   // dd($nuevo_nicho['nicho']);
+                                                    if($nuev_nicho['status']==true){
+                                                        $nuevo_sitio=$nuev_nicho['nicho']['codigo'];
+                                                    }
                                                     /** generar fur */
 
                                                                     $nombre_difunto=$request->nombres_dif." ".$request->paterno_dif." ".$request->materno_dif;
@@ -762,7 +773,7 @@ class ServiciosController extends Controller
 
                                                                     $response=$obj->GenerarFur($ci,$nombre_pago,$paterno_pago,$materno_pago, $domicilio,  $nombre_difunto, $codigo_n,
                                                                     $request->bloque, $request->nro_nicho, $request->fila, $servicio_hijos, $cantidades, $cajero,
-                                                                    $nombre_adjudicatario, $ci_adjudicatario , $tblobs);
+                                                                    $nombre_adjudicatario, $ci_adjudicatario , $tblobs, $asignado, $nuevo_sitio);
 
                                                                     if($response['status']==true){
                                                                         $fur = $response['response'];
@@ -773,6 +784,7 @@ class ServiciosController extends Controller
                                                             $descripcion_exhumacion=  implode(', ', $tblobs);
 
                                                         }
+
                                                 $serv = new ServicioNicho;
                                                 $serv->codigo_nicho=$codigo_n ?? '';
                                                 $serv->fecha_registro = date("Y-m-d");
@@ -798,33 +810,50 @@ class ServiciosController extends Controller
                                                 $serv->observacion=$descripcion_exhumacion;
                                                 $serv->det_exhum=$descripcion_exhumacion?? '';
                                                 $serv->ubicacion_id=$id_nicho ?? null;
+
+
                                                 if($pago_renovaciones=="SI"){
                                                     $serv->monto_renovacion=$request->monto_renov;
                                                     $serv->nro_renovacion=$request->nro_renovacion;
                                                 }
                                                 $serv->save();
+                                                $idServ=$serv->id;
+                                                  /// si se esta haciendo una asignacion
+
+                                                  if($request->asignar_difunto_nicho=="asignado")
+                                                  {
+                                                      $n=New Nicho;
+                                                      $nuevo_n= $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
+                                                      $nuevo_nicho= json_decode($nuevo_n->getContent(), true);
+                                                     // dd($nuevo_nicho['nicho']);
+                                                      if($nuevo_nicho['status']==true){
+                                                          $rf = new ResponsableDifunto ;
+                                                          $existeRespDif = $rf->searchResponsableDifNicho($request, $idresp, $difuntoid,$nuevo_nicho['nicho']['codigo'] );
+
+                                                          if ($existeRespDif != null) {
+
+                                                          } else {
+                                                              $rf->registrar_asignacion($request ,$difuntoid, $idresp, $nuevo_nicho['nicho']['codigo'], $estado_nicho, $nuevo_nicho['nicho']['id'], $nuevo_nicho['nicho']['tipo']);
+                                                                //update servicio-nicho
+
+                                                                $rowServ=ServicioNicho::where('id', $idServ)->first();
+                                                                $rowServ->asignado=$request->asignar_difunto_nicho;
+                                                                $rowServ->destino=$nuevo_nicho['nicho']['codigo'];
+                                                                $rowServ->save();
+                                                            }
+                                                                $lib=New Nicho;
+                                                                $liberar=$lib->liberarNichoAsignacion($id_nicho, $codigo_n);
+                                                      }
+                                                      else{
+                                                          return response([
+                                                              'status'=> false,
+                                                              'message'=> $nuevo_nicho['message']
+                                                          ],201);
+                                                      }
+
+                                                  }
 
 
-                                                if($request->asignar_difunto_nicho=="asignado")
-                                                {
-                                                    $n=New Nicho;
-                                                    $nuevo_n= $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
-                                                    $nuevo_nicho= json_decode($nuevo_n->getContent(), true);
-                                                   // dd($nuevo_nicho['nicho']);
-                                                    if($nuevo_nicho['status']==true){
-                                                        $rf = new ResponsableDifunto ;
-                                                       $rf->registrar_asignacion($request ,$difuntoid, $idresp, $nuevo_nicho['nicho']['codigo'], $estado_nicho, $nuevo_nicho['nicho']['id'], $nuevo_nicho['nicho']['tipo']);
-                                                        $lib=New Nicho;
-                                                        $liberar=$lib->liberarNichoAsignacion($id_nicho, $codigo_n);
-                                                    }
-                                                    else{
-                                                        return response([
-                                                            'status'=> false,
-                                                            'message'=> $nuevo_nicho['message']
-                                                        ],201);
-                                                    }
-
-                                                }
 
 
                                                 return response([
@@ -965,21 +994,12 @@ class ServiciosController extends Controller
                         // ->where('tipo','=',$request->tipo)
                         ->orderBy('id','DESC')
                         ->first();
-// dd($tablelocal->tipo);
+
                         $datos_ubicacion=$tablelocal->ubicacion_id??'';
                         $tipo_ubicacion=$tablelocal->tipo??'';
                         $det_exhum=$tablelocal->det_exhum ??'';
                         $responsable_difunto_id=$tablelocal->responsable_difunto_id;
                         $pago_por=$tablelocal->pago_por;
-                        // dd( $det_exhum);
-
-                        // if($tipo_ubicacion=="CRIPTA" || $tipo_ubicacion== "MAUSOLEO" ){
-                        //     $sq=CriptaMausoleoResp::where('cripta_mausoleo_responsable.cripta_mausole_id', '=',$datos_ubicacion )
-                        //     ->join('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
-                        //     ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
-                        //     $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp."  C.I.: ".$sq->ci_resp;
-                        // }
-                        // else
 
                         if($tipo_ubicacion=="NICHO"){
                             $sq=Nicho::where('nicho.id', '=',$datos_ubicacion )
@@ -1036,7 +1056,7 @@ class ServiciosController extends Controller
                                     $table = json_decode(json_encode($tab));
 
                                 $pdf = PDF::setPaper('A4', 'landscape');
-                                $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp' , 'pago_por'));
+                                $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp' , 'pago_por','tipo_ubicacion'));
                                 return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                             }
 
@@ -1057,9 +1077,8 @@ class ServiciosController extends Controller
                                         if($response->object()->status == true) {
                                             $table = $response->object()->data->cobrosVarios[0];
                                             $observacion= $tablelocal->observacion;
-
                                             $pdf = PDF::setPaper('A4', 'landscape');
-                                            $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp', 'pago_por'));
+                                            $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp', 'pago_por','tipo_ubicacion'));
                                             return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                                         }
                                 }

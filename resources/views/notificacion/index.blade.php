@@ -12,8 +12,12 @@
 
 
 @section('content')
-
-<div class="container">
+<style>
+    .custom-font-size {
+        font-size: 16px; /* Adjust this value to your desired font size */
+    }
+</style>
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-6">
             <a href="{{ route('new-tipo-notification') }}" id="new-tipo" class="btn btn-info col-sm-12"> <i
@@ -28,7 +32,6 @@
                     <tr role="row">
                         <th scope="col">#</th>
                         <th scope="col">NOMBRE NOTIFICACION</th>
-                        <th scope="col">CONTENIDO</th>
                         <th scope="col">ESTADO</th>
                         <th scope="col">ACCIONES</th>
                     </tr>
@@ -40,7 +43,6 @@
                         <tr>
                             <td scope="row">{{ $count++ }}</td>
                             <td>{{ $tipos->nombre_notificacion }}</td>
-                            <td>{!! $tipos->contenido !!}</td>
                             <td>{{ $tipos->estado }}</td>
                             <td>
 
@@ -100,6 +102,7 @@
                         "colvis": "Visibilidad"
                     }
                 },
+
             });
 
 

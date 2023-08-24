@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-@section('title', 'Pago Mantenimiento')
+@section('title', 'Make template notification')
 @section('plugins.Datatables', true)
 @section('plugins.Animation', true)
 @section('plugins.Toastr', true)
@@ -10,8 +10,8 @@
 
 <!-- include summernote css/js-->
 
-<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.css" rel="stylesheet">
-<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js" defer></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js" defer></script>
 
 @stop
 
@@ -22,7 +22,7 @@
         @csrf
     <div class="row  p-4">
         <div class="col-12">
-          <h1>CREACION DE TIPOS DE NOTIFICACIONES</h1>
+          <h1>CREACION DE PlANTILLA DE NOTIFICACIONES</h1>
         </div>
 
         <div class="col-12">
@@ -40,7 +40,7 @@
         <div class="col-3"></div>
 
         <div class="col-6">
-            <button class="btn btn-primary btn-lg btn-block" id="btn_guardar_tipo_notificacion">Guardar</button>
+            <button class="btn btn-primary btn-lg btn-block" id="btn_guardar_tipo_notificacion">Guardar Plantilla</button>
         </div>
 
         <div class="col-3"></div>
@@ -56,7 +56,7 @@
 
 
 
-    $(document).ready(function() {
+jQuery(document).ready(function() {
 
        // $('.summernote').summernote('editor.insertText', 'hello world');
 

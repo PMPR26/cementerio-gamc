@@ -140,7 +140,7 @@
                         </div>
 
                         <div class="row seccion_list_difuntos" style="display:none">
-                            <div class="card-header col-md-6 col-xl-6">
+                            <div class="card-header col-md-12 col-xl-12">
                                 <h4> Lista de difuntos en nicho en nicho</h4>
                             </div>
                             <div class="col-sm-12 col-md-6 col-xl-6 p-4">
@@ -1160,6 +1160,7 @@ $(document).ready(function ()
                                      $('#tipo_nicho').val(data.response.tipo_nicho);
                                      // CARGAR LISTA DE DIFUTNOS A LA SECCION seccion_list_difuntos
                                      if(data.response.tipo_nicho=="PERPETUO"){
+                                        $(".seccion_list_difuntos").show();
                                         mostrar_lista_difuntos();
                                      }
 

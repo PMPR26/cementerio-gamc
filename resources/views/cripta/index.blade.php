@@ -549,8 +549,8 @@
 
             $(document).on('click', '#btn-editar', function(){
 
-                // $('#foto_actual').empty();
-                // $('#foto_actual').hide();
+                $('#foto_actual').empty();
+                $('#foto_actual').hide();
                 $('.clear').val('');
                 $(".select-cuartel").val('').trigger('change');
                 $('#cod-cripta').val('');
@@ -621,7 +621,10 @@
                         url: '/cripta/get-cripta/' + $(this).val(),
                         async: false,
                         success: function(data_query) {
-                            console.log(data_query['response']);
+                            console.log("*************************************");
+                            console.log(data_query['response']['cripta']);
+                            console.log("/*************************************/");
+
                             console.log(data_query['response']['responsable']);
                             var data_response=data_query['response']['cripta'];
                             var data_resp=data_query['response']['responsable'];
@@ -644,7 +647,6 @@
                             $('#superficie').val(data_response.superficie);
                             $('#estado').val(data_response.estado);
                             $('#btn-cripta-editar').val(data_response.id);
-
                             $('#construido').val(data_response.estado_construccion);
                             $('#enterratorios_ocupados').val(enterratorios_ocupados);
                             $('#total_enterratorios').val(total_enterratorios);
@@ -656,77 +658,80 @@
                             $('#altura').val(data_response.altura);
                             $('#notable').val(data_response.notable);
 
+                            if(data_response.foto!=null ||data_response.foto!="" ){
+                                console.log("entra afoto"+data_response.foto );
+                                    $('#url-foto-edit').val(data_response.foto)  ;
+                                    $('#foto_actual').show();
+                                    $('#foto_actual').append('<a href="'+ data_response.foto+'" target="_blank">Ver foto actual </a>');
+                                    $('#foto_actual').append('<img src="'+ data_response.foto+'" widh="100px" heigth="100"');
+                                    }else{
+                                            $('#foto_actual').empty();
+                                            $('#foto_actual').hide();
+                                    }
+
                             if(data_resp!=null){
-                            $('#cripta-name').val(data_resp.nombres);
-                            $('#paterno').val(data_resp.primer_apellido);
-                            $('#materno').val(data_resp.segundo_apellido);
-                            $('#dni').val(data_resp.ci);
-                            $('#domicilio').val(data_resp.domicilio);
-                            $('#genero_resp').val(data_resp.genero);
-                            $('#telefono').val(data_resp.celular);
+                                $('#cripta-name').val(data_resp.nombres);
+                                $('#paterno').val(data_resp.primer_apellido);
+                                $('#materno').val(data_resp.segundo_apellido);
+                                $('#dni').val(data_resp.ci);
+                                $('#domicilio').val(data_resp.domicilio);
+                                $('#genero_resp').val(data_resp.genero);
+                                $('#telefono').val(data_resp.celular);
 
-                            $('#adjudicacion').val(data_resp.adjudicacion);
+                                $('#adjudicacion').val(data_resp.adjudicacion);
 
-                            if(data_resp.documentos_recibidos){
-                                var ar=JSON.parse(data_resp.documentos_recibidos);
-                                console.log(ar);
-                                if(ar.bienes_m=="BIENES M"){ $('#bienes_m').prop('checked', true); }else{$('#bienes_m').prop('checked', false);}
-                                if(ar.ci!="FALTA"){ $('#ci').prop('checked', true); $('#nro_ci').val(ar.ci); $('#nro_ci').show(); $('#digital_documents').show(); }else{$('#ci').prop('checked', false);}
-                                if(ar.resolucion!="FALTA"){ $('#resolucion').prop('checked', true); $('#nro_resolucion').val(ar.resolucion); $('#nro_resolucion').show(); }else{$('#resolucion').prop('checked', false);}
-                                if(ar.planos_aprobados=="PLANOS A"){ $('#planos_aprobados').prop('checked', true); }else{$('#planos_aprobados').prop('checked', false);}
-                                if(ar.obs_resolucion!="FALTA"){ $('#obs_resolucion').prop('checked', true); $('#txt_resolucion').val(ar.obs_resolucion); $('#txt_resolucion').show(); }else{$('#obs_resolucion').prop('checked', false);}
+                                    if(data_resp.documentos_recibidos){
+                                        var ar=JSON.parse(data_resp.documentos_recibidos);
+                                        console.log(ar);
+                                        if(ar.bienes_m=="BIENES M"){ $('#bienes_m').prop('checked', true); }else{$('#bienes_m').prop('checked', false);}
+                                        if(ar.ci!="FALTA"){ $('#ci').prop('checked', true); $('#nro_ci').val(ar.ci); $('#nro_ci').show(); $('#digital_documents').show(); }else{$('#ci').prop('checked', false);}
+                                        if(ar.resolucion!="FALTA"){ $('#resolucion').prop('checked', true); $('#nro_resolucion').val(ar.resolucion); $('#nro_resolucion').show(); }else{$('#resolucion').prop('checked', false);}
+                                        if(ar.planos_aprobados=="PLANOS A"){ $('#planos_aprobados').prop('checked', true); }else{$('#planos_aprobados').prop('checked', false);}
+                                        if(ar.obs_resolucion!="FALTA"){ $('#obs_resolucion').prop('checked', true); $('#txt_resolucion').val(ar.obs_resolucion); $('#txt_resolucion').show(); }else{$('#obs_resolucion').prop('checked', false);}
 
 
-                                //resolucion
-                                if(ar.foto_resolucion!=null){
-                                    $('#url_foto_resol').val(ar.foto_resolucion)  ;
-                                    $('#foto_resol').append('<a href="'+ ar.foto_resolucion+'" target="_blank">Ver foto actual </a>');
-                                    $('#foto_resol').append('<img src="'+ ar.foto_resolucion+'" widh="100px" heigth="100"');
-                                    }else{
-                                            $('#foto_resol').empty();
-                                            $('#foto_resol').hide();
+                                        //resolucion
+                                        if(ar.foto_resolucion!=null){
+                                            $('#url_foto_resol').val(ar.foto_resolucion)  ;
+                                            $('#foto_resol').append('<a href="'+ ar.foto_resolucion+'" target="_blank">Ver foto actual </a>');
+                                            $('#foto_resol').append('<img src="'+ ar.foto_resolucion+'" widh="100px" heigth="100"');
+                                            }else{
+                                                    $('#foto_resol').empty();
+                                                    $('#foto_resol').hide();
+                                            }
+                                        //titulo de propiedad
+                                        if(ar.foto_titulo!=null){
+                                            $('#url_foto_title').val(ar.foto_titulo)  ;
+                                            $('#foto_title').append('<a href="'+ ar.foto_titulo+'" target="_blank">Ver foto actual </a>');
+                                            $('#foto_title').append('<img src="'+ ar.foto_titulo+'" widh="100px" heigth="100"');
+                                            }else{
+                                                    $('#foto_title').empty();
+                                                    $('#foto_title').hide();
+                                            }
+
+                                        // ci adjudicatario
+                                        if(ar.foto_prop_ci!=null){
+                                            $('#url_foto_prop').val(ar.foto_prop_ci)  ;
+                                            $('#foto_prop').append('<a href="'+ ar.foto_prop_ci+'" target="_blank">Ver foto actual </a>');
+                                            $('#foto_prop').append('<img src="'+ ar.foto_prop_ci+'" widh="100px" heigth="100"');
+                                            }else{
+                                                    $('#foto_prop').empty();
+                                                    $('#foto_prop').hide();
+                                            }
+
+                                        //planos aprobados
+                                        if(ar.foto_planos!=null){
+                                            $('#url_foto_planos_ap').val(ar.foto_planos)  ;
+                                            $('#foto_planos_ap').append('<a href="'+ ar.foto_planos+'" target="_blank">Ver foto actual </a>');
+                                            $('#foto_planos_ap').append('<img src="'+ ar.foto_planos+'" widh="100px" heigth="100"');
+                                            }else{
+                                                    $('#foto_planos_ap').empty();
+                                                    $('#foto_planos_ap').hide();
+                                            }
                                     }
-                                 //titulo de propiedad
-                                 if(ar.foto_titulo!=null){
-                                    $('#url_foto_title').val(ar.foto_titulo)  ;
-                                    $('#foto_title').append('<a href="'+ ar.foto_titulo+'" target="_blank">Ver foto actual </a>');
-                                    $('#foto_title').append('<img src="'+ ar.foto_titulo+'" widh="100px" heigth="100"');
-                                    }else{
-                                            $('#foto_title').empty();
-                                            $('#foto_title').hide();
-                                    }
-
-                                // ci adjudicatario
-                                 if(ar.foto_prop_ci!=null){
-                                    $('#url_foto_prop').val(ar.foto_prop_ci)  ;
-                                    $('#foto_prop').append('<a href="'+ ar.foto_prop_ci+'" target="_blank">Ver foto actual </a>');
-                                    $('#foto_prop').append('<img src="'+ ar.foto_prop_ci+'" widh="100px" heigth="100"');
-                                    }else{
-                                            $('#foto_prop').empty();
-                                            $('#foto_prop').hide();
-                                    }
-
-                                //planos aprobados
-                                if(ar.foto_planos!=null){
-                                    $('#url_foto_planos_ap').val(ar.foto_planos)  ;
-                                    $('#foto_planos_ap').append('<a href="'+ ar.foto_planos+'" target="_blank">Ver foto actual </a>');
-                                    $('#foto_planos_ap').append('<img src="'+ ar.foto_planos+'" widh="100px" heigth="100"');
-                                    }else{
-                                            $('#foto_planos_ap').empty();
-                                            $('#foto_planos_ap').hide();
-                                    }
-                            }
-                        }
-                            if(data_response.foto!=null){
-                               $('#url-foto').val(data_response.foto)  ;
-                               $('#foto_actual').append('<a href="'+ data_response.foto+'" target="_blank">Ver foto actual </a>');
-                               $('#foto_actual').append('<img src="'+ data_response.foto+'" widh="100px" heigth="100"');
+                             }
 
 
-                            }else{
-                                    $('#foto_actual').empty();
-                                    $('#foto_actual').hide();
-                            }
                             if($('#tipo_reg option:selected').val() =="CRIPTA"){
                                         $('#letra').val("C");
                                         $('#box_tipo_cripta').show();
