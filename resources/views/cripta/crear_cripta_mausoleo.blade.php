@@ -150,7 +150,7 @@
                                                 <label>Observaciones:</label>
                                                 <textarea id="observaciones" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="number" class="form-control" autocomplete="off"  onblur="generarCodigo()" rows="6"> </textarea>
                                                 <hr>
-                                                <input type="hidden" id="url-foto">
+                                                <input type="hidden" id="url-foto-edit">
                                             </div>
 
                         </div>
