@@ -449,6 +449,38 @@
                     if ($("#obs_resolucion").is(":checked")) { var obs_resolucion=$('#txt_resolucion').val(); } else { var obs_resolucion="FALTA";}
                     if($('#notable :selected').text()=="SELECCIONAR"){ var field_notable=null;}else{ var field_notable= $('#notable :selected').val(); }
 
+                    //edicion de documentos
+
+                    if($('#url_foto_resol').val()!=''){
+                        var resolucion_doc=$('#url_foto_resol').val();
+                    }
+                    else{
+                        var resolucion_doc=$('#url_foto_resol_edit').val();
+                    }
+
+                    if($('#url_foto_title').val()!=''){
+                        var foto_title_doc=$('#url_foto_title').val();
+                    }
+                    else{
+                        var foto_title_doc=$('#url_foto_title_edit').val();
+                    }
+
+
+                    if($('#url_foto_prop').val()!=''){
+                        var foto_prop_doc=$('#url_foto_prop').val();
+                    }
+                    else{
+                        var foto_prop_doc=$('#url_foto_prop_edit').val();
+                    }
+
+                    if($('#url_foto_planos_ap').val()!=''){
+                        var foto_planos_ap_doc=$('#url_foto_planos_ap').val();
+                    }
+                    else{
+                        var foto_planos_ap_doc=$('#url_foto_planos_ap_edit').val();
+                    }
+
+
                 $.ajax({
                         type: 'PUT',
                         headers: {
@@ -488,6 +520,7 @@
                             'notable':field_notable,
                             'altura': $('#altura').val(),
                             'foto' :  $('#url-foto').val(),
+                            'foto_edit' :  $('#url-foto-edit').val(),
                             'estado': $('#estado').val() ,
                             'documentos_recibidos':  {
                                                        'resolucion': resolucion,
@@ -495,10 +528,10 @@
                                                        'bienes_m': bienes_m,
                                                        'planos_aprobados': planos_aprobados,
                                                        'obs_resolucion':obs_resolucion,
-                                                       'foto_resolucion':$('#url_foto_resol').val(),
-                                                        'foto_titulo':$('#url_foto_title').val(),
-                                                        'foto_prop_ci':$('#url_foto_prop').val(),
-                                                        'foto_planos':$('#url_foto_planos_ap').val()
+                                                       'foto_resolucion':resolucion_doc,
+                                                       'foto_titulo':foto_title_doc,
+                                                       'foto_prop_ci':foto_prop_doc,
+                                                       'foto_planos':foto_planos_ap_doc,
                                                     }
 
 
@@ -693,6 +726,7 @@
                                         //resolucion
                                         if(ar.foto_resolucion!=null){
                                             $('#url_foto_resol').val(ar.foto_resolucion)  ;
+                                            $('#url_foto_resol_edit').val(ar.foto_resolucion)  ;
                                             $('#foto_resol').append('<a href="'+ ar.foto_resolucion+'" target="_blank">Ver foto actual </a>');
                                             $('#foto_resol').append('<img src="'+ ar.foto_resolucion+'" widh="100px" heigth="100"');
                                             }else{
@@ -702,6 +736,7 @@
                                         //titulo de propiedad
                                         if(ar.foto_titulo!=null){
                                             $('#url_foto_title').val(ar.foto_titulo)  ;
+                                            $('#url_foto_title_edit').val(ar.foto_titulo)  ;
                                             $('#foto_title').append('<a href="'+ ar.foto_titulo+'" target="_blank">Ver foto actual </a>');
                                             $('#foto_title').append('<img src="'+ ar.foto_titulo+'" widh="100px" heigth="100"');
                                             }else{
@@ -712,6 +747,7 @@
                                         // ci adjudicatario
                                         if(ar.foto_prop_ci!=null){
                                             $('#url_foto_prop').val(ar.foto_prop_ci)  ;
+                                            $('#url_foto_prop_edit').val(ar.foto_prop_ci)  ;
                                             $('#foto_prop').append('<a href="'+ ar.foto_prop_ci+'" target="_blank">Ver foto actual </a>');
                                             $('#foto_prop').append('<img src="'+ ar.foto_prop_ci+'" widh="100px" heigth="100"');
                                             }else{
@@ -722,6 +758,8 @@
                                         //planos aprobados
                                         if(ar.foto_planos!=null){
                                             $('#url_foto_planos_ap').val(ar.foto_planos)  ;
+                                            $('#url_foto_planos_ap_edit').val(ar.foto_planos)  ;
+
                                             $('#foto_planos_ap').append('<a href="'+ ar.foto_planos+'" target="_blank">Ver foto actual </a>');
                                             $('#foto_planos_ap').append('<img src="'+ ar.foto_planos+'" widh="100px" heigth="100"');
                                             }else{
@@ -1126,6 +1164,7 @@ $(document).ready(function ()
                                     'url':  JSON.parse(file.xhr.response).response[0].url_file
                                 }),
                                 success: function(data_response) {
+                                    $('#url-foto').val('');
                                 }
                             })
                 });
@@ -1138,7 +1177,7 @@ $(document).ready(function ()
         },
         sending: function(file, xhr, formData){
                     formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
-                    formData.append('collector', 'cementerio cripta-mausoleo');
+                    formData.append('collector', 'cementerio');
 
                 },
         success: function (file, response) {
@@ -1161,70 +1200,71 @@ $(document).ready(function ()
     });
 
 
-    $("#foto-edit").dropzone({
-        dictDefaultMessage: "Arrastre y suelte aquí los archivos …<br>(o haga clic para seleccionar archivos)",
-        dictRemoveFile: 'Remover Archivo',
-        dictCancelUpload: 'Cancelar carga',
-        dictResponseError: 'Server responded with  code.',
-        dictCancelUploadConfirmation: '¿Estás seguro/a de que deseas cancelar esta carga?',
-        url: "{{ env('URL_FILE') }}/api/v1/repository/upload-files",
-        paramName: "documens_files[]",
-        addRemoveLinks: true,
-        acceptedFiles: 'image/jpeg, image/png, image/jpg, application/pdf',
-        parallelUploads: 1,
-        maxFiles: 1,
-        init: function() {
-        this.on("complete", function(file) {
-            if(file.type != 'application/pdf' && file.type != 'image/png' && file.type != 'image/jpg' && file.type != 'image/jpeg') {
-                this.removeFile(file);
-                toastr["error"]('No se puede subir el archivo '+ file.name);
-                return false;
-            }
-        });
-           this.on("removedfile", function(file) {
-            $.ajax({
-                        type: 'DELETE',
-                        headers: {
-                            'Content-Type':'application/json'
-                        },
-                        url: "{{ env('URL_FILE') }}/api/v1/repository/remove-file",
-                        async: false,
-                        data: JSON.stringify({
-                            'url':  JSON.parse(file.xhr.response).response[0].url_file
-                        }),
-                        success: function(data_response) {
-                        }
-                    })
+    // $("#foto-edit").dropzone({
+    //     dictDefaultMessage: "Arrastre y suelte aquí los archivos …<br>(o haga clic para seleccionar archivos)",
+    //     dictRemoveFile: 'Remover Archivo',
+    //     dictCancelUpload: 'Cancelar carga',
+    //     dictResponseError: 'Server responded with  code.',
+    //     dictCancelUploadConfirmation: '¿Estás seguro/a de que deseas cancelar esta carga?',
+    //     url: "{{ env('URL_FILE') }}/api/v1/repository/upload-files",
+    //     paramName: "documens_files[]",
+    //     addRemoveLinks: true,
+    //     acceptedFiles: 'image/jpeg, image/png, image/jpg, application/pdf',
+    //     parallelUploads: 1,
+    //     maxFiles: 1,
+    //     init: function() {
+    //     this.on("complete", function(file) {
+    //         if(file.type != 'application/pdf' && file.type != 'image/png' && file.type != 'image/jpg' && file.type != 'image/jpeg') {
+    //             this.removeFile(file);
+    //             toastr["error"]('No se puede subir el archivo '+ file.name);
+    //             return false;
+    //         }
+    //     });
+    //        this.on("removedfile", function(file) {
+    //         $.ajax({
+    //                     type: 'DELETE',
+    //                     headers: {
+    //                         'Content-Type':'application/json'
+    //                     },
+    //                     url: "{{ env('URL_FILE') }}/api/v1/repository/remove-file",
+    //                     async: false,
+    //                     data: JSON.stringify({
+    //                         'url':  JSON.parse(file.xhr.response).response[0].url_file
+    //                     }),
+    //                     success: function(data_response) {
+    //                         $('url-foto-edit').val('');
+    //                     }
+    //                 })
 
-        });
+    //     });
 
-        this.on("maxfilesexceeded", function(file){
-            file.previewElement.classList.add("dz-error");
-            $('.dz-error-message').text('No se puede subir mas archivos!');
-        });
+    //     this.on("maxfilesexceeded", function(file){
+    //         file.previewElement.classList.add("dz-error");
+    //         $('.dz-error-message').text('No se puede subir mas archivos!');
+    //     });
 
-        },
-        sending: function(file, xhr, formData){
-                    formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
-                    formData.append('collector', 'cementerio cripta-mausoleo');
+    //     },
+    //     sending: function(file, xhr, formData){
+    //                 formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
+    //                 formData.append('collector', 'cementerio');
 
-                },
-        success: function (file, response) {
-            file.previewElement.classList.add("dz-success");
-            $('#url-foto-edit').val(response.response[0].url_file);
+    //             },
+    //     success: function (file, response) {
+    //         file.previewElement.classList.add("dz-success");
+    //         $('#url-foto-edit').val(response.response[0].url_file);
 
-        },
-        error: function (file, response) {
+    //     },
+    //     error: function (file, response) {
 
-            if(response == 'You can not upload any more files.'){
-                toastr["error"]('No se puede subir mas archivos');
-                this.removeFile(file);
-            }
-            file.previewElement.classList.add("dz-error");
-            $('.dz-error-message').text('No se pudo subir el archivo '+ file.name);
-        }
+    //         if(response == 'You can not upload any more files.'){
+    //             toastr["error"]('No se puede subir mas archivos');
+    //             this.removeFile(file);
+    //         }
+    //         file.previewElement.classList.add("dz-error");
+    //         $('.dz-error-message').text('No se pudo subir el archivo '+ file.name);
+    //     }
 
-    });
+    // });
 
 
                 function openFile(file) {
@@ -2878,6 +2918,7 @@ function calcularMonto(){
                                             'url':  JSON.parse(file.xhr.response).response[0].url_file
                                         }),
                                         success: function(data_response) {
+                                            $('#url_foto_resol').val('');
                                         }
                                     })
                         });
@@ -2890,7 +2931,7 @@ function calcularMonto(){
                 },
                 sending: function(file, xhr, formData){
                             formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
-                            formData.append('collector', 'cementerio resolucion-testimonio');
+                            formData.append('collector', 'cementerio');
                             formData.append('nro_documento', $('#nro_ci').val());
 
                         },
@@ -2936,9 +2977,6 @@ function calcularMonto(){
                                 return false;
                             }
                         });
-
-
-
                         this.on("removedfile", function(file) {
                             $.ajax({
                                         type: 'DELETE',
@@ -2951,6 +2989,8 @@ function calcularMonto(){
                                             'url':  JSON.parse(file.xhr.response).response[0].url_file
                                         }),
                                         success: function(data_response) {
+                                          $('#url_foto_title').val('');
+
                                         }
                                     })
                         });
@@ -2963,7 +3003,7 @@ function calcularMonto(){
                 },
                 sending: function(file, xhr, formData){
                             formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
-                            formData.append('collector', 'cementerio titulo de propiedad');
+                            formData.append('collector', 'cementerio');
                             formData.append('nro_documento', $('#nro_ci').val());
 
                         },
@@ -3024,6 +3064,8 @@ function calcularMonto(){
                                             'url':  JSON.parse(file.xhr.response).response[0].url_file
                                         }),
                                         success: function(data_response) {
+                                              $('#url_foto_prop').val('');
+
                                         }
                                     })
                         });
@@ -3098,7 +3140,10 @@ function calcularMonto(){
                                             'url':  JSON.parse(file.xhr.response).response[0].url_file
                                         }),
                                         success: function(data_response) {
+                                          $('#url_foto_planos_ap').val('');
+
                                         }
+
                                     })
                         });
 

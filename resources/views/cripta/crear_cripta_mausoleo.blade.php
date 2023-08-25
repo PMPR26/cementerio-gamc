@@ -291,6 +291,8 @@
                                     <input type="hidden" id="url_foto_resol">
                                     <br>
                                     <p id="foto_resol"></p>
+                                    <input type="hidden" id="url_foto_resol_edit">
+
                                  </div>
 
                                  <div class="col-sm-12 col-md-3 col-xl-3">
@@ -300,6 +302,8 @@
                                     <input type="hidden" id="url_foto_title">
                                     <br>
                                     <p id="foto_title"></p>
+                                    <input type="hidden" id="url_foto_title_edit">
+
                                  </div>
 
                                  <div class="col-sm-12 col-md-3 col-xl-3">
@@ -309,6 +313,8 @@
                                     <input type="hidden" id="url_foto_prop">
                                     <br>
                                     <p id="foto_prop"></p>
+                                    <input type="hidden" id="url_foto_prop_edit">
+
                                  </div>
 
                                  <div class="col-sm-12 col-md-3 col-xl-3">
@@ -318,6 +324,8 @@
                                     <input type="hidden" id="url_foto_planos_ap">
                                     <br>
                                     <p id="foto_planos_ap"></p>
+                                    <input type="hidden" id="url_foto_planos_ap_edit">
+
                                  </div>
                         </div>
 
