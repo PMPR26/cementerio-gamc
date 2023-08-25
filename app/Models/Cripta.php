@@ -75,6 +75,7 @@ class Cripta extends Model
 }
 
 public function upCripta(Request $request, $id){
+    //dd($request);
     $cripta= Cripta::where('id', $id)->first();
     $cripta->user_id = auth()->id();
    $cripta->cuartel_id = trim($request->id_cuartel);
@@ -94,7 +95,19 @@ public function upCripta(Request $request, $id){
 
    $cripta->estado_construccion = trim($request->estado_construccion);
    $cripta->observaciones = trim($request->observaciones) ?? null;
-   $cripta->foto = trim($request->foto) ?? null;
+   if(($request->foto=="" || $request->foto==null) && ($request->foto_edit!="" || $request->foto_edit!=null)){
+     $foto=$request->foto_edit;
+   }
+   else if(($request->foto!="" || $request->foto!=null) && ($request->foto_edit!="" || $request->foto_edit!=null)){
+    $foto=$request->foto;
+   }
+   else if(($request->foto!="" || $request->foto!=null) && ($request->foto_edit=="" || $request->foto_edit==null)){
+    $foto=$request->foto;
+   }
+   else if(($request->foto=="" || $request->foto!=null) && ($request->foto_edit=="" || $request->foto_edit==null)){
+    $foto='';
+   }
+   $cripta->foto = trim($foto) ?? null;
    $cripta->estado = $request->estado ?? 'ACTIVO';
    $cripta->tipo_registro = $request->tipo_reg;
    $cripta->tipo_cripta = $request->tipo_cripta;
