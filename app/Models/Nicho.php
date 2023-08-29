@@ -157,6 +157,22 @@ class Nicho extends Model
         }
     }
 
+    public function CambiarEstadoNicho( $id,$est, $cantidad){
+        $nicho=Nicho::where('id',$id)->first();
+        $nicho->estado_nicho= $est;
+        $nicho->cantidad_cuerpos=$cantidad;
+        $nicho->save();
+        return $nicho->estado_nicho;
+
+    }
+
+    public function restaurarRenov($id_nicho, $renov_ant,  $monto_renov_anterior){
+        $nicho=Nicho::where('id',$id_nicho)->first();
+        $nicho->renovacion= $renov_ant;
+        $nicho->monto_renov= $monto_renov_anterior;
+        $nicho->save();
+
+    }
 
 
 }

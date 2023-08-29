@@ -259,6 +259,8 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
     Route::post('/get-tipo-notificacion', 'App\Http\Controllers\TipoNotificacionController@getTipo')->name('get.tipo.notificacion');
     Route::post('/buscar-ubicacion', 'App\Http\Controllers\NotificacionesController@buscarUbicacion')->name('buscar.ubicacion');
     Route::post('/controlar-notificacion', 'App\Http\Controllers\NotificacionesController@controlarNroNotificacion')->name('count.nro.notificacion');
+    Route::post('/save-notificacion', 'App\Http\Controllers\NotificacionesController@saveNotificacion')->name('save.notificacion');
+
 
 
     //controlarNroNotificacion

@@ -101,7 +101,7 @@ jQuery(document).ready(function() {
                             showConfirmButton: false
                             });
                             setTimeout(function() {
-                                location.reload();
+                                window.location.href = "{{ route('notification-tipo') }}";
                             }, 2000);
                             //toastr["success"]("Registro realizado con éxito!");
                         },

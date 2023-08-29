@@ -298,14 +298,64 @@ class ServicioNicho extends Model
 
             public function anularServicio(Request $request){
                 $data= ServicioNicho::where('id', $request->id)->first();
+                $id_responsable_difunto=$data->responsable_difunto_id;
+                $id_nicho=$data->ubicacion_id;
+                $asignado=$data->asignado;
+                $nicho=New Nicho;
+                $data_nicho= $nicho::where('id',$id_nicho )->first();
+                $cantidad=$data_nicho->cantidad_anterior;
+                $codigo_nicho=$data_nicho->codigo;
+
+
+
                 $verif=$this->verificarServicioAnulado($request->id);
                 $result=  json_decode($verif->getContent(), true);
-               // dd( $result['out']);
+               dd( $result);
                 if( $result['in']==true){
 
+                    $est="LIBRE";
+                    $estado="INACTIVO";
+
+                    $nicho->CambiarEstadoNicho( $id_nicho,$est, $cantidad);
+                    $resp_dif=New ResponsableDifunto;
+                    $resp_dif->revertirAnulacionRespDif( $id_responsable_difunto, $est, $estado, NULL, null, 'no_ingresar' );
                 }
 
-                // $a= $this->anular_fur( $request);
+                if( $result['out']==true){
+
+                    $est="OCUPADO";
+                    $estado="ACTIVO";
+                    $nicho=New Nicho;
+                    $data_nicho= $nicho::where('id',$id_nicho )->first();
+                    $cantidad=$data_nicho->cantidad_anterior;
+                    $nicho->CambiarEstadoNicho( $id_nicho,$est, $cantidad);
+                    if($asignado=="asignado"){
+                        //buscar id responsable difunto nuevo
+                        $codigo_nicho_nuevo=$data->destino;
+                        $new_respdif=New ResponsableDifunto;
+                        $new_respdif=ResponsableDifunto::where('responsable_id',$id_responsable_difunto )
+                                    ->where('difunto_id',$id_responsable_difunto )
+                                    ->where('codigo_nicho',$codigo_nicho_nuevo )->first();
+                         //inactivar nuevo registro responsable difunto
+                        $resp_dif->cambiarEstadoRespDif( $new_respdif->id,  'INACTIVO');
+
+                        //revertir la tupla anterior activar tupla anterior q fue inactivada
+                        $old_respdif=ResponsableDifunto::where('responsable_id',$id_responsable_difunto )
+                        ->where('difunto_id',$id_responsable_difunto )
+                        ->where('codigo_nicho',$codigo_nicho )->first();
+                        $resp_dif->revertirAnulacionRespDif(  $old_respdif->id, 'OCUPADO','ACTIVO', null, null, 'no_liberar' );
+                    }else{
+                        $resp_dif->revertirAnulacionRespDif(  $id_responsable_difunto, 'OCUPADO','ACTIVO', null, null, 'no_liberar' );
+                    }
+                }
+
+                if( $result['ren']==true){
+                    $renov_ant=$data_nicho->renov_anterior;
+                    $monto_renov_anterior=$data_nicho->monto_renov_anterior;
+                    $nicho->restaurarRenov($id_nicho, $renov_ant,  $monto_renov_anterior);
+                  }
+
+                 $a= $this->anular_fur( $request);
 
                  if($a['fur_estado']== "IN"  ){
                     $data->estado="INACTIVO";
@@ -320,6 +370,8 @@ class ServicioNicho extends Model
             function verificarServicioAnulado($id){
                 $data= ServicioNicho::where('id', $id)->first();
                 $services=$data->servicio_id;
+                $services="1999, 631";
+
                     $inhumaciones = array("530", "1981", "1980", "529", "623", "622", "1977", "1979", "1978", "1982");
                     $exhumaciones = array("629", "631", "630", "628"); // Convertido a un array
                     $renovacion = array("642");
@@ -331,6 +383,7 @@ class ServicioNicho extends Model
                     $ren = in_array($services, $renovacion);
                     $mnicho = in_array($services, $mant_nicho);
                     $mcm = in_array($services, $mant_cm);
+                    dd(  $out);
 
                 return response([
                      'in' =>  $in,

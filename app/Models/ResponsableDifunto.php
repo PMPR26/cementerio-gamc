@@ -262,5 +262,30 @@ class ResponsableDifunto extends Model
                             return response()->json($respu);
         }
 
+        // activar fila deshabilitada al anular servicio de exhumacion
+
+        public function revertirAnulacionRespDif($id, $estado_nicho, $estado, $fecha_liberacion, $fecha_adjudicacion, $condicion){
+            $dr= ResponsableDifunto::where('id', $id)->first();
+            $dr->estado =  $estado;
+            $dr->estado_nicho = $estado_nicho;
+            if($condicion=='no_liberar'){
+                $dr->fecha_liberacion =  $fecha_liberacion;
+            }
+            if($condicion=="no_ingresar"){
+                $dr->fecha_adjudicacion =  $fecha_adjudicacion;
+               }
+            $dr->save();
+            return true;
+        }
+
+        public function cambiarEstadoRespDif($id,  $estado){
+            $dr= ResponsableDifunto::where('id', $id)->first();
+            $dr->estado =  $estado;
+            $dr->save();
+            return true;
+        }
+
+
+
 
 }
