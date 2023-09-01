@@ -579,11 +579,16 @@ class ServiciosController extends Controller
                                 if ($existeNicho != null) {
                                     $id_nicho = $existeNicho->id;
                                     $upnicho= Nicho::where('id',  $id_nicho)->first();
+                                    $renov_anterior=$upnicho->renovacion;
+                                    $monto_renov_anterior=$upnicho->monto_renov;
+
                                     if(isset($estado_nicho)){
                                         $upnicho->estado_nicho=$estado_nicho;
                                     }
                                     if(isset($pago_renovaciones) ){
                                             if($pago_renovaciones=="SI"){
+                                                $upnicho->renov_anterior=$renov_anterior;
+                                                $upnicho->monto_renov_anterior=$monto_renov_anterior;
                                                 $upnicho->renovacion=$request->nro_renovacion;
                                                 $upnicho->monto_renov=$request->monto_renov;
                                               }
