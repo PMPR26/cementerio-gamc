@@ -44,31 +44,31 @@ class ServiciosController extends Controller
             if($rolUsuario == "APOYO"){
                 return view('restringidos/no_autorizado');
             }else{
-                $currentMonth = now()->format('m'); // Get the current month in MM format
-                $currentYear = now()->format('Y');  // Get the current year in YYYY format
 
-                $servicio = DB::table('servicio_nicho')
-                    ->select(
-                        'servicio_nicho.codigo_nicho',
-                        'servicio_nicho.tipo_servicio',
-                        'servicio_nicho.servicio',
-                        'servicio_nicho.fur',
-                        'servicio_nicho.tipo',
-                        'servicio_nicho.monto',
-                        'servicio_nicho.nombrepago as nombre_resp',
-                        'servicio_nicho.paternopago as primerap_resp',
-                        'servicio_nicho.maternopago as segap_dif',
-                        'servicio_nicho.estado_pago',
-                        'servicio_nicho.id as serv_id'
-                    )
-                    ->where('servicio_nicho.estado', 'ACTIVO')
-                    ->whereRaw("DATE_PART('month', servicio_nicho.created_at) = ?", [$currentMonth])
-                    ->whereRaw("DATE_PART('year', servicio_nicho.created_at) = ?", [$currentYear])
-                    ->orderBy('servicio_nicho.id', 'DESC')
-                    ->get();
+                  // Calculate the date for three months ago
+                    $threeMonthsAgo = now()->subMonths(3);
+
+                    $servicio = DB::table('servicio_nicho')
+                        ->select(
+                            'servicio_nicho.codigo_nicho',
+                            'servicio_nicho.tipo_servicio',
+                            'servicio_nicho.servicio',
+                            'servicio_nicho.fur',
+                            'servicio_nicho.tipo',
+                            'servicio_nicho.monto',
+                            'servicio_nicho.nombrepago as nombre_resp',
+                            'servicio_nicho.paternopago as primerap_resp',
+                            'servicio_nicho.maternopago as segap_dif',
+                            'servicio_nicho.estado_pago',
+                            'servicio_nicho.id as serv_id'                        )
+                        ->where('servicio_nicho.estado', 'ACTIVO')
+                        ->whereBetween('servicio_nicho.created_at', [$threeMonthsAgo, now()])
+                        ->orderBy('servicio_nicho.id', 'DESC')
+                        ->get();
 
                return view('servicios/index', ['servicio' => $servicio]);
             }
+
 
     }
 
@@ -491,21 +491,16 @@ class ServiciosController extends Controller
                                                     $cant= $cantidadEnNicho + 1;
                                                 }else{
                                                     $cant=1;
-
                                                 }
-
                                         }
                                         else if($difuntoEnNicho==false && $request->tipo_nicho == "PERPETUO")
                                         {
                                                 $cantidadEnNicho=$this->contarDifuntoEnNicho($codigo_n);
                                                 if( $cantidadEnNicho <4){
                                                     $cant= $cantidadEnNicho + 1;
-                                                    $permitir_ingreso_nuevo_cuerpo="SI";
                                                 }else{
                                                     $cant= $cantidadEnNicho;
-                                                    $permitir_ingreso_nuevo_cuerpo="NO";
                                                 }
-
                                         }
                                         else{
                                                     if( $cantidadEnNicho !=false){
@@ -517,7 +512,7 @@ class ServiciosController extends Controller
                                         }
                                     }
                                     $texto_servicio = $texto_servicio. $separador. $servi['txt_serv']." Bs.";
-                        }else if($servi['serv'] == '645' || $servi['serv'] =='644' || $servi['serv'] == '629' || $servi['serv'] == '628')
+                        }else if($servi['serv'] == '645' || $servi['serv'] =='644' || $servi['serv'] == '629' || $servi['serv'] == '628' )
                         {  //exhumaciones
                             // dd($cantidadEnNicho);
 
@@ -756,13 +751,19 @@ class ServiciosController extends Controller
                                                     $estado_pago=false;
                                                     $fecha_pago=null   ;
                                                     $asignado=$request->asignar_difunto_nicho;
-                                                    $n=New Nicho;
-                                                    $nuevo_n= $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
-                                                    $nuev_nicho= json_decode($nuevo_n->getContent(), true);
 
-                                                   // dd($nuevo_nicho['nicho']);
-                                                    if($nuev_nicho['status']==true){
-                                                        $nuevo_sitio=$nuev_nicho['nicho']['codigo'];
+                                                    if($request->asignar_difunto_nicho=="asignado")
+                                                    {
+                                                                    $n=New Nicho;
+                                                                    $nuevo_n= $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
+                                                                    $nuev_nicho= json_decode($nuevo_n->getContent(), true);
+
+                                                                // dd($nuevo_nicho['nicho']);
+                                                                    if($nuev_nicho['status']==true){
+                                                                        $nuevo_sitio=$nuev_nicho['nicho']['codigo'];
+                                                                    }
+                                                    }else{
+                                                        $nuevo_sitio="";
                                                     }
                                                     /** generar fur */
 

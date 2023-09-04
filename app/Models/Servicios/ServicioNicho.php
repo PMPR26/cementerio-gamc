@@ -312,14 +312,11 @@ class ServicioNicho extends Model
 
                 $verif=$this->verificarServicioAnulado($request->id);
                 $result=  json_decode($verif->getContent(), true);
-              // dd( $id_responsable_difunto);
+                   // dd( $id_responsable_difunto);
                 if( $result['in']==true){
-
                     $est="LIBRE";
                     $estado="INACTIVO";
-
                     $nicho->CambiarEstadoNicho( $id_nicho,$est, $cantidad);
-
                     $resp_dif->revertirAnulacionRespDif( $id_responsable_difunto, $est, $estado, NULL, null, 'no_ingresar' );
                 }
 
@@ -333,9 +330,9 @@ class ServicioNicho extends Model
                     $nicho->CambiarEstadoNicho( $id_nicho,$est, $cantidad);
                     if($asignado=="asignado"){
                         //buscar id responsable  nueva asignacion
-                        $codigo_nicho_nuevo=$data->destino;
-                        $new_respdif=New ResponsableDifunto;
-                        $reg=DB::table('responsable_difunto')->where('id',$id_responsable_difunto )->first();
+                         $codigo_nicho_nuevo=$data->destino;
+                         $new_respdif=New ResponsableDifunto;
+                         $reg=DB::table('responsable_difunto')->where('id',$id_responsable_difunto )->first();
                          $responsable_id=$reg->responsable_id;
                          $difunto_id=$reg->difunto_id;
 

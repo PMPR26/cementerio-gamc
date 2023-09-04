@@ -129,10 +129,10 @@
                     {{-- datos difunto --}}
                     <div class="card">
                         <div class="row bg-gradient-cyan">
-                            <div class="card-header col-md-6 col-xl-6">
+                            <div class="card-header col-md-12 col-xl-12">
                                 <h4> DATOS DIFUNTOS </h4>
                             </div>
-                            <div class="col-sm-12 col-md-6 col-xl-6 p-4 nuevo_difunto">
+                            <div class="col-sm-12 col-md-12 col-xl-12 p-4 nuevo_difunto">
                                 <label>INGRESAR NUEVO DIFUNTO
                                     <input type="checkbox" name="add_difunto"  id="add_difunto" value="" style="width: 35px; height:35px">
                                  </label>
@@ -143,7 +143,7 @@
                             <div class="card-header col-md-12 col-xl-12">
                                 <h4> Lista de difuntos en nicho en nicho</h4>
                             </div>
-                            <div class="col-sm-12 col-md-6 col-xl-6 p-4">
+                            <div class="col-sm-12 col-md-12 col-xl-12 p-4">
                                 <table id="list_difuntos">
                                     <thead>
                                       <tr>
@@ -776,7 +776,7 @@ $(document).ready(function ()
            // console.log("split info"+inf);
                 $('.row_ren').remove();
             //list_detalle
-                var row='<tr class="w-auto row_ren"  draggable="true" class="drag-handle">'+
+                var row='<tr class="w-auto row_ren"  draggable="true" class="drag-handle"  dynamic-row>'+
                        '<td class="w-auto text-center service">'+srv+'</td>'+
                        '<td class="w-auto text-center service_txt">'+txt_srv+'</td>'+
                         '<td class="w-auto text-center service_hijo " >'+ cuenta+' </td>'+
@@ -784,7 +784,7 @@ $(document).ready(function ()
                         '<td class="w-auto text-center cantidad_row">'+cantidad+'</td>'+
                         '<td class="w-auto text-center precio_srv">'+precio_ren+'</td>'+
                         '<td class="w-auto text-center subtotal">'+subtotal+'</td>'+
-                        '<td class="w-auto text-center tblobs"></td>'+
+                        '<td class="w-auto text-center tblobs" contenteditable ></td>'+
 
                         '</tr>';
                 $('#list_detalle').append(row);
