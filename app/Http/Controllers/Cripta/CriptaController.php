@@ -479,7 +479,7 @@ class CriptaController extends Controller
 
                                     $existe=$this->buscarDifunto( $ci_dif, $value['nombres'],
                                     $value['primer_apellido'],$value['segundo_apellido'], $value['fecha_nacimiento']);
-                                     dd($existe);
+
                                         if($existe==false)
                                         {
                                             $dif->ci = $ci_dif;
@@ -559,6 +559,8 @@ class CriptaController extends Controller
 
                                     $cript=Cripta::where('id',$request->id_cripta_mausoleo )->first();
                                     $cript->difuntos=json_encode($newdif);
+                                    $cript->list_ant_difuntos=json_encode($newdif);
+
                                     $cript->save();
 
                                 if($cript){

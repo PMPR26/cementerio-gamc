@@ -62,6 +62,20 @@
                         </td>
                             <td>
                                 @if($serv->tipo=="NICHO" || $serv->tipo=="EXTERNO" || $serv->tipo=="EXTERNO GRATUITO" )
+
+                                @if(( $serv->estado_pago==false)&& ($serv->tipo=="NICHO"))
+                                    <button type='button' class="btn btn-danger anular"  id="{{ $serv->fur }}"  data-id="{{ $serv->serv_id }}"><i
+                                        class="fas fa-trash fa-2x"></i></button>
+
+                                @elseif($serv->tipo=="EXTERNO" || $serv->tipo=="EXTERNO GRATUITO" )
+                                    <button type='button' class="btn btn-danger anularExterno"  id="{{ $serv->fur }}"  data-id="{{ $serv->serv_id }}"><i
+                                        class="fas fa-trash fa-2x"></i></button>
+
+
+
+
+
+                            @endif
                                 <form action="{{ route('serv.generatePDF') }}" method="GET" target="blank">
                                     @csrf
                                     <input type="hidden" name="codigo_nicho" value={{ $serv->codigo_nicho }}>
@@ -83,13 +97,7 @@
                                             class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
                                 </form>
                                 @endif
-                                @if( $serv->estado_pago==false)
 
-
-                                    <button type='button' class="btn btn-danger anular"  id="{{ $serv->fur }}"  data-id="{{ $serv->serv_id }}"><i
-                                            class="fas fa-trash fa-2x"></i></button>
-
-                                @endif
 
                             </td>
                         </tr>
@@ -342,9 +350,94 @@
                     })
         })
 
+        /**** anular fur de servicio externo ****/
 
 
+        $(document).on('click', '.anularExterno', function(e){
+            e.preventDefault();
+            var fur= $(this).attr('id');
 
+            var id = $(this).attr('data-id');
+            console.log('id: '+id+" fur: "+fur);
+                Swal.fire({
+                        title: 'Esta seguro de anular el registro?',
+                        showDenyButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: 'Realizar',
+                        denyButtonText: `No realizar`,
+                        }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+
+                                Swal.fire({
+                                        title: 'Ejecutando la solicitud!',
+                                        html: `Espere un momento`,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        //  new Promise((resolve, reject) => {
+                                                $.ajax({
+                                                    url:"{{route('serv.anularFurExterno')}}",
+                                                    type: "POST",
+                                                    headers: {
+                                                        'Content-Type':'application/json',
+                                                        'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                                                    },
+                                                    data: JSON.stringify({
+                                                        fur: fur,
+                                                        id: id,
+                                                    }),
+                                                    cache: false,
+                                                    contentType: "application/json; charset=utf-8",
+                                                    dataType: 'json',
+                                                    success: function(data) {
+                                                        console.log("respuesta anulacion");
+
+                                                        console.log(data.status==true);
+
+
+                                                        if(data.status==true)
+                                                        {
+                                                            Swal.fire(
+                                                                            'Proceso realizado con éxito',
+                                                                            `FUR ${fur} : ${data.message}`,
+                                                                            'success'
+                                                                                    )
+                                                                            .then(() => {
+                                                                                    location.reload();
+                                                                                });
+
+
+                                                                    }else{
+                                                                        Swal.fire(
+                                                                            'Proceso fallado',
+                                                                            ` ${data.message}`,
+
+                                                                                    )
+                                                                            .then(() => {
+                                                                                    return false;
+                                                                                });
+                                                                    }
+
+                                                                    // $('.verificar_pago').show();
+                                                                    $('.spiner_revision').hide();
+
+                                                    },
+                                                    error: function(resp) {
+                                                        Swal.fire(
+                                                            'Error de verificación',
+                                                            'Intente nuevamente, Si el problema continua notifica a soporte',
+                                                            'error'
+                                                        );
+                                                    }
+                                                });
+                                        //  });
+                                        },
+                                    });
+                                } else if (result.isDenied) {
+                            Swal.fire('Los cambios no fueron realizados', '', 'info')
+                        }
+                    })
+        })
 
 
 

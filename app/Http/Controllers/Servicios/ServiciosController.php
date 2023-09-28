@@ -167,6 +167,8 @@ class ServiciosController extends Controller
                bloque.codigo as bloque,
                cuartel.codigo as cuartel,
                cuartel.id as cuartel_id,
+               nicho.renovacion,
+               nicho.cantidad_anterior,
 
                nicho.nro_nicho,
                nicho.estado_nicho as estado_nicho,
@@ -762,6 +764,7 @@ class ServiciosController extends Controller
                                                                     if($nuev_nicho['status']==true){
                                                                         $nuevo_sitio=$nuev_nicho['nicho']['codigo'];
                                                                     }
+
                                                     }else{
                                                         $nuevo_sitio="";
                                                     }
@@ -831,24 +834,35 @@ class ServiciosController extends Controller
                                                       $n=New Nicho;
                                                       $nuevo_n= $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
                                                       $nuevo_nicho= json_decode($nuevo_n->getContent(), true);
-                                                     // dd($nuevo_nicho['nicho']);
+
                                                       if($nuevo_nicho['status']==true){
+                                                          $id_nicho_nuevo=$nuevo_nicho['nicho']['id'];
+                                                          $cantidad_cuerpos_nicho_nuevo=$nuevo_nicho['nicho']['cantidad_cuerpos']+1;
                                                           $rf = new ResponsableDifunto ;
                                                           $existeRespDif = $rf->searchResponsableDifNicho($request, $idresp, $difuntoid,$nuevo_nicho['nicho']['codigo'] );
 
                                                           if ($existeRespDif != null) {
 
                                                           } else {
+                                                            //crear registro responsable_difunto
                                                               $rf->registrar_asignacion($request ,$difuntoid, $idresp, $nuevo_nicho['nicho']['codigo'], $estado_nicho, $nuevo_nicho['nicho']['id'], $nuevo_nicho['nicho']['tipo']);
                                                                 //update servicio-nicho
-
+                                                                //update destino y asignacion en  registro del servicio
                                                                 $rowServ=ServicioNicho::where('id', $idServ)->first();
                                                                 $rowServ->asignado=$request->asignar_difunto_nicho;
                                                                 $rowServ->destino=$nuevo_nicho['nicho']['codigo'];
                                                                 $rowServ->save();
+                                                                //cambiar estado nuevo nicho
+                                                                $n->CambiarEstadoNicho( $id_nicho_nuevo, 'OCUPADO', $cantidad_cuerpos_nicho_nuevo);
                                                             }
                                                                 $lib=New Nicho;
                                                                 $liberar=$lib->liberarNichoAsignacion($id_nicho, $codigo_n);
+
+                                                                 //1.liberar nicho antiguo 2. desvincular nicho antiguo responsable
+                                                                 $n->liberarNichoAsignacion($id_nicho, $codigo_n);
+                                                                 $n->desvincularDifuntoNichoAsignacion($codigo_n);
+                                                                 //3.vincular nicho nuevo con responsable 4. aumentar numero de difunto a nicho nuevo
+
                                                       }
                                                       else{
                                                           return response([
@@ -1508,7 +1522,11 @@ class ServiciosController extends Controller
                 $nro_nicho=0;
                 $fila=0;
                 $tipo="EXTERNO";
-
+                /**** recuperar datos del cajero para registrar el pago  *****/
+                $datos_cajero=User::select()
+                ->where('id',auth()->id())
+                ->first();
+                $cajero= $datos_cajero->user_sinot;
             //******************** recuperar los servicios adquiridos ***** */
             if (!empty($request->servicios_adquiridos) && is_array($request->servicios_adquiridos))
             {
@@ -1626,8 +1644,7 @@ class ServiciosController extends Controller
                                                                     $ci_adjudicatario=$request->ci_resp;
 
 
-                                                                    $response=$obj->GenerarFur($ci,$nombre_pago,$paterno_pago,$materno_pago, $domicilio,  $nombre_difunto, $codigo_n,
-                                                                    $bloque, $nro_nicho, $fila, $servicio_hijos, $cantidades, $cajero,
+                                                                    $response=$obj->GenerarFurExterno($ci,$nombre_pago,$paterno_pago,$materno_pago, $domicilio,  $nombre_difunto, $servicio_hijos, $cantidades, $cajero,
                                                                     $nombre_adjudicatario, $ci_adjudicatario , $tblobs);
 
 
@@ -1710,19 +1727,31 @@ class ServiciosController extends Controller
 
     public function anularFur(Request $request){
        // todo: terminar modulo
-       //dd($request);
        $sn=New ServicioNicho;
        $serv=$sn->anularServicio($request);
        return $serv;
     }
 
+     /**** anular servicio para externos ****/
+    public function anularFurExterno(Request $request){
+        // todo: terminar modulo
+        $sn=New ServicioNicho;
+        $serv=$sn->anularServicioExterno($request);
+        return $serv;
+     }
+
+
+      /**** anular servicio para externos ****/
+    public function anularFurCM(Request $request){
+        // todo: terminar modulo
+        $sn=New ServicioNicho;
+        $serv=$sn->anularServicioExterno($request);
+        return $serv;
+     }
 
     public function lista_difuntos(Request $request){
-
-
         $nicho= New Nicho;
         $codigo_nicho= $request->cuartel.".".$request->bloque.".".$request->nicho.".".$request->fila;
-
          $rf = new ResponsableDifunto ;
          $difuntos=  $rf->lista_difuntos_perpetuo($codigo_nicho);
 
