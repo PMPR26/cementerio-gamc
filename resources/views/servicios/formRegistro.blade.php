@@ -129,10 +129,10 @@
                     {{-- datos difunto --}}
                     <div class="card">
                         <div class="row bg-gradient-cyan">
-                            <div class="card-header col-md-6 col-xl-6">
+                            <div class="card-header col-md-12 col-xl-12">
                                 <h4> DATOS DIFUNTOS </h4>
                             </div>
-                            <div class="col-sm-12 col-md-6 col-xl-6 p-4 nuevo_difunto">
+                            <div class="col-sm-12 col-md-12 col-xl-12 p-4 nuevo_difunto">
                                 <label>INGRESAR NUEVO DIFUNTO
                                     <input type="checkbox" name="add_difunto"  id="add_difunto" value="" style="width: 35px; height:35px">
                                  </label>
@@ -143,7 +143,7 @@
                             <div class="card-header col-md-12 col-xl-12">
                                 <h4> Lista de difuntos en nicho en nicho</h4>
                             </div>
-                            <div class="col-sm-12 col-md-6 col-xl-6 p-4">
+                            <div class="col-sm-12 col-md-12 col-xl-12 p-4">
                                 <table id="list_difuntos">
                                     <thead>
                                       <tr>
@@ -605,6 +605,8 @@
 </style>
 
 @section('js')
+
+
     <script>
 
         $(document).on('click', '#add_difunto', function(){
@@ -762,21 +764,26 @@ $(document).ready(function ()
           //  alert($('#info').val());
             var inf=($('#info').val()).split(',');
             var srv=inf[0];
-            var arrar_serv=inf[1].split('=>');
+            var array_serv=inf[1].split('=>');
 
-            var txt_srv=arrar_serv[0];
-            var cuenta=arrar_serv[1];
+            var txt_srv=array_serv[0];
+            var cuenta=array_serv[1];
             var servicio=inf[2];
+            console.log("servicio put in grid "+cuenta);
+            console.log("inf 0 put in grid "+srv);
+            console.log("inf 0 put in grid "+srv);
+
+
             var cantidad=$('#nro_renovaciones').val();
             var precio_ren=$('#monto_renov').val();
             var subtotal=$('#monto_renov').val();
 
 
 
-           // console.log("split info"+inf);
-                $('.row_ren').remove();
-            //list_detalle
-                var row='<tr class="w-auto row_ren"  draggable="true" class="drag-handle">'+
+                // console.log("split info"+inf);
+                        $('.row_ren').remove();
+                    //list_detalle
+                var row='<tr class="w-auto row_ren dynamic-row"   >'+
                        '<td class="w-auto text-center service">'+srv+'</td>'+
                        '<td class="w-auto text-center service_txt">'+txt_srv+'</td>'+
                         '<td class="w-auto text-center service_hijo " >'+ cuenta+' </td>'+
@@ -784,12 +791,14 @@ $(document).ready(function ()
                         '<td class="w-auto text-center cantidad_row">'+cantidad+'</td>'+
                         '<td class="w-auto text-center precio_srv">'+precio_ren+'</td>'+
                         '<td class="w-auto text-center subtotal">'+subtotal+'</td>'+
-                        '<td class="w-auto text-center tblobs"></td>'+
+                        '<td class="w-auto text-center tblobs" contenteditable ></td>'+
 
                         '</tr>';
                 $('#list_detalle').append(row);
+            //    addDragHandlers($('#list_detalle .row_' + inf[0] + '.dynamic-row')[0]);
+
                 calcularMonto();
-            }
+        }
 
         $(document).on('click','#gratis', function(){
                 if ($(this).is(':checked') ) {
@@ -823,12 +832,10 @@ $(document).ready(function ()
                                 var ar = $(this).val().split('-');
                                 var ar1 = ar[1].split('=>');
                                 subtotal = cantidad * ar[3];
-
-
                                                 if (ar1[1] == 642) {
 
                                                 } else {
-                                                    var html = '<tr class="row_' + ar[0] + ' dynamic-row">'
+                                                    var html = '<tr class="row_' + ar[0] + ' dynamic-row"  >'
                                                         + '<td class="w-auto text-center service">' + ar[0] + '</td>'
                                                         + '<td class="w-auto text-center service_txt">' + ar1[0] + '</td>'
                                                         + '<td class="w-auto text-center service_hijo">' + ar1[1] + '</td>'
@@ -840,6 +847,8 @@ $(document).ready(function ()
                                                         +'</tr>';
                                                     $('#list_detalle').append(html);
                                                     addDragHandlers($('#list_detalle .row_' + ar[0] + '.dynamic-row')[0]);
+                                                    var lastRow = $('#list_detalle .row_' + ar[0] + '.dynamic-row').last(); // Select the last row
+                                                    addDragHandlers(lastRow[0]); // Make the last row draggable
                                                 }
                             }
                 }else{
@@ -918,6 +927,7 @@ $(document).ready(function ()
                 suma=parseInt(suma) + parseInt($( this ).html());
             });
             $('#totalServ').html(suma);
+            console.log("suma total" + suma);
             return suma;
         }
 
@@ -1035,6 +1045,15 @@ $(document).ready(function ()
 
                function setValuesRenovacion()
                {
+                  // Obtén el elemento select2 por su clase
+                    var select2 = $('.cuartel');
+
+                    // Activa el plugin Select2 en el elemento
+                    select2.select2();
+
+                    // Obtén el valor seleccionado
+                    var opcionSeleccionada = select2.find(':selected');
+                    var textoSeleccionado = opcionSeleccionada.text();
                 $.ajax({
                                     type: 'POST',
 
@@ -1048,7 +1067,7 @@ $(document).ready(function ()
                                         'nro_nicho':  $('#nro_nicho').val(),
                                         'bloque':  $('#bloque').val(),
                                         'fila':  $('#fila').val(),
-                                        'cuartel':  $('#cuartel').val()
+                                        'cuartel': textoSeleccionado
                                     }),
                                     success: function(data_response) {
                                         console.log("sql");
@@ -1089,7 +1108,7 @@ $(document).ready(function ()
                 }else{
                     $('.row_ren').remove();
                 }
-
+                calcularMonto();
                });
 
                 $(document).on('click', '#buscar', function() {
@@ -1473,7 +1492,6 @@ $(document).ready(function ()
                                url: "{{ route('new.servicio') }}",
                                async: false,
                                data: JSON.stringify({
-
                                    'nro_nicho': $('#nro_nicho').val(),
                                    'bloque':  $('#bloque').val(),
                                    'cuartel':  $('#cuartel option:selected').text(), //$('#cuartel').val().trigger("change"),
@@ -1510,17 +1528,15 @@ $(document).ready(function ()
                                    'monto':$('#totalServ').html(),
                                    'monto_renov':  $('#monto_renov').val(),
                                    'cuartel_nuevo': $('#select_cuartel_nuevo').val(),
-                                    'bloque_nuevo': $('#bloque_nuevo').val(),
+                                     'bloque_nuevo': $('#bloque_nuevo').val(),
                                     'nicho_nuevo': $('#nuevo_nicho').val(),
                                     'fila_nuevo': $('#nueva_fila').val(),
                                    'nueva_fecha_ingreso':$('#nueva_fecha_ingreso').val(),
-
                                    'nro_renovacion':$('#renov').val(),
                                    'sereci':$('#sereci').val(),
                                    'gratis':$('#gratis').val(),
                                    'asignar_difunto_nicho':$('#asignar_difunto_nicho').val(),
                                    'add_difunto':$('#add_difunto').val(),
-
                                }),
                                success: function(data_response) {
                                 if(data_response.status==false){
@@ -1929,7 +1945,9 @@ $(document).ready(function ()
             function validarInfoEnviada(){
 
                 var cuartel= $('#cuartel option:selected').text();
-                    if(cuartel=="Seleccione un cuartel"){
+                if ($('#servicio_externo').is(":checked")){}
+                else{
+                    if(cuartel=="Seleccione un cuartel") {
                         swal.fire({
                                     title: "Precaucion!",
                                     text: "!Complete el campo cuartel",
@@ -1942,6 +1960,8 @@ $(document).ready(function ()
                                        return false;
                                     }, 2000);
                     }
+                }
+
             //   if($('#fechanac_resp').val() =="" || !$('#fechanac_resp').val()){
             //     swal.fire({
             //                         title: "Precaucion!",
@@ -2130,35 +2150,35 @@ $(document).ready(function ()
                            })
                   }
 
-
+                  var dragSrcElement = null;
 
                   function addDragHandlers(elem) {
-    elem.draggable = true;
+                    elem.draggable = true;
 
-    elem.addEventListener('dragstart', handleDragStart, false);
-    elem.addEventListener('dragover', handleDragOver, false);
-    elem.addEventListener('drop', handleDrop, false);
-}
+                    elem.addEventListener('dragstart', handleDragStart, false);
+                    elem.addEventListener('dragover', handleDragOver, false);
+                    elem.addEventListener('drop', handleDrop, false);
+                }
 
-function handleDragStart(event) {
-    event.dataTransfer.effectAllowed = 'move';
-    event.dataTransfer.setData('text/html', this.outerHTML);
-    dragSrcElement = this;
-}
+                function handleDragStart(event) {
+                    event.dataTransfer.effectAllowed = 'move';
+                    event.dataTransfer.setData('text/html', this.outerHTML);
+                    dragSrcElement = this;
+                }
 
-function handleDragOver(event) {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
-}
+                function handleDragOver(event) {
+                    event.preventDefault();
+                    event.dataTransfer.dropEffect = 'move';
+                }
 
-function handleDrop(event) {
-    event.preventDefault();
-    if (dragSrcElement !== this) {
-        this.parentNode.removeChild(dragSrcElement);
-        this.insertAdjacentElement('beforebegin', dragSrcElement);
+            function handleDrop(event) {
+                event.preventDefault();
+                if (dragSrcElement !== this) {
+                    this.parentNode.removeChild(dragSrcElement);
+                    this.insertAdjacentElement('beforebegin', dragSrcElement);
 
-    }
-}
+                }
+            }
 
             // select cuartel for search
             $(".select_cuartel_nuevo").select2({
@@ -2298,6 +2318,17 @@ function handleDrop(event) {
                         }
                     });
         }
+
+        // $(document).ready(function() {
+        //     $("#tableServices").sortable({
+        //         axis: "y", // Allow vertical dragging
+        //         handle: ".drag-handle", // Use a specific handle for dragging, add the class to the appropriate cell
+        //         update: function(event, ui) {
+        //             // This function is called when the user finishes dragging and updates the order
+        //             // You can perform any necessary actions here, such as updating your data
+        //         }
+        //     });
+        // });
     </script>
 
     @stop

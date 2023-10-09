@@ -271,32 +271,31 @@
                     <div class="row" style="padding-top: 15px;">
                         <div class="col-12">
                             <div class="card">
-                                <div class="card-body" >
-                                    <table border="1" class="detalle_servicios" style="display: none">
-                                        <thead>
-                                            <tr>
-                                                <td>Cuenta Tipo Servicio</td>
-                                                <td>Cuenta Servicio</td>
-                                                <td>Tipo Servicio</td>
-                                                <td>Servicio</td>
-                                                <td>Cantidad</td>
-
-                                                <td>Precio</td>
-                                                <td>Subtotal</td>
-                                                <td>Observacion</td>
-
-                                            </tr>
-                                        </thead>
-                                        <tbody id="servicios-data">
-
-                                        </tbody>
-                                    </table>
-
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered detalle_servicios" style="display: none;">
+                                            <thead>
+                                                <tr>
+                                                    <th>Cuenta Tipo Servicio</th>
+                                                    <th>Cuenta Servicio</th>
+                                                    <th>Tipo Servicio</th>
+                                                    <th>Servicio</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio</th>
+                                                    <th>Subtotal</th>
+                                                    <th>Observacion</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="servicios-data">
+                                                <!-- Aquí agregarás las filas de datos -->
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
+
 
                     <div id="cal_price" style="text-align: center">
                         <div class="card">

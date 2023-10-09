@@ -169,12 +169,45 @@ class ResponsableDifunto extends Model
             $dif->codigo_nicho = $codigo_n;
             $dif->fecha_adjudicacion = $request->fecha_ingreso_nicho ?? null;
             $dif->tiempo = $request->tiempo;
-            if($estado_nicho=="LIBRE"){
-                $dif->estado_nicho = $estado_nicho;
-                $dif->fecha_liberacion= date("Y-m-d H:i:s");
-                }else{
+            if($estado_nicho !=null){
+                if($estado_nicho=="LIBRE"){
                     $dif->estado_nicho = $estado_nicho;
-                }
+                    $dif->fecha_liberacion= date("Y-m-d H:i:s");
+                    }else{
+                        $dif->estado_nicho = $estado_nicho;
+                    }
+            }
+
+            //   //en caso de pagarse mantenimiento
+            //  if(isset($request->sel)){
+
+            // //     $last= $request->sel[count($request->sel)-1];
+            // //     $ultimo_pago=$last;
+            // //     $gestiones =implode(', ', $request->sel);
+            //     $dif->gestiones_mant_anterior=$dif->gestiones_mant;
+            //     $dif->ultima_gestion_mant_anterior=$dif->gestiones_mant;
+            //     $dif->monto_mant_anterior=$dif->monto_mant;
+
+            //     $dif->gestiones_mant=$dif->gestiones_mant_anterior;
+            //     $dif->ultima_gestion_mant=$dif->ultima_gestion_mant_anterior;
+            //     $dif->monto_mant=$dif->monto_mant_anterior;
+
+            // //     // $dif->gestion_renov_anterior=$dif->gestion_renov;
+            // //     // $dif->nro_renov_anterior=$dif->nro_renovacion;
+            // //     // $dif->monto_ultima_renov_ant=$dif->monto_ultima_renov;
+            // //     // $dif->ultima_gestion_pagada_anterior=$dif->ultima_gestion_pagada;
+            // //     // $dif->gestion_renov=$gestiones;
+            // //     // $dif->ultima_gestion_pagada=$ultimo_pago;
+
+            //  }
+
+            // //prguntar si se esta haciendo renovacion
+            // // if()
+            // $dif->gestion_renov=null;
+            // $dif->nro_renovacion=0;
+            // $dif->monto_ultima_renov=0;
+
+
 
             $dif->estado = 'ACTIVO';
             $dif->user_id = auth()->id();
@@ -194,17 +227,40 @@ class ResponsableDifunto extends Model
             $dif->tiempo = $request->tiempo;
             $dif->nicho_id = $id_nicho;
 
-            if($estado_nicho=="LIBRE"){
-                $dif->estado_nicho = $estado_nicho;
-                $dif->fecha_liberacion= date("Y-m-d H:i:s");
-                $dif->estado = 'INACTIVO';
-              }
-              else{
-                $dif->estado_nicho = $estado_nicho;
-              }
+            if($estado_nicho !=null){
+
+                if($estado_nicho=="LIBRE"){
+                    $dif->estado_nicho = $estado_nicho;
+                    $dif->fecha_liberacion= date("Y-m-d H:i:s");
+                    $dif->estado = 'INACTIVO';
+                }
+                else{
+                    $dif->estado_nicho = $estado_nicho;
+                }
+
+            }
+
+            //en caso de pagarse mantenimiento
+            // if(isset($request->sel)){
+
+            //     $last= $request->sel[count($request->sel)-1];
+            //     $ultimo_pago=$last;
+            //     $gestiones =implode(', ', $request->sel);
+            //     $dif->gestiones_mant=$dif->gestiones_mant_anterior;
+            //     $dif->ultima_gestion_mant=$dif->gestiones_mant_anterior;
 
 
 
+            //     // $dif->gestion_renov_anterior=$dif->gestion_renov;
+            //     // $dif->nro_renov_anterior=$dif->nro_renovacion;
+            //     // $dif->monto_ultima_renov_ant=$dif->monto_ultima_renov;
+            //     // $dif->ultima_gestion_pagada_anterior=$dif->ultima_gestion_pagada;
+            //     // $dif->gestion_renov=$gestiones;
+            //     // $dif->ultima_gestion_pagada=$ultimo_pago;
+
+            // }
+
+            //prguntar si se esta haciendo renovacion
                 $dif->gestion_renov=null;
                 $dif->nro_renovacion=0;
                 $dif->monto_ultima_renov=0;

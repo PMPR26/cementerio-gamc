@@ -75,6 +75,8 @@
                                     @csrf
                                     <input type="hidden" name="id" value={{ $mant->id }}>
                                     <input type="hidden" name="fur" value={{ $mant->fur }}>
+                                    <input type="hidden" name="tipo_sitio" value="CRIPTA_MAUSELEO">
+
                                     <button type='sumit' class="btn btn-info "><i
                                             class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
                                 </form>
@@ -83,6 +85,8 @@
                                 @csrf
                                 <input type="hidden" name="id" value={{ $mant->id }}>
                                 <input type="hidden" name="fur" value={{ $mant->fur }}>
+                                <input type="hidden" name="tipo_sitio" value="NICHOS">
+
 
                                 <button type='sumit' class="btn btn-info "><i
                                         class="fas fa-file-pdf fa-2x  accent-blue "></i></button>

@@ -31,10 +31,27 @@ class Mantenimiento extends Model
 
 
     public function anularServicio(Request $request){
+        $data= Mantenimiento::where('id', $request->id)->first();
+
+        if($request->tipo_sitio=="CRIPTA_MAUSELEO"){
+            $cm= Cripta::where('id', $data->id_ubicacion)->first();
+            $cm->difuntos=$cm->list_ant_difuntos;
+            $cm->ultima_gestion_pagada=$cm->ult_gestion_pagada_ant;
+            $cm->gestiones_pagadas=$cm->gestiones_pagadas_ant;
+            $cm->save();
+        }
+        // else{
+        //     // actualizar los datos del nicho  luego anular
+        //     $ni=Nicho::where('id', $data->id_ubicacion)->first();
+        //     $ni->monto_renov= $ni->monto_renov_anterior;
+        //     $ni->renovacion= $ni->renov_anterior;
+
+        // }
+
+
 
         $a= $this->anular_fur( $request);
           if($a['fur_estado']== "IN"  ){
-             $data= Mantenimiento::where('id', $request->id)->first();
              $data->estado="INACTIVO";
              $data->save();
              return response()->json(['status'=>true, 'message'=>'Se anuló el registro con exito']);
