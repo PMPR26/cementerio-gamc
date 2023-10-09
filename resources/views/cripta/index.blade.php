@@ -2153,8 +2153,8 @@ $("#cert_defuncion_p").dropzone({
                                 else if(( id_serv =='630' || id_serv =='628' || id_serv =='633' || id_serv =='634' || id_serv =='635'  || id_serv =='1991' || id_serv =='1992' || id_serv =='1993')&& $('#exhumacion').val()=="SI"){
                                     $('#dif_exhumado').hide();
                                 }
-                                else{  $('.section_difunto').hide();
-                                $('#modal_save_pagos_cm').prop('disabled', false);
+                                   else{  $('.section_difunto').hide();
+                                    $('#modal_save_pagos_cm').prop('disabled', false);
                                }
                             }else
                             {

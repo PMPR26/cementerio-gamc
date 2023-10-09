@@ -42,14 +42,16 @@ class MantenimientoController extends Controller
             if($rolUsuario == "APOYO"){
                 return view('restringidos/no_autorizado');
             }else{
+                $threeMonthsAgo = now()->subMonths(3);
                 $currentMonth = now()->format('m'); // Get the current month in MM format
                 $currentYear = now()->format('Y');  // Get the current year in YYYY format
 
                 $mant = Mantenimiento::select('mantenimiento.*', DB::raw('CONCAT(mantenimiento.nombrepago , \' \',mantenimiento.paternopago, \' \', mantenimiento.maternopago ) AS nombre'))
                    // ->leftJoin('responsable', 'responsable.id', '=', 'mantenimiento.respdifunto_id')
                     ->where('mantenimiento.estado', 'ACTIVO')
-                    ->whereRaw("DATE_PART('month', mantenimiento.created_at) = ?", [$currentMonth])
-                    ->whereRaw("DATE_PART('year', mantenimiento.created_at) = ?", [$currentYear])
+                    ->whereBetween('mantenimiento.created_at', [$threeMonthsAgo, now()])
+                    // ->whereRaw("DATE_PART('month', mantenimiento.created_at) = ?", [$currentMonth])
+                    // ->whereRaw("DATE_PART('year', mantenimiento.created_at) = ?", [$currentYear])
                     ->orderBy('id', 'DESC')
                      ->get();
                      return view('mantenimiento/index', compact('mant'));
@@ -96,7 +98,7 @@ class MantenimientoController extends Controller
 
     public function savePay(Request $request){
 
-       // dd($request);
+    //    dd($request);
         if($request->isJson())
         {
             $this->validate($request, [
@@ -136,11 +138,7 @@ class MantenimientoController extends Controller
             //    'ci_resp.required'=> 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
                  'nombres_resp.required'=> 'El campo nombre del responsable es obligatorio',
                  'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
-              //  'celular.required'=> 'El campo celular es obligatorio',
-              //  'ecivil.required'=> 'El campo estado civil  es obligatorio',
-              //  'email.required'=> 'El campo email es obligatorio',
-               // 'domicilio.required'=> 'El campo domicilio es obligatorio',
-              //  'genero_resp.required'=> 'El campo genero_resp es obligatorio',
+
                 'sel.required'=>'Debe seleccionar al menos una gestion a pagar',
 
 
@@ -206,6 +204,8 @@ class MantenimientoController extends Controller
                                     $nicho->codigo_anterior = $request->anterior;
                                     $nicho->estado_nicho = 'OCUPADO';
                                     $nicho->user_id = auth()->id();
+                                    $nicho->renov_anterior = $nicho->renovacion;
+                                    $nicho->monto_renov_anterior = $nicho->monto_renov;
                                     $nicho->save();
                                     $nicho->id;
                                     $id_nicho= $nicho->id;
@@ -224,6 +224,7 @@ class MantenimientoController extends Controller
                         $d->updateDifunto($request, $difuntoid);
 
                     }
+
                     // end difunto
                     // step4: register responsable -- si el responsable
                     // $existeResponsable= Responsable::where('ci', $request->ci_resp)->first();
@@ -231,34 +232,45 @@ class MantenimientoController extends Controller
                     $existeResponsable=$r->searchResponsable($request);
                    // dd($existeResponsable);
                     $respon=New Responsable;
-                            if(!$existeResponsable || $existeResponsable=="" || empty($existeResponsable) ){
 
+                            if(!$existeResponsable || $existeResponsable=="" || empty($existeResponsable) ){
                                  $idresp= $respon->insertResponsable($request);
                                  $adjudicatario=$request->nombres_resp." ".$request->paterno_resp??''." ".$request->materno_resp??'';
                                  $ci_adjudicatario=$respon->getCiResp($idresp);
+
                             }else{
                                 $idresp=$existeResponsable->id;
                                 $respon->updateResponsable($request, $idresp);
                                 $adjudicatario=$request->nombres_resp." ".$request->paterno_resp??''." ".$request->materno_resp??'';
                                 $ci_adjudicatario= $idresp;
-
                             }
                     //end responsable
                     //insertar tbl responsable_difunto
-                            if(isset($difuntoid) && isset($idresp)){
+                            // if(isset($difuntoid) && isset($idresp)){
 
-                                $rf=new ResponsableDifunto();
+                            //     $rf=new ResponsableDifunto();
 
-                                 $existeRespDif= $rf->searchResponsableDifunt($request, $idresp, $difuntoid);
+                            //      $existeRespDif= $rf->searchResponsableDifunt($request, $idresp, $difuntoid);
 
-                                if($existeRespDif!= null || !empty($existeRespDif)){
-                                    $iddifuntoResp= $this->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n);
-                                }else{
-                                    $iddifuntoResp=$this->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n);
+                            //     if($existeRespDif!= null || !empty($existeRespDif)){
+                            //         $iddifuntoResp= $this->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n);
+                            //     }else{
+                            //         $iddifuntoResp=$this->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n);
+                            //     }
+
+                            // }
+
+                            if (isset($difuntoid) && isset($idresp)) {
+                                // dd($estado_nicho);
+                                $rf = new ResponsableDifunto();
+                                $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid );
+
+                                if ($existeRespDif != null) {
+                                    $iddifuntoResp = $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , null);
+                                } else {
+                                    $iddifuntoResp = $rf->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , null, $id_nicho);
                                 }
-
                             }
-
 
                                //insert pago
                                if($request->person!= "responsable"){
@@ -304,7 +316,7 @@ class MantenimientoController extends Controller
                                                         $cantgestiones=$cant_gestiones;
                                                        // dd( $request->observacion);
 
-                                                        $nombre_difunto=$request->nombres_dif." ".$request->paterno_dif." ".$request->materno_dif;
+                                                            $nombre_difunto=$request->nombres_dif." ".$request->paterno_dif." ".$request->materno_dif;
                                                             $obj= new ServicioNicho;
 
                                                             $response=$obj->GenerarFurMant($ci, $nombre_pago, $paterno_pago,
@@ -314,18 +326,16 @@ class MantenimientoController extends Controller
 
                                                             if($response['status']==true){
                                                                 $fur = $response['response'];
-                                                }
+                                                             }
 
                                                 //insertar mantenimiento
-
-                                              //  dd(count($request->sel));
 
                                                 $last= $request->sel[count($request->sel)-1];
                                                 $ultimo_pago=$last;
                                                 $mant = new Mantenimiento;
-                                                $mant->gestion =implode(', ', $request->sel);
+                                                $mant->gestion = implode(', ', $request->sel);
                                                 $mant->fur=$fur;
-                                                $mant->date_in=date('Y-m-d');
+                                                // $mant->date_in=date('Y-m-d');
 
                                                 $mant->date_in=$request->fechadef_dif;
                                                 $mant->respdifunto_id=$iddifuntoResp;
@@ -344,10 +354,10 @@ class MantenimientoController extends Controller
                                                 $mant->observacion=$request->observacion??'';
                                                 $mant->tipo_ubicacion="NICHO";
                                                 $mant->id_ubicacion=$id_nicho;
+                                                $mant->desc_servicio=$request->text_servicio;
                                                 $mant->codigo_ubicacion=$codigo_n;
                                                 $mant->cuenta_tipo_servicio=$request->cuenta_tipo_servicio;
                                                 $mant->cuenta_servicio=$request->cuenta_servicio;
-                                                $mant->desc_servicio=$request->text_servicio;
                                                 $mant->save();
                                                 return  $mant->id;
 
@@ -948,8 +958,12 @@ public function pagoMantenimientoCM(Request $request){
                      }
 
                      $cripta= Cripta::where('id', $request->id_cripta_mausoleo)->first();
+                     $cripta->list_ant_difuntos=$cripta->difuntos;
+                     $cripta->ult_gestion_pagada_ant=$cripta->ultima_gestion_pagada;
+                     $cripta->gestiones_pagadas_ant=$cripta->gestiones_pagadas;
                      $cripta->gestiones_pagadas = $request->gestiones_act;
                      $cripta->ultima_gestion_pagada = $request->ultima_gestion_actual;
+
                      $cripta->save();
 
                                     $serv = new Mantenimiento();
@@ -975,6 +989,7 @@ public function pagoMantenimientoCM(Request $request){
                                     $serv->observacion=$request->observacion;
                                     $serv->tipo_ubicacion=$request->tipo_registro;
                                     $serv->id_ubicacion =$request->id_cripta_mausoleo ;
+
                                     $serv->save();
 
                                 if($serv->id){

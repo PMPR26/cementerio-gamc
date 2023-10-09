@@ -4,6 +4,8 @@ namespace App\Models\Servicios;
 
 use App\Models\Nicho;
 use App\Models\ResponsableDifunto;
+use App\Models\Cripta;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use GuzzleHttp\Client;
@@ -249,7 +251,7 @@ class ServicioNicho extends Model
                             'fur'=>$fur
                         ]);
 
-                        dd( $response->json());
+                        // dd( $response->json());
                         return response([
                             'status' => false,
                             'data' => $response->json()
@@ -409,7 +411,39 @@ class ServicioNicho extends Model
                  }
             }
 
-            function verificarServicioAnulado($id){
+            public function anularServicioCM(Request $request){
+                $data= ServicioNicho::where('id', $request->id)->first();
+                $cm= Cripta::where('id', $data->ubicacion_id)->first();
+                if($cm->list_ant_difuntos !=null || $cm->list_ant_difuntos!=""){
+                    $cm->difuntos=$cm->list_ant_difuntos;
+                }
+
+                if($cm->ult_gestion_pagada_ant !=null || $cm->ult_gestion_pagada_ant!=""){
+                    $cm->ultima_gestion_pagada=$cm->ult_gestion_pagada_ant;
+                }
+
+
+                if($cm->gestiones_pagadas_ant !=null || $cm->gestiones_pagadas_ant!=""){
+                    $cm->gestiones_pagadas=$cm->gestiones_pagadas_ant;
+                }
+
+                $cm->save();
+
+                $a= $this->anular_fur( $request);
+
+                if($a['fur_estado']== "IN"  ){
+                    $data->estado="INACTIVO";
+                    $data->save();
+                    return response()->json(['status'=>true, 'message'=>'Se anuló el registro con exito']);
+                 }
+                 else{
+                    return $a;
+                 }
+
+
+            }
+
+           public function verificarServicioAnulado($id){
                 $data= ServicioNicho::where('id', $id)->first();
                 $services=$data->servicio_id;
               //  dd( $services);

@@ -67,19 +67,23 @@ class Difunto extends Model
         }
         $dif = new Difunto;
         $dif->ci = $ci_dif;
-        $dif->nombres = $request->nombres_dif;
-        $dif->primer_apellido = $request->paterno_dif;
-        $dif->segundo_apellido = $request->materno_dif;
-        $dif->fecha_nacimiento = $request->fechanac_dif;
-        $dif->fecha_defuncion = $request->fechadef_dif;
-        $dif->certificado_defuncion = $request->sereci;
-        $dif->causa = $request->causa;
-        $dif->edad = $request->edad ?? '';
+        $dif->ci = $ci_dif;
+        $dif->nombres = trim(mb_strtoupper($request->nombres_dif, 'UTF-8'));
+        $dif->primer_apellido = trim(mb_strtoupper($request->paterno_dif, 'UTF-8'));
+        $dif->segundo_apellido =trim(mb_strtoupper( $request->materno_dif, 'UTF-8'));
+        $dif->fecha_nacimiento = $request->fechanac_dif ?? null;
+        $dif->fecha_defuncion = $request->fecha_def_dif ?? null;
+        // $dif->fecha_defuncion = $request->fechadef_dif;
+        $dif->certificado_defuncion = $request->sereci ?? null;
+        $dif->causa = trim(mb_strtoupper($request->causa, 'UTF-8'));
+        // $dif->edad = $request->edad ?? '';
 
         $dif->tipo = $request->tipo_dif;
         $dif->genero = $request->genero_dif;
-        $dif->funeraria = trim($request->funeraria);
-        $dif->certificado_file = trim($request->certificado_file);
+        $dif->funeraria =trim(mb_strtoupper($request->funeraria, 'UTF-8'));
+        // $dif->certificado_file = trim($request->certificado_file);
+        $dif->certificado_file = $request->urlcertificacion;
+
         $dif->estado = 'ACTIVO';
         $dif->user_id = auth()->id();
         $dif->save();
@@ -88,37 +92,38 @@ class Difunto extends Model
 
     }
 
+
+
+
     public function updateDifunto($request, $difuntoid){
         $difunto= Difunto::where('id', $difuntoid)->first();
-
         if($request->ci_dif==null ||$request->ci_dif=="" ){
-           // $ci_dif=$this->generateCiDifunto();
-
-
         }else{
             $difunto->ci=$request->ci_dif;
         }
 
-        $difunto->nombres = $request->nombres_dif;
-        $difunto->primer_apellido = $request->paterno_dif;
-        $difunto->segundo_apellido = $request->materno_dif;
-        $difunto->fecha_nacimiento = $request->fechanac_dif;
-        $difunto->fecha_defuncion = $request->fechadef_dif;
-        $difunto->certificado_defuncion = $request->sereci;
-        $difunto->causa = $request->causa;
+        $difunto->nombres = trim(mb_strtoupper($request->nombres_dif, 'UTF-8'));
+        $difunto->primer_apellido = trim(mb_strtoupper($request->paterno_dif, 'UTF-8'));
+        $difunto->segundo_apellido =trim(mb_strtoupper( $request->materno_dif, 'UTF-8'));
+        $difunto->fecha_nacimiento = $request->fechanac_dif ?? null;
+        $difunto->fecha_defuncion = $request->fecha_def_dif ?? null;
+        // $difunto->fecha_defuncion = $request->fechadef_dif;
+        $difunto->certificado_defuncion = $request->sereci ?? null;
+        $difunto->causa =  trim(mb_strtoupper($request->causa, 'UTF-8'));
         $difunto->tipo = $request->tipo_dif;
         $difunto->genero = $request->genero_dif;
-        $difunto->funeraria = trim($request->funeraria);
-        $difunto->certificado_file = trim($request->url_certificacion);
-        $difunto->edad = $request->edad ?? '';
-
-       // $difunto->certificado_file=$request->adjunto;
-      //  $difunto->tiempo = $request->tiempo;
+        $difunto->funeraria = trim(mb_strtoupper($request->funeraria, 'UTF-8'));
+        $difunto->certificado_file = trim($request->urlcertificacion);
+        // $difunto->certificado_file = trim($request->url_certificacion);
+        // $difunto->edad = $request->edad ?? '';
         $difunto->estado = 'ACTIVO';
         $difunto->user_id = auth()->id();
         $difunto->save();
         return $difunto->id;
     }
+
+
+
 
     public function deleteDifunto($id_difunto){
         //buscar difunto en pagos servicios

@@ -1528,7 +1528,7 @@ $(document).ready(function ()
                                    'monto':$('#totalServ').html(),
                                    'monto_renov':  $('#monto_renov').val(),
                                    'cuartel_nuevo': $('#select_cuartel_nuevo').val(),
-                                    'bloque_nuevo': $('#bloque_nuevo').val(),
+                                     'bloque_nuevo': $('#bloque_nuevo').val(),
                                     'nicho_nuevo': $('#nuevo_nicho').val(),
                                     'fila_nuevo': $('#nueva_fila').val(),
                                    'nueva_fecha_ingreso':$('#nueva_fecha_ingreso').val(),
@@ -1537,7 +1537,6 @@ $(document).ready(function ()
                                    'gratis':$('#gratis').val(),
                                    'asignar_difunto_nicho':$('#asignar_difunto_nicho').val(),
                                    'add_difunto':$('#add_difunto').val(),
-
                                }),
                                success: function(data_response) {
                                 if(data_response.status==false){

@@ -455,8 +455,6 @@ class CriptaController extends Controller
                 //Buscar si ya existe el difunto en la tabla difunto
 
                 if(isset($request['difuntos'])){
-
-
                     $dif = new Difunto;
                     $newdif=[];
                             foreach($request['difuntos'] as $key => $value)
@@ -491,7 +489,7 @@ class CriptaController extends Controller
                                             $dif->certificado_defuncion = $value['ceresi']??'';
                                             $dif->causa = trim(strtoupper($value['causa']))??'';
                                             $dif->tipo = $value['tipo'];
-                                            $dif->edad = $value['edad']??'';
+                                            // $dif->edad = $value['edad']??'';
                                             $dif->genero = $value['genero'];
                                             $dif->funeraria = trim(strtoupper($value['funeraria']))??'';
                                             $dif->certificado_file = trim($value['url'])??'';
@@ -529,7 +527,7 @@ class CriptaController extends Controller
                                             $up_dif->certificado_defuncion = $value['ceresi'];
                                             $up_dif->causa = $value['causa'];
                                             $up_dif->tipo = $value['tipo'];
-                                            $up_dif->edad = $value['edad'];
+                                            // $up_dif->edad = $value['edad'];
                                             $up_dif->genero = $value['genero'];
                                             $up_dif->funeraria = trim($value['funeraria']);
                                             $up_dif->certificado_file = trim($value['url']);
@@ -558,9 +556,9 @@ class CriptaController extends Controller
 
 
                                     $cript=Cripta::where('id',$request->id_cripta_mausoleo )->first();
+                                    $cript->list_ant_difuntos= $cript->difuntos;
                                     $cript->difuntos=json_encode($newdif);
-                                    $cript->list_ant_difuntos=json_encode($newdif);
-
+                                    // $cript->list_ant_difuntos=json_encode($newdif);
                                     $cript->save();
 
                                 if($cript){
@@ -1038,5 +1036,7 @@ class CriptaController extends Controller
 
 
             }
+
+
 }
 
