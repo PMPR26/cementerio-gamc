@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Nicho;
 
 use App\Models\Nicho;
 use App\Http\Controllers\Controller;
+use App\Models\Cuartel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class NichoController extends Controller
 {
 
-    public function index(){
+    public function index(Request $request){
+
         if (auth()->check()) {
             $user = auth()->user();
             $rolUsuario = $user->role;
@@ -20,27 +22,88 @@ class NichoController extends Controller
             if($rolUsuario == "APOYO"){
                 return view('restringidos/no_autorizado');
             }else{
+                        $cuartel = DB::table('cuartel')
+                        ->select('cuartel.id', 'cuartel.codigo as codigo')
+                        // ->select('cuartel.id', DB::raw("CONCAT(codigo,' - ',nombre) as codigo"))
+                        ->where('estado', '=', 'ACTIVO')
+                        ->get();
 
-                    $cuartel = DB::table('cuartel')
-                    ->select('cuartel.id', 'cuartel.codigo as codigo')
-                            // ->select('cuartel.id', DB::raw("CONCAT(codigo,' - ',nombre) as codigo"))
-                            ->where('estado', '=', 'ACTIVO')
+                        $bloque= DB::table('bloque')
+                        ->select('bloque.id', 'bloque.codigo')
+                        ->where('estado', '=', 'ACTIVO')
+                        ->get();
+
+                if(($request->select_cuartel_search==null  || !isset($request->select_cuartel_search) )){
+                    $letter="A";
+                    $nicho = DB::table('nicho')
+                    ->select(
+                        'nicho.*',
+                        'cuartel.codigo as cuartel_cod',
+                        'bloque.codigo as bloque_id',
+                        DB::raw("CONCAT(nombres,' ',primer_apellido,' ',segundo_apellido) as difunto")
+                    )
+                    ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
+                    ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id')
+                    ->leftJoin('responsable_difunto', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
+                    ->leftJoin('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
+                    ->where('nicho.estado', '=', 'ACTIVO')
+                    ->where('nicho.codigo', 'ILIKE', $letter . '%') // Use ILIKE with '%' to match words starting with $letter
+                    ->where(function($query) {
+                        $query->orWhere('responsable_difunto.estado', '=', 'ACTIVO')
+                              ->orWhereNull('responsable_difunto.estado');
+                    })
+                    ->get();
+
+                }else{
+                    // dd($request->select_cuartel_search);
+
+                    if($request->select_cuartel_search=="todos"){
+                        $nicho = DB::table('nicho')
+                        ->select(
+                            'nicho.*',
+                            'cuartel.codigo as cuartel_cod',
+                            'bloque.codigo as bloque_id',
+                            DB::raw("CONCAT(nombres,' ',primer_apellido,' ',segundo_apellido) as difunto")
+                        )
+                        ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
+                        ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id')
+                        ->leftJoin('responsable_difunto', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
+                        ->leftJoin('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
+                        ->where('nicho.estado', '=', 'ACTIVO')
+                        ->where(function($query) {
+                            $query->orWhere('responsable_difunto.estado', '=', 'ACTIVO')
+                                  ->orWhereNull('responsable_difunto.estado');
+                        })
+                        ->get();
+
+                    }else{
+                            $c=Cuartel::where('id',$request->select_cuartel_search)->where('estado', 'ACTIVO')->first();
+                            $letter=$c->codigo;
+
+                            $nicho = DB::table('nicho')
+                            ->select(
+                                'nicho.*',
+                                'cuartel.codigo as cuartel_cod',
+                                'bloque.codigo as bloque_id',
+                                DB::raw("CONCAT(nombres,' ',primer_apellido,' ',segundo_apellido) as difunto")
+                            )
+                            ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
+                            ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id')
+                            ->leftJoin('responsable_difunto', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
+                            ->leftJoin('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
+                            ->where('nicho.estado', '=', 'ACTIVO')
+                            ->where('nicho.codigo', 'ILIKE', $letter . '%') // Use ILIKE with '%' to match words starting with $letter
+                            ->where(function($query) {
+                                $query->orWhere('responsable_difunto.estado', '=', 'ACTIVO')
+                                      ->orWhereNull('responsable_difunto.estado');
+                            })
                             ->get();
-
-                            $bloque= DB::table('bloque')
-                            ->select('bloque.id', 'bloque.codigo')
-                            ->where('estado', '=', 'ACTIVO')
-                            ->get();
+                        }
 
 
-                        $nicho =DB::table('nicho')
-                                ->select('nicho.*', 'cuartel.codigo as cuartel_cod', 'bloque.codigo as bloque_id')
-                                ->join('cuartel' , 'cuartel.id','=', 'nicho.cuartel_id')
-                                ->join('bloque' , 'bloque.id','=', 'nicho.bloque_id')
-                                // ->where('bloque.estado', '=', 'ACTIVO')
-                                ->get();
+                }
 
-                        return view('nicho/index', ['bloque' =>$bloque , 'cuartel' => $cuartel , 'nicho' => $nicho]);
+                       return view('nicho/index', ['bloque' =>$bloque , 'cuartel' => $cuartel , 'nicho' => $nicho]);
             }
     }
 
