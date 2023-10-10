@@ -25,7 +25,32 @@
         </div>
     </div>
  </div>
+            <div class="row">
+                <div class="col-12">
+                    <h3>Busqueda avanzada</h3>
+                </div>
+            </div>
+            <form action="{{ route('nicho') }}">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>Cuartel</label>
+                            <select  class="form-control select_cuartel_search" name="select_cuartel_search"  id="select_cuartel_search" style="width: 100%" >
+                            <option selected disabled>Seleccione un cuartel</option>
+                            <option value="todos" >Todos</option>
 
+                                    @foreach ($cuartel as $val)
+                                    <option value="{{ $val->id }}">{{ $val->codigo }}</option>
+                                    @endforeach
+                            </select>
+                        </div>
+                        <div class="col-2 pt-2">
+                            <br>
+                            <input type="submit"  class="btn btn-success" name="advanced_search" style="width: 100%" value="Buscar" />
+                        </div>
+
+                    </div>
+
+            </form>
 
 
         <div class="col-sm-12">
@@ -36,14 +61,15 @@
                     <tr role="row">
                         <th scope="col">#</th>
                         <th scope="col">Código</th>
-                        <th scope="col">Cuartel</th>
+                        {{-- <th scope="col">Cuartel</th>
                         <th scope="col">Bloque</th>
                         <th scope="col">Nro</th>
-                        <th scope="col">Fila</th>
+                        <th scope="col">Fila</th> --}}
 
                         <th scope="col">Cantidad</th>
                         <th scope="col">Tipo</th>
                         <th scope="col">Código Antiguo</th>
+                        <th scope="col">difunto</th>
                         <th scope="col">Estado nicho</th>
                         <th scope="col">Opciones</th>
                     </tr>
@@ -55,15 +81,16 @@
 
                         <tr>
                             <td scope="row">{{ $count++ }}</td>
-
                             <td>{{ $nicho->codigo }}</td>
-                            <td>{{ $nicho->cuartel_cod }}</td>
+
+                            {{-- <td>{{ $nicho->cuartel_cod }}</td>
                             <td>{{ $nicho->bloque_id }}</td>
                             <td>{{ $nicho->nro_nicho }}</td>
-                            <td>{{ $nicho->fila }}</td>
+                            <td>{{ $nicho->fila }}</td> --}}
                             <td>{{ $nicho->cantidad_cuerpos }}</td>
                             <td>{{ $nicho->tipo }}</td>
                             <td>{{ $nicho->codigo_anterior }}</td>
+                            <td>{{ $nicho->difunto ?? '' }}</td>
                             <td>{{ $nicho->estado_nicho }}</td>
                             <td>
                                 <button type="button" class="btn btn-info" value="{{ $nicho->id }}" id="btn-editar" title="Editar nicho"><i class="fas fa-edit"></i></button>

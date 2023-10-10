@@ -11,19 +11,50 @@ use App\Http\Controllers\Controller;
 class DifuntoController extends Controller
 {
     //
-    public function index(){
+    public function index(Request $request){
 
         $funeraria=DB::table('difunto')
                     ->select('funeraria')
                     ->whereNotNull('funeraria')
                     ->distinct()->get();
 
-        $difunto= DB::table('difunto')
-                ->select('difunto.id','difunto.ci',DB::raw('CONCAT(difunto.nombres , \' \',difunto.primer_apellido, \' \', difunto.segundo_apellido ) AS nombre'),'difunto.fecha_nacimiento','difunto.fecha_defuncion','difunto.certificado_defuncion',
-                'difunto.causa','difunto.tipo','difunto.estado','difunto.genero','difunto.funeraria', 'difunto.certificado_file')
-                ->orderBy('id','DESC')
+        // $difunto= DB::table('difunto')
+        //         ->select('difunto.id','difunto.ci',DB::raw('CONCAT(difunto.nombres , \' \',difunto.primer_apellido, \' \', difunto.segundo_apellido ) AS nombre'),'difunto.fecha_nacimiento','difunto.fecha_defuncion','difunto.certificado_defuncion',
+        //         'difunto.causa','difunto.tipo','difunto.estado','difunto.genero','difunto.funeraria', 'difunto.certificado_file')
+        //         ->orderBy('id','DESC')
+        //         ->get();
+
+
+
+                $difunto = DB::table('difunto')
+                ->select(
+                    'difunto.id',
+                    'difunto.ci',
+                    DB::raw('CONCAT(difunto.nombres, \' \', difunto.primer_apellido, \' \', difunto.segundo_apellido) AS nombre'),
+                    'difunto.fecha_nacimiento',
+                    'difunto.fecha_defuncion',
+                    'difunto.certificado_defuncion',
+                    'difunto.causa',
+                    'difunto.tipo',
+                    'difunto.estado',
+                    'difunto.genero',
+                    'difunto.funeraria',
+                    'difunto.certificado_file',
+                    'nicho.codigo'
+                )
+                ->leftJoin('responsable_difunto', 'responsable_difunto.difunto_id', '=', 'difunto.id')
+                ->leftJoin('nicho', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
+                // ->where('difunto.primer_apellido', 'ILIKE', $letter . '%')
+                ->where(function($query) {
+                    $query->orWhere('responsable_difunto.estado', '=', 'ACTIVO')
+                          ->orWhereNull('responsable_difunto.estado');
+                })
+                ->orderBy('difunto.id', 'DESC')
                 ->get();
 
+
+
+                // dd($difunto);
         return view('difunto/index', compact('difunto', 'funeraria'));
     }
 
