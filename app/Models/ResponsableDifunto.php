@@ -159,11 +159,13 @@ class ResponsableDifunto extends Model
 
 
         public function updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n,  $estado_nicho ){
-            // dd($request->fecha_ingreso_nicho);
+           //  dd($request."ID RESP ". $idresp."ID DIF ". $difuntoid);//
 
             $dif= ResponsableDifunto::where('responsable_id', $idresp)
                                ->where('difunto_id', $difuntoid)
                                ->where('codigo_nicho', $codigo_n)->first();
+
+                              // dd($dif);
             $dif->responsable_id = $idresp;
             $dif->difunto_id = $difuntoid;
             $dif->codigo_nicho = $codigo_n;
