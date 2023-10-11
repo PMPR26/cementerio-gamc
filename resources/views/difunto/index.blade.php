@@ -34,7 +34,10 @@
                 <th scope="col">Fecha de defunción</th>
                 <th scope="col">Causa</th>
                 <th scope="col">Tipo</th>
-                <th scope="col">Funeraria</th>
+                <th scope="col">Ubicación</th>
+
+                {{-- <th scope="col">Funeraria</th> --}}
+
                 <th scope="col">Certificado Defunción</th>
                 <th scope="col">Opciones</th>
             </tr>
@@ -52,7 +55,8 @@
                     <td>{{ $difunto->fecha_defuncion }}</td>
                     <td>{{ $difunto->causa }}</td>
                     <td>{{ $difunto->tipo }}</td>
-                    <td>{{ $difunto->funeraria }}</td>
+                    <td>{{ $difunto->codigo }}</td>
+                    {{-- <td>{{ $difunto->funeraria }}</td> --}}
                     <td>@if(  $difunto->certificado_file!="")
                         <a href="{{ $difunto->certificado_file ?? '' }}" target="blank">Certificado de defunción</a>
                         @else

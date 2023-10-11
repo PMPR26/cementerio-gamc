@@ -142,6 +142,9 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::get('generate-pdf-cm', [App\Http\Controllers\Servicios\ServiciosController::class, 'generatePDFCM'])->name('serv.generatePDFCM')->middleware('auth');
 
     Route::post('anular-fur', [App\Http\Controllers\Servicios\ServiciosController::class, 'anularFur'])->name('serv.anularFur')->middleware('auth');
+    Route::post('anular-fur-externo', [App\Http\Controllers\Servicios\ServiciosController::class, 'anularFurExterno'])->name('serv.anularFurExterno')->middleware('auth');
+    Route::post('anular-fur-cm', [App\Http\Controllers\Servicios\ServiciosController::class, 'anularFurCM'])->name('serv.anularFurCM')->middleware('auth');
+
 
     Route::post('/new-serviciocm', [App\Http\Controllers\Servicios\ServiciosController::class,'createNewServicioscm'])->name('new.serviciocm');
     Route::post('/get-nro-renov',  [App\Http\Controllers\Servicios\ServiciosController::class,'getNroRenov'])->name('get.nro.renov');
@@ -259,6 +262,8 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
     Route::post('/get-tipo-notificacion', 'App\Http\Controllers\TipoNotificacionController@getTipo')->name('get.tipo.notificacion');
     Route::post('/buscar-ubicacion', 'App\Http\Controllers\NotificacionesController@buscarUbicacion')->name('buscar.ubicacion');
     Route::post('/controlar-notificacion', 'App\Http\Controllers\NotificacionesController@controlarNroNotificacion')->name('count.nro.notificacion');
+    Route::post('/save-notificacion', 'App\Http\Controllers\NotificacionesController@saveNotificacion')->name('save.notificacion');
+
 
 
     //controlarNroNotificacion

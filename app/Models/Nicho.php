@@ -63,6 +63,8 @@ class Nicho extends Model
 
     }
 
+
+
      //desvincular responsable
      public function desvincularDifuntoNicho(Request $request){
         // dd( $request);
@@ -138,13 +140,14 @@ class Nicho extends Model
         $c=Cuartel::where('id', $cuartel)->first();
         $b=Bloque::where('id', $bloque)->first();
         $codigo_nuevo_nicho=$c->codigo.".".$b->codigo.".".$nicho.".".$fila;
-    //dd( $codigo_nuevo_nicho);
+         //dd( $codigo_nuevo_nicho);
         $nicho= Nicho::where('codigo', $codigo_nuevo_nicho )->first();
 
         if($nicho){
             return response([
                 'status'=> true,
-                'nicho'=> $nicho
+                'nicho'=> $nicho,
+
              ],200);
         }
         else{
@@ -157,6 +160,22 @@ class Nicho extends Model
         }
     }
 
+    public function CambiarEstadoNicho( $id,$est, $cantidad){
+        $nicho=Nicho::where('id',$id)->first();
+        $nicho->estado_nicho= $est;
+        $nicho->cantidad_cuerpos=$cantidad;
+        $nicho->save();
+        return $nicho->estado_nicho;
+
+    }
+
+    public function restaurarRenov($id_nicho, $renov_ant,  $monto_renov_anterior){
+        $nicho=Nicho::where('id',$id_nicho)->first();
+        $nicho->renovacion= $renov_ant;
+        $nicho->monto_renov= $monto_renov_anterior;
+        $nicho->save();
+
+    }
 
 
 }
