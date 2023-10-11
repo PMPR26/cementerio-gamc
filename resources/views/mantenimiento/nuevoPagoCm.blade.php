@@ -44,7 +44,7 @@
             <h3>Busqueda avanzada</h3>
         </div>
     </div>
-    <form action="{{ route('cripta.index') }}">
+    <form action="{{ route('paycm_mant') }}">
             <div class="row">
                 <div class="col-sm-3">
                     <label>Cuartel</label>
