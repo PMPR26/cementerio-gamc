@@ -732,13 +732,15 @@ class ServiciosController extends Controller
                                                     $fecha_pago=null   ;
                                                     $asignado=$request->asignar_difunto_nicho;
 
+
+                                                    //preguntar si se hara reasignacion del difunto a otro nicho
                                                     if($request->asignar_difunto_nicho=="asignado")
                                                     {
                                                                     $n=New Nicho;
-                                                                    $nuevo_n= $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
-                                                                    $nuev_nicho= json_decode($nuevo_n->getContent(), true);
+                                                                    $nuevo_n=  $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
+                                                                    $nuev_nicho=  json_decode($nuevo_n->getContent(), true);
 
-                                                                // dd($nuevo_nicho['nicho']);
+
                                                                     if($nuev_nicho['status']==true){
                                                                         $nuevo_sitio=$nuev_nicho['nicho']['codigo'];
                                                                     }
