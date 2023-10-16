@@ -135,19 +135,25 @@ class Nicho extends Model
     }
 
 
-    public function generarCodigoAsignacion($cuartel, $bloque, $nicho, $fila){
-       // dd($cuartel.",". $bloque.",". $nicho.",". $fila);
+    public function generarCodigoAsignacion($cuartel, $bloque, $nro_nicho, $fila){
+    //    dd($cuartel.",". $bloque.",". $nicho.",". $fila);
         $c=Cuartel::where('id', $cuartel)->first();
         $b=Bloque::where('id', $bloque)->first();
-        $codigo_nuevo_nicho=$c->codigo.".".$b->codigo.".".$nicho.".".$fila;
-         //dd( $codigo_nuevo_nicho);
+        $codigo_nuevo_nicho=$c->codigo.".".$b->codigo.".".$nro_nicho.".".$fila;
+        //  dd( $codigo_nuevo_nicho);
+
+
         $nicho= Nicho::where('codigo', $codigo_nuevo_nicho )->first();
+
+        if(empty($nicho)|| $nicho=="" ||  $nicho==null){
+            $ni=$this->InsertNichoPartial( $cuartel,  $bloque, $nro_nicho, $fila, 'PERPETUO','LIBRE', 0, 0, '');
+            $nicho= Nicho::where('id', $ni )->first();
+        }
 
         if($nicho){
             return response([
                 'status'=> true,
                 'nicho'=> $nicho,
-
              ],200);
         }
         else{
@@ -174,6 +180,52 @@ class Nicho extends Model
         $nicho->renovacion= $renov_ant;
         $nicho->monto_renov= $monto_renov_anterior;
         $nicho->save();
+
+    }
+    public function InsertNichoPartial( $id_cuartel,  $id_bloque,  $nro_nicho, $fila, $tipo_nicho,$estado_nicho, $cant, $cant_ant, $anterior){
+          // insertar nicho
+          $cuartel=Cuartel::where('id', $id_cuartel)->first();
+          $bloque=Bloque::where('id', $id_bloque)->first();
+          $nicho = new Nicho;
+          $nicho->cuartel_id = $id_cuartel;
+          $nicho->bloque_id = $id_bloque;
+          $nicho->nro_nicho = $nro_nicho;
+          $nicho->fila = $fila;
+          $nicho->tipo = $tipo_nicho ?? '';
+          $nicho->codigo = $cuartel . "." . $bloque . "." . $nro_nicho . "." . $fila;
+          $nicho->codigo_anterior = $anterior ?? '';
+          $nicho->estado_nicho =$estado_nicho;
+          $nicho->estado ='ACTIVO';
+          $nicho->cantidad_cuerpos =$cant ?? 0;
+          $nicho->cantidad_anterior =$cant_ant?? 0 ;
+          $nicho->user_id = auth()->id();
+          $nicho->save();
+          $nicho->id;
+          $id_nicho = $nicho->id;
+          return $id_nicho;
+    }
+          public function InsertNicho(Request $request){
+          $new_nicho =  Nicho::create([
+            'codigo' => trim($request->codigo),
+            'bloque_id' => trim($request->bloque),
+            'cuartel_id' => trim($request->cuartel),
+            'nro_nicho' => trim($request->nro),
+            'fila' => trim($request->fila),
+
+            'codigo' => trim($request->codigo),
+            'codigo_anterior' => trim($request->codigo_anterior),
+            'cantidad_cuerpos' => trim($request->cantidad),
+            'tipo' => trim($request->tipo),
+            //'estado_nicho' => trim($request->estado_nicho),
+            'estado' => trim($request->estado),
+
+            'user_id' => auth()->id(),
+            'estado' => 'ACTIVO',
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s"),
+        ]);
+        $id_nicho = $new_nicho->id;
+        return $id_nicho;
 
     }
 

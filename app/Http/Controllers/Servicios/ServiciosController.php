@@ -737,9 +737,12 @@ class ServiciosController extends Controller
                                                     if($request->asignar_difunto_nicho=="asignado")
                                                     {
                                                                     $n=New Nicho;
-                                                                    $nuevo_n=  $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
-                                                                    $nuev_nicho=  json_decode($nuevo_n->getContent(), true);
+                                                                // dd($request->cuartel_nuevo."-nuevo bloque". $request->bloque_nuevo."-nuevo ni". $request->nicho_nuevo."-nuevo f". $request->fila_nuevo);
 
+                                                                    $nuevo_n=  $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
+
+
+                                                                    $nuev_nicho=  json_decode($nuevo_n->getContent(), true);
 
                                                                     if($nuev_nicho['status']==true){
                                                                         $nuevo_sitio=$nuev_nicho['nicho']['codigo'];

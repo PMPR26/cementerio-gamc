@@ -31,6 +31,13 @@
                 <div class="card-body">
                     <div class="row">
 
+                    <div class="col-sm-12 col-md-3 col-xl-3">
+                        <label>Cuartel</label>
+                        <input style="text-transform:uppercase;"
+                            onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
+                            class="form-control" id="cuartel" autocomplete="off">
+                    </div>
+
 
                         <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>BLOQUE</label>
@@ -63,12 +70,7 @@
             <div id="contenido">
                 <div class="card">
                     <div class="row">
-                        <div class="col-sm-12 col-md-3 col-xl-3">
-                            <label>Cuartel</label>
-                            <input style="text-transform:uppercase;"
-                                onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
-                                class="form-control clear" id="cuartel" autocomplete="off">
-                        </div>
+
 
                         <div class="col-sm-12 col-md-3 col-xl-3">
                             <label>Codigo antiguo</label>
@@ -564,11 +566,13 @@
                 var bloque = $('#bloque').val();
                 var nicho = $('#nro_nicho').val();
                 var fila = $('#fila').val();
+                var cuartel = $('#cuartel').val();
+                    //alert($('#cuartel').val());
 
-                cuartel = buscarCuartel(bloque, nicho, fila);
+                // cuartel = buscarCuartel(bloque, nicho, fila);
 
                 if (bloque && nicho && fila) {
-                    dats = buscar_datos(bloque, nicho, fila);
+                    dats = buscar_datos(bloque, nicho, fila, cuartel);
                 }
                 bloque = $('#bloque').prop('readonly',true);
                      nicho = $('#nro_nicho').prop('readonly',true);
@@ -578,8 +582,9 @@
 
 
 
-            function buscar_datos(bloque, nicho, fila) {
+            function buscar_datos(bloque, nicho, fila, cuartel) {
                 var datos = "";
+
                 $('#contenido').show();
                 $.ajax({
                     headers: {
@@ -592,7 +597,9 @@
                     data: JSON.stringify({
                         "bloque": bloque,
                         "nicho": nicho,
-                        "fila": fila
+                        "fila": fila,
+                        "cuartel": cuartel
+
                     }),
                     success: function(data) {
 
@@ -699,8 +706,9 @@
 
 
                                             $('#pag_con').val(pg);
+
                                             $('#causa').val(data.response.datos_difuntos[0]
-                                                .causa_fall);
+                                                .causa_fall).trigger('change');;
                                             $('#nombres_dif').val(data.response
                                                 .datos_difuntos[0].difunto);
 
@@ -775,7 +783,7 @@
                                             }
 
                                         }
-                                        autocompletar();
+                                        // autocompletar();
                                     } else {
                                         $('#sp').empty();
                                         Swal.fire(
@@ -787,7 +795,7 @@
                                         $('.clear').val("");
                                         $('#form').hide();
                                     }
-                                    autocompletar();
+                                    // autocompletar();
                                 }
                             });
 
@@ -797,17 +805,17 @@
                     }
 
                 });
-                autocompletar();
+                // autocompletar();
             }
 
 
             // calcularPlazo nicho
             function calcularPlazo(tiempo, año, nfecha) {
                 let plazo = 0;
-                alert(año);
+               // alert(año);
                 if (año.length == 2) {
                     año = '20' + año;
-                    alert(año);
+                   // alert(año);
                 }
 
                 plazo = parseInt(año) + parseInt(tiempo);
@@ -887,7 +895,8 @@
                             showConfirmButton: false
                         });
                      }
-                }else{
+                }
+                /*else{
                     if($('#search_resp').val()==""  || $('#nombres_resp').val()=="" || $('#paterno_resp').val()==""  ){
                         swal.fire({
                             title: "Completar los datos del responsable que esta realizando el pago!",
@@ -898,7 +907,7 @@
                         });
                      }
 
-                }
+                }*/
 
                 if ($('#nrofur').val() != "") {
                     verificarfur();
@@ -1290,31 +1299,31 @@
         })
 
 
-        function buscarCuartel(bloque, nicho, fila) {
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                    'Content-Type': 'application/json'
-                },
-                url: "{{ route('buscar.cuartel') }}",
-                method: 'POST',
-                dataType: 'json',
-                data: JSON.stringify({
-                    "bloque": bloque,
-                    "nicho": nicho,
-                    "fila": fila
+        // function buscarCuartel(bloque, nicho, fila) {
+        //     $.ajax({
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        //             'Content-Type': 'application/json'
+        //         },
+        //         url: "{{ route('buscar.cuartel') }}",
+        //         method: 'POST',
+        //         dataType: 'json',
+        //         data: JSON.stringify({
+        //             "bloque": bloque,
+        //             "nicho": nicho,
+        //             "fila": fila
 
-                }),
-                success: function(data) {
-                    if (data.status==true) {
-                        $('#cuartel').val(data.resp.codigo);
-                    }else{
-                        $('#cuartel').val("NN");
-                    }
-                }
-            });
+        //         }),
+        //         success: function(data) {
+        //             if (data.status==true) {
+        //                 $('#cuartel').val(data.resp.codigo);
+        //             }else{
+        //                 $('#cuartel').val("NN");
+        //             }
+        //         }
+        //     });
 
-        }
+        // }
 
 
 

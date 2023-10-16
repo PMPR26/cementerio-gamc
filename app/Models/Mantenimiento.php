@@ -48,7 +48,14 @@ class Mantenimiento extends Model
 
         // }
 
+                $rd = ResponsableDifunto::where('id', $data->respdifunto_id)
+                ->where('estado', 'ACTIVO')
+                ->whereRaw('DATE(created_at) = ?', [date('Y-m-d', strtotime($data->created_at))])
+                ->first();
 
+                if($rd !=null || $rd!="" || !empty($rd)){
+                    $rd::cambiarEstadoRespDif($rd->id,  'INACTIVO');
+                }
 
         $a= $this->anular_fur( $request);
           if($a['fur_estado']== "IN"  ){
