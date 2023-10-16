@@ -908,8 +908,28 @@ class CriptaController extends Controller
                 $servicio_hijos="";
                 $txt_servicio_hijos="";
                 $tblobs="";
+                $nuevo_sitio="";
+                //en caso de hacer una asignacion
+                $asignado=$request->asignar_difunto_nicho;
 
 
+                if($request->asignar_difunto_nicho=="asignado")
+                {
+                                $n=New Nicho;
+                            // dd($request->cuartel_nuevo."-nuevo bloque". $request->bloque_nuevo."-nuevo ni". $request->nicho_nuevo."-nuevo f". $request->fila_nuevo);
+
+                                $nuevo_n=  $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
+
+
+                                $nuev_nicho=  json_decode($nuevo_n->getContent(), true);
+
+                                if($nuev_nicho['status']==true){
+                                    $nuevo_sitio=$nuev_nicho['nicho']['codigo'];
+                                }
+
+                }else{
+                    $nuevo_sitio="";
+                }
 
                 // si es inhumacion o exhumacion actualizar array de difuntos y estado de la unidad
                // dd($request->difuntos[count( $request->difuntos)-1]['nombres']);
@@ -934,9 +954,9 @@ class CriptaController extends Controller
 
                 $response=$obj->GenerarFurCM($request->ci, $request->nombrepago, $request->paternopago,
                 $request->maternopago, $request->domicilio, $request->codigo_unidad,
-                $request->servicio_hijos , $cantidades, $cajero,  $adjudicatario, $request->tblobs);
+                $request->servicio_hijos , $cantidades, $cajero,  $adjudicatario, $request->tblobs, $asignado, $nuevo_sitio);
 
-// dd( $response);
+                    // dd( $response);
                 if($response['status']==true){
                     $fur = $response['response'];
                     //dd($fur);
@@ -1016,6 +1036,11 @@ class CriptaController extends Controller
                     $serv->observacion=$txt_tblobs;
                     $serv->tipo=$request->tipo_registro;
                     $serv->ubicacion_id =$request->id_cripta_mausoleo ;
+                    if($asignado!=""){
+                        $serv->asignado= $request->asignar_difunto_nicho;
+                        $serv->destino= $nuevo_sitio;
+
+                    }
                     $serv->save();
 
                 if($serv->id){

@@ -260,8 +260,63 @@
                                 </div>
                      </div>
 
+              <!-- seccion asignacion a otro nicho -->
 
 
+              <div class="card">
+                <div class="card-header">
+                    <div class="form-check bg-cyan p-4">
+                        <input class="form-check-input" type="checkbox" value="" id="asignar_difunto_nicho">
+                        <label class="form-check-label" for="asignar_difunto_nicho">
+                         Asignar Difunto a otro nicho
+                        </label>
+                    </div>
+                </div>
+
+                <div class="card-body asignar_df bg-gradient-gray" style="display: none">
+                    <div class="col-12">
+                        <form>
+                            <div class="form-row">
+                              <div class="form-group col-md-3">
+                                <label for="inputEmail4">Nuevo Cuartel</label>
+                                <select  class="form-control select_cuartel_nuevo" name="select_cuartel_nuevo"  id="select_cuartel_nuevo" style="width: 100%" >
+                                    <option selected disabled>Seleccione un cuartel</option>
+                                            @foreach ($cuartel as $val)
+                                            <option value="{{ $val->id }}">{{ $val->codigo }}</option>
+                                            @endforeach
+                                    </select>
+                              </div>
+                              <div class="form-group col-md-3">
+                                <label>Nuevo Bloque </label>
+                                <select  class="form-control bloque_nuevo" name="bloque_nuevo"  id="bloque_nuevo" style="width: 100%" >
+                                </select>
+                            </div>
+
+                              <div class="form-group col-md-3">
+                                <label for="inputPassword4">Nuevo Nicho</label>
+                                <input type="text" class="form-control" id="nuevo_nicho" placeholder="Nicho">
+                              </div>
+                              <div class="form-group col-md-3">
+                                <label for="inputPassword4">Nueva Fila</label>
+                                <input type="text" class="form-control" id="nueva_fila" placeholder="Fila">
+                              </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="inputPassword4">Fecha ingreso a nuevo nicho</label>
+                                <input type="date" class="form-control" id="nueva_fecha_ingreso" placeholder="fecha ingreso">
+                                </div>
+                            </div>
+
+                            {{-- <button type="button" class="btn btn-warning btn_nueva_asignacion">Confirmar Ingreso</button> --}}
+                          </form>
+                    </div>
+                </div>
+
+              {{-- </div> --}}
+
+
+              <!-- fin de secccion de asignacion  -->
 
                 <div class="card">
                     <div class="card-header">
