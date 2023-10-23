@@ -176,6 +176,9 @@
                                         <input type="hidden" name="store_nro_renovacion" id="store_nro_renovacion">
                                         <input type="hidden" name="store_monto_renovacion" id="store_monto_renovacion">
                                         <input type="hidden" name="ci_difunto_actual" id="ci_difunto_actual">
+                                        <input type="hidden" name="cant_renov_confirm" id="cant_renov_confirm">
+
+
 
                                         </div>
                                 </div>
@@ -774,7 +777,7 @@ $(document).ready(function ()
             console.log("inf 0 put in grid "+srv);
 
 
-            var cantidad=$('#nro_renovaciones').val();
+            var cantidad=$('#cant_renov_confirm').val();//$('#nro_renovaciones').val();
             var precio_ren=$('#monto_renov').val();
             var subtotal=$('#monto_renov').val();
 
@@ -991,6 +994,51 @@ $(document).ready(function ()
            console.log("informacion: "+info);
            precio_renov=$.trim(info[3]);
            console.log("----->"+precio_renov);  //class=""
+
+           var html_info_last_renov='<div class="card p-2 bg-gradient-cyan" id="ren"> <h4 class="card-info">CALCULAR RENOVATORIO</h4></div><div class="row pb-2"><h6>El monto correspondiente a la primera renovación es '+precio_renov+' pasado el primer año se adiciona el 20% sobre el monto correspondiente a cada renovación</h6></div>'
+                                    +'<div class="card-body">'
+                                                +'<div class="row pb-2">'
+                                                     +'<div class="col-sm-12 col-md-4 col-xl-4">'
+                                                        +'<label for="">Nro de renovación</label>'
+                                                        +'<input type="number" name="precio_renov" id="precio_renov" value="'+precio_renov+'" class="form-control precio_renov" readonly>'
+                                                     +'</div>'
+                                                    +'<div class="col-sm-12 col-md-4 col-xl-4">'
+                                                        +'<label for=""># de renovacion anterior</label>'
+                                                        +'<input type="number" name="renov_ant" id="renov_ant"  onKeyPress="if(this.value.length==2) return false;"    start="1" class="form-control renov"  onkeyup="calcRenov()">'
+                                                    +'</div>'
+                                                    +'<div class="col-sm-12 col-md-4 col-xl-4">'
+                                                        +'<label for="">Ultimo cobro renovacion</label>'
+                                                        +'<input type="number" name="precio_renov_ant" id="precio_renov_ant" class="form-control precio_renov_ant" onblur="calcRenov() value="0">'
+                                                    +'</div>'
+                                                +'</div>'
+                                                +'<div class="row pb-2">'
+                                                     +'<div class="col-sm-12 col-md-4 col-xl-4">'
+                                                        +'<label for="">Nro de renovaciónes a calcular</label>'
+                                                        +'<input type="number" name="nro_ren_calc" id="nro_ren_calc" value="" class="form-control nro_ren_calc">'
+                                                     +'</div>'
+                                                    +'<div class="col-sm-12 col-md-4 col-xl-4"> <br>'
+                                                        +'<button type="button" class="btn btn-primary" name="calcular_cuotas" id="calcular_cuotas">Calcular Cuotas</button>'
+                                                    +'</div>'
+
+                                                +'</div>'
+
+                                                +'<div class="row pb-2" id="section_cuotas">'
+                                                +'</div>'
+                                                +'<div class="row pb-2">'
+                                                    + '<div class="col-sm-12 col-md-3 col-xl-3 section_acum_ren">'
+                                                            +'<label for="">TOTAL MONTO RENOVACION </label>'
+                                                            +'<input type="number" name="monto_renov" id="monto_renov" class="form-control monto_renov" value="" readonly>'
+                                                            +'<input type="hidden" name="nro_renovaciones" id="nro_renovaciones" class="form-control nro_renovaciones" value="'+$('#store_nro_renovacion').val()+'">'
+                                                            +'<input type="hidden" name="info" id="info" class="form-control info" value="'+info+'">'
+                                                        +'</div>'
+
+                                                        +'<div class="col-sm-12 col-md-3 col-xl-3">'
+                                                            +'<label for="">Confirmar selección</label>'
+                                                            +'<input type="checkbox" name="checkbox" id="confirmar_ren"  class="form-control confirmar_ren" >'
+                                                         +'</div>'
+                                                +'</div>'
+                                    +'</div>'
+
            var html_renov=' <div class="card p-2 bg-gradient-cyan" id="ren"> <h4 class="card-info">CALCULAR RENOVATORIO</h4>'
                                                 +'<div class="card-body">'
                                                 +'<div class="row pb-2">'
@@ -1012,7 +1060,7 @@ $(document).ready(function ()
                                                 +'</div>'
                                                 +'<div class="col-sm-12 col-md-3 col-xl-3">'
                                                     +'<label for="">Monto renovacion </label>'
-                                                    +'<input type="number" name="monto_renov" id="monto_renov" class="form-control monto_renov" value="'+$('#store_monto_renovacion').val()+'">'
+                                                    +'<input type="number" name="monto_renov" id="monto_renov" class="form-control monto_renov" value="">'
                                                     +'<input type="hidden" name="nro_renovaciones" id="nro_renovaciones" class="form-control nro_renovaciones" value="'+$('#store_nro_renovacion').val()+'">'
                                                     +'<input type="hidden" name="info" id="info" class="form-control info" value="'+info+'">'
                                                 +'</div>'
@@ -1034,7 +1082,7 @@ $(document).ready(function ()
                                                 +'</div>'
                                                 +'</div>';
 
-                                    $('#contenedor_renov').append(html_renov);
+                                    $('#contenedor_renov').append(html_info_last_renov);
                                     $('#ren').show();
                                     $('#renov_txt').val("SI");
 
@@ -1527,6 +1575,8 @@ $(document).ready(function ()
                                    'servicios_adquiridos':servicios_adquiridos,
                                    'monto':$('#totalServ').html(),
                                    'monto_renov':  $('#monto_renov').val(),
+                                   'cant_renov_confirm':  $('#cant_renov_confirm').val(),
+
                                    'cuartel_nuevo': $('#select_cuartel_nuevo').val(),
                                      'bloque_nuevo': $('#bloque_nuevo').val(),
                                     'nicho_nuevo': $('#nuevo_nicho').val(),
@@ -1611,62 +1661,6 @@ $(document).ready(function ()
                     })
 
 
-                function calcRenov()
-                {
-                    $('#monto_renov').val(0);
-                    var precio_sinot=$('#precio_renov').val(); //precio devuelto por el servicio del sinot
-                    var precio_ant=$('#precio_renov_ant').val();
-                    var cuota_ant=$('#precio_renov_ant').val();
-                  //  var cuota=$('#precio_renov_ant').val();
-                    var cuota1=$('#precio_renov').val();
-                    var acum=0;
-                    var adicion=0;
-                    var ncuota=$('#precio_renov_ant').val();
-                    var nro_renov_ant=$('#renov_ant').val();
-                    var nro_renov_act=$('#renov').val();
-                    var nro_iteraciones=Math.abs(nro_renov_act-nro_renov_ant);
-                        $('#nro_renovaciones').val(nro_iteraciones);
-                        var porcentaje=20;
-
-                    for(var i=nro_renov_ant ; i<nro_renov_act; i++){
-                        if(cuota_ant==0 && i==0){
-                            porcentaje=0;
-                            adicion= precio_sinot*porcentaje/100;
-                            cuota=  parseFloat(precio_sinot) + parseFloat(adicion);
-                            ncuota=cuota;
-                        }else{
-                           porcentaje=20;
-                           adicion=ncuota*porcentaje/100;
-                           cuota=  parseFloat(ncuota) + parseFloat(adicion);
-                           ncuota=cuota;
-                        }
-                        acum=parseFloat(acum)+ parseFloat(cuota);
-                        console.log("cuota"+i+"="+cuota);
-                        console.log("acum"+i+"="+acum);
-                        acum=acum.toFixed(2);
-
-                        // if(i==0){
-                        //     cuota=cuota_ant;
-                        //     cuota_ant=cuota_ant;
-                        // }
-                        // else{
-
-
-                      //  }
-
-
-
-                    }
-
-                    $('#monto_renov').val(acum);
-
-                    $('#pu_15224300').html(acum);
-                   // consolidado();
-                    //   put_in_grid();
-                    $('#btn_guardar_servicio').prop('disabled', false);
-
-
-                }
 
 
 
@@ -2329,6 +2323,132 @@ $(document).ready(function ()
         //         }
         //     });
         // });
+
+
+
+      $(document).on('click', '#calcular_cuotas', function(){
+        $('.row_cuotas').remove();
+
+            var porcentaje=20;
+            var adicion=0;
+            var precio_sinot=$('#precio_renov').val();
+            var ren_row="";
+            var nrocuota=0;
+            var nro_cuotas=$('#nro_ren_calc').val();
+           // var ultimo_monto=$('precio_renov_ant').val();
+            var cuota_ant=$('#renov_ant').val();
+            var ncuota=$('#precio_renov_ant').val();
+            console.log("hasta aqqqqqqq");
+            var acum=0;
+console.log(precio_sinot);
+            for(i=1; i<=nro_cuotas; i++){
+                nrocuota=parseInt(cuota_ant)+parseInt(i);
+                if(cuota_ant==0 && i==1){
+                            porcentaje=0;
+                            adicion= precio_sinot*porcentaje/100;
+                            cuota=  parseFloat(precio_sinot) + parseFloat(adicion);
+                            ncuota=cuota;
+                        }else{
+                           porcentaje=20;
+                           adicion=ncuota*porcentaje/100;
+                           cuota=  parseFloat(ncuota) + parseFloat(adicion);
+                           ncuota=cuota;
+                        }
+                        acum=parseFloat(acum)+ parseFloat(cuota);
+                        console.log("cuotaaaaaaa"+i+"="+cuota);
+                        console.log("acum"+i+"="+acum);
+                        acum=acum.toFixed(2);
+
+                        ren_row=  '<div class="row pb-2 row_cuotas">'
+                                       +'<div class="col-sm-12 col-md-3 col-xl-3">'
+                                            +'<label for="">Nro de cuota</label>'
+                                            +'<input type="number" name="precio_renov" id="precio_renov-'+i+'" value="'+nrocuota+'" class="form-control precio_renov" readonly>'
+                                       +'</div>'
+                                       +'<div class="col-sm-12 col-md-3 col-xl-3">'
+                                            +'<label for="">Monto renovacion</label>'
+                                            +'<input type="number" name="amount" id="amount-'+i+'" class="form-control amount" value="'+cuota+'" readonly>'
+                                       +'</div>'
+                                        +'<div class="col-sm-12 col-md-3 col-xl-3">'
+                                             +'<label for="">Total acumulado</label>'
+                                             +'<input type="number" name="parcial_amount" id="parcial_amount-'+i+'" class="form-control parcial_amount" value="'+acum+'" readonly>'
+                                        +'</div>'
+                                        +'<div class="col-sm-12 col-md-3 col-xl-3">'
+                                             +'<label for="">Seleccionar pago</label>'
+                                             +'<input type="checkbox" name="checkbox" id="checkbox_ren-'+i+'"  value="'+i+'" class="form-control checkbox_ren" >'
+                                        +'</div>'
+                                   +'</div>';
+
+                            $('#section_cuotas').append(ren_row);
+
+
+            }
+
+        });
+
+        $(document).on('click', '.checkbox_ren', function() {
+            var nro = 0;
+            var acum = 0;
+
+            $(".checkbox_ren").each(function(index) {
+                if ($(this).is(":checked")) { // Verifica si el checkbox actual está marcado
+                    nro = $(this).val(); // Obtiene el valor del checkbox marcado
+                    console.log("indice " + nro);
+
+                    acum = $('#parcial_amount-' + nro).val();
+                    console.log(" ---acum sel--" + acum);
+                }
+            });
+
+            $('#monto_renov').val(acum);
+            $('#cant_renov_confirm').val(nro);
+            $('#pu_15224300').html(acum);
+            $('#btn_guardar_servicio').prop('disabled', false);
+        });
+
+
+       /* function calcRenov()
+                {
+                    $('#monto_renov').val(0);
+                    var precio_sinot=$('#precio_renov').val(); //precio devuelto por el servicio del sinot
+                    var precio_ant=$('#precio_renov_ant').val();
+                    var cuota_ant=$('#precio_renov_ant').val();
+                  //  var cuota=$('#precio_renov_ant').val();
+                    var cuota1=$('#precio_renov').val();
+                    var acum=0;
+                    var adicion=0;
+                    var ncuota=$('#precio_renov_ant').val();
+                    var nro_renov_ant=$('#renov_ant').val();
+                    var nro_renov_act=$('#renov').val();
+                    var nro_iteraciones=Math.abs(nro_renov_act-nro_renov_ant);
+                        $('#nro_renovaciones').val(nro_iteraciones);
+                        var porcentaje=20;
+
+                    for(var i=nro_renov_ant ; i<nro_renov_act; i++){
+                        if(cuota_ant==0 && i==0){
+                            porcentaje=0;
+                            adicion= precio_sinot*porcentaje/100;
+                            cuota=  parseFloat(precio_sinot) + parseFloat(adicion);
+                            ncuota=cuota;
+                        }else{
+                           porcentaje=20;
+                           adicion=ncuota*porcentaje/100;
+                           cuota=  parseFloat(ncuota) + parseFloat(adicion);
+                           ncuota=cuota;
+                        }
+                        acum=parseFloat(acum)+ parseFloat(cuota);
+                        console.log("cuota"+i+"="+cuota);
+                        console.log("acum"+i+"="+acum);
+                        acum=acum.toFixed(2);
+                    }
+
+                    $('#monto_renov').val(acum);
+
+                    $('#pu_15224300').html(acum);
+                    $('#btn_guardar_servicio').prop('disabled', false);
+
+
+                }*/
+
     </script>
 
     @stop

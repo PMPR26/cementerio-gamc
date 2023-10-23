@@ -92,13 +92,15 @@ class Nicho extends Model
        return true;
     }
     public function liberarNichoAsignacion($id, $codigo_nicho){
-        // dd($request->id);
+        //  dd($id);
 
         // $nicho=New Nicho;
         $data= Nicho::where('id', $id)->first();
         $data->estado_nicho="LIBRE";
-        $data->cantidad_anterior=$data->cantidad_cuerpos;
-        $data->cantidad_cuerpos=0;
+       // $data->cantidad_anterior=$data->cantidad_cuerpos;
+        $data->cantidad_cuerpos= $data->cantidad_cuerpos-1;
+    //    dd( $data->cantidad_cuerpos);
+
         $data->save();
         //desvincular registro
 
@@ -136,11 +138,10 @@ class Nicho extends Model
 
 
     public function generarCodigoAsignacion($cuartel, $bloque, $nro_nicho, $fila){
-    //    dd($cuartel.",". $bloque.",". $nicho.",". $fila);
+
         $c=Cuartel::where('id', $cuartel)->first();
         $b=Bloque::where('id', $bloque)->first();
         $codigo_nuevo_nicho=$c->codigo.".".$b->codigo.".".$nro_nicho.".".$fila;
-        //  dd( $codigo_nuevo_nicho);
 
 
         $nicho= Nicho::where('codigo', $codigo_nuevo_nicho )->first();

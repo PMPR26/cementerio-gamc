@@ -1823,7 +1823,7 @@ $("#cert_defuncion_p").dropzone({
                                                 'difuntos': difuntos,
                                             }),
                                             success: function(data)
-                                            { console.log("entraaaa");
+                                            { console.log("entraaaa difuuuuuu");
                                                  console.log(data);
                                                                 if(data.status==true){
                                                                     swal.fire({
@@ -1840,7 +1840,7 @@ $("#cert_defuncion_p").dropzone({
                                                                 }else{
                                                                     swal.fire({
                                                                             title: "Error!",
-                                                                            text: "!Ocurrio un error, intente nuevamente!",
+                                                                            text: "!Ocurrió un error, intente nuevamente!",
                                                                             type: "error",
                                                                             timer: 2000,
                                                                             showCancelButton: false,
@@ -2803,11 +2803,31 @@ function calcularMonto(){
                                                 'sel_exhumado':sel_exhumado,
                                                 'tipo_registro': $('#tipo_registro').html(),
                                                 'domicilio' : $('#cm_domicilio').val()? $('#cm_domicilio').val() : 'NO DEFINIDO',
+                                                'cuartel_nuevo': $('#select_cuartel_nuevo').val(),
+                                                'bloque_nuevo': $('#bloque_nuevo').val(),
+                                                'nicho_nuevo': $('#nuevo_nicho').val(),
+                                                'fila_nuevo': $('#nueva_fila').val(),
+                                                'nueva_fecha_ingreso':$('#nueva_fecha_ingreso').val(),
+                                                'asignar_difunto_nicho':$('#asignar_difunto_nicho').val(),
+
+                                                'ci_dif':$('#dif_asignado').val(),
+                                                'nombres_dif':$('#nombres_dif').val(),
+                                                'paterno_dif':$('#paterno_difunto').val(),
+                                                'materno_dif':$('#materno_difunto').val(),
+                                                'genero_dif':$('#genero_difunto').val(),
+                                                'sereci':$('#cereci_difunto').val(),
+                                                'fechanac_dif':$('#nac_difunto').val(),
+                                                'fecha_dif':$('#ingreso_difunto').val(),
+                                                'fecha_def_dif':$('#defuncion_difunto').val(),
+                                                'funeraria':$('#funeraria_difunto').val(),
+                                                'causa':$('#causa_difunto').val(),
+                                                'tipo_dif':$('#tipo_difunto').val(),
+                                                'urlcertificacion':$('#urlcertificacion').val(),
 
                                             }),
                                             success: function(data)
                                             {
-
+console.log("llega aquiii");
                                                 console.log(data);
                                                 if(data.status==true){
                                                     swal.fire({
@@ -3423,8 +3443,38 @@ function calcularMonto(){
             $(document).on('click', '.exhumado_dif', function(){
                 $('.exhumado_dif').each(function( index ) {
                       console.log( index + ": " + $( this ).text() );
+
                       if($(this).is(":checked"))
                        {
+                             const row = this.closest('tr');
+                             const dataCi = row.querySelector('.data-ci').textContent;
+                             const nombre_difunto = row.querySelector('.data-nombre').textContent;
+                             const paterno_difunto = row.querySelector('.data-pat').textContent;
+                             const materno_difunto = row.querySelector('.data-mat').textContent;
+                             const genero_difunto = row.querySelector('.data-genero').textContent;
+                             const cereci_difunto = row.querySelector('.data-ceresi').textContent;
+                             const nac_difunto = row.querySelector('.data-nac').textContent;
+                             const ingreso_difunto = row.querySelector('.data-ingreso').textContent;
+                             const defuncion_difunto = row.querySelector('.data-def').textContent;
+                             const funeraria_difunto = row.querySelector('.data-fun').textContent;
+                             const causa_difunto = row.querySelector('.data-causa').textContent;
+                             const tipo_difunto = row.querySelector('.data-tipo').textContent;
+
+                            console.log('Valor de data-ci:', dataCi);
+                            $('#dif_asignado').val(dataCi);
+                            $('#nombres_dif').val(nombre_difunto);
+                            $('#paterno_difunto').val(paterno_difunto);
+                            $('#materno_difunto').val(materno_difunto);
+                            $('#genero_difunto').val(genero_difunto);
+                            $('#cereci_difunto').val(cereci_difunto);
+                            $('#nac_difunto').val(nac_difunto);
+                            $('#ingreso_difunto').val(ingreso_difunto);
+                            $('#defuncion_difunto').val(defuncion_difunto);
+                            $('#funeraria_difunto').val(funeraria_difunto);
+                            $('#causa_difunto').val(causa_difunto);
+                            $('#tipo_difunto').val(tipo_difunto);
+
+
                             $('#exhumacion_txt').val('SI');
                             $('#cond'+index+'').html("exhumado");
                             $('#modal_save_pagos_cm').prop('disabled', false);
@@ -3482,5 +3532,49 @@ function calcularMonto(){
                         $('#cm_maternopago').val("");
                     }
                 })
+
+                $(document).on('click', '#asignar_difunto_nicho',function(){
+                    if ($('#asignar_difunto_nicho').is(":checked")){
+                        $('#asignar_difunto_nicho').val('asignado');
+                        $('.asignar_df').show();
+                        }
+                    else{
+                        $('.asignar_df').hide();
+                        $('#asignar_difunto_nicho').val('');
+                    }
+                    });
+
+                    $("#bloque_nuevo").select2({
+                        selectOnClose: true
+                    });
+
+
+
+              $(document).on('change', '.select_cuartel_nuevo', function(){
+                    $('#bloque_nuevo').empty();
+                    var sel_cuartel=$('.select_cuartel_nuevo').val();
+                    $('#bloque_nuevo').prop('disabled', false);
+                    $.ajax({
+                                type: 'POST',
+                                headers: {
+                                    'Content-Type':'application/json',
+                                    'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                                },
+                                url: "{{ route('bloqueid.get') }}",
+                                async: false,
+                                data: JSON.stringify({
+                                    'cuartel': $('#select_cuartel_nuevo').val(),
+                                }),
+                                success: function(data_bloque) {
+                                var op1='<option value="" >SELECCIONAR</option>';
+                                    $('#bloque_nuevo').append(op1);
+                                $.each( data_bloque.response, function( key, value ) {
+                                        opt2='<option value="'+ value.id +'">'+value.codigo +'</option>';
+                                        $('#bloque_nuevo').append(opt2);
+                                    });
+                                }
+                             });
+                });
+
     </script>
     @stop
