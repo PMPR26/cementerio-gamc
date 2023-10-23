@@ -122,7 +122,7 @@ class ServiciosController extends Controller
 
     public function buscar_nicho(Request $request)
     {
-        // dd( $request);
+
 
         $sql = DB::table('responsable_difunto')
             ->select(DB::raw('
@@ -338,7 +338,7 @@ class ServiciosController extends Controller
 
     public function createNewServicios(Request $request)
     {
-        // dd($request->fecha_ingreso_nicho);
+        //dd($request->cant_renov_confirm);
         // $explode_txt=explode("Bs.",$request->servicio_hijos_txt);
       //  $explode_txt=$request->servicio_hijos_txt;
         // dd($explode_txt);
@@ -425,6 +425,8 @@ class ServiciosController extends Controller
                 $tipo_servicio=[];
                 $txt_tipo_servicio=[];
                 $servicio_hijos=[];
+                $servicio_montos=[];
+
                 $txt_servicios_hijos=[];
                 $cantidad=[];
                 $tblobs=[];
@@ -438,6 +440,7 @@ class ServiciosController extends Controller
                     array_push($tipo_servicio, $value['tipo_servicio']);
                     array_push($txt_tipo_servicio, $value['txt_tipo_servicio']);
                     array_push( $servicio_hijos, $value['serv']);
+                    array_push( $servicio_montos, $value['precio']);
                     array_push($txt_servicios_hijos, $value['txt_serv']);
                     array_push($cantidad, $value['cantidad']);
                     array_push($tblobs, $value['tblobs']);
@@ -461,119 +464,132 @@ class ServiciosController extends Controller
 
                     $texto_servicio="";
                     $separador=" ";
-                    foreach($request->servicios_adquiridos as $key=>$servi)
-                    {
 
-                        // print_r($servi['serv']);
-                        if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'  || $servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='1982' || $servi['serv']=='630' || $servi['serv']=='631')
-                        { //inhumaciones
-                            // dd("inhum"+$cantidadEnNicho);
+                    if($request->asignar_difunto_nicho=="asignado"){
+                        $estado_nicho="LIBRE";
+                    }
+                else{
+                        foreach($request->servicios_adquiridos as $key=>$servi)
+                        {
 
-                            $cant_ant= $cantidadEnNicho;
+                            // calcular la cantidad de cuerpos de acuerdo al servicio solicitado /inhumacion o exhumacion
+                            if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'  || $servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='1982' || $servi['serv']=='630' || $servi['serv']=='631')
+                            { //inhumaciones
+                                $cant_ant= $cantidadEnNicho;
 
-                                    $estado_nicho="OCUPADO";
-                                    if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'){
-
-                                        if( $cantidadEnNicho !=false){
-                                            $cant_ant=$cantidadEnNicho;
-                                            return response([
-                                                'status'=> false,
-                                                'message'=>"temporal_ocupado"
-                                            ],200);
-                                        }else{
-                                            $cant=1;
-                                            $cant_ant=0;
-                                        }
-                                    }else if($servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='1982'){
-
-                                        if($difuntoEnNicho==false && $request->tipo_nicho== "TEMPORAL")
-                                        {
-                                                $cantidadEnNicho=$this->contarDifuntoEnNicho($codigo_n);
-                                                if( $cantidadEnNicho ==0){
-                                                    $cant= $cantidadEnNicho + 1;
-                                                }else{
-                                                    $cant=1;
-                                                }
-                                        }
-                                        else if($difuntoEnNicho==false && $request->tipo_nicho == "PERPETUO")
-                                        {
-                                                $cantidadEnNicho=$this->contarDifuntoEnNicho($codigo_n);
-                                                if( $cantidadEnNicho <4){
-                                                    $cant= $cantidadEnNicho + 1;
-                                                }else{
-                                                    $cant= $cantidadEnNicho;
-                                                }
-                                        }
-                                        else{
-                                                    if( $cantidadEnNicho !=false){
-                                                        $cant= $cantidadEnNicho;
+                                        $estado_nicho="OCUPADO";
+                                        if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'){
+                                                //inhumacion a nichos temporales
+                                            if( $cantidadEnNicho !=false){
+                                                $cant_ant=$cantidadEnNicho;
+                                                return response([
+                                                    'status'=> false,
+                                                    'message'=>"temporal_ocupado"
+                                                ],200);
+                                            }else{
+                                                $cant=1;
+                                                $cant_ant=0;
+                                            }
+                                        }else if($servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='1982'){
+                                            //Inhumación Nichos A Perpetuidad
+                                            if($difuntoEnNicho==false && $request->tipo_nicho== "TEMPORAL")
+                                            {
+                                                    $cantidadEnNicho=$this->contarDifuntoEnNicho($codigo_n);
+                                                    if( $cantidadEnNicho ==0){
+                                                        $cant= $cantidadEnNicho + 1;
                                                     }else{
                                                         $cant=1;
                                                     }
+                                            }
+                                            else if($difuntoEnNicho==false && $request->tipo_nicho == "PERPETUO")
+                                            {
+                                                    $cantidadEnNicho=$this->contarDifuntoEnNicho($codigo_n);
+                                                    if( $cantidadEnNicho <4){
+                                                        $cant= $cantidadEnNicho + 1;
+                                                    }else{
+                                                        $cant= $cantidadEnNicho;
+                                                    }
+                                            }
+                                            else{
+                                                        if( $cantidadEnNicho !=false){
+                                                            $cant= $cantidadEnNicho;
+                                                        }else{
+                                                            $cant=1;
+                                                        }
 
+                                            }
                                         }
+                                        $texto_servicio = $texto_servicio. $separador. $servi['txt_serv']." Bs.";
+                            }else if($servi['serv'] == '645' || $servi['serv'] =='644' || $servi['serv'] == '629' || $servi['serv'] == '628' )
+                            {  //exhumaciones
+                                // dd($cantidadEnNicho);
+
+                                            $cant_ant= $cantidadEnNicho;
+
+                                            if( $cantidadEnNicho == 1 && $request->tipo_nicho== "TEMPORAL" ){
+                                                $estado_nicho="LIBRE";
+                                                $cant= $cantidadEnNicho -1;
+                                            }
+                                            else if( $cantidadEnNicho >= 1 ){
+                                                $estado_nicho="OCUPADO";
+                                                $cant = $cantidadEnNicho -1;
+                                            }
+                                            else if( $cantidadEnNicho == 0){
+                                                $estado_nicho="LIBRE";
+                                                $cant= 0;
+                                            }
+                                            $texto_servicio= $texto_servicio.$separador.$servi['txt_serv']." Bs.";
+                            }
+                            else{
+                                // dd("other"+$cantidadEnNicho);
+
+                                if($servi['serv'] == '642'){
+                                        $pago_renovaciones="SI";
                                     }
-                                    $texto_servicio = $texto_servicio. $separador. $servi['txt_serv']." Bs.";
-                        }else if($servi['serv'] == '645' || $servi['serv'] =='644' || $servi['serv'] == '629' || $servi['serv'] == '628' )
-                        {  //exhumaciones
-                            // dd($cantidadEnNicho);
 
-                                        $cant_ant= $cantidadEnNicho;
+                                    $texto_servicio= $texto_servicio.$separador. $servi['txt_serv']." Bs.";
+                                    $estado_nicho="OCUPADO";
 
-                                        if( $cantidadEnNicho == 1 && $request->tipo_nicho== "TEMPORAL" ){
-                                            $estado_nicho="LIBRE";
-                                            $cant= $cantidadEnNicho -1;
-                                        }
-                                        else if( $cantidadEnNicho >= 1 ){
-                                            $estado_nicho="OCUPADO";
-                                            $cant = $cantidadEnNicho -1;
-                                        }
-                                        else if( $cantidadEnNicho == 0){
-                                            $estado_nicho="LIBRE";
-                                            $cant= 0;
-                                        }
-                                        $texto_servicio= $texto_servicio.$separador.$servi['txt_serv']." Bs.";
-                         }
-                        else{
-                            // dd("other"+$cantidadEnNicho);
-
-                               if($servi['serv'] == '642'){
-                                    $pago_renovaciones="SI";
                                 }
 
-                                $texto_servicio= $texto_servicio.$separador. $servi['txt_serv']." Bs.";
-                                 $estado_nicho="OCUPADO";
+                        } //end for each
+                    }
 
-                            }
+                           /// datos de nicho si existe el nicho actualizar sino insertar
 
-                    } //end for each
-                    /// datos de nicho para caso de cremacion para externo
+                                $existeNicho = Nicho::where('codigo', $codigo_n)->where('estado', 'ACTIVO')->first();
 
-                                $existeNicho = Nicho::where('codigo', $codigo_n)->first();
-                                // dd($existeNicho->id);
                                 if ($existeNicho != null) {
                                     $id_nicho = $existeNicho->id;
-                                    $upnicho= Nicho::where('id',  $id_nicho)->first();
-                                    $renov_anterior=$upnicho->renovacion;
-                                    $monto_renov_anterior=$upnicho->monto_renov;
+
+                                    $renov_anterior=$existeNicho->renovacion;
+                                    $monto_renov_anterior=$existeNicho->monto_renov;
 
                                     if(isset($estado_nicho)){
-                                        $upnicho->estado_nicho=$estado_nicho;
+                                        $existeNicho->estado_nicho=$estado_nicho;
                                     }
                                     if(isset($pago_renovaciones) ){
                                             if($pago_renovaciones=="SI"){
-                                                $upnicho->renov_anterior=$renov_anterior;
-                                                $upnicho->monto_renov_anterior=$monto_renov_anterior;
-                                                $upnicho->renovacion=$request->nro_renovacion;
-                                                $upnicho->monto_renov=$request->monto_renov;
+                                                $existeNicho->renov_anterior=$renov_anterior;
+                                                $existeNicho->monto_renov_anterior=$monto_renov_anterior;
+                                                $existeNicho->renovacion=$request->nro_renovacion;
+                                                $existeNicho->monto_renov=$request->monto_renov;
+                                                $existeNicho->nro_renov=$request->cant_renov_confirm;
+                                                $existeNicho->renovacion=$request->cant_renov_confirm;
+
                                               }
                                     }
-                                    $upnicho->estado="ACTIVO";
-                                    $upnicho->cantidad_cuerpos=$cant;
-                                    $upnicho->codigo_anterior=$request->anterior;
-                                    $upnicho->save();
-                                    $upnicho->id;
-                                    $id_nicho=$upnicho->id;
+                                    $existeNicho->estado="ACTIVO";
+                                    $existeNicho->codigo_anterior=$request->anterior;
+                                    $existeNicho->cantidad_anterior= $existeNicho->cantidad_cuerpos;
+                                    if($request->asignar_difunto_nicho=="asignado"){}
+                                    else{
+                                        $existeNicho->cantidad_cuerpos= $cant;
+                                    }
+
+                                    $existeNicho->save();
+                                    $existeNicho->id;
+                                    $id_nicho=$existeNicho->id;
 
                                 } else {      // buscar cuartel si existe recuperar id sino insertar
                                                 $existeCuartel = Cuartel::where('codigo', $request->cuartel)->first();
@@ -620,8 +636,11 @@ class ServiciosController extends Controller
                                                 $nicho->codigo_anterior = $request->anterior;
                                                 $nicho->estado_nicho =$estado_nicho;
                                                 $nicho->estado ='ACTIVO';
-                                                $nicho->cantidad_cuerpos =$cant;
-                                                $nicho->cantidad_anterior =$cant_ant;
+                                                $nicho->cantidad_anterior= $nicho->cantidad_cuerpos;
+                                                    if($request->asignar_difunto_nicho=="asignado"){}
+                                                    else{
+                                                        $nicho->cantidad_cuerpos= $cant;
+                                                    }
                                                 $nicho->user_id = auth()->id();
                                                 $nicho->save();
                                                 $nicho->id;
@@ -764,7 +783,7 @@ class ServiciosController extends Controller
                                                                     $nombre_adjudicatario= $request->nombre_resp." ".$request->paterno_resp." ".$request->materno_resp;
 
                                                                     $response=$obj->GenerarFur($ci,$nombre_pago,$paterno_pago,$materno_pago, $domicilio,  $nombre_difunto, $codigo_n,
-                                                                    $request->bloque, $request->nro_nicho, $request->fila, $servicio_hijos, $cantidades, $cajero,
+                                                                    $request->bloque, $request->nro_nicho, $request->fila, $servicio_hijos, $cantidades, $servicio_montos, $cajero,
                                                                     $nombre_adjudicatario, $ci_adjudicatario , $tblobs, $asignado, $nuevo_sitio);
 
                                                                     if($response['status']==true){
@@ -842,8 +861,8 @@ class ServiciosController extends Controller
                                                                 $liberar=$lib->liberarNichoAsignacion($id_nicho, $codigo_n);
 
                                                                  //1.liberar nicho antiguo 2. desvincular nicho antiguo responsable
-                                                                 $n->liberarNichoAsignacion($id_nicho, $codigo_n);
-                                                                 $n->desvincularDifuntoNichoAsignacion($codigo_n);
+                                                                //  $n->liberarNichoAsignacion($id_nicho, $codigo_n);
+                                                                //  $n->desvincularDifuntoNichoAsignacion($codigo_n);
                                                                  //3.vincular nicho nuevo con responsable 4. aumentar numero de difunto a nicho nuevo
 
                                                       }

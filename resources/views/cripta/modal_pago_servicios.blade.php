@@ -73,6 +73,21 @@
                                     <input type="hidden" name="inhumacion"  id="inhumacion" value="NO">
                                     <input type="hidden" name="exhumacion"  id="exhumacion_txt" value="NO">
                                     <input type="hidden" name="cremacion"   id="cremacion_txt" value="NO">
+                                    <input type="hidden" name="dif_asignado"   id="dif_asignado" value="">
+                                    <input type="hidden" name="nombres_dif"   id="nombres_dif" value="">
+                                    <input type="hidden" name="paterno_difunto"   id="paterno_difunto" value="">
+                                    <input type="hidden" name="materno_difunto"   id="materno_difunto" value="">
+                                    <input type="hidden" name="genero_difunto"   id="genero_difunto" value="">
+                                    <input type="hidden" name="cereci_difunto"   id="cereci_difunto" value="">
+                                    <input type="hidden" name="nac_difunto"   id="nac_difunto" value="">
+                                    <input type="hidden" name="ingreso_difunto"   id="ingreso_difunto" value="">
+                                    <input type="hidden" name="defuncion_difunto"   id="defuncion_difunto" value="">
+                                    <input type="hidden" name="funeraria_difunto"   id="funeraria_difunto" value="">
+                                    <input type="hidden" name="causa_difunto"   id="causa_difunto" value="">
+                                    <input type="hidden" name="tipo_difunto"   id="tipo_difunto" value="">
+
+
+
 
                             </div>
                             {{-- end row --}}
