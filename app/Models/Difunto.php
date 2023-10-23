@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 
 class Difunto extends Model
@@ -34,29 +35,30 @@ class Difunto extends Model
         'updated_at'
     ];
 
-    public function generateCiDifunto(){
-        // $ci = Difunto::select('ci')
-        // ->where('ci', 'ilike', "%SCD-0%")
-        // ->orderBy('ci', 'DESC')
-        // ->first();
+public function generateCiDifunto()
+{
+    return DB::transaction(function () {
+        $lastDifunto = Difunto::select('id')->orderBy('id', 'desc')->first();
 
-        $ci = Difunto::select('id')
-               ->whereRaw('id = (select max(id) from difunto)')
-                // ->where('ci', 'ilike', "%SCD-0%")
-                // ->orderBy('ci', 'DESC')
-                ->first();
+        if ($lastDifunto) {
+            $nro = $lastDifunto->id + 1;
+        } else {
+            $nro = 1;
+        }
 
-         if($ci){
-            // $text=explode('-', );
-            // $number = (int) str_replace('-','',filter_var($ci, FILTER_SANITIZE_NUMBER_INT)) + 1;
-            $nro=$ci->id+1;
-            $number = 'SCDI-'.$nro;
-            return  $number;
-            // return 'SCDI-'.str_pad($number, 4, '0', STR_PAD_LEFT);
-         }else{
-             return 'SCD-0001';
-         }
-    }
+        $number = 'SCDI-' . str_pad($nro, 4, '0', STR_PAD_LEFT);
+
+        // Insert the new difunto record with this generated number if needed
+        // ...
+
+        return $number;
+    });
+}
+
+
+
+
+
 
 
     public function insertDifunto($request){
@@ -82,7 +84,7 @@ class Difunto extends Model
         $dif->genero = $request->genero_dif;
         $dif->funeraria =trim(mb_strtoupper($request->funeraria, 'UTF-8'));
         // $dif->certificado_file = trim($request->certificado_file);
-        $dif->certificado_file = $request->urlcertificacion;
+        $dif->certificado_file = $request->urlcertificacion??null;
 
         $dif->estado = 'ACTIVO';
         $dif->user_id = auth()->id();
@@ -174,6 +176,122 @@ class Difunto extends Model
                 ->first();
             }
             return $existeDifunto;
+    }
+    //para armar array de listado de difuntos
+    public function buscarDifunto($ci_dif, $nombres_dif, $paterno_dif, $materno_dif, $fecha_def_dif){
+        if($ci_dif !=null){
+            $existeDifunto=Difunto::where("ci", "=", trim($ci_dif))->where("estado", "=", 'ACTIVO')->orderBy('id', 'desc')
+            ->first();
+         }
+         else if($fecha_def_dif== null || $fecha_def_dif==''){
+            if($materno_dif==null || $materno_dif==''){
+                $existeDifunto =Difunto::whereRaw('nombres=\''.trim(mb_strtoupper($nombres_dif, 'UTF-8')).'\'')
+                ->whereRaw('primer_apellido=\''.trim(mb_strtoupper($paterno_dif, 'UTF-8')).'\'')
+                ->select()
+                ->first();
+            }else{
+                $existeDifunto =Difunto::whereRaw('nombres=\''.trim(mb_strtoupper($nombres_dif, 'UTF-8')).'\'')
+                ->whereRaw('primer_apellido=\''.trim(mb_strtoupper($paterno_dif, 'UTF-8')).'\'')
+                ->whereRaw('segundo_apellido=\''.trim(mb_strtoupper($materno_dif, 'UTF-8')).'\'')
+                ->select()
+                ->first();
+            }
+
+        }else if(($materno_dif== null || $materno_dif=='') &&( $fecha_def_dif !='' || $fecha_def_dif !=null )){
+                    $existeDifunto =Difunto::whereRaw('nombres=\''.trim(mb_strtoupper($nombres_dif, 'UTF-8')).'\'')
+                ->whereRaw('primer_apellido=\''.trim(mb_strtoupper($paterno_dif, 'UTF-8')).'\'')
+                ->whereRaw('fecha_defuncion=\''.trim($fecha_def_dif).'\'')
+                ->select()
+                ->first();
+        }else{
+            $existeDifunto =Difunto::whereRaw('nombres=\''.trim(mb_strtoupper($nombres_dif, 'UTF-8')).'\'')
+            ->whereRaw('primer_apellido=\''.trim(mb_strtoupper($paterno_dif, 'UTF-8')).'\'')
+            ->whereRaw('segundo_apellido=\''.trim(mb_strtoupper($materno_dif, 'UTF-8')).'\'')
+            ->whereRaw('fecha_defuncion=\''.trim($fecha_def_dif).'\'')
+            ->select()
+            ->first();
+        }
+        return $existeDifunto;
+    }
+    public function searchDifuntoByCI($ci_dif){
+                if($ci_dif !=null){
+                    $existeDifunto=Difunto::where("ci", "=", trim($ci_dif))->where("estado", "=", 'ACTIVO')->orderBy('id', 'desc')
+                    ->first();
+                }
+                else {
+                    $existeDifunto=null;
+                }
+               return $existeDifunto;
+     }
+
+
+    public function desvincularDifuntoCripta($ci_dif, $difuntos, $idCripta)
+    {
+        // dd($difuntos);
+        $newdif = [];
+                if(isset($difuntos))
+                {
+                    $dif = new Difunto;
+
+
+                                    foreach($difuntos as $key => $value)
+                                    {
+                                                if($value['fecha_nacimiento']=="null"){
+                                                        $fecha_nac=null;
+                                                    }
+                                                    else{
+                                                        $fecha_nac=$value['fecha_nacimiento'];
+                                                    }
+
+                                                    // dd($value['ci']);
+                                                    if($value['ci']!=$ci_dif){
+
+                                                        $newdif[] = [
+                                                            "ci" => $value['ci'], // Usa el valor actual de $ci_dif
+                                                            "nombres" => $value['nombres'],
+                                                            "primer_apellido" => $value['primer_apellido'],
+                                                            "segundo_apellido" => $value['segundo_apellido'],
+                                                            "ceresi" => $value['ceresi'],
+                                                            "tipo" => $value['tipo'],
+                                                            "fecha_nacimiento" => $fecha_nac,
+                                                            "fecha_defuncion" => $value['fecha_defuncion'] ?? null,
+                                                            "causa" => trim(strtoupper($value['causa'])),
+                                                            "funeraria" => trim(strtoupper($value['funeraria'])),
+                                                            "genero" => $value['genero'],
+                                                            "url" => trim($value['url'])
+                                                        ];
+
+                                                    }
+                                    }
+                                    // dd($newdif);
+
+
+                                    $cript=Cripta::where('id',$idCripta )->first();
+                                    $cript->list_ant_difuntos= $cript->difuntos;
+                                    $cript->difuntos=json_encode($newdif);
+                                    $cript->save();
+
+                                if($cript){
+                                        return response([
+                                            'status'=> true,
+                                            'message'=> 'registro con exito..!'
+                                            ],200);
+                                }
+                                else{
+                                    return response([
+                                        'status'=> false,
+                                        'message'=> 'Ocurrio un error al ejecutar la transacción..!'
+                                        ],201);
+                                }
+                    }else{
+                        return response([
+                            'status'=> false,
+                            'message'=> 'Ocurrio un error al ejecutar la transacción..!'
+                            ],201);
+                    }
+
+
+
     }
 
 

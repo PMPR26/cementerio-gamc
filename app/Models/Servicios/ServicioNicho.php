@@ -49,13 +49,13 @@ class ServicioNicho extends Model
 
     public function GenerarFur($ci, $nombre, $primer_apellido,
     $ap_materno, $direccion, $nombre_difunto, $codigo,
-     $bloque, $nicho, $fila, $servicios_cementery , $cantidades, $cajero,   $nombre_adjudicatario, $ci_adjudicatario, $observacion, $asignado, $nuevo_sitio)
+     $bloque, $nicho, $fila, $servicios_cementery , $cantidades, $servicio_montos, $cajero,   $nombre_adjudicatario, $ci_adjudicatario, $observacion, $asignado, $nuevo_sitio)
      {
        // dd( $servicios_cementery);
           $headers =  ['Content-Type' => 'application/json'];
           $client = new Client();
           $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementery', [
-        //  $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementery', [
+        // $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementery', [
 
               'json' => [
                   'ci' => $ci,
@@ -70,6 +70,7 @@ class ServicioNicho extends Model
                   'nicho' => $nicho,
                   'servicios_cementery' => $servicios_cementery,
                   'cantidad' => $cantidades,
+                  'montos' => $servicio_montos,
                   'cajero'=>$cajero,
                   'nombre_adjudicatario'=>$nombre_adjudicatario,
                   'ci_adjudicatario'=>$ci_adjudicatario,
@@ -118,14 +119,14 @@ class ServicioNicho extends Model
 
       public function GenerarFurCM($ci, $nombre, $primer_apellido,
       $ap_materno, $direccion, $codigo,
-       $servicios_cementery , $cantidades, $cajero,  $adjudicatario, $tblobs)
+       $servicios_cementery , $cantidades, $cajero,  $adjudicatario, $tblobs, $asignado, $nuevo_sitio)
         {
-      //
-    //   dd( $ci." ". $nombre." ". $primer_apellido." ".$ap_materno ." ".$direccion ." ".$codigo);
-    //   dd( $servicios_cementery );
-    //   dd($cantidades);
-    //   dd($cajero." ". $adjudicatario);
-    //   dd($tblobs);
+
+            //   dd( $ci." ". $nombre." ". $primer_apellido." ".$ap_materno ." ".$direccion ." ".$codigo);
+            //   dd( $servicios_cementery );
+            //   dd($cantidades);
+            //   dd($cajero." ". $adjudicatario);
+            //   dd($tblobs);
             $headers =  ['Content-Type' => 'application/json'];
             $client = new Client();
              $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCM', [
@@ -142,7 +143,10 @@ class ServicioNicho extends Model
                     'cantidad' => $cantidades,
                     'cajero'=>$cajero,
                     'adjudicatario'=>$adjudicatario,
-                    'tblobs'=>$tblobs
+                    'tblobs'=>$tblobs,
+                    'asignado'=>$asignado,
+                    'nuevo_sitio'=>$nuevo_sitio
+
                 ],
                 'headers' => $headers,
             ]);
@@ -190,10 +194,11 @@ class ServicioNicho extends Model
        $servicios_cementery , $cantidades, $cajero,  $adjudicatario,$ci_adjudicatario, $tblobs)
         {
 
+            // dd($tblobs);
             $headers =  ['Content-Type' => 'application/json'];
             $client = new Client();
-             $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryMant', [
-            //  $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryCMant', [
+            //  $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryMant', [
+             $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryMant', [
 
                 'json' => [
                     'ci' => $ci,
@@ -328,22 +333,55 @@ class ServicioNicho extends Model
                 $id_responsable_difunto=$data->responsable_difunto_id;
                 $id_nicho=$data->ubicacion_id;
                 $asignado=$data->asignado;
+                $destino=$data->destino;
+
+
+                // volver a los valores anteriores el nicho liberado
                 $nicho=New Nicho;
                 $data_nicho= $nicho::where('id',$id_nicho )->first();
                 $cantidad=$data_nicho->cantidad_anterior;
                 $codigo_nicho=$data_nicho->codigo;
 
+
                 $resp_dif=New ResponsableDifunto;
 
                 $verif=$this->verificarServicioAnulado($request->id);
                 $result=  json_decode($verif->getContent(), true);
-                   // dd( $id_responsable_difunto);
-                if( $result['in']==true){
-                    $est="LIBRE";
-                    $estado="INACTIVO";
-                    $nicho->CambiarEstadoNicho( $id_nicho,$est, $cantidad);
-                    $resp_dif->revertirAnulacionRespDif( $id_responsable_difunto, $est, $estado, NULL, null, 'no_ingresar' );
+
+                if( $asignado =="asignado"){
+                    $data_nicho->cantidad_cuerpos=$cantidad;
+                    $data_nicho->estado_nicho="OCUPADO";
+                    $data_nicho->save();
+
+                    $resp_dif_nicho_origen=ResponsableDifunto::where('codigo_nicho', $data->codigo_nicho)->orderBy('id', 'DESC')->first();
+
+                    $resp_dif_nicho_origen->estado='ACTIVO';
+                    $resp_dif_nicho_origen->save();
+
+                    $nicho_destino=Nicho::where('codigo',$destino)->where('estado', 'ACTIVO')->first();
+                    // dd( $nicho_destino);
+
+                    $nicho_destino->cantidad_cuerpos=$nicho_destino->cantidad_cuerpos-1;
+                    if( $nicho_destino->cantidad_cuerpos <1){
+                        $nicho_destino->estado_nicho="LIBRE";
+                    }
+
+                    $nicho_destino->save();
+
+                    $resp_dif_nicho_destino=ResponsableDifunto::where('codigo_nicho', $data->destino)->orderBy('id', 'DESC')->first();
+                    // dd($resp_dif_nicho_destino);
+                    $resp_dif_nicho_destino->estado='INACTIVO';
+                    $resp_dif_nicho_destino->save();
+
                 }
+                else{
+                            if( $result['in']==true){
+                                $est="LIBRE";
+                                $estado="INACTIVO";
+                                $nicho->CambiarEstadoNicho( $id_nicho,$est, $cantidad);
+                                $resp_dif->revertirAnulacionRespDif( $id_responsable_difunto, $est, $estado, NULL, null, 'no_ingresar' );
+
+                            }
 
                 if( $result['out']==true){
 
@@ -385,7 +423,7 @@ class ServicioNicho extends Model
                     $monto_renov_anterior=$data_nicho->monto_renov_anterior;
                     $nicho->restaurarRenov($id_nicho, $renov_ant,  $monto_renov_anterior);
                   }
-
+                }
                  $a= $this->anular_fur( $request);
 
                  if($a['fur_estado']== "IN"  ){
@@ -414,6 +452,7 @@ class ServicioNicho extends Model
             public function anularServicioCM(Request $request){
                 $data= ServicioNicho::where('id', $request->id)->first();
                 $cm= Cripta::where('id', $data->ubicacion_id)->first();
+               // dd($cm);
                 if($cm->list_ant_difuntos !=null || $cm->list_ant_difuntos!=""){
                     $cm->difuntos=$cm->list_ant_difuntos;
                 }
@@ -428,6 +467,22 @@ class ServicioNicho extends Model
                 }
 
                 $cm->save();
+
+                if($data->asignado == "asignado"){
+                   $rd= ResponsableDifunto::where('id', $data->responsable_difunto_id)
+                    ->where('estado', 'ACTIVO')
+                    ->whereDate('created_at', '=', date('Y-m-d', strtotime($data->created_at)))
+                    ->first();
+                    if(!empty($rd)){
+                        $rd->estado='INACTIVO';
+                        $rd->save();
+                    }
+
+                   //ACTUALIZAR EL NICHO OCUPADO
+                   $n = Nicho::where('codigo', $data->destino)
+                   ->where('estado', 'ACTIVO')
+                   ->update(['cantidad_cuerpos' => \DB::raw('cantidad_cuerpos - 1')]);
+                }
 
                 $a= $this->anular_fur( $request);
 
