@@ -187,13 +187,16 @@ class Nicho extends Model
           // insertar nicho
           $cuartel=Cuartel::where('id', $id_cuartel)->first();
           $bloque=Bloque::where('id', $id_bloque)->first();
+
+
           $nicho = new Nicho;
           $nicho->cuartel_id = $id_cuartel;
           $nicho->bloque_id = $id_bloque;
           $nicho->nro_nicho = $nro_nicho;
           $nicho->fila = $fila;
+          $nicho->codigo = $cuartel->codigo . "." . $bloque->codigo . "." . $nro_nicho . "." . $fila;
           $nicho->tipo = $tipo_nicho ?? '';
-          $nicho->codigo = $cuartel . "." . $bloque . "." . $nro_nicho . "." . $fila;
+        //   $nicho->codigo = $cuartel . "." . $bloque . "." . $nro_nicho . "." . $fila;
           $nicho->codigo_anterior = $anterior ?? '';
           $nicho->estado_nicho =$estado_nicho;
           $nicho->estado ='ACTIVO';
