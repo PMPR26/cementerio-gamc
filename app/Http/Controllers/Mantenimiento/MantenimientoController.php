@@ -148,12 +148,12 @@ class MantenimientoController extends Controller
            $datos_cajero=User::select()
            ->where('id',auth()->id())
            ->first();
-           $cajero= $datos_cajero->user_sinot;
-
+            $cajero= $datos_cajero->user_sinot;
+            $fur="";
             //step1: nicho buscar si existe registrado el nicho recuperar el id  sino existe registrarlo
             $codigo_n=$request->cuartel.".".$request->bloque.".".$request->nro_nicho.".".$request->fila;
             $existeNicho= Nicho::where('codigo', $codigo_n)->first();
-            // dd( $existeNicho);
+            // dd(  $codigo_n);
 
             if($existeNicho!=null){
                 $id_nicho=$existeNicho->id;
@@ -161,7 +161,10 @@ class MantenimientoController extends Controller
             }
             else
              {      // buscar cuartel si existe recuperar id sino insertar
+
+
                     $existeCuartel= Cuartel::where('codigo', $request->cuartel)->first();
+
                         if($existeCuartel!=null){
                             $id_cuartel=$existeCuartel->id;
                         }else{
@@ -208,6 +211,7 @@ class MantenimientoController extends Controller
                                     // $nicho->monto_renov_anterior = $nicho->monto_renov;
                                     // $nicho->save();
                                     // $nicho->id;
+
                                     $id_nicho= $ni->id;
                 }
                      // end nicho
@@ -231,7 +235,6 @@ class MantenimientoController extends Controller
                     // step4: register responsable -- si el responsable
                     $r=New Responsable;
                     $existeResponsable=$r->searchResponsable($request);
-                        // dd($existeResponsable);
 
                     if (!$existeResponsable ||  $existeResponsable == null) {
                         //insertar difunto
@@ -265,8 +268,8 @@ class MantenimientoController extends Controller
                             if (isset($difuntoid) && isset($idresp)) {
                                 // dd($estado_nicho);
                                 $rf = new ResponsableDifunto();
-                                $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid );
-
+                                $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid,  $codigo_n );
+// dd($existeRespDif);
                                 if ($existeRespDif != null) {
                                     $iddifuntoResp = $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , null);
                                 } else {

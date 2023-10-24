@@ -31,12 +31,12 @@ class ResponsableDifunto extends Model
         'updated_at'
     ];
 
-    public function searchResponsableDifunt(Request $request ,$idresp, $difuntoid ){
+    public function searchResponsableDifunt(Request $request ,$idresp, $difuntoid ,  $codigo ){
 
             if( $difuntoid &&   $idresp  ){
                 $respdif = DB::table('responsable_difunto')
                 ->select('responsable_difunto.*')
-                ->where(['responsable_id' => trim($idresp) , 'difunto_id' => trim($difuntoid), 'estado' => "ACTIVO" ])
+                ->where(['responsable_id' => trim($idresp) , 'difunto_id' => trim($difuntoid), 'codigo_nicho'=>trim($codigo), 'estado' => "ACTIVO" ])
                 ->first();
 
                 if($respdif!=null || !empty($respdif)){

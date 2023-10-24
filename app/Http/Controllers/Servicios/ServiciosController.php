@@ -726,7 +726,7 @@ class ServiciosController extends Controller
                                     if (isset($difuntoid) && isset($idresp)) {
                                         // dd($estado_nicho);
                                         $rf = new ResponsableDifunto();
-                                        $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid );
+                                        $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid, $codigo_n );
 
                                         if ($existeRespDif != null) {
                                             $iddifuntoResp = $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
@@ -1604,7 +1604,7 @@ class ServiciosController extends Controller
                     //insertar tbl responsable_difunto
                     if (isset($difuntoid) && isset($idresp)) {
                         $rf = new ResponsableDifunto();
-                        $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid );
+                        $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid , $codigo_n);
 
                         if ($existeRespDif != null) {
                             $iddifuntoResp = $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $tipo);
