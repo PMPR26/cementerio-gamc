@@ -453,7 +453,7 @@ class RelevamientoController extends Controller
                     // }
                     // dd($idresp);
 
-                        $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid );
+                        $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid , $codigo_n);
 
                     if ($existeRespDif != null) {
                         $iddifuntoResp = $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
