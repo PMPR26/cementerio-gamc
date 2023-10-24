@@ -168,7 +168,7 @@ class ResponsableDifunto extends Model
                                ->orderBy('id', 'desc')
                                ->first();
 
-                            //   dd($dif);
+
             $dif->responsable_id = $idresp;
             $dif->difunto_id = $difuntoid;
             $dif->codigo_nicho = $codigo_n;
