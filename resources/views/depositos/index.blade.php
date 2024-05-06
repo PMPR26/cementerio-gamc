@@ -55,20 +55,23 @@
                                         <td>{{ $deposito->fecha_pago }}</td>
                                         <td>{{ $deposito->responsable_pago }}</td>
                                         <td>
-                                            <a href="{{ route('deposito.show', $deposito->id) }}" class="btn btn-primary btn-xs">Ver</a>
-                                            <a href="{{ route('deposito.edit', $deposito->id) }}" class="btn btn-warning btn-xs">Editar</a>
+                                            <button type="button" class="btn btn-info" value="{{ route('deposito.edit', $deposito->id) }}" id="btn-editar-difunto-value" title="Editar"><i class="fas fa-edit"></i></button>
+                                            <button type="button" class="btn btn-warning" value="{{ route('deposito.show', $deposito->id) }}" id="btn-editar-difunto-value" title="Ver"><i class="fas fa-eye"></i></button>
+
+                                            {{-- <a href="{{ route('deposito.show', $deposito->id) }}" class="btn btn-primary btn-xs" alt="ver"><i class="fas fa-eye"></i></a> --}}
+                                            {{-- <a href="{{ route('deposito.edit', $deposito->id) }}" class="btn btn-warning btn-xs"><i class="fas fa-edit"></i>r</a> --}}
 
                                             <form action="{{ route('deposito.formPago') }}" method="POST" style="display: inline;">
                                                 @csrf
                                                 <input type="hidden" name="deposito_id" id="deposito_id" value="{{ $deposito->id}}">
-                                                <button type="submit" class="btn btn-danger btn-xs">Pagar</button>
+                                                <button type="submit" class="btn btn-danger"><i class="fas fa-credit-card 2x"></i></button>
                                             </form>
 
-                                            <form action="{{ route('deposito.destroy', $deposito->id) }}" method="POST" style="display: inline;">
+                                            {{-- <form action="{{ route('deposito.destroy', $deposito->id) }}" method="POST" style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-xs">Eliminar</button>
-                                            </form>
+                                            </form> --}}
                                         </td>
                                     </tr>
                                 @endforeach
