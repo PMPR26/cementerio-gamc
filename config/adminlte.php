@@ -332,6 +332,12 @@ return [
             'icon' => 'fas fa-edit',
         ],
 
+        [
+            'text' => 'DEPOSITO/FOSA',
+            'route'  => 'deposito',
+            'icon' => 'fas fa-archive',
+        ],
+
         ['header' => 'REPORTES'],
         [
             'text' => 'MAUSOLEOS NOTABLES',
