@@ -20,7 +20,7 @@
         </div>
                         <form method="POST" action="{{ route('deposito.pagar') }}">
                             @csrf
-                            <input type="hidden" name="deposito_id" value="{{$deposito_id}}">
+                            <input type="hidden" name="deposito_id" value="{{$deposito->id}}">
                             <div class="form-row">
                                 <div class="form-group col-sm-12 col-md-6 col-lg-6">
                                     <label for="total_adeudado">Total Adeudado:</label>
