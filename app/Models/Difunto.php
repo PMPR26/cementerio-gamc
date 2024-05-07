@@ -55,45 +55,32 @@ public function generateCiDifunto()
     });
 }
 
-
-
-
-
-
-
-    public function insertDifunto($request){
-        if($request->ci_dif==null ||$request->ci_dif=="" ){
-            $ci_dif=$this->generateCiDifunto();
-        }else{
-            $ci_dif=$request->ci_dif;
-        }
-        $dif = new Difunto;
-        $dif->ci = $ci_dif;
-        $dif->ci = $ci_dif;
-        $dif->nombres = trim(mb_strtoupper($request->nombres_dif, 'UTF-8'));
-        $dif->primer_apellido = trim(mb_strtoupper($request->paterno_dif, 'UTF-8'));
-        $dif->segundo_apellido =trim(mb_strtoupper( $request->materno_dif, 'UTF-8'));
-        $dif->fecha_nacimiento = $request->fechanac_dif ?? null;
-        $dif->fecha_defuncion = $request->fecha_def_dif ?? null;
-        // $dif->fecha_defuncion = $request->fechadef_dif;
-        $dif->certificado_defuncion = $request->sereci ?? null;
-        $dif->causa = trim(mb_strtoupper($request->causa, 'UTF-8'));
-        // $dif->edad = $request->edad ?? '';
-
-        $dif->tipo = $request->tipo_dif;
-        $dif->genero = $request->genero_dif;
-        $dif->funeraria =trim(mb_strtoupper($request->funeraria, 'UTF-8'));
-        // $dif->certificado_file = trim($request->certificado_file);
-        $dif->certificado_file = $request->urlcertificacion??null;
-
-        $dif->estado = 'ACTIVO';
-        $dif->user_id = auth()->id();
-        $dif->save();
-        $dif->id;
-        return  $dif->id;
-
+public function insertDifunto($request) {
+    if ($request->ci_dif == null || $request->ci_dif == "") {
+        $ci_dif = $this->generateCiDifunto();
+    } else {
+        $ci_dif = $request->ci_dif;
     }
 
+    $dif = new Difunto;
+    $dif->ci = $ci_dif;
+    $dif->nombres = trim(mb_strtoupper($request->nombres_dif, 'UTF-8'));
+    $dif->primer_apellido = trim(mb_strtoupper($request->paterno_dif, 'UTF-8'));
+    $dif->segundo_apellido = trim(mb_strtoupper($request->materno_dif ?? '', 'UTF-8'));
+    $dif->fecha_nacimiento = $request->fechanac_dif ?? null;
+    $dif->fecha_defuncion = $request->fecha_def_dif ?? null;
+    $dif->certificado_defuncion = $request->sereci ?? null;
+    $dif->causa = trim(mb_strtoupper($request->causa, 'UTF-8'));
+    $dif->tipo = $request->tipo_dif;
+    $dif->genero = $request->genero_dif;
+    $dif->funeraria = trim(mb_strtoupper($request->funeraria, 'UTF-8'));
+    $dif->certificado_file = $request->urlcertificacion ?? null;
+    $dif->estado = 'ACTIVO';
+    $dif->user_id = auth()->id();
+    $dif->save();
+
+    return $dif->id;
+}
 
 
 

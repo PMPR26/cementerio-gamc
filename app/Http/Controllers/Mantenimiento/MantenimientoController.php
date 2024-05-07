@@ -12,7 +12,6 @@ use App\Models\ResponsableDifunto;
 use App\Models\User;
 use App\Models\Cripta;
 
-use App\Models\Servicios;
 
 use App\Models\Mantenimiento;
 use App\Models\CriptaMausoleoResp;
@@ -22,7 +21,6 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 
-use GuzzleHttp\Exception\RequestException;
 use PDF;
 use Illuminate\Support\Facades\Http;
 class MantenimientoController extends Controller
@@ -144,7 +142,7 @@ class MantenimientoController extends Controller
 
             ]);
 
-            print_r(auth()->id());
+            // print_r(auth()->id());
            $datos_cajero=User::select()
            ->where('id',auth()->id())
            ->first();
@@ -157,7 +155,6 @@ class MantenimientoController extends Controller
 
             if($existeNicho!=null){
                 $id_nicho=$existeNicho->id;
-
             }
             else
              {      // buscar cuartel si existe recuperar id sino insertar
@@ -195,22 +192,19 @@ class MantenimientoController extends Controller
                                         $bloq->id;
                                         $id_bloque=$bloq->id;
                                     }
-                                    $ni=Nicho::InsertNichoPartial( $id_cuartel,  $id_bloque, $request->nro_nicho, $request->fila, $request->tipo_nicho,'LIBRE', 0, 0,  $request->anterior);
-                                    // insertar nicho
-                                    // $nicho = new Nicho;
-                                    // $nicho->cuartel_id = $id_cuartel;
-                                    // $nicho->bloque_id = $id_bloque;
-                                    // $nicho->nro_nicho = $request->nro_nicho;
-                                    // $nicho->fila = $request->fila;
-                                    // $nicho->tipo = $request->tipo_nicho;
-                                    // $nicho->codigo = $request->cuartel.".".$request->bloque.".".$request->nro_nicho.".".$request->fila;
-                                    // $nicho->codigo_anterior = $request->anterior;
-                                    // $nicho->estado_nicho = 'OCUPADO';
-                                    // $nicho->user_id = auth()->id();
-                                    // $nicho->renov_anterior = $nicho->renovacion;
-                                    // $nicho->monto_renov_anterior = $nicho->monto_renov;
-                                    // $nicho->save();
-                                    // $nicho->id;
+                                    $ni = new Nicho();
+                                    $ni->InsertNichoPartial(
+                                        $id_cuartel,
+                                        $id_bloque,
+                                        $request->nro_nicho,
+                                        $request->fila,
+                                        $request->tipo_nicho,
+                                        'LIBRE',
+                                        0,
+                                        0,
+                                        $request->anterior
+                                    );
+
 
                                     $id_nicho= $ni->id;
                 }
