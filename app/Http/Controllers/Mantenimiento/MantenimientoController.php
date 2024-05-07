@@ -566,28 +566,34 @@ class MantenimientoController extends Controller
                             ->where('estado', 'ACTIVO')
                             ->orderBy('id', 'desc')
                             ->first();
-                            $id_difunto=$respdifunto->difunto_id;
-                            $id_responsable=$respdifunto->responsable_id;
-                            $difunto=DB::table('difunto')
-                            ->where('id',$id_difunto)
-                            ->where('estado','ACTIVO')
-                            ->orderBy('id', 'desc')
-                            ->first();
-                            $responsable=DB::table('responsable')
-                            ->where('id',$id_responsable)
-                            ->where('estado','ACTIVO')
-                            ->orderBy('id', 'desc')
-                            ->first();
+                            if($respdifunto){
+                                $id_difunto=$respdifunto->difunto_id;
+                                $id_responsable=$respdifunto->responsable_id;
+                                $difunto=DB::table('difunto')
+                                ->where('id',$id_difunto)
+                                ->where('estado','ACTIVO')
+                                ->orderBy('id', 'desc')
+                                ->first();
+                                $responsable=DB::table('responsable')
+                                ->where('id',$id_responsable)
+                                ->where('estado','ACTIVO')
+                                ->orderBy('id', 'desc')
+                                ->first();
 
-                            $response=[
-                                "status"=> true,
-                                "nicho" =>$sql_nicho,
-                                "mantenimiento"=>[],
-                                "respdifunto"=>$respdifunto,
-                                "difunto"=>$difunto,
-                                "responsable"=>$responsable
-                            ];
-                             return response()->json($response);
+                                $response=[
+                                    "status"=> true,
+                                    "nicho" =>$sql_nicho,
+                                    "mantenimiento"=>[],
+                                    "respdifunto"=>$respdifunto,
+                                    "difunto"=>$difunto,
+                                    "responsable"=>$responsable
+                                ];
+                                 return response()->json($response);
+                            }else{
+                                $response=["status"=>false,"error"=>'No se encontró el nicho solicitado'];
+                                return response()->json($response);
+                            }
+
                         }
 
                     }else{
