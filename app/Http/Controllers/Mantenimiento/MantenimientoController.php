@@ -12,7 +12,6 @@ use App\Models\ResponsableDifunto;
 use App\Models\User;
 use App\Models\Cripta;
 
-use App\Models\Servicios;
 
 use App\Models\Mantenimiento;
 use App\Models\CriptaMausoleoResp;
@@ -22,7 +21,6 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 
-use GuzzleHttp\Exception\RequestException;
 use PDF;
 use Illuminate\Support\Facades\Http;
 class MantenimientoController extends Controller
@@ -144,7 +142,7 @@ class MantenimientoController extends Controller
 
             ]);
 
-            print_r(auth()->id());
+            // print_r(auth()->id());
            $datos_cajero=User::select()
            ->where('id',auth()->id())
            ->first();
@@ -157,7 +155,6 @@ class MantenimientoController extends Controller
 
             if($existeNicho!=null){
                 $id_nicho=$existeNicho->id;
-
             }
             else
              {      // buscar cuartel si existe recuperar id sino insertar
@@ -195,22 +192,19 @@ class MantenimientoController extends Controller
                                         $bloq->id;
                                         $id_bloque=$bloq->id;
                                     }
-                                    $ni=Nicho::InsertNichoPartial( $id_cuartel,  $id_bloque, $request->nro_nicho, $request->fila, $request->tipo_nicho,'LIBRE', 0, 0,  $request->anterior);
-                                    // insertar nicho
-                                    // $nicho = new Nicho;
-                                    // $nicho->cuartel_id = $id_cuartel;
-                                    // $nicho->bloque_id = $id_bloque;
-                                    // $nicho->nro_nicho = $request->nro_nicho;
-                                    // $nicho->fila = $request->fila;
-                                    // $nicho->tipo = $request->tipo_nicho;
-                                    // $nicho->codigo = $request->cuartel.".".$request->bloque.".".$request->nro_nicho.".".$request->fila;
-                                    // $nicho->codigo_anterior = $request->anterior;
-                                    // $nicho->estado_nicho = 'OCUPADO';
-                                    // $nicho->user_id = auth()->id();
-                                    // $nicho->renov_anterior = $nicho->renovacion;
-                                    // $nicho->monto_renov_anterior = $nicho->monto_renov;
-                                    // $nicho->save();
-                                    // $nicho->id;
+                                    $ni = new Nicho();
+                                    $ni->InsertNichoPartial(
+                                        $id_cuartel,
+                                        $id_bloque,
+                                        $request->nro_nicho,
+                                        $request->fila,
+                                        $request->tipo_nicho,
+                                        'LIBRE',
+                                        0,
+                                        0,
+                                        $request->anterior
+                                    );
+
 
                                     $id_nicho= $ni->id;
                 }
@@ -515,100 +509,185 @@ class MantenimientoController extends Controller
             public function buscar_registros(Request $request){
 
                 if($request->cuartel!=""|| $request->cuartel!=null || isset($request->cuartel)){
-                   // $codigo=$request->cuartel.".".$request->bloque.".".$request->nicho.".".$request->fila;
-
-                   /* $sql = DB::table('nicho')
-                    ->join('responsable_difunto', 'responsable_difunto.id', '=', 'nicho.id')
-                    ->join('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
-                    ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
-                    ->join('mantenimiento', 'mantenimiento.id_ubicacion', '=', 'nicho.id')
-                    ->where('nicho.codigo', $codigo)
-                    ->where('nicho.estado', 'ACTIVO')
-                    ->where('mantenimiento.codigo_ubicacion', $codigo)
-                    ->select('nicho.*', 'difunto.*', 'responsable.*', 'mantenimiento.*')
-                    ->orderBy('mantenimiento.id', 'desc')
-                    ->first();
-
-                     */
-
-                    $sql=DB::table('mantenimiento')
-                    ->join('responsable_difunto', 'responsable_difunto.id', '=', 'mantenimiento.respdifunto_id')
-                    ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
-                    ->join('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
-                    ->join('nicho', 'nicho.codigo', '=', 'responsable_difunto.codigo_nicho')
+                    $codigo=$request->cuartel.".".$request->bloque.".".$request->nicho.".".$request->fila;
+                    $sql_nicho = DB::table('nicho')
                     ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id')
                     ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
                     ->where( 'nicho.fila', '=', ''.$request->fila.'')
                     ->where('bloque.codigo', '=', ''.$request->bloque.'')
                     ->where('nicho.nro_nicho', '=',  ''.$request->nicho.'')
                     ->where('cuartel.codigo', '=',  ''.$request->cuartel.'')
-                    ->where('mantenimiento.estado',  'ACTIVO')
-                    ->orwhere('responsable_difunto.estado', '=', 'ACTIVO')
-                    ->select('mantenimiento.gestion', 'mantenimiento.pagado', 'mantenimiento.fur', 'mantenimiento.precio_sinot',
-                    'mantenimiento.monto', 'mantenimiento.ultimo_pago', 'mantenimiento.nombrepago',
-                    'mantenimiento.paternopago', 'mantenimiento.paternopago', 'mantenimiento.ci as cipago',
-                    'mantenimiento.gestion', 'mantenimiento.fecha_pago', 'mantenimiento.monto',  'mantenimiento.fur',
-                    'difunto.id as id_dif','difunto.ci as ci_dif','difunto.nombres as nombre_dif','difunto.primer_apellido as paterno_dif', 'difunto.segundo_apellido as materno_dif',
-                    'difunto.fecha_nacimiento as nacimiento_dif', 'difunto.fecha_defuncion', 'difunto.genero as genero_dif', 'difunto.causa', 'difunto.certificado_defuncion',
-                    'difunto.tipo as tipo_dif',
-                    'responsable_difunto.fecha_adjudicacion', 'responsable_difunto.tiempo',
-                    'responsable.id as id_resp','responsable.ci as ci_resp',  'responsable.nombres as nombre_resp',  'responsable.primer_apellido as paterno_resp',
-                    'responsable.segundo_apellido as materno_resp',  'responsable.fecha_nacimiento as nacimiento_resp',  'responsable.domicilio as dir_resp',
-                    'responsable.telefono',
-                    'responsable.celular',
-                    'responsable.estado_civil',  'responsable.email', 'responsable.genero as genero_resp',
-                     'cuartel.codigo as cuartel', 'bloque.codigo as bloque', 'nicho.nro_nicho as nicho', 'nicho.codigo_anterior as anterior', 'nicho.fila as fila','nicho.tipo as tipo_nicho')
-                     ->orderBy('mantenimiento.id', 'DESC')
+                    ->where('nicho.codigo', $codigo)
+                    ->where('nicho.estado', 'ACTIVO')
+                    ->select('nicho.*')
+                    ->orderBy('nicho.id', 'desc')
                     ->first();
-                }else{
+                    if( $sql_nicho) {
 
-                   // dd("sfesrerwrwe");
-                    $sql=DB::table('mantenimiento')
-                    ->join('responsable_difunto', 'responsable_difunto.id', '=', 'mantenimiento.respdifunto_id')
-                    ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
-                    ->join('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
-                    ->join('nicho', 'nicho.codigo', '=', 'responsable_difunto.codigo_nicho')
-                    ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id')
-                    ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
-                    ->where( 'nicho.fila', '=', ''.$request->fila.'')
-                    ->where('bloque.codigo', '=', ''.$request->bloque.'')
-                    ->where('nicho.nro_nicho', '=',  ''.$request->nicho.'')
-                    ->where('responsable_difunto.estado',  'ACTIVO')
-                    ->where('mantenimiento.estado',  'ACTIVO')
-                    ->select('mantenimiento.gestion', 'mantenimiento.pagado', 'mantenimiento.fur', 'mantenimiento.precio_sinot',
-                    'mantenimiento.monto', 'mantenimiento.ultimo_pago', 'mantenimiento.nombrepago',
-                    'mantenimiento.paternopago', 'mantenimiento.paternopago', 'mantenimiento.ci as cipago',
-                    'mantenimiento.gestion', 'mantenimiento.fecha_pago', 'mantenimiento.monto',  'mantenimiento.fur',
-                    'difunto.id as id_dif','difunto.ci as ci_dif','difunto.nombres as nombre_dif','difunto.primer_apellido as paterno_dif', 'difunto.segundo_apellido as materno_dif',
-                    'difunto.fecha_nacimiento as nacimiento_dif', 'difunto.fecha_defuncion', 'difunto.genero as genero_dif', 'difunto.causa', 'difunto.certificado_defuncion',
-                    'difunto.tipo as tipo_dif',
-                    'responsable_difunto.fecha_adjudicacion', 'responsable_difunto.tiempo',
-                    'responsable.id as id_resp','responsable.ci as ci_resp',  'responsable.nombres as nombre_resp',  'responsable.primer_apellido as paterno_resp',
-                    'responsable.segundo_apellido as materno_resp',  'responsable.fecha_nacimiento as nacimiento_resp',  'responsable.domicilio as dir_resp',
-                    'responsable.telefono',
-                    'responsable.celular',
-                    'responsable.estado_civil',  'responsable.email', 'responsable.genero as genero_resp',
-                     'cuartel.codigo as cuartel', 'bloque.codigo as bloque', 'nicho.nro_nicho as nicho', 'nicho.codigo_anterior as anterior', 'nicho.fila as fila','nicho.tipo as tipo_nicho')
-                     ->orderBy('mantenimiento.id', 'DESC')
-                    ->first();
+                        $id_ubicacion=$sql_nicho->id;
+                        $data_mantenimiento=DB::table('mantenimiento')->where('id_ubicacion', $id_ubicacion)
+                        ->where('estado','ACTIVO') ->orderBy('mantenimiento.id', 'desc')->first();
+                        if( $data_mantenimiento) {
+                            $id_respdifunto= $data_mantenimiento->respdifunto_id;
+                            //buscar los datos del responsable y difuntos
+                            $respdifunto=DB::table('responsable_difunto')
+                            ->where('id', $id_respdifunto)
+                            ->where('estado', 'ACTIVO')
+                            ->orderBy('id', 'desc')
+                            ->first();
+                            $id_difunto=$respdifunto->difunto_id;
+                            $id_responsable=$respdifunto->responsable_id;
+                            $difunto=DB::table('difunto')
+                            ->where('id',$id_difunto)
+                            ->where('estado','ACTIVO')
+                            ->orderBy('id', 'desc')
+                            ->first();
+                            $responsable=DB::table('responsable')
+                            ->where('id',$id_responsable)
+                            ->where('estado','ACTIVO')
+                            ->orderBy('id', 'desc')
+                            ->first();
+
+                            $response=[
+                                "status"=> true,
+                                "nicho" =>$sql_nicho,
+                                "mantenimiento"=>$data_mantenimiento,
+                                "respdifunto"=>$respdifunto,
+                                "difunto"=>$difunto,
+                                "responsable"=>$responsable
+                            ];
+                             return response()->json($response);
+
+
+                        }
+                        else{
+                            $respdifunto=DB::table('responsable_difunto')
+                            ->where('codigo_nicho', $codigo)
+                            ->where('estado', 'ACTIVO')
+                            ->orderBy('id', 'desc')
+                            ->first();
+                            if($respdifunto){
+                                $id_difunto=$respdifunto->difunto_id;
+                                $id_responsable=$respdifunto->responsable_id;
+                                $difunto=DB::table('difunto')
+                                ->where('id',$id_difunto)
+                                ->where('estado','ACTIVO')
+                                ->orderBy('id', 'desc')
+                                ->first();
+                                $responsable=DB::table('responsable')
+                                ->where('id',$id_responsable)
+                                ->where('estado','ACTIVO')
+                                ->orderBy('id', 'desc')
+                                ->first();
+
+                                $response=[
+                                    "status"=> true,
+                                    "nicho" =>$sql_nicho,
+                                    "mantenimiento"=>[],
+                                    "respdifunto"=>$respdifunto,
+                                    "difunto"=>$difunto,
+                                    "responsable"=>$responsable
+                                ];
+                                 return response()->json($response);
+                            }else{
+                                $response=["status"=>false,"error"=>'No se encontró el nicho solicitado'];
+                                return response()->json($response);
+                            }
+
+                        }
+
+                    }else{
+                        $response=["status"=>false,"error"=>'No se encontró el nicho solicitado'];
+                        return response()->json($response);
+                    }
 
 
 
-                }
-
-       // dd( $sql);
-                if($sql){
-                    $mensaje=true;
+                    // $data_mantenimiento=DB::table('mantenimiento')->where('')->first();
+                    // $sql=DB::table('mantenimiento')
+                    // ->join('responsable_difunto', 'responsable_difunto.id', '=', 'mantenimiento.respdifunto_id')
+                    // ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
+                    // ->join('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
+                    // ->join('nicho', 'nicho.codigo', '=', 'responsable_difunto.codigo_nicho')
+                    // ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id')
+                    // ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
+                    // ->where( 'nicho.fila', '=', ''.$request->fila.'')
+                    // ->where('bloque.codigo', '=', ''.$request->bloque.'')
+                    // ->where('nicho.nro_nicho', '=',  ''.$request->nicho.'')
+                    // ->where('cuartel.codigo', '=',  ''.$request->cuartel.'')
+                    // ->where('mantenimiento.estado',  'ACTIVO')
+                    // ->orwhere('responsable_difunto.estado', '=', 'ACTIVO')
+                    // ->select('mantenimiento.gestion', 'mantenimiento.pagado', 'mantenimiento.fur', 'mantenimiento.precio_sinot',
+                    // 'mantenimiento.monto', 'mantenimiento.ultimo_pago', 'mantenimiento.nombrepago',
+                    // 'mantenimiento.paternopago', 'mantenimiento.paternopago', 'mantenimiento.ci as cipago',
+                    // 'mantenimiento.gestion', 'mantenimiento.fecha_pago', 'mantenimiento.monto',  'mantenimiento.fur',
+                    // 'difunto.id as id_dif','difunto.ci as ci_dif','difunto.nombres as nombre_dif','difunto.primer_apellido as paterno_dif', 'difunto.segundo_apellido as materno_dif',
+                    // 'difunto.fecha_nacimiento as nacimiento_dif', 'difunto.fecha_defuncion', 'difunto.genero as genero_dif', 'difunto.causa', 'difunto.certificado_defuncion',
+                    // 'difunto.tipo as tipo_dif',
+                    // 'responsable_difunto.fecha_adjudicacion', 'responsable_difunto.tiempo',
+                    // 'responsable.id as id_resp','responsable.ci as ci_resp',  'responsable.nombres as nombre_resp',  'responsable.primer_apellido as paterno_resp',
+                    // 'responsable.segundo_apellido as materno_resp',  'responsable.fecha_nacimiento as nacimiento_resp',  'responsable.domicilio as dir_resp',
+                    // 'responsable.telefono',
+                    // 'responsable.celular',
+                    // 'responsable.estado_civil',  'responsable.email', 'responsable.genero as genero_resp',
+                    //  'cuartel.codigo as cuartel', 'bloque.codigo as bloque', 'nicho.nro_nicho as nicho', 'nicho.codigo_anterior as anterior', 'nicho.fila as fila','nicho.tipo as tipo_nicho')
+                    //  ->orderBy('mantenimiento.id', 'DESC')
+                    // ->first();
                 }
                 else{
-                    $mensaje= false;
+                    $response = ["status"=> false ,
+                                 "error"=> 'codigo de ubicacion incorrecto o incompleto, por favor verifique si ingreso cuartel en el campo correspondiente'
+                                ];
+                                return response()->json($response);
+
+
+                //    dd("sfesrerwrwe");
+                    // $sql=DB::table('mantenimiento')
+                    // ->join('responsable_difunto', 'responsable_difunto.id', '=', 'mantenimiento.respdifunto_id')
+                    // ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
+                    // ->join('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
+                    // ->join('nicho', 'nicho.codigo', '=', 'responsable_difunto.codigo_nicho')
+                    // ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id')
+                    // ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
+                    // ->where( 'nicho.fila', '=', ''.$request->fila.'')
+                    // ->where('bloque.codigo', '=', ''.$request->bloque.'')
+                    // ->where('nicho.nro_nicho', '=',  ''.$request->nicho.'')
+                    // ->where('responsable_difunto.estado',  'ACTIVO')
+                    // ->where('mantenimiento.estado',  'ACTIVO')
+                    // ->select('mantenimiento.gestion', 'mantenimiento.pagado', 'mantenimiento.fur', 'mantenimiento.precio_sinot',
+                    // 'mantenimiento.monto', 'mantenimiento.ultimo_pago', 'mantenimiento.nombrepago',
+                    // 'mantenimiento.paternopago', 'mantenimiento.paternopago', 'mantenimiento.ci as cipago',
+                    // 'mantenimiento.gestion', 'mantenimiento.fecha_pago', 'mantenimiento.monto',  'mantenimiento.fur',
+                    // 'difunto.id as id_dif','difunto.ci as ci_dif','difunto.nombres as nombre_dif','difunto.primer_apellido as paterno_dif', 'difunto.segundo_apellido as materno_dif',
+                    // 'difunto.fecha_nacimiento as nacimiento_dif', 'difunto.fecha_defuncion', 'difunto.genero as genero_dif', 'difunto.causa', 'difunto.certificado_defuncion',
+                    // 'difunto.tipo as tipo_dif',
+                    // 'responsable_difunto.fecha_adjudicacion', 'responsable_difunto.tiempo',
+                    // 'responsable.id as id_resp','responsable.ci as ci_resp',  'responsable.nombres as nombre_resp',  'responsable.primer_apellido as paterno_resp',
+                    // 'responsable.segundo_apellido as materno_resp',  'responsable.fecha_nacimiento as nacimiento_resp',  'responsable.domicilio as dir_resp',
+                    // 'responsable.telefono',
+                    // 'responsable.celular',
+                    // 'responsable.estado_civil',  'responsable.email', 'responsable.genero as genero_resp',
+                    //  'cuartel.codigo as cuartel', 'bloque.codigo as bloque', 'nicho.nro_nicho as nicho', 'nicho.codigo_anterior as anterior', 'nicho.fila as fila','nicho.tipo as tipo_nicho')
+                    //  ->orderBy('mantenimiento.id', 'DESC')
+                    // ->first();
+
+
+
                 }
 
-                $resp= [
-                    "mensaje" => $mensaje,
-                    "datos"=>$sql
-                    ];
-                 return response()->json($resp);
+
+                // if($sql){
+                //     $mensaje=true;
+                // }
+                // else{
+                //     $mensaje= false;
+                // }
+
+                // $resp= [
+                //     "mensaje" => $mensaje,
+                //     "datos"=>$sql
+                //     ];
+                //  return response()->json($resp);
             }
 
             public function generateCiDif(){

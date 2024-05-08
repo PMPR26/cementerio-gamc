@@ -227,6 +227,18 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
       Route::get('/getServicioMant', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'getInfoPayCm'])->name('get.services.mant');
       Route::post('/pago-matenimiento', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'pagoMantenimientoCM'])->name('pay.mant.cm');
 
+        //deposito
+      Route::get('/deposito', [App\Http\Controllers\Deposito\DepositoController::class,'index'])->name('deposito');
+      Route::get('/create_form', [App\Http\Controllers\Deposito\DepositoController::class,'create'])->name('deposito.create');
+      Route::post('/deposito_store', [App\Http\Controllers\Deposito\DepositoController::class,'store'])->name('deposito.store');
+      Route::get('/deposito_show', [App\Http\Controllers\Deposito\DepositoController::class,'show'])->name('deposito.show');
+      Route::post('/deposito_edit', [App\Http\Controllers\Deposito\DepositoController::class,'edit'])->name('deposito.edit');
+      Route::post('/deposito_form_pago', [App\Http\Controllers\Deposito\DepositoController::class,'formPago'])->name('deposito.formPago');
+      Route::post('/deposito_pago', [App\Http\Controllers\Deposito\DepositoController::class,'pagar'])->name('deposito.pagar');
+
+      Route::post('/deposito_delete', [App\Http\Controllers\Deposito\DepositoController::class,'destroy'])->name('deposito.destroy');
+
+
 
 });
 
