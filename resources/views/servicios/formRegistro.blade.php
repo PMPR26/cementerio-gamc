@@ -1215,7 +1215,7 @@ $(document).ready(function ()
 
                                 console.log(data.mensaje);
                                 if (data.mensaje==true) {
-                                    $('#sp').hide();
+                                    $('#sp').hide(); //ocultar spinner
                                     $('#contenido').show();
                                     $('#sp').empty();
                                     console.log(data);
@@ -1231,6 +1231,12 @@ $(document).ready(function ()
                                         mostrar_lista_difuntos();
                                      }
 
+                                                     Swal.fire(
+                                                        'Atencion!',
+                                                        data.response.estado_nicho,
+                                                        'success'
+                                                        )
+
                                             if(data.response.estado_nicho=="LIBRE"){
                                                     $('#search_dif').val("");
                                                     $('#ci_difunto_actual').val("");
@@ -1244,6 +1250,7 @@ $(document).ready(function ()
                                                     $('#sereci').val("");
                                                     $('#tipo_dif').val("");
                                                     $('#genero_dif').val("");
+
                                             }
                                             else{
                                                     $('#search_dif').val(data.response.ci_dif);
@@ -1258,6 +1265,13 @@ $(document).ready(function ()
                                                     $('#sereci').val(data.response.certificado_defuncion);
                                                     $('#tipo_dif').val(data.response.tipo_dif);
                                                     $('#genero_dif').val(data.response.genero_dif);
+                                                   $('#estado_actual_nicho').html(data.response.estado_nicho);
+
+                                                    Swal.fire(
+                                                        'Atencion!',
+                                                        'El nicho se encuentra ocupado.',
+                                                        'error'
+                                                        )
                                             }
 
 
@@ -1285,19 +1299,23 @@ $(document).ready(function ()
                                                 $('#store_monto_renovacion').val(data.response.monto_renovacion);
                                                 $('#store_nro_renovacion').val(data.response.nro_renovacion);
 
-                                                $('#estado_actual_nicho').html(data.response.estado_nicho);
-                                                    autocompletar();
-                                                    completarInfoNicho();
+
+                                                    // autocompletar();
+                                                    // completarInfoNicho();
 
 
 
                                 }
                                 else if (data.mensaje=="liberado") {
+                                    Swal.fire(
+                                                        'Atencion!',
+                                                        'Nicho Libre',
+                                                        'success'
+                                                        )
                                     console.log(data.response.response);
-                                    $('#sp').hide();
+                                    $('#sp').hide(); //ocultar spinner
                                     $('#contenido').show();
                                           if(!data.response.response || data.response.response == null ||data.response.response==""){
-                                                // console.log("sdasdas");
                                                  var estado_nicho="";
                                                  var fecha_liberacion="";
                                             }
@@ -1336,7 +1354,9 @@ $(document).ready(function ()
                                             $('#concepto').html("");
                                             $('#store_monto_renovacion').val("");
                                             $('#store_nro_renovacion').val("");
-                                            $('#estado_actual_nicho').html(estado_nicho);
+                                            $('#estado_actual_nicho').html('LIBRE');
+
+
 
                                 }
                                 else if (data.mensaje==false) {
@@ -1353,16 +1373,24 @@ $(document).ready(function ()
                                                     "nicho": nicho,
                                                     "fila": fila
                                                 }),
-                                                success: function(data) {
+                                                success: function(data)
+                                                {
                                                     $('#sp').empty();
                                                     $('#form').show();
                                                     $('#contenido').show();
                                                     $('#origen').val('tabla_antigua');
-                                                    if(data.response.datos_difuntos!="")
+                                                    if(data!="")
                                                         {
+
                                                              // datos difunto
                                                             if(data.response.datos_difuntos !="")
                                                             {
+
+                                                                Swal.fire(
+                                                                'Atencion!',
+                                                                'El nicho se encuentra ocupado.',
+                                                                'error'
+                                                                )
                                                                 var fecha=data.response.datos_difuntos[0].fecha;
                                                                     var año= fecha.substr(0, 4);
                                                                     var mes= fecha.substr(4, 2);
@@ -1395,7 +1423,7 @@ $(document).ready(function ()
                                                                         }
                                                                         $('#genero_dif').val(genero);
 
-                                                            }
+                                                         } // end difuntos
                                                              // datos responsable
                                                                     if(data.response.responsable!=""){
                                                                             $('#search_resp').val(data.response.responsable[0].carnet);
@@ -1430,9 +1458,9 @@ $(document).ready(function ()
 
                                                                     $('.clear').val("");
                                                                     $('#form').hide();
-                                                            }
-                                                            autocompletar();
-                                                            completarInfoNicho();
+                                                        }
+                                                            // autocompletar();
+                                                            // completarInfoNicho();
 
                                                 }
 
@@ -1851,7 +1879,8 @@ $(document).ready(function ()
                                     {
                                             if(data.info!=null)
                                             {
-                                                $('#cuartel').val(data.info.cuartel_id).trigger("change");
+                                                $('#cuartel').val(data.info.cuartel_id).trigger('change.select2');
+                                                // $('#cuartel').val(data.info.cuartel_id).trigger("change");
                                                 $('#anterior').val(data.info.codigo_anterior);
                                             }
                                     }
@@ -1970,19 +1999,21 @@ $(document).ready(function ()
             //                         }, 2000);
             //   }
 
-              if($('#fechadef_dif').val() =="" || !$('#fechadef_dif').val()){
-                swal.fire({
-                                    title: "Precaucion!",
-                                    text: "!Complete la fecha de defuncion de la sección del difunto",
-                                    type: "warning",
-                                  //  timer: 2000,
-                                    showCancelButton: false,
-                                    showConfirmButton: true
-                                    });
-                                    setTimeout(function() {
-                                       return false;
-                                    }, 2000);
-              }
+            //volver a habilitar
+
+            //   if($('#fechadef_dif').val() =="" || !$('#fechadef_dif').val()){
+            //     swal.fire({
+            //                         title: "Precaucion!",
+            //                         text: "!Complete la fecha de defuncion de la sección del difunto",
+            //                         type: "warning",
+            //                       //  timer: 2000,
+            //                         showCancelButton: false,
+            //                         showConfirmButton: true
+            //                         });
+            //                         setTimeout(function() {
+            //                            return false;
+            //                         }, 2000);
+            //   }
 
             //   if($('#fechanac_dif').val() =="" || !$('#fechanac_dif').val()){
             //     swal.fire({
