@@ -15,10 +15,10 @@
 
 @section('content')
     <div class="container-fluid">
-        <div class="row card">
-            <div class="col-12"><h1>FORMULARIO DE PAGO</h1></div>
-        </div>
-                        <form method="POST" action="{{ route('deposito.pagar') }}">
+        <div class="row card p-8">
+            <div class="col-12 p-5"><h1>FORMULARIO DE PAGO</h1></div>
+            <div class="col-12 p-5">
+                        <form method="POST" action="{{ route('deposito.pagar') }}" class="p-8">
                             @csrf
                             <input type="hidden" name="deposito_id" value="{{$deposito->id}}">
                             <div class="form-row">
@@ -53,8 +53,9 @@
                             <button type="submit" class="btn btn-primary">Generar Preliquidacion</button>
                         </form>
                     </div>
+                </div>
         </div>
-
+    </div>
 @endsection
 
 @section('js')
