@@ -252,7 +252,7 @@ class MantenimientoController extends Controller
                     }
                     else{
 
-                        $ci_adjudicatario=$existeResponsable->ci;
+                        $ci_adjudicatario=$existeResponsable->ci ?? $request->ci_resp ;
                         $adjudicatario= $existeResponsable->nombres_resp." ".$existeResponsable->paterno_resp." ".$existeResponsable->materno_resp;
 
                     }
