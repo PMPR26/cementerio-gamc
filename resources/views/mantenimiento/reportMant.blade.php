@@ -90,7 +90,9 @@
             padding: 5px;
 
         }
-
+        .text-right{
+    text-align: right !important;
+}
     </style>
 </head>
 
@@ -152,13 +154,13 @@
                 <td></td>
             </tr>
             <tr>
-                <td width="100%" colspan="2">Nombre Adjudicatario: {{ucwords($resp ?? '' )}}  </td>
+                <td width="80%" colspan="2">Nombre Adjudicatario: {{ucwords($resp ?? '' )}}  </td><td  width=20%  class="text-right"> C.I.:{{ $ci_resp }}</td>
 
             </tr>
             @if($table->pago_por=="Tercero responsable")
             <tr>
-                <td width="100%" colspan="2">Nombre: {{ucwords($table->nombrepago )}} {{ucwords( $table->paternopago) }}
-                    {{ ucwords($table->maternopago ?? '') }}  C.I.:{{ $table->ci }}</td>
+                <td width="80%" colspan="2">Nombre: {{ucwords($table->nombrepago )}} {{ucwords( $table->paternopago) }}
+                    {{ ucwords($table->maternopago ?? '') }}  </td><td  width=20%  class="text-right"> C.I.:{{ $table->ci }}</td>
             </tr>
             @endif
         </table>
@@ -177,7 +179,6 @@
                         <td width="10%" align="left">CUENTA</td>
                         <td width="10%" align="right">CANTIDAD</td>
                         <td width="70%" align="center">DETALLE</td>
-
                         <td width="10%" align="right">MONTO</td>
                     </tr>
 

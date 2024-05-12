@@ -90,6 +90,9 @@
             padding: 5px;
 
         }
+        .text-right{
+    text-align: right !important;
+}
 
     </style>
 </head>
@@ -147,18 +150,18 @@
 
                     </tr>
                 </table>
-                <table>
+                <table width="100%">
                     <tr>
                         <td colspan="2"> <span class="rotulo"> IDENTIFICACION DEL CONTRIBUYENTE</span></td>
-                        <td></td>
+
                     </tr>
                     <tr>
-                        <td width="100%" colspan="2">Nombre Adjudicatario: {{ucwords($resp ?? '' )}}  </td>
+                        <td width="80%" colspan="2">Nombre Adjudicatario: {{ucwords($resp ?? '' )}}  </td><td width="20%"  class="text-right"> C.I.:{{ $ci_resp ??'' }}   </td>
 
                     </tr>
                         @if($pago_por=="Tercera persona")
                         <tr>
-                            <td width="100%" colspan="2">Pagado por: {{ucwords($table->nombre ?? '' )}} C.I.:{{ $table->ci ??'' }}   </td>
+                            <td width="100%" colspan="2">Pagado por: {{ucwords($table->nombre ?? '' )}}  </td><td class="text-right"> C.I.:{{ $table->ci ??'' }}   </td>
                         </tr>
                         @endif
                     <tr>
