@@ -1059,8 +1059,27 @@ public function pagoMantenimientoCM(Request $request){
                'pago_por.required'=> 'Debe especificar si el pago se esta realizando por el propietario o un tercero',
 
           ]);
+                 //   sacar informacion del cuartel bloque sitio de la cripta
+                 $cuartel="";
+                 $bloque="";
+                 $sitio="";
+                 $tipo="";
+                 $infoCripta = DB::table('cripta_mausoleo')
+                 ->join('cuartel', 'cuartel.id','=','cripta_mausoleo.cuartel_id')
+                 ->join('bloque', 'bloque.id','=','cripta_mausoleo.bloque_id')
+                 ->select('sitio', 'familia', 'cripta_mausoleo.codigo', 'cuartel.codigo as cuartel', 'bloque.codigo as bloque', 'cripta_mausoleo.tipo_registro' )
+                 ->orderBy('cripta_mausoleo.id', 'DESC')
+                 ->first();
+                 if( $infoCripta){
+                    $cuartel=$infoCripta->cuartel;
+                    $bloque=$infoCripta->bloque;
+                    $sitio=$infoCripta->sitio;
+                    $tipo=$infoCripta->tipo_registro;
+                 }else{
+                    return response()->json(['errors' => ['general' => 'No se ha podido obtener información del mausoleo']]);
+                 }
 
-             /** generar fur */
+                /** generar fur */
                         //insert pago
                         if($request->pago_por!= "Titular_responsable"){
                             $pago_por="Tercera persona";
@@ -1093,7 +1112,7 @@ public function pagoMantenimientoCM(Request $request){
                     $servicio_hijos=$request->num_sec;
                     $obj= new ServicioNicho;
                     $response=$obj->GenerarFurCMant($request->ci, $request->nombrepago, $request->paternopago, $request->maternopago, $request->domicilio, $request->codigo_unidad,
-                    $servicio_hijos , $cantidades, $cajero, $request->resp_id, $request->observacion , $request->superficie);
+                    $servicio_hijos , $cantidades, $cajero, $request->resp_id, $request->observacion , $request->superficie, $cuartel, $bloque, $sitio, $tipo);
 
 
                     if($response['status']==true){
@@ -1210,8 +1229,8 @@ public function pagoMantenimientoCM(Request $request){
                             $sq=CriptaMausoleoResp::where('cripta_mausoleo_responsable.cripta_mausole_id', '=',$datos_ubicacion )
                             ->join('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
                             ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
-                            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp."  C.I.: ".$sq->ci_resp;
-
+                            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp;
+                            $ci_resp="  C.I.: ".$sq->ci_resp;
                             $dat= Cripta::where('cripta_mausoleo.id', '=',$datos_ubicacion )
                             ->select()->first();
                             $datoSitio= json_decode($dat, true);
@@ -1275,7 +1294,7 @@ public function pagoMantenimientoCM(Request $request){
                                             $observacion= $tablelocal->observacion;
 
                                             $pdf = PDF::setPaper('A4', 'landscape');
-                                            $pdf = PDF::loadView('mantenimiento/reportServCM', compact('table','codigo_ubicacion', 'observacion', 'det_exhum', 'resp', 'datoSitio',  'pago_por'));
+                                            $pdf = PDF::loadView('mantenimiento/reportServCM', compact('table','codigo_ubicacion', 'observacion', 'det_exhum', 'resp','ci_resp', 'datoSitio',  'pago_por'));
                                             return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                                         }
                                 }
@@ -1305,7 +1324,8 @@ public function pagoMantenimientoCM(Request $request){
             ->join('responsable_difunto', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
             ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
             ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp', 'nicho.codigo' )->first();
-            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp ."  C.I.: ".$sq->ci_resp;
+            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp;
+            $ci_resp=$sq->ci_resp;
             $codigo_nicho=$sq->codigo;
 
 
@@ -1326,7 +1346,7 @@ public function pagoMantenimientoCM(Request $request){
                                 $observacion= $table->observacion;
 
                                 $pdf = PDF::setPaper('A4', 'landscape');
-                                $pdf = PDF::loadView('mantenimiento/reportMant', compact('table', 'resp', 'observacion', 'tableFur', 'codigo_nicho'));
+                                $pdf = PDF::loadView('mantenimiento/reportMant', compact('table', 'resp', 'ci_resp', 'observacion', 'tableFur', 'codigo_nicho'));
                                 return  $pdf-> stream("preliquidacion_mantenimiento.pdf", array("Attachment" => false));
                             }
                     }

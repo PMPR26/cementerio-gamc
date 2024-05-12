@@ -33,10 +33,10 @@
                             <thead>
                                 <tr>
                                     <th>Código Sitio</th>
-                                    <th>Nombre Difunto</th>
-                                    <th>Fecha Ingreso a deposito</th>
-                                    <th>Cantidad Cuotas Adeudadas</th>
-                                    <th>Monto Total Adeudado </th>
+                                    <th>Difunto</th>
+                                    <th>Ingreso a deposito</th>
+                                    <th>Cuotas Adeudadas</th>
+                                    <th>Total Adeudado </th>
                                     <th>Fur</th>
                                     <th>Estado Pago</th>
                                     <th>Responsable Pago</th>

@@ -91,6 +91,9 @@
 
         }
 
+        .text-right{
+    text-align: right !important;
+}
     </style>
 </head>
 
@@ -158,7 +161,7 @@
                     </tr>
 
                     <tr>
-                        <td width="100%" colspan="2">Pagado por: {{ucwords($table->nombre ?? '' )}} C.I.:{{ $table->ci ??'' }}   </td>
+                        <td width="100%" colspan="2">Pagado por: {{ucwords($table->nombre ?? '' )}}  </td><td class="text-right"> C.I.:{{ $table->ci ??'' }}   </td>
 
                     </tr>
                     <tr>
