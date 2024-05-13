@@ -159,9 +159,10 @@ class ServicioNicho extends Model
  //fur mantenimiento criptas
       public function GenerarFurCMant($ci, $nombre, $primer_apellido,
       $ap_materno, $direccion, $codigo,
-       $servicios_cementery , $cantidades, $cajero,  $adjudicatario, $tblobs, $superficie)
+       $servicios_cementery , $cantidades, $cajero,  $adjudicatario, $tblobs, $superficie, $cuartel, $bloque, $sitio, $tipo)
         {
 
+          //  dd($cuartel."-".$bloque."-".$sitio);
             $headers =  ['Content-Type' => 'application/json'];
             $client = new Client();
              $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCMant', [
@@ -179,11 +180,16 @@ class ServicioNicho extends Model
                     'cajero'=>$cajero,
                     'adjudicatario'=>$adjudicatario,
                     'tblobs'=>$tblobs,
-                    'superficie'=>$superficie
+                    'superficie'=>$superficie,
+                    'cuartel'=>$cuartel,
+                    'bloque'=>$bloque,
+                    'sitio'=>$sitio,
+                    'tipo'=>$tipo,
                 ],
                 'headers' => $headers,
             ]);
             $fur_response = json_decode((string) $response->getBody(), true);
+           // dd($fur_response);
             return $fur_response;
         }
 
@@ -194,7 +200,7 @@ class ServicioNicho extends Model
        $servicios_cementery , $cantidades, $cajero,  $adjudicatario,$ci_adjudicatario, $tblobs)
         {
 
-            // dd($tblobs);
+            //dd($cajero);
             $headers =  ['Content-Type' => 'application/json'];
             $client = new Client();
              $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryMant', [
@@ -216,7 +222,7 @@ class ServicioNicho extends Model
                     'nicho'=>$nicho,
                     'fila'=>$fila,
                     'nombre_difunto'=>$nombre_difunto,
-                    'ci_adjudicatario'=>$ci_adjudicatario
+                    'ci_adjudicatario'=>$ci_adjudicatario,
                  ],
                 'headers' => $headers,
             ]);

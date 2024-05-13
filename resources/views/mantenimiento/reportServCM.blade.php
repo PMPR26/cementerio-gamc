@@ -90,7 +90,9 @@
             padding: 5px;
 
         }
-
+.text-right{
+    text-align: right !important;
+}
     </style>
 </head>
 
@@ -148,17 +150,18 @@
 
                     </tr>
                 </table>
-                <table>
+                <table width="100%"  >
                     <tr>
-                        <td colspan="2"> <span class="rotulo"> IDENTIFICACION DEL CONTRIBUYENTE</span></td>
-                        <td></td>
+                        <td colspan="12"> <span class="rotulo"> IDENTIFICACION DEL CONTRIBUYENTE</span></td>
                     </tr>
+                </table>
+                <table width="100%" >
                     <tr>
-                        <td width="100%" colspan="2">Nombre: {{ucwords($resp ?? '' )}}  </td>
+                        <td  width="60%" >Nombre: {{ucwords($resp ?? '' )}}  </td><td  width="40%"class="text-right">  C.I.:{{ $ci_resp ??'' }}   </td>
                     </tr>
                     @if($pago_por=="Tercero_responsable")
                     <tr>
-                        <td width="100%" colspan="2">Pagado por: {{ucwords($table->nombre ?? '' )}} C.I.:{{ $table->ci ??'' }}   </td>
+                        <td colspan="10">Pagado por: {{ucwords($table->nombre ?? '' )}} </td><td colspan="2" class="text-right">  C.I.:{{ $table->ci ??'' }}   </td>
 
                     </tr>
                     @endif
@@ -168,7 +171,7 @@
                         @if($table->fur==0)
                         <td width="60%" colspan="2"><b>SERVICO GRATUITO</b></td>
                         @endif
-                        <td width="20%">Actividad: Preliquidación</td>
+                        <td width="80%">Actividad: Preliquidación</td>
                     </tr>
                     <tr>
                         <td><b>Codigo Ubicación:  {{ $codigo_ubicacion }}</b></td>

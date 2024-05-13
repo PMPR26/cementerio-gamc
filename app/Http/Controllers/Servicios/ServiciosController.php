@@ -23,7 +23,6 @@ use GuzzleHttp\Exception\RequestException;
 use PDF;
 use Illuminate\Support\Facades\Http;
 use PhpParser\Node\Expr\Empty_;
-
 class ServiciosController extends Controller
 {
 
@@ -338,13 +337,7 @@ class ServiciosController extends Controller
 
     public function createNewServicios(Request $request)
     {
-        //dd($request->cant_renov_confirm);
-        // $explode_txt=explode("Bs.",$request->servicio_hijos_txt);
-      //  $explode_txt=$request->servicio_hijos_txt;
-        // dd($explode_txt);
 
-        //  $explode=explode("=>",$request->descripcion_exhumacion);
-        //  dd($explode);
         if ($request->isJson())
         {
 
@@ -416,6 +409,8 @@ class ServiciosController extends Controller
                     ]);
              }
 
+     DB::beginTransaction();
+        try {
                 /***generando el codigo del nicho ** */
                 $codigo_n = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
                 $cant=0;
@@ -446,7 +441,7 @@ class ServiciosController extends Controller
                     array_push($tblobs, $value['tblobs']);
 
                 }
-                  // dd($txt_servicios_hijos);
+
 
                 /**** recuperar datos del cajero para registrar el pago  *****/
                 $datos_cajero=User::select()
@@ -649,7 +644,6 @@ class ServiciosController extends Controller
                                              // end nicho
                     // }
                          //step1: nicho buscar si existe registrado el nicho recuperar el id  sino existe registrarlo
-
 
                         // step2: register difunto --- si id_difunto id_difunto es null insertar difunto insertar responsable
                         $d=New Difunto;
@@ -878,11 +872,13 @@ class ServiciosController extends Controller
 
 
 
+
                                                 return response([
                                                     'status'=> true,
                                                     'response'=> $serv->id,
                                                     'message'=>"El registro se ha realizado con éxito..!!"
                                                 ],200);
+
 
 
                              }else{
@@ -892,8 +888,18 @@ class ServiciosController extends Controller
                                 ],201);
                              }
 
+                             DB::commit();
 
+                             // Enviar respuesta de éxito
+                             return response()->json(['message' => 'Operaciones realizadas correctamente'], 200);
+                         } catch (\Exception $e) {
+                             // Si ocurre un error, deshacer la transacción
+                             DB::rollback();
 
+                             // Loguear el error o manejarlo de alguna otra manera
+                             // También puedes devolver un mensaje de error al cliente
+                             return response()->json(['message' => 'Error al realizar operaciones'], 500);
+                         }
 
             }else{
 
@@ -1022,20 +1028,24 @@ class ServiciosController extends Controller
                         $det_exhum=$tablelocal->det_exhum ??'';
                         $responsable_difunto_id=$tablelocal->responsable_difunto_id;
                         $pago_por=$tablelocal->pago_por;
+                       // $ci_resp="32432";
 
                         if($tipo_ubicacion=="NICHO"){
                             $sq=Nicho::where('nicho.id', '=',$datos_ubicacion )
                             ->join('responsable_difunto', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
                             ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
                             ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
-                            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp ."  C.I.: ".$sq->ci_resp;
+                            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp; // ."  C.I.: ".$sq->ci_resp;
+                            $ci_resp=$sq->ci_resp;
                         }
                         else if($tipo_ubicacion== "EXTERNO GRATIS" ||  $tipo_ubicacion== "EXTERNO" ){
                             $sq=ResponsableDifunto::where('responsable_difunto.id', '=',$responsable_difunto_id )
                                                         ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
                                                         ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp',
                                                          'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )->first();
-                                                        $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp ."  C.I.: ".$sq->ci_resp;
+                                                        $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp; // ."  C.I.: ".$sq->ci_resp;
+                            $ci_resp=$sq->ci_resp;
+
 
                         }
 
@@ -1078,7 +1088,7 @@ class ServiciosController extends Controller
                                     $table = json_decode(json_encode($tab));
 
                                 $pdf = PDF::setPaper('A4', 'landscape');
-                                $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp' , 'pago_por','tipo_ubicacion'));
+                                $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp' ,'ci_resp', 'pago_por','tipo_ubicacion'));
                                 return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                             }
 
@@ -1100,7 +1110,7 @@ class ServiciosController extends Controller
                                             $table = $response->object()->data->cobrosVarios[0];
                                             $observacion= $tablelocal->observacion;
                                             $pdf = PDF::setPaper('A4', 'landscape');
-                                            $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp', 'pago_por','tipo_ubicacion'));
+                                            $pdf = PDF::loadView('servicios/reportServ', compact('table','codigo_nicho', 'observacion', 'det_exhum', 'resp', 'ci_resp', 'pago_por','tipo_ubicacion'));
                                             return  $pdf-> stream("preliquidacion_servicio.pdf", array("Attachment" => false));
                                         }
                                 }
