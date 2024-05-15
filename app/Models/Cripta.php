@@ -80,8 +80,8 @@ class Cripta extends Model
 
 public function upCripta(Request $request, $id){
     //dd($request);
-    $cripta= Cripta::where('id', $id)->first();
-    $cripta->user_id = auth()->id();
+   $cripta= Cripta::where('id', $id)->first();
+   $cripta->user_id = auth()->id();
    $cripta->cuartel_id = trim($request->id_cuartel);
    $cripta->bloque_id = trim(strtoupper($request->bloque));
    $cripta->sitio = trim($request->sitio);
