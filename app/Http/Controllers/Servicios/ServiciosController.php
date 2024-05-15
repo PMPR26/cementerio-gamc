@@ -409,8 +409,8 @@ class ServiciosController extends Controller
                     ]);
              }
 
-     DB::beginTransaction();
-        try {
+   //  DB::beginTransaction();
+    //    try {
                 /***generando el codigo del nicho ** */
                 $codigo_n = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
                 $cant=0;
@@ -468,52 +468,42 @@ class ServiciosController extends Controller
                         {
 
                             // calcular la cantidad de cuerpos de acuerdo al servicio solicitado /inhumacion o exhumacion
-                            if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'  || $servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='1982' || $servi['serv']=='630' || $servi['serv']=='631')
+                            if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'  || $servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='1982' || $servi['serv']=='630' || $servi['serv']=='631'|| $servi['serv']=='530' || $servi['serv']=='529')
                             { //inhumaciones
-                                $cant_ant= $cantidadEnNicho;
 
-                                        $estado_nicho="OCUPADO";
-                                        if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'){
-                                                //inhumacion a nichos temporales
-                                            if( $cantidadEnNicho !=false){
-                                                $cant_ant=$cantidadEnNicho;
-                                                return response([
-                                                    'status'=> false,
-                                                    'message'=>"temporal_ocupado"
-                                                ],200);
-                                            }else{
-                                                $cant=1;
-                                                $cant_ant=0;
-                                            }
-                                        }else if($servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='1982'){
-                                            //Inhumación Nichos A Perpetuidad
-                                            if($difuntoEnNicho==false && $request->tipo_nicho== "TEMPORAL")
-                                            {
-                                                    $cantidadEnNicho=$this->contarDifuntoEnNicho($codigo_n);
-                                                    if( $cantidadEnNicho ==0){
-                                                        $cant= $cantidadEnNicho + 1;
-                                                    }else{
-                                                        $cant=1;
-                                                    }
-                                            }
-                                            else if($difuntoEnNicho==false && $request->tipo_nicho == "PERPETUO")
-                                            {
-                                                    $cantidadEnNicho=$this->contarDifuntoEnNicho($codigo_n);
-                                                    if( $cantidadEnNicho <4){
-                                                        $cant= $cantidadEnNicho + 1;
-                                                    }else{
-                                                        $cant= $cantidadEnNicho;
-                                                    }
-                                            }
-                                            else{
-                                                        if( $cantidadEnNicho !=false){
-                                                            $cant= $cantidadEnNicho;
-                                                        }else{
-                                                            $cant=1;
-                                                        }
+                                $estado_nicho="OCUPADO";
+                                if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'){
+                                      //inhumacion a nichos temporales ingreso de 1 solo cuerpo
+                                    //$estado_nicho="OCUPADO";
+                                    if( $cantidadEnNicho !=false ||  $cantidadEnNicho>=1){
+                                        $cant_ant=$cantidadEnNicho;
+                                        return response([
+                                            'status'=> false,
+                                            'message'=>"temporal_ocupado"
+                                        ],200);
+                                    }else{
+                                        $cant=1;
+                                        $cant_ant=0;
+                                    }
+                                }else if($servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='530' || $servi['serv']=='529' || $servi['serv']=='1982'){
 
-                                            }
+                                    if($difuntoEnNicho==false && $request->tipo_nicho == "PERPETUO")
+                                    {
+                                                $cant= $cantidadEnNicho + 1;
+                                    }
+                                    else if($difuntoEnNicho!=false && $request->tipo_nicho == "PERPETUO"){
+                                        if( $cantidadEnNicho <4){
+                                            $cant= $cantidadEnNicho + 1;
+                                        }else{
+                                            $cant= $cantidadEnNicho;
+                                            return response([
+                                                'status'=> false,
+                                                'message'=>"El nicho ya contiene suficientes cuerpos, cantidad de cuerpos actual 4"
+                                            ],200);
                                         }
+
+                                    }
+                                }
                                         $texto_servicio = $texto_servicio. $separador. $servi['txt_serv']." Bs.";
                             }else if($servi['serv'] == '645' || $servi['serv'] =='644' || $servi['serv'] == '629' || $servi['serv'] == '628' )
                             {  //exhumaciones
@@ -779,7 +769,7 @@ class ServiciosController extends Controller
                                                                     $response=$obj->GenerarFur($ci,$nombre_pago,$paterno_pago,$materno_pago, $domicilio,  $nombre_difunto, $codigo_n,
                                                                     $request->bloque, $request->nro_nicho, $request->fila, $servicio_hijos, $cantidades, $servicio_montos, $cajero,
                                                                     $nombre_adjudicatario, $ci_adjudicatario , $tblobs, $asignado, $nuevo_sitio);
-
+                                                                   // dd($response['response']);
                                                                     if($response['status']==true){
                                                                         $fur = $response['response'];
                                                                         //dd($fur);
@@ -823,6 +813,7 @@ class ServiciosController extends Controller
                                                 }
                                                 $serv->save();
                                                 $idServ=$serv->id;
+                                              //  dd( $idServ);
                                                   /// si se esta haciendo una asignacion
 
                                                   if($request->asignar_difunto_nicho=="asignado")
@@ -888,18 +879,18 @@ class ServiciosController extends Controller
                                 ],201);
                              }
 
-                             DB::commit();
+                          //   DB::commit();
 
                              // Enviar respuesta de éxito
                              return response()->json(['message' => 'Operaciones realizadas correctamente'], 200);
-                         } catch (\Exception $e) {
-                             // Si ocurre un error, deshacer la transacción
-                             DB::rollback();
+                        //  } catch (\Exception $e) {
+                        //      // Si ocurre un error, deshacer la transacción
+                        //      DB::rollback();
 
-                             // Loguear el error o manejarlo de alguna otra manera
-                             // También puedes devolver un mensaje de error al cliente
-                             return response()->json(['message' => 'Error al realizar operaciones'], 500);
-                         }
+                        //      // Loguear el error o manejarlo de alguna otra manera
+                        //      // También puedes devolver un mensaje de error al cliente
+                        //      return response()->json(['message' => 'Error al realizar operaciones'], 500);
+                        //  }
 
             }else{
 
