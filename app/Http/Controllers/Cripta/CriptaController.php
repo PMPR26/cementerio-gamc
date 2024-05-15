@@ -244,6 +244,7 @@ class CriptaController extends Controller
     public function updateCripta(Request $request){
         // return response()->json([ $request->id_cripta]);
         // dd("entra");
+       // dd($request);
 
         if ($request->isJson())
         {
@@ -257,30 +258,36 @@ class CriptaController extends Controller
             'numeric' => 'La :attribute debe ser un número!'
         ]);
 
-        $existe_resp=Responsable::where('ci', $request->ci_resp)->first();
+
+
+
         //    dd( $existe_resp->id);
         // si se envian datos del propietario del mausoleo o cripta entonces se busca en la tabla responsable para actualizar datos y no duplicar
-        // caso contrario se insterta
+
+                // caso contrario se insterta
+                $responsable = new Responsable(); // Create an instance of Responsable
+
                 if($request->ci_resp!=null)
                 {
-                        if($existe_resp==null){
-                                $responsable_id=Responsable::insertResponsable($request);
-                        }else{
-                            $responsable_id=Responsable::updateResponsable($request,   $existe_resp->id);
-                        }
+                    $existe_resp=Responsable::where('ci', $request->ci_resp)->first();
+                    if ($existe_resp == null) {
+                        $responsable_id =  $responsable->insertResponsable($request);
+                    } else {
+                        $responsable_id = $responsable->updateResponsable($request, $existe_resp->id);
+                    }
                         // dd($responsable_id);
                 }else if($request->ci_resp==null && $request->paterno_resp!=null){
-                    $responsable_id=Responsable::insertResponsable($request);
+                    $responsable_id= $responsable->insertResponsable($request);
                 }
 
-                    //insert cripta mausoleo
+                // actualizar cripta_mausoleos
+                    $cripta_mausoleo = new Cripta();
                     $existe=$this->existeCripta($request);
-                    // dd($existe);
-                          if(empty($existe)){
-                            $cripta_id=Cripta::addCripta($request, $request->cripta_mausoleo_id);
+                        if(!empty($existe) && $existe->id == $request->cripta_mausoleo_id){
+                            $cripta_id=$cripta_mausoleo->upCripta($request, $request->cripta_mausoleo_id);
                           }
-                        else if(!empty($existe) && $existe->id == $request->cripta_mausoleo_id){
-                            $cripta_id=Cripta::upCripta($request, $request->cripta_mausoleo_id);
+                          elseif (empty($existe)) {
+                            $cripta_id=$cripta_mausoleo->upCripta($request, $request->cripta_mausoleo_id);
                           }
                           else{
                             return response([
@@ -291,7 +298,7 @@ class CriptaController extends Controller
 
 
                     //insertar relacion cm responsable
-                    // dd($responsable_id);
+
                      if( isset($responsable_id)){
 
                             $search_relacion=DB::table('cripta_mausoleo_responsable')
@@ -299,21 +306,19 @@ class CriptaController extends Controller
                                             // ->where('responsable_id',$responsable_id)
                                             ->where('cripta_mausole_id',  $cripta_id)
                                             ->where('cripta_mausoleo.estado', 'ACTIVO')
-                                            ->where('cripta_mausoleo.cuartel_id',$request->id_cuartel)
-                                            ->where('cripta_mausoleo.bloque_id',$request->bloque)
-                                            ->where('cripta_mausoleo.sitio',$request->sitio)
-                                            ->where('cripta_mausoleo.superficie',$request->superficie)
                                             ->select('cripta_mausoleo_responsable.id')
                                             ->first();
 
                                             //  dd($search_relacion);
+                                            $cripta_mausoleo_resp = new CriptaMausoleoResp();
+
                                             if(!$search_relacion || $search_relacion==null ) {
-                                                  CriptaMausoleoResp::saveCriptaMausoleoResp($request,$responsable_id, $cripta_id);
+                                                $cripta_mausoleo_resp->saveCriptaMausoleoResp($request,$responsable_id, $cripta_id);
                                                  }
                                             else{
-                                                 CriptaMausoleoResp::upCriptaMausoleoResp($request,$responsable_id, $cripta_id, $search_relacion->id );
+                                                $cripta_mausoleo_resp->upCriptaMausoleoResp($request,$responsable_id, $cripta_id, $search_relacion->id );
                                             }
-                         }
+                             }
                          if($request->ci_resp == null &&  $request->nombres_resp == null  &&  $request->paterno_resp == null  &&  $request->materno_resp == null)
                             {
                                 //buscar responsabl ede la cripta o mausoleo
@@ -322,10 +327,9 @@ class CriptaController extends Controller
                                          ->where('estado', 'ACTIVO')
                                          ->orderby('id', 'DESC')
                                          ->first();
-                                $cmrespons= CriptaMausoleoResp::where('id', $respons->id )
+                                $cmrespons= CriptaMausoleoResp::where('id', $respons->id ) //inactivar la cripta
                                 ->where('estado', 'ACTIVO')->first();
                                 // dd($cmrespons);
-
                                 $cmrespons->estado='INACTIVO';
                                 $cmrespons->updated_at = date("Y-m-d H:i:s");
                                 $cmrespons->save();
@@ -349,7 +353,7 @@ class CriptaController extends Controller
     //verifica si la cripta ya esta registrada, en caso positivo retorna su id
     public function existeCripta(Request $request){
 
-        if ($request->bloque==0){   $cripta = DB::table('cripta_mausoleo')
+        if ($request->bloque==0 || $request->bloque==''){   $cripta = DB::table('cripta_mausoleo')
             ->where('cuartel_id', $request->id_cuartel)
             ->where('sitio', $request->sitio)
             ->first(); }
