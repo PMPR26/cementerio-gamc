@@ -313,7 +313,7 @@ class MantenimientoController extends Controller
                                                         /** generar fur */
                                                         $cant_gestiones=count($request->sel);
                                                         $cantgestiones=$cant_gestiones;
-                                                    //    dd( $request->observacion);
+
 
                                                             $nombre_difunto=$request->nombres_dif." ".$request->paterno_dif." ".$request->materno_dif;
                                                             $obj= new ServicioNicho;
