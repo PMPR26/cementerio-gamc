@@ -551,9 +551,7 @@ class RelevamientoController extends Controller
      }
 
      public function updateDifunto($request, $difuntoid){
-// dd($request);
          $difunto= Difunto::where('id', $difuntoid)->first();
-         // $difunto->ci = $request->ci_dif;
          $difunto->nombres = trim(mb_strtoupper($request->nombres_dif, 'UTF-8'));
          $difunto->primer_apellido = trim(mb_strtoupper($request->paterno_dif, 'UTF-8'));
          $difunto->segundo_apellido =trim(mb_strtoupper( $request->materno_dif, 'UTF-8'));
@@ -568,7 +566,6 @@ class RelevamientoController extends Controller
          $difunto->estado = 'ACTIVO';
          $difunto->user_id = auth()->id();
          $difunto->save();
-        //  dd( $difunto);
          return $difunto->id;
      }
 
@@ -612,7 +609,6 @@ class RelevamientoController extends Controller
          if(isset($request->fechanac_resp)){
             $responsable->fecha_nacimiento = $request->fechanac_resp ?? '';
          }
-
          $responsable->genero = $request->genero_resp;
          $responsable->telefono = $request->telefono;
          $responsable->celular = $request->celular;
@@ -625,85 +621,16 @@ class RelevamientoController extends Controller
          return $responsable->id;
      }
 
-    // public function insertDifunto($request){
-
-    //     $dif = new Difunto;
-    //     $dif->ci = $request->ci_dif;
-    //     $dif->nombres = $request->nombres_dif;
-    //     $dif->primer_apellido = $request->paterno_dif;
-    //     $dif->segundo_apellido = $request->materno_dif;
-    //     $dif->fecha_nacimiento = $request->fechanac_dif ?? null;
-    //     $dif->fecha_defuncion = $request->fecha_def_dif ?? null;
-    //     $dif->certificado_defuncion = $request->sereci;
-    //     $dif->causa = $request->causa;
-    //     $dif->tipo = $request->tipo_dif;
-    //     $dif->genero = $request->genero_dif;
-    //     $dif->certificado_file = $request->urlcertificacion;
-    //     $dif->funeraria = $request->funeraria;
-    //     $dif->estado = 'ACTIVO';
-    //     $dif->user_id = auth()->id();
-    //     $dif->save();
-    //     $dif->id;
-    //     return  $dif->id;
-
-    // }
-
-    // public function updateDifunto($request, $difuntoid){
-    //     $difunto= Difunto::where('id', $difuntoid)->first();
-    //     $difunto->ci = $request->ci_dif;
-    //     $difunto->nombres = $request->nombres_dif;
-    //     $difunto->primer_apellido = $request->paterno_dif;
-    //     $difunto->segundo_apellido = $request->materno_dif;
-    //     $difunto->fecha_nacimiento = $request->fechanac_dif ?? null;
-    //     $difunto->fecha_defuncion = $request->fecha_def_dif ?? null;
-    //     $difunto->certificado_defuncion = $request->sereci;
-    //     $difunto->causa = $request->causa;
-    //     $difunto->tipo = $request->tipo_dif;
-    //     $difunto->genero = $request->genero_dif;
-    //     $difunto->certificado_file = $request->urlcertificacion;
-    //     $difunto->funeraria = $request->funeraria;
-    //     $difunto->estado = 'ACTIVO';
-    //     $difunto->user_id = auth()->id();
-    //     $difunto->save();
-    //     return $difunto->id;
-    // }
-
-    // public function insertResponsable($request){
-
-    //     $responsable = new Responsable;
-    //     $responsable->ci = $request->ci_resp;
-    //     $responsable->nombres = $request->nombres_resp;
-    //     $responsable->primer_apellido = $request->paterno_resp;
-    //     $responsable->segundo_apellido = $request->materno_resp;
-    //     //$responsable->fecha_nacimiento = $request->fechanac_resp;
-    //     $responsable->genero = $request->genero_resp;
-    //     $responsable->telefono = $request->telefono;
-    //     $responsable->celular = $request->celular;
-    //     //$responsable->estado_civil = $request->ecivil;
-    //     $responsable->domicilio = $request->domicilio;
-    //     //$responsable->email = $request->email;
-    //     $responsable->estado = 'ACTIVO';
-    //     $responsable->user_id = auth()->id();
-    //     $responsable->save();
-    //     $responsable->id;
-    //     return  $responsable->id;
-
-    // }
-
     public function insertResponsableGenerico($request){
-
         $responsable = new Responsable;
         $responsable->ci = $request->ci_resp;
         $responsable->nombres = $request->nombres_resp;
         $responsable->primer_apellido = $request->paterno_resp;
         $responsable->segundo_apellido = $request->materno_resp;
-        //$responsable->fecha_nacimiento = $request->fechanac_resp;
         $responsable->genero = $request->genero_resp;
         $responsable->telefono = $request->telefono;
         $responsable->celular = $request->celular;
-        //$responsable->estado_civil = $request->ecivil;
         $responsable->domicilio = $request->domicilio;
-        //$responsable->email = $request->email;
         $responsable->estado = 'ACTIVO';
         $responsable->user_id = auth()->id();
         $responsable->save();
