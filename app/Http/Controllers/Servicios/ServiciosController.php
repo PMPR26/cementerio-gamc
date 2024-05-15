@@ -118,7 +118,7 @@ class ServiciosController extends Controller
         return view('servicios/formRegistro', ['tipo_service' => $tipo_service['response'], 'funeraria' => $funeraria, 'causa' => $causa, 'cuarteles'=>$cuarteles, 'list_responsable'=>$responsable]);
     }
 
-
+//revisar
     public function buscar_nicho(Request $request)
     {
 
