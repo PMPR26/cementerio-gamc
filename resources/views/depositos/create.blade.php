@@ -15,9 +15,11 @@
 
 @section('content')
     <div class="container-fluid">
-        <div class="row card">
-            <div class="col-12"><h1>FORMULARIO DE INGRESO DE CUERPO A DEPOSITO</h1></div>
+    <div class="card">
+        <div class="row">
+            <div class="col-12 bg-warning"><h1>FORMULARIO DE INGRESO DE CUERPO A DEPOSITO</h1></div>
         </div>
+        <div class="row">
                         <form method="POST" action="{{ route('deposito.store') }}">
                             @csrf
                             <div class="form-row">
@@ -114,6 +116,7 @@
                         </form>
                     </div>
         </div>
+    </div>
 
 @endsection
 
