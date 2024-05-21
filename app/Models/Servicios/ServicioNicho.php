@@ -553,5 +553,41 @@ class ServicioNicho extends Model
             }
 
 
+        //fur para tasas por  otros servicios
+            public function GenerarFurServicios($ci, $nombre, $primer_apellido,
+            $ap_materno, $direccion,  $codigo, $bloque, $nicho, $fila,
+            $servicios_cementery , $cantidades, $cajero,  $adjudicatario,$ci_adjudicatario, $tblobs)
+            {
+
+                //dd($cajero);
+                $headers =  ['Content-Type' => 'application/json'];
+                $client = new Client();
+                $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementery-serv', [
+                //$response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementeryMant', [
+
+                    'json' => [
+                        'ci' => $ci,
+                        'nombre' => $nombre,
+                        'primer_apellido' => $primer_apellido,
+                        'ap_materno' => $ap_materno,
+                        'direccion' => $direccion,
+                        'codigo' => $codigo,
+                        'servicios_cementery' => $servicios_cementery,
+                        'cantidad' => $cantidades,
+                        'cajero'=>$cajero,
+                        'adjudicatario'=>$adjudicatario,
+                        'observacion'=>$tblobs,
+                        'bloque'=>$bloque,
+                        'nicho'=>$nicho,
+                        'fila'=>$fila,
+                        'ci_adjudicatario'=>$ci_adjudicatario,
+                    ],
+                    'headers' => $headers,
+                ]);
+                $fur_response = json_decode((string) $response->getBody(), true);
+                return $fur_response;
+
+            }
+
 
 }
