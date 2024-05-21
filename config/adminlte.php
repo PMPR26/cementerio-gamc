@@ -332,11 +332,11 @@ return [
             'icon' => 'fas fa-edit',
         ],
 
-        // [
-        //     'text' => 'DEPOSITO/FOSA',
-        //     'route'  => 'deposito',
-        //     'icon' => 'fas fa-archive',
-        // ],
+        [
+            'text' => 'DEPOSITO/FOSA',
+            'route'  => 'deposito',
+            'icon' => 'fas fa-archive',
+        ],
 
         ['header' => 'REPORTES'],
         [

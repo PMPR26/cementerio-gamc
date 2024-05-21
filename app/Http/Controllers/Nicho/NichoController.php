@@ -295,4 +295,42 @@ class NichoController extends Controller
         return redirect()->route('nicho');
     }
 
+
+    public function liberarNichoServicio(Request $request){
+
+        $nicho = DB::table('nicho')
+        ->select('nicho.id')
+        ->where('nicho.codigo', '=', $request->codigo_nicho)
+        ->orderBy('id', 'desc')
+        ->first();
+        if ($nicho) {
+            $nicho_id = $nicho->id;
+            $data= Nicho::where('id',$nicho_id)->first();
+            $data->estado_nicho="LIBRE";
+            $data->cantidad_anterior=$data->cantidad_cuerpos;
+            $data->cantidad_cuerpos=0;
+            $data->save();
+            $ni=New Nicho();
+            $desv=$ni->desvincularDifuntoNicho($request);
+            return response([
+                'success' => true,
+                'message' => 'El nicho se ha liberado correctamente',
+                'data' => $desv
+            ], 200);
+
+        } else {
+            // Manejar el caso en el que no se encontró ningún registro
+            return response([
+                'success' => false,
+                'message' => 'Hubo un error al liberar el nicho, o el nicho se encuentra libre',
+                'data' => null
+            ], 201);
+
+
+        }
+
+
+
+    }
+
 }

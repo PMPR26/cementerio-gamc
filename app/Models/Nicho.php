@@ -105,6 +105,8 @@ class Nicho extends Model
         //desvincular registro
 
        $desv= $this->desvincularDifuntoNichoAsignacion($codigo_nicho);
+       //$desv_resp= $this->desvincularResponsableDifuntoNichoAsignacion($id,$codigo_nicho);
+
         return $desv;
 
     }
@@ -136,6 +138,31 @@ class Nicho extends Model
        return true;
     }
 
+    public function desvincularResponsableDifuntoNichoAsignacion($codigo){
+        // dd( $request);
+
+        $resp=New ResponsableDifunto;
+        // buscar relacion del nicho con difunto y desvincular inactivando
+
+        $rd=$resp::where('codigo_nicho', ''.trim((string)$codigo.''))
+        ->where('estado', "ACTIVO")
+        ->orderBy('id', "desc")
+        ->first();
+        // dd( $rd);
+
+        if(!empty($rd)){
+            $rd->estado="INACTIVO";
+            $rd->fecha_liberacion=\Carbon\Carbon::now();
+            $rd->gestion_renov=null;
+            $rd->nro_renovacion=0;
+            $rd->estado_nicho="LIBRE";
+            $rd->monto_ultima_renov=0;
+            $rd->user_id=Auth::user()->id;
+            $rd->save();
+        }
+
+       return true;
+    }
 
     public function generarCodigoAsignacion($cuartel, $bloque, $nro_nicho, $fila){
 
