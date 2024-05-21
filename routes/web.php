@@ -113,6 +113,8 @@ Route::group(['prefix' => 'nicho', 'middleware' => 'auth'], function () {
     Route::put('/update-nicho', 'App\Http\Controllers\Nicho\NichoController@updateNicho')->name('nicho.update');
     Route::post('/get-bloqueid', 'App\Http\Controllers\Nicho\NichoController@getBloqueid')->name('bloqueid.get');
     //nicho.liberar.temp
+    Route::post('/liberar-nicho-servicio', 'App\Http\Controllers\Nicho\NichoController@liberarNichoServicio')->name('nicho.liberar');
+
     Route::post('/liberar-nicho', 'App\Http\Controllers\Nicho\NichoController@liberarNicho')->name('nicho.free');
 
 });
