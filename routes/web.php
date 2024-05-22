@@ -233,12 +233,16 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
       Route::get('/deposito', [App\Http\Controllers\Deposito\DepositoController::class,'index'])->name('deposito');
       Route::get('/create_form', [App\Http\Controllers\Deposito\DepositoController::class,'create'])->name('deposito.create');
       Route::post('/deposito_store', [App\Http\Controllers\Deposito\DepositoController::class,'store'])->name('deposito.store');
-      Route::get('/deposito_show', [App\Http\Controllers\Deposito\DepositoController::class,'show'])->name('deposito.show');
+      Route::post('/deposito_show', [App\Http\Controllers\Deposito\DepositoController::class,'show'])->name('deposito.show');
       Route::post('/deposito_edit', [App\Http\Controllers\Deposito\DepositoController::class,'edit'])->name('deposito.edit');
       Route::post('/deposito_form_pago', [App\Http\Controllers\Deposito\DepositoController::class,'formPago'])->name('deposito.formPago');
-      Route::post('/deposito_pago', [App\Http\Controllers\Deposito\DepositoController::class,'pagar'])->name('deposito.pagar');
+      Route::post('/deposito_preliquidacion', [App\Http\Controllers\Deposito\DepositoController::class,'preliquidacion'])->name('deposito.preliquidacion');
 
       Route::post('/deposito_delete', [App\Http\Controllers\Deposito\DepositoController::class,'destroy'])->name('deposito.destroy');
+      Route::post('/deposito_update', [App\Http\Controllers\Deposito\DepositoController::class,'update'])->name('deposito.update');
+      Route::post('/deposito_print', [App\Http\Controllers\Deposito\DepositoController::class,'print'])->name('deposito.print');
+
+
 
 
 
@@ -278,11 +282,12 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
     Route::post('/controlar-notificacion', 'App\Http\Controllers\NotificacionesController@controlarNroNotificacion')->name('count.nro.notificacion');
     Route::post('/save-notificacion', 'App\Http\Controllers\NotificacionesController@saveNotificacion')->name('save.notificacion');
 
+        // reportes nichos vacios/llenos
+        Route::get('mausoleo-notable-pdf', [App\Http\Controllers\Cripta\CriptaController::class, 'printMausoleoNotables'])->name('mausoleosNotables');
+        Route::get('/generar_reporte_nicho', [App\Http\Controllers\Nicho\NichoController::class,'formEstadoNicho'])->name('form.report.nicho');
+        Route::post('/imprimir_reporte_nicho', [App\Http\Controllers\Nicho\NichoController::class,'imprimirReporteNicho'])->name('nicho.print.report');
 
 
-    //controlarNroNotificacion
-    //getTipo
-    //});
 
 
 

@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cuartel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use PDF;
 class NichoController extends Controller
 {
 
@@ -132,7 +132,7 @@ class NichoController extends Controller
             ]);
 
            $rep= $this->repetidoins(  $request->nro , $request->cuartel,$request->bloque);
-      // dd($rep);
+           // dd($rep);
 
             if($rep=="no"){
                             $new_nicho =  Nicho::create([
@@ -187,7 +187,7 @@ class NichoController extends Controller
 
 
     public function updateNicho(Request $request){
-// dd($request);
+       // dd($request);
         $this->validate($request, [
             'bloque' => 'required',
             'cuartel' => 'required',
@@ -295,7 +295,6 @@ class NichoController extends Controller
         return redirect()->route('nicho');
     }
 
-
     public function liberarNichoServicio(Request $request){
 
         $nicho = DB::table('nicho')
@@ -331,6 +330,30 @@ class NichoController extends Controller
 
 
 
+    }
+    public function formEstadoNicho(Request $request){
+        return view('nicho.form_report');
+    }
+    public function imprimirReporteNicho(Request $request){
+        $nicho_estado= $request->estado_nicho;
+        $nicho = DB::table('nicho')
+        ->leftJoin('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
+        ->leftJoin('bloque', 'bloque.id', '=', 'nicho.bloque_id')
+        ->select('nicho.*', 'cuartel.codigo as cuartel', 'bloque.codigo as bloque')
+        ->where('nicho.estado_nicho', '=', $request->estado_nicho)
+        ->where('nicho.estado', 'ACTIVO')
+        ->orderBy('id', 'asc')
+        ->get();
+        //11d($nicho);
+
+        $pdf = new PDF();
+        if($nicho_estado=="OCUPADO"){
+            $pdf = PDF::loadView('nicho/reportNichoOcupado', compact('nicho', 'nicho_estado'))->setPaper('a4');
+        }else{
+            $pdf = PDF::loadView('nicho/reportNichoLibre', compact('nicho', 'nicho_estado'))->setPaper('a4');
+        }
+
+        return  $pdf-> stream("Lista_nichos".$request->estado_nicho.".pdf", array("Attachment" => false));
     }
 
 }
