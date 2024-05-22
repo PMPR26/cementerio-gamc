@@ -12,11 +12,13 @@ use App\Models\ResponsableDifunto;
 use App\Models\User;
 use App\Models\Cripta;
 
+use App\Models\Depo;
 
 use App\Models\Mantenimiento;
 use App\Models\CriptaMausoleoResp;
 
 use App\Http\Controllers\Controller;
+use App\Models\Deposito\DepositoModel;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
@@ -716,6 +718,31 @@ class MantenimientoController extends Controller
             $pago = Mantenimiento::select('id', 'fur')
             ->where(['fur' => trim($request->fur), 'pagado' => false, 'estado' => 'ACTIVO'])
             ->first();
+
+            if(!$pago){
+                $depo = DepositoModel::select('id', 'fur')
+                ->where(['fur' => trim($request->fur), 'pagado' => false, 'estado' => 'ACTIVO'])
+                ->first();
+
+                if($depo){
+                    DepositoModel::where('fur', trim($request->fur))
+                    ->update([
+                       'estado_pago' => true,
+                    //    'id_usuario_caja' => $request->id_usuario_caja,
+                       'fecha_pago'=> date('Y-m-d')
+                    ]);
+                    return response([
+                        'status'=> true
+                       // 'message'=> 'El nro fur  no existe o ya fue pagado por favor recargue la pagina'
+                     ],200);
+
+                }else{
+                    return response([
+                        'status'=> false,
+                        'message'=> 'El nro fur  no existe o ya fue pagado por favor recargue la pagina'
+                     ],200);
+                }
+            }
 
             if($pago){
                 Mantenimiento::where('fur', trim($request->fur))

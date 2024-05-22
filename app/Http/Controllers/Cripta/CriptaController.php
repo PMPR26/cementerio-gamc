@@ -822,7 +822,7 @@ class CriptaController extends Controller
                ->orderBy('cripta_mausoleo.codigo', 'DESC')
                ->get();
 
-            //    $pdf = new PDF();
+                $pdf = new PDF();
             //    $pdf = PDF::setPaper('a4', 'landscape');
                $pdf = PDF::loadView('cripta/reportMausoleoNotable', compact('cripta'))->setPaper('a4', 'landscape');
                return  $pdf-> stream("Lista_mausoleo_notables.pdf", array("Attachment" => false));

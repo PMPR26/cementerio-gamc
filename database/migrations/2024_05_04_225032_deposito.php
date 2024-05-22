@@ -15,19 +15,26 @@ class Deposito extends Migration
     {
         Schema::create('deposito', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('codigo_sitio');
+            $table->string('cuartel');
+            $table->string('bloque');
+            $table->string('nicho');
+            $table->string('fila');
             $table->string('nombre_difunto');
-            $table->date('fecha_salida_sitio');
-            $table->date('fecha_ingreso_deposito');
-            $table->text('detalle_ingreso');
-            $table->integer('cant_cuotas_adeudadas');
-            $table->string('precio_unitario');
-            $table->string('total_adeudado');
+            $table->string('impuesto');
+            $table->string('lapida');
+            $table->text('observacion');
+            $table->date('fecha_salida_sitio')->nullable();
+            $table->date('fecha_ingreso_deposito')->nullable();
+            $table->integer('cant_cuotas_adeudadas')->nullable();
+            $table->string('precio_unitario')->nullable();
+            $table->string('total_adeudado')->nullable();
             $table->integer('fur')->nullable() ;
             $table->date('fecha_pago')->nullable();
             $table->text('glosa')->nullable();
-            $table->string('responsable_pago')->nullable();
-            $table->string('ci_responsable_pago')->nullable();
+            $table->string('nombre_pago')->nullable();
+            $table->string('primer_apellido_pago')->nullable();
+            $table->string('segundo_apellido_pago')->nullable();
+            $table->string('ci_pago')->nullable();
             $table->string('estado_pago')->nullable();
             $table->integer('user_id')->default(auth()->id());
             $table->string('estado')->default('ACTIVO');

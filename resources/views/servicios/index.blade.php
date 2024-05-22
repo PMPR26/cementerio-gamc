@@ -22,90 +22,82 @@
 
         <div class="col-sm-12">
             <table id="servicio-data" class="table table-striped table-bordered responsive" role="grid"
-            aria-describedby="example">
-            <thead class="bg-table-header">
+                    aria-describedby="example">
+                        <thead class="bg-table-header">
+                            <tr role="row">
+                                <th scope="col">#</th>
+                                <th scope="col">TIPO</th>
+                                <th scope="col">CÓDIGO </th>
+                                <th scope="col">SOLICITANTE</th>
+                                <th scope="col">SERVICIOS</th>
+                                <th scope="col">MONTO</th>
+                                <th scope="col">FUR</th>
+                                <th scope="col">VERIFICAR PAGO</th>
+                                <th scope="col">ESTADO PAGO</th>
+                                <th scope="col">Opciones</th>
+                            </tr>
+                        </thead>
+                         <tbody>
+                            @php($count = 1)
+                            @foreach ($servicio as $serv)
 
-                    <tr role="row">
-                        <th scope="col">#</th>
-                        <th scope="col">TIPO</th>
-                        <th scope="col">CÓDIGO </th>
-                        <th scope="col">SOLICITANTE</th>
-                        <th scope="col">SERVICIOS</th>
-                        <th scope="col">MONTO</th>
-                        <th scope="col">FUR</th>
-                        <th scope="col">VERIFICAR PAGO</th>
-                        <th scope="col">ESTADO PAGO</th>
-                        <th scope="col">Opciones</th>
-                    </tr>
-                </thead>
+                                <tr>
+                                    <td scope="row">{{ $count++ }}</td>
+                                    <td>{{ $serv->tipo??'' }}</td>
+                                    <td>{{ $serv->codigo_nicho??'' }}</td>
+                                    <td>{{ $serv->nombre_resp??' '   }} {{   $serv->primerap_resp??''    }}   {{    $serv->segap_resp??'' }}</td>
+                                    <td>{{ $serv->servicio?? '' }}</td>
+                                    <td>{{ $serv->monto ?? '0' }}</td>
+                                    <td>{{ $serv->fur }}</td>
 
-                <tbody>
-                    @php($count = 1)
-                    @foreach ($servicio as $serv)
+                                    <td><button class="btn btn-warning verificar_pago" data-id="{{ $serv->serv_id }}" value="{{ $serv->fur }}"><i
+                                            class="fas fa-check-square fa-2x  accent-blue " ></i></button></td>
+                                    <td>@if( $serv->estado_pago==false)
+                                    @php( print_r( 'PENDIENTE'))
+                                    @else
+                                    @php( print_r( 'PAGADO'))
+                                    @endif
+                                </td>
+                                    <td>
+                                        @if($serv->tipo=="NICHO" || $serv->tipo=="EXTERNO" || $serv->tipo=="EXTERNO GRATUITO" )
 
-                        <tr>
-                            <td scope="row">{{ $count++ }}</td>
-                            <td>{{ $serv->tipo??'' }}</td>
-                            <td>{{ $serv->codigo_nicho??'' }}</td>
-                            <td>{{ $serv->nombre_resp??' '   }} {{   $serv->primerap_resp??''    }}   {{    $serv->segap_resp??'' }}</td>
-                            <td>{{ $serv->servicio?? '' }}</td>
-                            <td>{{ $serv->monto ?? '0' }}</td>
-                            <td>{{ $serv->fur }}</td>
+                                        @if(( $serv->estado_pago==false) && ($serv->tipo=="NICHO"))
+                                            <button type='button' class="btn btn-danger anular"  id="{{ $serv->fur }}"  data-id="{{ $serv->serv_id }}"><i
+                                                class="fas fa-trash fa-2x"></i></button>
 
-                            <td><button class="btn btn-warning verificar_pago" data-id="{{ $serv->serv_id }}" value="{{ $serv->fur }}"><i
-                                    class="fas fa-check-square fa-2x  accent-blue " ></i></button></td>
-                            <td>@if( $serv->estado_pago==false)
-                               @php( print_r( 'PENDIENTE'))
-                            @else
-                            @php( print_r( 'PAGADO'))
-                            @endif
-                        </td>
-                            <td>
-                                @if($serv->tipo=="NICHO" || $serv->tipo=="EXTERNO" || $serv->tipo=="EXTERNO GRATUITO" )
+                                        @elseif($serv->tipo=="EXTERNO" || $serv->tipo=="EXTERNO GRATUITO" )
+                                            <button type='button' class="btn btn-danger anularExterno"  id="{{ $serv->fur }}"  data-id="{{ $serv->serv_id }}"><i
+                                                class="fas fa-trash fa-2x"></i></button>
+                                    @endif
+                                        <form action="{{ route('serv.generatePDF') }}" method="GET" target="blank">
+                                            @csrf
+                                            <input type="hidden" name="codigo_nicho" value={{ $serv->codigo_nicho }}>
+                                            <input type="hidden" name="id" value={{ $serv->serv_id }}>
+                                            <input type="hidden" name="tipo" value={{ $serv->tipo }}>
+                                            <input type="hidden" name="fur" value={{ $serv->fur }}>
 
-                                @if(( $serv->estado_pago==false) && ($serv->tipo=="NICHO"))
-                                    <button type='button' class="btn btn-danger anular"  id="{{ $serv->fur }}"  data-id="{{ $serv->serv_id }}"><i
-                                        class="fas fa-trash fa-2x"></i></button>
+                                            <button type='submit' class="btn btn-info "><i
+                                                    class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
+                                        </form>
+                                        @elseif ($serv->tipo=="CRIPTA" || $serv->tipo=="MAUSOLEO" )
+                                        <form action="{{ route('serv.generatePDFCM') }}" method="GET" target="blank">
+                                            @csrf
+                                            <input type="hidden" name="codigo_nicho" value={{ $serv->codigo_nicho }}>
+                                            <input type="hidden" name="id" value={{ $serv->serv_id }}>
+                                            <input type="hidden" name="fur" value={{ $serv->fur }}>
 
-                                @elseif($serv->tipo=="EXTERNO" || $serv->tipo=="EXTERNO GRATUITO" )
-                                    <button type='button' class="btn btn-danger anularExterno"  id="{{ $serv->fur }}"  data-id="{{ $serv->serv_id }}"><i
-                                        class="fas fa-trash fa-2x"></i></button>
-                            @endif
-                                <form action="{{ route('serv.generatePDF') }}" method="GET" target="blank">
-                                    @csrf
-                                    <input type="hidden" name="codigo_nicho" value={{ $serv->codigo_nicho }}>
-                                    <input type="hidden" name="id" value={{ $serv->serv_id }}>
-                                    <input type="hidden" name="tipo" value={{ $serv->tipo }}>
-                                    <input type="hidden" name="fur" value={{ $serv->fur }}>
-
-                                    <button type='submit' class="btn btn-info "><i
-                                            class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
-                                </form>
-                                @elseif ($serv->tipo=="CRIPTA" || $serv->tipo=="MAUSOLEO" )
-                                <form action="{{ route('serv.generatePDFCM') }}" method="GET" target="blank">
-                                    @csrf
-                                    <input type="hidden" name="codigo_nicho" value={{ $serv->codigo_nicho }}>
-                                    <input type="hidden" name="id" value={{ $serv->serv_id }}>
-                                    <input type="hidden" name="fur" value={{ $serv->fur }}>
-
-                                    <button type='submit' class="btn btn-info "><i
-                                            class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
-                                </form>
-                                        <button type='button' class="btn btn-danger anular_cm"  id="{{ $serv->fur }}"  data-id="{{ $serv->serv_id }}"><i
-                                        class="fas fa-trash fa-2x"></i></button>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
+                                            <button type='submit' class="btn btn-info "><i
+                                                    class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
+                                        </form>
+                                                <button type='button' class="btn btn-danger anular_cm"  id="{{ $serv->fur }}"  data-id="{{ $serv->serv_id }}"><i
+                                                class="fas fa-trash fa-2x"></i></button>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
             </table>
         </div>
-
-
-
-
-        {{-- @include('servicios.modalRegister')  --}}
-
 @stop
 @section('css')
 <style>
