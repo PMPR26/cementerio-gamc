@@ -66,12 +66,12 @@
                                             <td>{{ $deposito->estado_pago }}</td>
                                             <td>{{ $deposito->responsable_pago }}</td>
                                             <td>
-                                                <button type="button" class="btn btn-info" value="{{ route('deposito.edit', $deposito->id) }}" id="btn-editar-difunto-value" title="Editar"><i class="fas fa-edit"></i></button>
+
 
                                                 <form action="{{ route('deposito.show') }}" method="POST" style="display: inline;">
                                                     @csrf
                                                     <input type="hidden" name="deposito_id" id="deposito_id" value="{{ $deposito->id}}">
-                                                    <button type="submit" class="btn btn-warning"><i class="fas fa-eye"></i></button>
+                                                    <button type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
                                                 </form>
 
 
