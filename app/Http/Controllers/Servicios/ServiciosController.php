@@ -438,7 +438,7 @@ class ServiciosController extends Controller
                     $cantidadEnNicho=$this->contarDifuntoEnNicho($codigo_n);
                     $difuntoEnNicho=$this->buscarDifuntoEnNicho($request);
                     $cant=$cantidadEnNicho;
-
+                   // dd($cantidadEnNicho);
                     $texto_servicio="";
                     $separador=" ";
 
@@ -457,7 +457,7 @@ class ServiciosController extends Controller
                                 if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'){
                                       //inhumacion a nichos temporales ingreso de 1 solo cuerpo
                                     //$estado_nicho="OCUPADO";
-                                    if( $cantidadEnNicho !=false ||  $cantidadEnNicho>=1){
+                                    if( $cantidadEnNicho !=false &&  $cantidadEnNicho>=1){
                                         $cant_ant=$cantidadEnNicho;
                                         return response([
                                             'status'=> false,
@@ -720,11 +720,7 @@ class ServiciosController extends Controller
                                                             if($request->asignar_difunto_nicho=="asignado")
                                                             {
                                                                             $n=New Nicho;
-                                                                        // dd($request->cuartel_nuevo."-nuevo bloque". $request->bloque_nuevo."-nuevo ni". $request->nicho_nuevo."-nuevo f". $request->fila_nuevo);
-
                                                                             $nuevo_n=  $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
-
-
                                                                             $nuev_nicho=  json_decode($nuevo_n->getContent(), true);
 
                                                                             if($nuev_nicho['status']==true){

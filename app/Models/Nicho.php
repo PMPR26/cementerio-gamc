@@ -98,7 +98,12 @@ class Nicho extends Model
         $data= Nicho::where('id', $id)->first();
         $data->estado_nicho="LIBRE";
        // $data->cantidad_anterior=$data->cantidad_cuerpos;
+       if($data->cantidad_cuerpos>0){
         $data->cantidad_cuerpos= $data->cantidad_cuerpos-1;
+       }else{
+        $data->cantidad_cuerpos=0;
+       }
+
     //    dd( $data->cantidad_cuerpos);
 
         $data->save();
