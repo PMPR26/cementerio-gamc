@@ -351,25 +351,32 @@ return [
             'target' => '_blank',
             'icon' => 'fas fa-edit',
         ],
-
         [
-           'text'    => 'NOTIFICACIONES',
-           'icon'     =>'fas fa-bell',
-           'submenu' => [
-
-                            [
-                                'text' => 'GESTION TIPOS DE NOTIFICACION',
-                                'route'  => 'notification-tipo',
-                            ],
-
-                            [
-                                'text' => 'NOTIFICAR',
-                                'route'  => 'notificacion.list',
-                            ],
-
-
-                         ],
+            'text' => 'NICHOS',
+            'route'  => 'form.report.nicho',
+            'target' => '_blank',
+            'icon' => 'fas fa-edit',
         ],
+
+
+        // [
+        //    'text'    => 'NOTIFICACIONES',
+        //    'icon'     =>'fas fa-bell',
+        //    'submenu' => [
+
+        //                     [
+        //                         'text' => 'GESTION TIPOS DE NOTIFICACION',
+        //                         'route'  => 'notification-tipo',
+        //                     ],
+
+        //                     [
+        //                         'text' => 'NOTIFICAR',
+        //                         'route'  => 'notificacion.list',
+        //                     ],
+
+
+        //                  ],
+        // ],
         // [
         //     'text'    => 'NICHOS',
         //     'icon'    => 'fas fa-fw fa-share',

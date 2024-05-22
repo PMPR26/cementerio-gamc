@@ -13,7 +13,7 @@ use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
-
+use PDF;
 
 use Illuminate\Http\Exceptions;
 
@@ -46,7 +46,42 @@ class ServicioNicho extends Model
         'updated_at'
     ];
 
+       public function GenerarFurDeposito($ci, $nombre, $primer_apellido,
+         $ap_materno, $nombre_difunto, $cuartel, $bloque, $nicho, $fila, $cuenta , $precio, $descripcion, $num_sec, $cantidades, $cajero,   $nombre_adjudicatario, $ci_adjudicatario, $glosa)
+     {
+       // dd( $servicios_cementery);
+          $headers =  ['Content-Type' => 'application/json'];
+          $client = new Client();
+          $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementery-deposito', [
+        // $response = $client->post('http://192.168.220.117:8006/api/v1/cementerio/generate-fur-cementery', [
 
+              'json' => [
+                  'ci' => $ci,
+                  'nombre' => $nombre,
+                  'primer_apellido' => $primer_apellido,
+                  'ap_materno' => $ap_materno,
+                  'nombre_difunto' => $nombre_difunto,
+                  'cuartel' => $cuartel,
+                  'bloque' => $bloque,
+                  'nicho' => $nicho,
+                  'fila' => $fila,
+                  'cuenta' => $cuenta,
+                  'precio' => $precio,
+                  'descripcion' => $descripcion,
+                  'num_sec' => $num_sec,
+                  'cantidad' => $cantidades,
+                  'cajero'=>$cajero,
+                  'nombre_adjudicatario'=>$nombre_adjudicatario,
+                  'ci_adjudicatario'=>$ci_adjudicatario,
+                  'glosa'=>$glosa
+              ],
+              'headers' => $headers,
+          ]);
+
+          $fur_response = json_decode((string) $response->getBody(), true);
+
+          return $fur_response;
+      }
     public function GenerarFur($ci, $nombre, $primer_apellido,
     $ap_materno, $direccion, $nombre_difunto, $codigo,
      $bloque, $nicho, $fila, $servicios_cementery , $cantidades, $servicio_montos, $cajero,   $nombre_adjudicatario, $ci_adjudicatario, $observacion, $asignado, $nuevo_sitio)
@@ -553,7 +588,7 @@ class ServicioNicho extends Model
             }
 
 
-        //fur para tasas por  otros servicios
+            //fur para tasas por  otros servicios
             public function GenerarFurServicios($ci, $nombre, $primer_apellido,
             $ap_materno, $direccion,  $codigo, $bloque, $nicho, $fila,
             $servicios_cementery , $cantidades, $cajero,  $adjudicatario,$ci_adjudicatario, $tblobs)
@@ -588,6 +623,7 @@ class ServicioNicho extends Model
                 return $fur_response;
 
             }
+
 
 
 }
