@@ -17,6 +17,8 @@
       height: 100px;
 
       text-align: center;
+      border-bottom: 2px solid #ddd;
+
     }
     /* header h1{
       margin: 10px 0;
@@ -27,10 +29,10 @@
     footer {
       position: fixed;
       left: 0px;
-      bottom: -50px;
+      bottom: -80px;
       right: 0px;
       height: 40px;
-      border-bottom: 2px solid #ddd;
+      border-top: 2px solid #ddd;
     }
     footer .page:after {
       content: counter(page);

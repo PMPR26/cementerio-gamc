@@ -17,20 +17,17 @@
       height: 100px;
 
       text-align: center;
+      border-bottom: 2px solid #ddd;
+
     }
-    /* header h1{
-      margin: 10px 0;
-    }
-    header h2{
-      margin: 0 0 10px 0;
-    } */
+
     footer {
       position: fixed;
       left: 0px;
-      bottom: -50px;
+      bottom: -80px;
       right: 0px;
       height: 40px;
-      border-bottom: 2px solid #ddd;
+      border-top: 2px solid #ddd;
     }
     footer .page:after {
       content: counter(page);
@@ -49,39 +46,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
         }
-
-        .txtadd {
-            font-size: 10px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: 200;
-        }
-
-        .txtred {
-            font-size: 12px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: bold;
-            color: red;
-
-        }
-
-        .rotulo {
-            font-size: 15px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: bold;
-            font-style: italic;
-
-        }
-
-        .bold {
-            font-size: 12px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: bold;
-            font-style: italic;
-
-        }
-
-
-
 
        .info tr:nth-child(even) {background: rgb(250, 250, 250)}
         .info tr:nth-child(odd) {background: #edeef0}
@@ -113,8 +77,12 @@
     <header>
         <table width="100%"  cellpadding ="0" cellspacing="0">
             <tr>
-                <td width="20%">
-                    <img src="{{ public_path('/img/admin/logogamc.png') }}" style="width: 70px; height: 70px">
+               <td width="20%">
+                @php($image_path1 = public_path() . '/img/admin/logogamc.png')
+                @php($imageData = base64_encode(file_get_contents($image_path1)))
+                @php($src = 'data:' . mime_content_type($image_path1) . ';base64,' . $imageData)
+                <img src="{{ $src }}" height="100px" class="img-fluid" style="width: 70px; height: 70px">
+
                 </td>
                 <td width="60%" class="txthead">
                     <span class="txthead">GOBIERNO AUTONOMO MUNICIPAL DE COCHABAMBA <br>
@@ -122,18 +90,14 @@
                         DIVISION DE CEMENTERIO</span>
 
                 </td>
-                <td width="10%"></td>
 
-                <td width="10%">
+                <td width="30%">
                     <span class="txthead" align="right"> Fecha: {{ date('Y-m-d') }} <br>
                         Hora:{{ date('H:m:s') }}
                     </span>
                 </td>
             </tr>
         </table>
-
-
-
     </header>
 
     <footer>
@@ -148,6 +112,7 @@
             <caption>LISTA DE NICHOS LIBRES</caption>
             <thead>
                 <tr>
+
                     <th>CUARTEL</th>
                     <th>BLOQUE</th>
                     <th>NRO NICHO</th>
@@ -156,15 +121,13 @@
                     <th>CODIGO ANTERIOR</th>
                     <th>TIPO DE NICHO</th>
                     <th>CANTIDAD DE CUERPOS</th>
-
                     <th>ESTADO</th>
-
-
                  </tr>
             </thead>
             <tbody>
                 @foreach ($nicho as $key => $value )
                     <tr>
+
                         <td>{{ $value->cuartel ?? '' }}</td>
                         <td>{{ $value->bloque ?? '' }}</td>
                         <td>{{ $value->nro_nicho ?? '' }}</td>
@@ -173,7 +136,6 @@
                         <td>{{ $value->codigo_anterior ?? '' }}</td>
                         <td>{{ $value->tipo ?? '' }}</td>
                         <td>{{ $value->cantidad_cuerpos ?? '' }}</td>
-
                         <td>{{ $value->estado_nicho ?? '' }}</td>
 
                     </tr>

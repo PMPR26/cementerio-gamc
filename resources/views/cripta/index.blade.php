@@ -2014,7 +2014,7 @@ $("#cert_defuncion_p").dropzone({
                                                         }
                                                         }
                                                         else{
-                                                            if(val.cuenta=="15224150" || val.cuenta=="15224250" || val.cuenta=="15224410" ){
+                                                            if(val.cuenta=="15224150" || val.cuenta=="15224250" || val.cuenta=="15224410"   || val.cuenta=="15224360"){
                                                                 var html='<div class="form-check '+val.cuenta+'">'+
                                                                         '<input class="form-check-input" type="checkbox" id="'+val.cuenta+'" name="serv[tipo_servicio]" value="'+val.cuenta+'-'+val.descripcion+'"  onclick="cargar_sevicios_hijos(this)">'+
                                                                         '<label class="form-check-label labelservice" for="'+val.cuenta+'">'+val.descripcion+'</label>'+
@@ -2060,6 +2060,7 @@ $("#cert_defuncion_p").dropzone({
             if ($('#'+cuenta+'').is(":checked"))
             {
 
+                console.log("txt_cuenta si");
 
                         $.ajax({
                                 type: 'POST',
@@ -2079,28 +2080,27 @@ $("#cert_defuncion_p").dropzone({
                                         //alert($('#tabla_difunto_row_pay').children().length );
                                         if($('#tabla_difunto_row_pay').children().length == 0)
                                             {
-                                                if (value.num_sec == '636' || value.num_sec == '622' || value.num_sec == '623' || value.num_sec == '1990'  )
-                                                {
-                                                               var html='<div class="form-check">'+
-                                                                    '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs." onclick="seleccionar_hijos_list()" >'+
-                                                                    '<label class="form-check-label childservice" for="'+value.num_sec+'">'+value.descripcion+' - ' + value.monto1 +'- Bs.</label>'+
-                                                                    '</div>';
-                                                                    $('#serv_hijos'+cuenta+'').append(html);
-                                                }
-                                            }
-                                            else{
+                                            //     if (value.num_sec == '636' || value.num_sec == '622' || value.num_sec == '623' || value.num_sec == '1990'  )
+                                            //     {
+                                            //                    var html='<div class="form-check">'+
+                                            //                         '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs." onclick="seleccionar_hijos_list()" >'+
+                                            //                         '<label class="form-check-label childservice" for="'+value.num_sec+'">'+value.descripcion+' - ' + value.monto1 +'- Bs.</label>'+
+                                            //                         '</div>';
+                                            //                         $('#serv_hijos'+cuenta+'').append(html);
+                                            //     }
+                                            // }
+                                            // else{
 
 
-                                                        if (value.num_sec == '526' || value.num_sec == '525' ||
-                                                            value.num_sec == '629' || value.num_sec == '631') {}
-                                                                else {
+                                            //             if ( value.num_sec == '629' || value.num_sec == '631' ) {}
+                                            //                     else {
                                                                     // console.log("asdas");
                                                                     var html='<div class="form-check">'+
                                                                     '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs." onclick="seleccionar_hijos_list()" >'+
                                                                     '<label class="form-check-label childservice" for="'+value.num_sec+'">'+value.descripcion+' - ' + value.monto1 +'- Bs.</label>'+
                                                                     '</div>';
                                                                     $('#serv_hijos'+cuenta+'').append(html);
-                                                                    }
+                                                                  //  }
                                                 }
 
                                     });

@@ -111,8 +111,8 @@ class ResponsableController extends Controller
     }
 
 
-    public function updateResponsable(Request $request){
-
+    public function updateResponsableCrud(Request $request){
+        $resp=New Responsable();
         $this->validate($request, [
             'ci_resp' => 'required',
             'nombres_resp' => 'required',
@@ -122,7 +122,7 @@ class ResponsableController extends Controller
         ]);
 
 
-        $disable_responsable =Responsable::updateResponsable($request);
+        $disable_responsable =$resp->updateResponsableCrud($request);
 
 
         return response([

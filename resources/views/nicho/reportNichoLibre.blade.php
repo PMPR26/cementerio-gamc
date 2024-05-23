@@ -17,6 +17,8 @@
       height: 100px;
 
       text-align: center;
+      border-bottom: 2px solid #ddd;
+
     }
     /* header h1{
       margin: 10px 0;
@@ -30,7 +32,7 @@
       bottom: -50px;
       right: 0px;
       height: 40px;
-      border-bottom: 2px solid #ddd;
+      border-top: 2px solid #ddd;
     }
     footer .page:after {
       content: counter(page);
@@ -122,9 +124,8 @@
                         DIVISION DE CEMENTERIO</span>
 
                 </td>
-                <td width="5%"></td>
 
-                <td width="20%">
+                <td width="30%">
                     <span class="txthead" align="right"> Fecha: {{ date('Y-m-d') }} <br>
                         Hora:{{ date('H:m:s') }}
                     </span>
