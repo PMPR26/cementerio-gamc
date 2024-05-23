@@ -4,95 +4,105 @@
 
 <head>
     <style>
-        /**
-                Establezca los márgenes de la página en 0, por lo que el pie de página y el encabezado
-                puede ser de altura y anchura completas.
-             **/
-        @page {
-            margin: 0cm 0cm;
-        }
+        body{
+       font-family: sans-serif;
+     }
+     @page {
+       margin: 160px 50px;
+     }
+     header { position: fixed;
+       left: 0px;
+       top: -120px;
+       right: 0px;
+       height: 100px;
 
-        /** Defina ahora los márgenes reales de cada página en el PDF **/
-        body {
-            margin-top: 1cm;
-            margin-left: 2cm;
-            margin-right: 2cm;
-            margin-bottom: 2cm;
-        }
+       text-align: center;
+       border-bottom: 2px solid #ddd;
 
-        /** Definir las reglas del encabezado **/
-        header {
-            position: fixed;
-            top: 1cm;
-            left: 2cm;
-            right: 0cm;
-            height: 2cm;
-        }
+     }
 
-        /** Definir las reglas del pie de página **/
-        footer {
-            position: fixed;
-            bottom: 0cm;
-            left: 0cm;
-            right: 0cm;
-            height: 2cm;
-        }
+     footer {
+       position: fixed;
+       left: 0px;
+       bottom: -100px;
+       right: 0px;
+       height: 40px;
+       border-top: 2px solid #ddd;
+     }
+     footer .page:after {
+       content: counter(page);
+     }
+     footer table {
+       width: 100%;
+     }
+     footer div {
+       text-align: right;
+     }
+     footer .izq {
+       text-align: left;
+     }
+         .txthead {
+             font-size: 10px;
+             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+             text-align: center;
+         }
 
-        table tr td {
-            font-size: 12px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+         .txtadd {
+             font-size: 10px;
+             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+             font-weight: 200;
+         }
 
-        }
+         .txtred {
+             font-size: 12px;
+             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+             font-weight: bold;
+             color: red;
 
-        .txthead {
-            font-size: 10px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-        }
+         }
 
-        .txtadd {
-            font-size: 10px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: 200;
-        }
+         .rotulo {
+             font-size: 15px;
+             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+             font-weight: bold;
+             font-style: italic;
 
-        .txtred {
-            font-size: 12px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: bold;
-            color: red;
+         }
 
-        }
+         .bold {
+             font-size: 12px;
+             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+             font-weight: bold;
+             font-style: italic;
 
-        .rotulo {
-            font-size: 15px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: bold;
-            font-style: italic;
+         }
 
-        }
 
-        .bold {
-            font-size: 12px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: bold;
-            font-style: italic;
 
-        }
 
-        .thead {
-            background-color: rgba(155, 155, 155, 0.8);
-            padding: 5px;
-        }
+        .info tr:nth-child(even) {background: rgb(250, 250, 250)}
+         .info tr:nth-child(odd) {background: #edeef0}
+         table thead tr th {
+             background-color: rgba(43, 72, 105, 0.3);
+             /* padding: 5px; */
+             border-collapse: collapse;
+             color: rgb(4, 2, 24);
 
-        .odd {
-            background-color: rgba(155, 155, 155, 0.3);
-            padding: 5px;
+         }
+ .info th, .info td{
+     border: 0.8px rgb(218, 215, 215) solid;
+     text-align: center;
+     font-size: 9px;
 
-        }
-        .text-right{
-    text-align: right !important;
-}
+ }
+ #footer .page:after {
+   content: counter(page, decimal);
+ }
+ .page{
+     text-align: center;
+     font-size: 9px;
+ }
+     </style>
     </style>
 </head>
 
