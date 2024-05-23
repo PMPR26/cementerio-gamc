@@ -159,11 +159,11 @@ class CriptaController extends Controller
             // caso contrario se insterta
             if (!$existe_resp ||  $existe_resp == null) {
                 //insertar difunto
-                $responsable_id = Responsable::insertResponsable($request);
+                $responsable_id = $bResp->insertResponsable($request);
                 // dd( $idresp);
             } else {
                 $responsable_id = $existe_resp->id;
-                Responsable::updateResponsable($request, $responsable_id);
+                $bResp->updateResponsable($request, $responsable_id);
             }
             //end responsable
 
