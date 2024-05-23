@@ -436,7 +436,7 @@
 
 
                         @foreach ($tipo_service as $value)
-                            @if($value['cuenta'] == '15224330' || $value['cuenta'] == "15224350" )
+                            @if($value['cuenta'] == '15224330'  )
                             {{-- //$value['cuenta'] =='15224150' ||   $value['cuenta'] =='15224350' ||  --}}
                             @else
                                 <div class="col-12 {{ $value['cuenta'] }}">
@@ -810,7 +810,7 @@ $(document).ready(function ()
                                 $('#serv-hijos-'+cuenta+'').empty();
                                 $.each(data_response.response, function(index, value) {
 
-                                    if (value.num_sec == '526' || value.num_sec == '525' ||  value.num_sec == '640' ) {}
+                                    if (value.num_sec == '526' || value.num_sec == '525'  ) {}
                                      else {
                                                 // console.log("asdas");
                                                 var html='<div class="form-check">'+
