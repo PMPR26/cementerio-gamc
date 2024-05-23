@@ -126,7 +126,7 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::post('/new-responsable', 'App\Http\Controllers\Responsable\ResponsableController@createNewResponsable')->name('new.responsable');
     Route::get('/disable-responsable/{id}', 'App\Http\Controllers\Responsable\ResponsableController@disableAndEnableResponsable')->name('responsable.disable');
     Route::get('/get-responsable/{id}', 'App\Http\Controllers\Responsable\ResponsableController@getResponsable')->name('responsable.get');
-    Route::put('/update-responsable', 'App\Http\Controllers\Responsable\ResponsableController@updateResponsable')->name('responsable.update');
+    Route::put('/update-responsable-crud', 'App\Http\Controllers\Responsable\ResponsableController@updateResponsableCrud')->name('responsable.update.single');
 });
 
 
@@ -241,6 +241,8 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
       Route::post('/deposito_delete', [App\Http\Controllers\Deposito\DepositoController::class,'destroy'])->name('deposito.destroy');
       Route::post('/deposito_update', [App\Http\Controllers\Deposito\DepositoController::class,'update'])->name('deposito.update');
       Route::post('/deposito_print', [App\Http\Controllers\Deposito\DepositoController::class,'print'])->name('deposito.print');
+      Route::get('/deposito_print_list', [App\Http\Controllers\Deposito\DepositoController::class,'printListDeposito'])->name('deposito.print.list');
+
 
 
 

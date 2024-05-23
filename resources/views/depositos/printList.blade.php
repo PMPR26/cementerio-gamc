@@ -4,7 +4,7 @@
 
 <head>
     <style>
-             body{
+       body{
       font-family: sans-serif;
     }
     @page {
@@ -20,16 +20,11 @@
       border-bottom: 2px solid #ddd;
 
     }
-    /* header h1{
-      margin: 10px 0;
-    }
-    header h2{
-      margin: 0 0 10px 0;
-    } */
+
     footer {
       position: fixed;
       left: 0px;
-      bottom: -80px;
+      bottom: -100px;
       right: 0px;
       height: 40px;
       border-top: 2px solid #ddd;
@@ -124,9 +119,9 @@
                         DIVISION DE CEMENTERIO</span>
 
                 </td>
-                <td width="10%"></td>
+                <td width="2%"></td>
 
-                <td width="10%">
+                <td width="18%">
                     <span class="txthead" align="right"> Fecha: {{ date('Y-m-d') }} <br>
                         Hora:{{ date('H:m:s') }}
                     </span>
@@ -139,62 +134,49 @@
     </header>
 
     <footer>
-        <!-- <img src="footer.png" width="100%" height="100%"/> -->
+        <div id="footer">
+            <p class="page">Página </p>
+        </div>
     </footer>
 
-    <!-- Envuelva el contenido de su PDF dentro de una etiqueta principal -->
 
 
-        <table class="info">
-            <caption>LISTA DE MAUSOLEOS NOTABLES</caption>
+        <table class="info" width=100%>
+            <caption>LISTA DE CUERPOS EN DEPOSITO</caption>
             <thead>
                 <tr>
-                    <th>CODIGO</th>
-                    <th>COD. ANTIGUO</th>
+                    <th>NRO.</th>
                     <th>CUARTEL</th>
                     <th>BLOQUE</th>
-                    <th>SITIO</th>
-                    <th>SUPERFICIE</th>
-                    <th>FAMILIA</th>
-                    <th>ENT. OCUPADOS</th>
-                    <th>TOT. ENTERRATORIOS</th>
-                    <th>OSARIOS OCUPADOS</th>
-                    <th>TOT. OSARIOS</th>
-                    <th>CENISARIOS</th>
-                    <th>DIFUNTOS</th>
-                    <th>ULTIMA GESTION PAGADA</th>
+                    <th>NICHO</th>
+                    <th>FILA</th>
+                    <th>NOMBRE DEL DIFUNTO</th>
+                    <th>IMPUESTOS</th>
+                    <th>LAPIDA</th>
+                    <th>OBSERVACION</th>
                  </tr>
             </thead>
             <tbody>
-                @foreach ($cripta as $key => $value )
+                @foreach ($deposito as $key => $value )
                     <tr>
-                        <td>{{ $value->codigo ?? '' }}</td>
-                        <td>{{ $value->codigo_antiguo ?? '' }}</td>
-                        <td>{{ $value->cuartel_codigo ?? '' }}</td>
-                        <td>{{ $value->bloque_nombre ?? '' }}</td>
-                        <td>{{ $value->sitio ?? '' }}</td>
-                        <td>{{ $value->superficie ?? '' }}</td>
-                        <td>{{ $value->familia ?? '' }}</td>
-                        <td>{{ $value->enterratorios_ocupados ?? '' }}</td>
-                        <td>{{ $value->total_enterratorios ?? '' }}</td>
-                        <td>{{ $value->osarios ?? '' }}</td>
-                        <td>{{ $value->total_osarios ?? '' }}</td>
-                        <td>{{ $value->cenisarios ?? '' }}</td>
-                        <td><?php
-                            if($value->difuntos !=null || !empty($value->difuntos)){
-                                foreach (json_decode($value->difuntos) as $k => $val) {
-                                    echo "<p> " .$val->ci. " ".$val->nombres. " ".$val->primer_apellido ?? ''. "  </p>";
-                                }
-                            }
-                    ?></td>
-                        <td>{{ $value->ultimo_pago ?? '' }}</td>
+                        <td>{{ $key+1 }}</td>
+
+                        <td>{{ $value->cuartel ?? '' }}</td>
+                        <td>{{ $value->bloque ?? '' }}</td>
+                        <td>{{ $value->nicho ?? '' }}</td>
+                        <td>{{ $value->fila ?? '' }}</td>
+                        <td>{{ $value->nombre_difunto ?? '' }}</td>
+
+                        <td>{{ $value->impuesto ?? '' }}</td>
+                        <td>{{ $value->lapida ?? '' }}</td>
+                        <td>{{ $value->observacion ?? '' }}</td>
 
                     </tr>
                 @endforeach
             </tbody>
         </table>
 
-
+    {{-- </main> --}}
 </body>
 
 </html>

@@ -16,13 +16,14 @@ class Responsable extends Model
         'nombres',
         'primer_apellido',
         'segundo_apellido',
-        // 'fecha_nacimiento',
+         'fecha_nacimiento',
         'telefono',
         'celular',
         // 'estado_civil',
         'genero',
         // 'email',
         // 'domicilio',
+        'genero',
         'estado',
         'user_id',
         'created_at'
@@ -85,6 +86,7 @@ class Responsable extends Model
 
 
     public function updateResponsableByDif($request, $difuntoid){
+        dd($difuntoid);
         if($request->ci_resp==null ||$request->ci_resp=="" ){
            // $respons = new Responsable;  // correct
 
@@ -130,6 +132,27 @@ class Responsable extends Model
         $responsable->save();
         return $responsable->id;
     }
+
+    public function updateResponsableCrud($request){
+        //dd( $request->id);
+                $responsable= Responsable::where('id', $request->id)->first();
+                // dd($responsable);
+                if($request->ci_resp==null || $request->ci_resp==""){
+
+                }else{
+                    $responsable->ci=$request->ci_resp;
+                }
+
+                $responsable->nombres=trim(mb_strtoupper($request->nombres_resp,'UTF-8'));
+                $responsable->primer_apellido= trim(mb_strtoupper($request->paterno_resp,'UTF-8'));
+                $responsable->segundo_apellido=trim(mb_strtoupper($request->materno_resp,'UTF-8'))?? '';
+                $responsable->genero=$request->genero_resp ?? '';
+                $responsable->telefono=$request->telefono ?? 0;
+                $responsable->celular=$request->celular ?? 0;
+                $responsable->updated_at=date("Y-m-d H:i:s");
+                $responsable->save();
+                return $responsable->id;
+            }
 
     public function getCiResp($id_resp){
         $q= Responsable::where('id', $id_resp)->first();
