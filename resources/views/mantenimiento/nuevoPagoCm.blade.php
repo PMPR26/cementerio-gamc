@@ -300,6 +300,8 @@
 
               function calcular_monto(){
                 var sum = 0;
+                var total = 0;
+
                 var cant = 0;
                 var sup= $('#superficie').html();
 
@@ -308,7 +310,11 @@
                 $('.sel').each(function(index) {
                     current = $(this).val();
                     if ($(this).is(':checked')) {
-                      sum = parseFloat(sum) + (sup * parseFloat($('#precio_unitario').html()));
+                      total = parseFloat(total) + (sup * parseFloat($('#precio_unitario').html()));
+                      //redondear al inmdiato superior
+
+                        sum = Math.ceil(total); // Esto da 180
+
                       cant=cant+1;
                       gestion=parseInt(ult_pago)+parseInt(index)+parseInt(1);
                       gestiones_acum=gestiones_acum + gestion+",";
