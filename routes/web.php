@@ -210,7 +210,7 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
       Route::get('/mantenimiento', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'index'])->name('mant');
       Route::get('/form-pay', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'createPay'])->name('pay');
       Route::post('/save-pay', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'savePay'])->name('save.pay');
-      Route::get('generate-pdf', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'generatePDF'])->name('generatePDF')->middleware('auth');
+      Route::get('generate-pdf-mant', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'generatePDF'])->name('generatePDF')->middleware('auth');
       Route::post('/buscar_registros', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'buscar_registros'])->name('buscar.registros');
       Route::get('generarci-difunto', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'generateCiDif'])->name('generateCiDif')->middleware('auth');
       Route::get('generarci-responsable', [App\Http\Controllers\Mantenimiento\MantenimientoController::class, 'generateCiResp'])->name('generateCiResp')->middleware('auth');

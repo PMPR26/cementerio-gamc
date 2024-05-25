@@ -1343,7 +1343,7 @@ public function pagoMantenimientoCM(Request $request){
           $datos_ubicacion=$table->id_ubicacion;
           $tipo_ubicacion=$table->tipo_ubicacion;
           $observacion=$table->observacion;
-         // dd($table);
+         // dd($datos_ubicacion);
 
 
         $sql=ResponsableDifunto::where('responsable_difunto.id',$table->respdifunto_id)
@@ -1356,12 +1356,12 @@ public function pagoMantenimientoCM(Request $request){
         $ci_resp=$sql->ci_resp;
         $codigo_nicho=$table->codigo_ubicacion;
 
-            $sq=Nicho::where('nicho.id', '=',$datos_ubicacion )
-            ->join('responsable_difunto', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
-            ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
-            ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp', 'nicho.codigo' )->first();
+        //     $sq=Nicho::where('nicho.id', '=',$datos_ubicacion )
+        //     ->join('responsable_difunto1', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
+        //     ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
+        //     ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp', 'nicho.codigo' )->first();
 
-
+        // dd($sq);
 
                     $arrayBusqueda = [];
                     $arrayBusqueda[] = (string)2;
