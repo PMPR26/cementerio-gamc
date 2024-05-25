@@ -1333,27 +1333,34 @@ public function pagoMantenimientoCM(Request $request){
 
     public function generatePDF(Request $request)
     {
+        //dd("entra");
 
           $table = DB::table('mantenimiento')
           ->where('mantenimiento.id', $request->id)
           ->where('mantenimiento.estado', 'ACTIVO')
           ->select('mantenimiento.*')
           ->first();
-
           $datos_ubicacion=$table->id_ubicacion;
           $tipo_ubicacion=$table->tipo_ubicacion;
           $observacion=$table->observacion;
+         // dd($table);
 
 
+        $sql=ResponsableDifunto::where('responsable_difunto.id',$table->respdifunto_id)
+        ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
+        ->select('responsable.id as id_resp','responsable.ci as ci_resp', 'responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp')
+        ->first();
+       // dd(  $sql);
 
+        $resp=$sql->nombre_resp. " " . $sql->paterno_resp. " ".$sql->materno_resp;
+        $ci_resp=$sql->ci_resp;
+        $codigo_nicho=$table->codigo_ubicacion;
 
             $sq=Nicho::where('nicho.id', '=',$datos_ubicacion )
             ->join('responsable_difunto', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
             ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
             ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp', 'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp', 'nicho.codigo' )->first();
-            $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp;
-            $ci_resp=$sq->ci_resp;
-            $codigo_nicho=$sq->codigo;
+
 
 
                     $arrayBusqueda = [];
