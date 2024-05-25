@@ -1712,6 +1712,8 @@ $(document).ready(function ()
                                         'add_difunto':$('#add_difunto').val(),
                                     }),
                                     success: function(data_response) {
+                                            $('#btn_guardar_servicio').prop('disabled', true);
+
                                                 if(data_response.status==false){
                                                     // temporal_ocupado
                                                     swal.fire({

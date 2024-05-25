@@ -27,31 +27,40 @@ class NichoController extends Controller
                         // ->select('cuartel.id', DB::raw("CONCAT(codigo,' - ',nombre) as codigo"))
                         ->where('estado', '=', 'ACTIVO')
                         ->get();
-
+                // dd( $cuartel);
                         $bloque= DB::table('bloque')
                         ->select('bloque.id', 'bloque.codigo')
                         ->where('estado', '=', 'ACTIVO')
                         ->get();
+                       // dd( $request->select_cuartel_searc);
 
                 if(($request->select_cuartel_search==null  || !isset($request->select_cuartel_search) )){
                     $letter="A";
+
                     $nicho = DB::table('nicho')
                     ->select(
                         'nicho.*',
                         'cuartel.codigo as cuartel_cod',
                         'bloque.codigo as bloque_id',
-                        DB::raw("CONCAT(nombres,' ',primer_apellido,' ',segundo_apellido) as difunto")
+                        DB::raw("
+                            CASE
+                                WHEN nicho.estado_nicho = 'LIBRE' THEN ''
+                                ELSE CONCAT(difunto.nombres, ' ', difunto.primer_apellido, ' ', difunto.segundo_apellido)
+                            END as difunto
+                        ")
                     )
                     ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
                     ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id')
-                    ->leftJoin('responsable_difunto', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
-                    ->leftJoin('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
-                    ->where('nicho.estado', '=', 'ACTIVO')
-                    ->where('nicho.codigo', 'ILIKE', $letter . '%') // Use ILIKE with '%' to match words starting with $letter
-                    ->where(function($query) {
-                        $query->orWhere('responsable_difunto.estado', '=', 'ACTIVO')
-                              ->orWhereNull('responsable_difunto.estado');
+                    ->leftJoin('responsable_difunto', function($join) {
+                        $join->on('responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
+                             ->where('nicho.estado_nicho', '<>', 'LIBRE');
                     })
+                    ->leftJoin('difunto', function($join) {
+                        $join->on('difunto.id', '=', 'responsable_difunto.difunto_id')
+                             ->where('nicho.estado_nicho', '<>', 'LIBRE');
+                    })
+                    ->where('nicho.estado', '=', 'ACTIVO')
+                    ->where('nicho.codigo', 'ILIKE', $letter . '%')
                     ->get();
 
                 }else{
@@ -63,43 +72,57 @@ class NichoController extends Controller
                             'nicho.*',
                             'cuartel.codigo as cuartel_cod',
                             'bloque.codigo as bloque_id',
-                            DB::raw("CONCAT(nombres,' ',primer_apellido,' ',segundo_apellido) as difunto")
+                            DB::raw("
+                                CASE
+                                    WHEN nicho.estado_nicho = 'LIBRE' THEN ''
+                                    ELSE CONCAT(difunto.nombres, ' ', difunto.primer_apellido, ' ', difunto.segundo_apellido)
+                                END as difunto
+                            ")
                         )
                         ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
                         ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id')
-                        ->leftJoin('responsable_difunto', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
-                        ->leftJoin('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
-                        ->where('nicho.estado', '=', 'ACTIVO')
-                        ->where(function($query) {
-                            $query->orWhere('responsable_difunto.estado', '=', 'ACTIVO')
-                                  ->orWhereNull('responsable_difunto.estado');
+                        ->leftJoin('responsable_difunto', function($join) {
+                            $join->on('responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
+                                 ->where('nicho.estado_nicho', '<>', 'LIBRE');
                         })
+                        ->leftJoin('difunto', function($join) {
+                            $join->on('difunto.id', '=', 'responsable_difunto.difunto_id')
+                                 ->where('nicho.estado_nicho', '<>', 'LIBRE');
+                        })
+                        ->where('nicho.estado', '=', 'ACTIVO')
                         ->get();
+
 
                     }else{
                             $c=Cuartel::where('id',$request->select_cuartel_search)->where('estado', 'ACTIVO')->first();
                             $letter=$c->codigo;
 
                             $nicho = DB::table('nicho')
-                            ->select(
-                                'nicho.*',
-                                'cuartel.codigo as cuartel_cod',
-                                'bloque.codigo as bloque_id',
-                                DB::raw("CONCAT(nombres,' ',primer_apellido,' ',segundo_apellido) as difunto")
-                            )
-                            ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
-                            ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id')
-                            ->leftJoin('responsable_difunto', 'responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
-                            ->leftJoin('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
-                            ->where('nicho.estado', '=', 'ACTIVO')
-                            ->where('nicho.codigo', 'ILIKE', $letter . '%') // Use ILIKE with '%' to match words starting with $letter
-                            ->where(function($query) {
-                                $query->orWhere('responsable_difunto.estado', '=', 'ACTIVO')
-                                      ->orWhereNull('responsable_difunto.estado');
-                            })
-                            ->get();
+                                ->select(
+                                    'nicho.*',
+                                    'cuartel.codigo as cuartel_cod',
+                                    'bloque.codigo as bloque_id',
+                                    DB::raw("
+                                        CASE
+                                            WHEN nicho.estado_nicho = 'LIBRE' THEN ''
+                                            ELSE CONCAT(difunto.nombres, ' ', difunto.primer_apellido, ' ', difunto.segundo_apellido)
+                                        END as difunto
+                                    ")
+                                )
+                                ->join('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
+                                ->join('bloque', 'bloque.id', '=', 'nicho.bloque_id')
+                                ->leftJoin('responsable_difunto', function($join) {
+                                    $join->on('responsable_difunto.codigo_nicho', '=', 'nicho.codigo')
+                                        ->where('nicho.estado_nicho', '<>', 'LIBRE');
+                                })
+                                ->leftJoin('difunto', function($join) {
+                                    $join->on('difunto.id', '=', 'responsable_difunto.difunto_id')
+                                        ->where('nicho.estado_nicho', '<>', 'LIBRE');
+                                })
+                                ->where('nicho.estado', '=', 'ACTIVO')
+                                ->where('nicho.codigo', 'ILIKE', $letter . '%')
+                                ->get();
                         }
-
 
                 }
 
