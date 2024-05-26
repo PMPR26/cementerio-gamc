@@ -289,7 +289,15 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
         Route::get('/generar_reporte_nicho', [App\Http\Controllers\Nicho\NichoController::class,'formEstadoNicho'])->name('form.report.nicho');
         Route::post('/imprimir_reporte_nicho', [App\Http\Controllers\Nicho\NichoController::class,'imprimirReporteNicho'])->name('nicho.print.report');
 
+/******************************************************************************** */
+/*************************REPORTES DIARIOS NICHOS/CRIPTAS-MAUSOLEOS  ************* */
+/******************************************************************************** */
+Route::get('/reporte-parametros', [App\Http\Controllers\ReportesDiarios\ReportesDiariosController::class,'index'])->name('transacciones.form');
+Route::post('/reporte-generador', [App\Http\Controllers\ReportesDiarios\ReportesDiariosController::class,'generadorReport'])->name('transacciones.print.report');
 
+
+Route::get('/reporte-servicios-diarios', [App\Http\Controllers\ReportesDiarios\ReportesDiariosController::class,'serviciosDiarios'])->name('transacciones.servicios.diarios');
+Route::get('/reporte-mantenimientos-diarios', [App\Http\Controllers\ReportesDiarios\ReportesDiariosController::class,'mantenimientosDiarios'])->name('transacciones.mantenimientos.diarios');
 
 
 

@@ -337,8 +337,16 @@ return [
             'route'  => 'deposito',
             'icon' => 'fas fa-archive',
         ],
+        ['header' => 'TRANSACCIONES DIARIAS'],
+        [
+            'text' => 'GENERAR REPORTE',
+            'route'  => 'transacciones.form',
+            'target' => '_blank',
+            'icon' => 'fas fa-file',
+        ],
 
         ['header' => 'REPORTES'],
+
         [
             'text' => 'MAUSOLEOS NOTABLES',
             'route'  => 'mausoleosNotables',
@@ -363,6 +371,7 @@ return [
             'target' => '_blank',
             'icon' => 'fas fa-file',
         ],
+
 
 
         // [
