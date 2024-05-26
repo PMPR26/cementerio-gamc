@@ -113,10 +113,10 @@
             <thead>
                 <tr>
 
-                    <th>CUARTEL</th>
+               {{--      <th>CUARTEL</th>
                     <th>BLOQUE</th>
                     <th>NRO NICHO</th>
-                    <th>FILA</th>
+                    <th>FILA</th> --}}
                     <th>CODIGO</th>
                     <th>CODIGO ANTERIOR</th>
                     <th>TIPO DE NICHO</th>
@@ -128,10 +128,10 @@
                 @foreach ($nicho as $key => $value )
                     <tr>
 
-                        <td>{{ $value->cuartel ?? '' }}</td>
+                      {{--   <td>{{ $value->cuartel ?? '' }}</td>
                         <td>{{ $value->bloque ?? '' }}</td>
                         <td>{{ $value->nro_nicho ?? '' }}</td>
-                        <td>{{ $value->fila ?? '' }}</td>
+                        <td>{{ $value->fila ?? '' }}</td> --}}
                         <td>{{ $value->codigo ?? '' }}</td>
                         <td>{{ $value->codigo_anterior ?? '' }}</td>
                         <td>{{ $value->tipo ?? '' }}</td>

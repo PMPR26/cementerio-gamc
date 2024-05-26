@@ -387,11 +387,23 @@ class NichoController extends Controller
     public function imprimirReporteNicho(Request $request)
     {
         $nicho_estado = $request->estado_nicho;
-
+/*
         $query = DB::table('nicho')
             ->leftJoin('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
             ->leftJoin('bloque', 'bloque.id', '=', 'nicho.bloque_id')
-            ->select('nicho.id', 'nicho.codigo','nicho.nro_nicho', 'nicho.fila','nicho.tipo','nicho.estado_nicho','nicho.codigo_anterior','nicho.cantidad_cuerpos', 'nicho.estado', 'cuartel.codigo as cuartel', 'bloque.codigo as bloque')
+            ->select('nicho.id', 'nicho.codigo','nicho.nro_nicho', 'nicho.fila','nicho.tipo',
+            'nicho.estado_nicho',
+            'nicho.codigo_anterior','nicho.cantidad_cuerpos', 'nicho.estado',
+             'cuartel.codigo as cuartel', 'bloque.codigo as bloque')
+            ->where('nicho.estado_nicho', '=', $nicho_estado)
+            ->where('nicho.estado', '=', 'ACTIVO')
+            ->orderBy('nicho.id', 'asc');
+*/
+        $query = DB::table('nicho')
+            ->select('nicho.id', 'nicho.codigo','nicho.nro_nicho', 'nicho.fila','nicho.tipo',
+            'nicho.estado_nicho',
+            'nicho.codigo_anterior','nicho.cantidad_cuerpos', 'nicho.estado'
+            )
             ->where('nicho.estado_nicho', '=', $nicho_estado)
             ->where('nicho.estado', '=', 'ACTIVO')
             ->orderBy('nicho.id', 'asc');
