@@ -1988,7 +1988,7 @@ $("#cert_defuncion_p").dropzone({
                                                         {
                                                       //  if(val.cuenta=='15224370' || val.cuenta=='15224330' || val.cuenta=='15224380' || val.cuenta=='15224300' || val.cuenta=='15224390' ){}
                                                        // else{
-                                                          if( val.cuenta=='15224330'  ){}
+                                                          if( val.cuenta=='15224330' ){}
                                                         else{
                                                             var html='<div class="form-check '+val.cuenta+'">'+
                                                                         '<input class="form-check-input services_origin" type="checkbox" id="'+val.cuenta+'" name="serv[tipo_servicio]" value="'+val.cuenta+'-'+val.descripcion+'"  onclick="cargar_sevicios_hijos(this)">'+
@@ -1998,7 +1998,7 @@ $("#cert_defuncion_p").dropzone({
                                                                         $('#contenedor_servicios').append(html);
 
 
-                                                                        if(val.cuenta=='15224200' || val.cuenta=="15224250"){
+                                                                        if(val.cuenta=='15224200' || val.cuenta=="15224250" ){
                                                                           //  var html1='<p class="dif_exhumacion" style="display:none"> </p>';
                                                                            // $('.15224200').append(html1);
                                                                             $('#contenedor_dif_serv').show();
@@ -2014,7 +2014,7 @@ $("#cert_defuncion_p").dropzone({
                                                         }
                                                         }
                                                         else{
-                                                            if(val.cuenta=="15224150" || val.cuenta=="15224250" || val.cuenta=="15224410"   || val.cuenta=="15224360"){
+                                                            if(val.cuenta=="15224150" || val.cuenta=="15224250" || val.cuenta=="15224410"   || val.cuenta=="15224360" || val.cuenta=="15224350"){
                                                                 var html='<div class="form-check '+val.cuenta+'">'+
                                                                         '<input class="form-check-input" type="checkbox" id="'+val.cuenta+'" name="serv[tipo_servicio]" value="'+val.cuenta+'-'+val.descripcion+'"  onclick="cargar_sevicios_hijos(this)">'+
                                                                         '<label class="form-check-label labelservice" for="'+val.cuenta+'">'+val.descripcion+'</label>'+
@@ -2080,27 +2080,27 @@ $("#cert_defuncion_p").dropzone({
                                         //alert($('#tabla_difunto_row_pay').children().length );
                                         if($('#tabla_difunto_row_pay').children().length == 0)
                                             {
-                                            //     if (value.num_sec == '636' || value.num_sec == '622' || value.num_sec == '623' || value.num_sec == '1990'  )
-                                            //     {
-                                            //                    var html='<div class="form-check">'+
-                                            //                         '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs." onclick="seleccionar_hijos_list()" >'+
-                                            //                         '<label class="form-check-label childservice" for="'+value.num_sec+'">'+value.descripcion+' - ' + value.monto1 +'- Bs.</label>'+
-                                            //                         '</div>';
-                                            //                         $('#serv_hijos'+cuenta+'').append(html);
-                                            //     }
-                                            // }
-                                            // else{
+                                                if (value.num_sec == '636' || value.num_sec == '622' || value.num_sec == '623' || value.num_sec == '1990' || value.num_sec == '527' || value.num_sec == '526' || value.num_sec == '525'|| value.num_sec == '640'   )
+                                                {
+                                                               var html='<div class="form-check">'+
+                                                                    '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs." onclick="seleccionar_hijos_list()" >'+
+                                                                    '<label class="form-check-label childservice" for="'+value.num_sec+'">'+value.descripcion+' - ' + value.monto1 +'- Bs.</label>'+
+                                                                    '</div>';
+                                                                    $('#serv_hijos'+cuenta+'').append(html);
+                                                }
+                                            }
+                                            else{
 
 
-                                            //             if ( value.num_sec == '629' || value.num_sec == '631' ) {}
-                                            //                     else {
+                                                        if ( value.num_sec == '629' || value.num_sec == '631' ) {}
+                                                                else {
                                                                     // console.log("asdas");
                                                                     var html='<div class="form-check">'+
                                                                     '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs." onclick="seleccionar_hijos_list()" >'+
                                                                     '<label class="form-check-label childservice" for="'+value.num_sec+'">'+value.descripcion+' - ' + value.monto1 +'- Bs.</label>'+
                                                                     '</div>';
                                                                     $('#serv_hijos'+cuenta+'').append(html);
-                                                                  //  }
+                                                                   }
                                                 }
 
                                     });
