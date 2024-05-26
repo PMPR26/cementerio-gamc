@@ -343,19 +343,25 @@ return [
             'text' => 'MAUSOLEOS NOTABLES',
             'route'  => 'mausoleosNotables',
             'target' => '_blank',
-            'icon' => 'fas fa-edit',
+            'icon' => 'fas fa-file',
         ],
         [
             'text' => 'CRIPTAS NOTABLES',
             'route'  => 'criptasNotables',
             'target' => '_blank',
-            'icon' => 'fas fa-edit',
+            'icon' => 'fas fa-file',
         ],
         [
             'text' => 'NICHOS',
             'route'  => 'form.report.nicho',
             'target' => '_blank',
-            'icon' => 'fas fa-edit',
+            'icon' => 'fas fa-file',
+        ],
+        [
+            'text' => 'LISTA DEPOSITO/PENDIENTES DE PAGO',
+            'route'  => 'deposito.print.list',
+            'target' => '_blank',
+            'icon' => 'fas fa-file',
         ],
 
 

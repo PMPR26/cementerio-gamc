@@ -162,7 +162,7 @@ class DepositoController extends Controller
             'buscar' => $arrayBusquedaString
         ]);
 
-//dd( $response->object()->data->cobrosVarios[0]);
+
         if ($response->successful()) {
             if($response->object()->status == true) {
                 $deposito = $response->object()->data->cobrosVarios[0];
@@ -171,6 +171,20 @@ class DepositoController extends Controller
                 return  $pdf-> stream("Pago_deposito.pdf", array("Attachment" => false));
 
             }
+           }
+
+
+      }
+
+      public function printListDeposito(){
+
+        $deposito = DepositoModel::orderBy('id', 'desc')->get();
+
+
+        if ($deposito) {
+                $pdf = PDF::setPaper('A4', 'landscape');
+                $pdf = PDF::loadView('depositos/printList', compact('deposito'));
+                return  $pdf-> stream("Lista_deposito.pdf", array("Attachment" => false));
            }
 
 

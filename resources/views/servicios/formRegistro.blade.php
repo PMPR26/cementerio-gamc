@@ -810,7 +810,7 @@ $(document).ready(function ()
                                 $('#serv-hijos-'+cuenta+'').empty();
                                 $.each(data_response.response, function(index, value) {
 
-                                    if (value.num_sec == '526' || value.num_sec == '525' ||  value.num_sec == '1995' ||  value.num_sec == '527'  ||  value.num_sec == '640' ) {}
+                                    if (value.num_sec == '526' || value.num_sec == '525' ||  value.num_sec == '640' ) {}
                                      else {
                                                 // console.log("asdas");
                                                 var html='<div class="form-check">'+
@@ -2083,7 +2083,7 @@ $(document).ready(function ()
 
                         // Disable the button to prevent double submission
                         $button.prop('disabled', false);
-                        $button.text('Registra Servicio');
+                        $button.text('Volver a enviar');
                 }
 
 

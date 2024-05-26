@@ -243,7 +243,7 @@
                             'Content-Type':'application/json',
                             'X-CSRF-TOKEN':'{{ csrf_token() }}',
                         },
-                        url: "{{ route('responsable.update') }}",
+                        url: "{{ route('responsable.update.single') }}",
                         async: false,
                         data: JSON.stringify({
                             'ci_resp':  $('#ci-responsable').val(),
