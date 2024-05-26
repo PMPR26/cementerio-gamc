@@ -116,8 +116,12 @@
         <table width="100%"  cellpadding ="0" cellspacing="0">
             <tr>
                 <td width="20%">
-                    <img src="{{ public_path('/img/admin/logogamc.png') }}" style="width: 70px; height: 70px">
-                </td>
+                    @php($image_path1 = public_path() . '/img/admin/logogamc.png')
+                    @php($imageData = base64_encode(file_get_contents($image_path1)))
+                    @php($src = 'data:' . mime_content_type($image_path1) . ';base64,' . $imageData)
+                    <img src="{{ $src }}" height="100px" class="img-fluid" style="width: 70px; height: 70px">
+
+                    </td>
                 <td width="60%" class="txthead">
                     <span class="txthead">GOBIERNO AUTONOMO MUNICIPAL DE COCHABAMBA <br>
                         DIVISION DE INGRESOS NO TRIBUTARIOS<br>
@@ -149,10 +153,10 @@
             <caption>LISTA DE NICHOS LIBRES</caption>
             <thead>
                 <tr>
-                    <th>CUARTEL</th>
+                   {{--  <th>CUARTEL</th>
                     <th>BLOQUE</th>
                     <th>NRO NICHO</th>
-                    <th>FILA</th>
+                    <th>FILA</th> --}}
                     <th>CODIGO</th>
                     <th>CODIGO ANTERIOR</th>
                     <th>TIPO DEL NICHO</th>
@@ -164,13 +168,13 @@
             <tbody>
                 @foreach ($nicho as $key => $value )
                     <tr>
-                        <td>{{ $value->cuartel ?? '' }}</td>
+                       {{--  <td>{{ $value->cuartel ?? '' }}</td>
                         <td>{{ $value->bloque ?? '' }}</td>
                         <td>{{ $value->nro_nicho ?? '' }}</td>
-                        <td>{{ $value->fila ?? '' }}</td>
+                        <td>{{ $value->fila ?? '' }}</td> --}}
                         <td>{{ $value->codigo ?? '' }}</td>
                         <td>{{ $value->codigo_anterior ?? '' }}</td>
-                        <td>{{ $value->tipo_nicho ?? '' }}</td>
+                        <td>{{ $value->tipo ?? '' }}</td>
                         <td>{{ $value->estado_nicho ?? '' }}</td>
 
                     </tr>
