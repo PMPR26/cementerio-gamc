@@ -1712,6 +1712,8 @@ $(document).ready(function ()
                                         'add_difunto':$('#add_difunto').val(),
                                     }),
                                     success: function(data_response) {
+                                        // console.log("successss");
+                                        // return false;
                                             $('#btn_guardar_servicio').prop('disabled', true);
 
                                                 if(data_response.status==false){
@@ -1735,8 +1737,8 @@ $(document).ready(function ()
                                                     showConfirmButton: false
                                                 });
                                                 setTimeout(function() {
-                                                    location.reload();
-                                                    window.location.href = "/servicios/servicios"
+                                                   // location.reload();
+                                                   // window.location.href = "/servicios/servicios"
                                                 }, 2000);
                                             }
 
@@ -1747,6 +1749,8 @@ $(document).ready(function ()
                                         if(error.status == 422){
                                             Object.keys(error.responseJSON.errors).forEach(function(k){
                                             toastr["error"](error.responseJSON.errors[k]);
+                                            $button.prop('disabled', false);
+                                            $button.text('Volver a Intentar ..');
                                             //console.log(k + ' - ' + error.responseJSON.errors[k]);
                                             });
                                         }else if(error.status == 400){
@@ -1759,7 +1763,9 @@ $(document).ready(function ()
                                                 showConfirmButton: false
                                                 });
                                                 setTimeout(function() {
-                                                    location.reload();
+                                                    $button.prop('disabled', false);
+                                                    $button.text('Volver a Intentar ..');
+                                                   // location.reload();
                                                     // window.location.href =  "{{URL::to('serv')}} " //"{{ route('serv') }}";
 
                                                 }, 2000);
