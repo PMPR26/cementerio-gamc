@@ -437,9 +437,9 @@ class ServiciosController extends Controller
             //******************** recuperar los servicios adquiridos ***** */
 
 
-try {
-    // Iniciar una transacción
-    DB::beginTransaction();
+// try {
+//     // Iniciar una transacción
+//     DB::beginTransaction();
             if (!empty($request->servicios_adquiridos) && is_array($request->servicios_adquiridos))
             {
                     $cantidadEnNicho=$this->contarDifuntoEnNicho($codigo_n);
@@ -615,7 +615,6 @@ try {
                     // step4: register responsable -- si el responsable
                     $r=New Responsable;
                     $existeResponsable=$r->searchResponsable($request);
-
                     if (!$existeResponsable ||  $existeResponsable == null) {
                         $r=New Responsable;
                         $idresp = $r->insertResponsable($request);
@@ -623,6 +622,7 @@ try {
                         $idresp = $existeResponsable->id;
                         $this->updateResponsable($request, $idresp);
                     }
+
 
                     if($request->ci_resp==null || !isset($request->ci_resp) || $request->ci_resp==""){
                         $sqresp=Responsable::WhereRaw('id=\''.trim($idresp).'\'')->select('ci')->first();
@@ -656,11 +656,11 @@ try {
                                             $materno_pago =  trim(strtoupper($request->materno_resp)) ?? '';
                                             $ci = $ci_adjudicatario;
                                 }
+
                                     //end responsable
                                     //insertar tbl responsable_difunto
                                     if (isset($difuntoid) && isset($idresp))
                                     {
-                                        // dd($estado_nicho);
                                         $rf = new ResponsableDifunto();
                                         $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid, $codigo_n );
                                         if ($existeRespDif != null) {
@@ -668,6 +668,7 @@ try {
                                         } else {
                                             $iddifuntoResp = $rf->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho, $id_nicho);
                                         }
+
                                     }
                                                 //insert pago
                                                 if($request->reg=="reg"){
@@ -700,6 +701,8 @@ try {
                                                             }else{
                                                                 $nuevo_sitio="";
                                                             }
+
+
                                                             /** generar fur */
 
                                                                     $nombre_difunto=$request->nombres_dif." ".$request->paterno_dif." ".$request->materno_dif;
@@ -720,10 +723,14 @@ try {
                                                                         $fur = $response['response'];
                                                                         //dd($fur);
                                                                     }
+
                                                     }
                                                         if(!empty($tblobs)){
                                                             $descripcion_exhumacion=  implode(', ', $tblobs);
 
+                                                        }
+                                                        else{
+                                                            $descripcion_exhumacion="";
                                                         }
 
                                                 $serv = new ServicioNicho;
@@ -759,7 +766,6 @@ try {
                                                 }
                                                 $serv->save();
                                                 $idServ=$serv->id;
-                                              //  dd( $idServ);
                                                   /// si se esta haciendo una asignacion
 
                                                   if($request->asignar_difunto_nicho=="asignado")
@@ -767,7 +773,7 @@ try {
                                                       $n=New Nicho;
                                                       $nuevo_n= $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
                                                       $nuevo_nicho= json_decode($nuevo_n->getContent(), true);
-
+            // dd($nuevo_nicho);
                                                       if($nuevo_nicho['status']==true){
                                                           $id_nicho_nuevo=$nuevo_nicho['nicho']['id'];
                                                           $cantidad_cuerpos_nicho_nuevo=$nuevo_nicho['nicho']['cantidad_cuerpos']+1;
@@ -809,7 +815,7 @@ try {
 
 
                                                    // Confirmar la transacción
-                                                    DB::commit();
+                                                 //   DB::commit();
 
                                                 return response([
                                                     'status'=> true,
@@ -826,13 +832,13 @@ try {
                                     'message'=> "Debe seleccionar al menos un servicio"
                                 ],201);
                              }
-                            } catch (\Exception $e) {
-                                // Ocurrió un error, revertir la transacción
-                                DB::rollback();
+                            // } catch (\Exception $e) {
+                            //     // Ocurrió un error, revertir la transacción
+                            //    // DB::rollback();
 
-                                // Manejar el error de alguna manera
-                                echo "Ocurrió un error: " . $e->getMessage();
-                            }
+                            //     // Manejar el error de alguna manera
+                            //     echo "Ocurrió un error: " . $e->getMessage();
+                            // }
 
 
 
