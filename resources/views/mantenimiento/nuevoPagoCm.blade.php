@@ -5,12 +5,13 @@
 @section('plugins.Toastr', true)
 @section('plugins.Sweetalert2', true)
 @section('plugins.Select2', true)
-@section('plugins.Pace', true)
+{{-- @section('plugins.Pace', true) --}}
 @section('plugins.dropzone', true)
 
 
-<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+{{-- <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'> --}}
 
+<link rel="stylesheet" href="{{ asset('libreries/font-awesome/font-awesome.min.css') }}">
 @section('content_header')
     <h1>Gestion de Criptas y Mausoleos</h1>
 @stop

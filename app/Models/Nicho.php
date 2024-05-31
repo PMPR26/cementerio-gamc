@@ -138,6 +138,8 @@ class Nicho extends Model
             $rd->monto_ultima_renov=0;
             $rd->user_id=Auth::user()->id;
             $rd->save();
+            $resp_dif=ResponsableDifunto::where('id', $rd->responsable_id)
+            ->update(['estado'=>'INACTIVO']);
         }
 
        return true;
