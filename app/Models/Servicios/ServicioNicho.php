@@ -47,7 +47,7 @@ class ServicioNicho extends Model
     ];
 
        public function GenerarFurDeposito($ci, $nombre, $primer_apellido,
-         $ap_materno, $nombre_difunto, $cuartel, $bloque, $nicho, $fila, $cuenta , $precio, $descripcion, $num_sec, $cantidades, $cajero,   $nombre_adjudicatario, $ci_adjudicatario, $glosa)
+         $ap_materno, $nombre_difunto, $cuartel, $bloque, $nicho, $fila, $cuenta , $precio, $descripcion, $num_sec, $cantidades, $monto, $cajero,   $nombre_adjudicatario, $ci_adjudicatario, $glosa)
      {
        // dd( $servicios_cementery);
           $headers =  ['Content-Type' => 'application/json'];
@@ -70,6 +70,7 @@ class ServicioNicho extends Model
                   'descripcion' => $descripcion,
                   'num_sec' => $num_sec,
                   'cantidad' => $cantidades,
+                  'monto' => $monto,
                   'cajero'=>$cajero,
                   'nombre_adjudicatario'=>$nombre_adjudicatario,
                   'ci_adjudicatario'=>$ci_adjudicatario,

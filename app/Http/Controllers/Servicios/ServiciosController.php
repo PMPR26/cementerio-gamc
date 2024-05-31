@@ -610,9 +610,7 @@ try {
                             $difuntoid = $existeDifunto->id;
                             $d->updateDifunto($request, $difuntoid);
                         }
-
                         // dd($difuntoid);
-
                     // end difunto
                     // step4: register responsable -- si el responsable
                     $r=New Responsable;
@@ -626,7 +624,6 @@ try {
                         $this->updateResponsable($request, $idresp);
                     }
 
-
                     if($request->ci_resp==null || !isset($request->ci_resp) || $request->ci_resp==""){
                         $sqresp=Responsable::WhereRaw('id=\''.trim($idresp).'\'')->select('ci')->first();
                         $ci_adjudicatario=$sqresp->ci;
@@ -634,9 +631,7 @@ try {
                     else{
                         $ci_adjudicatario=$request->ci_resp;
                     }
-
                        /********recuperar datos de la persona que realizo el pago, si es el propietario o un tercer responsable */
-
                                 if ($request->pago_por != "responsable") {
                                     $pago_por = "Tercera persona";
                                     $nombre_pago = trim(strtoupper($request->name_pago));
@@ -661,23 +656,19 @@ try {
                                             $materno_pago =  trim(strtoupper($request->materno_resp)) ?? '';
                                             $ci = $ci_adjudicatario;
                                 }
-
-
-                                  //end responsable
-
+                                    //end responsable
                                     //insertar tbl responsable_difunto
-                                    if (isset($difuntoid) && isset($idresp)) {
+                                    if (isset($difuntoid) && isset($idresp))
+                                    {
                                         // dd($estado_nicho);
                                         $rf = new ResponsableDifunto();
                                         $existeRespDif = $rf->searchResponsableDifunt($request, $idresp, $difuntoid, $codigo_n );
-
                                         if ($existeRespDif != null) {
                                             $iddifuntoResp = $rf->updateDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho);
                                         } else {
                                             $iddifuntoResp = $rf->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho, $id_nicho);
                                         }
                                     }
-
                                                 //insert pago
                                                 if($request->reg=="reg"){
                                                     $fur=$request->nrofur;
@@ -898,12 +889,14 @@ try {
                         if($tipo_ubicacion=="NICHO"){
 
                             $sq = Responsable::where('responsable_difunto.id', $responsable_difunto_id)
-                            ->where('responsable_difunto.estado','ACTIVO')
+                          //  ->where('responsable_difunto.estado','ACTIVO')
                             ->join('responsable_difunto', 'responsable_difunto.responsable_id', '=', 'responsable.id')
                             ->select('responsable.nombres as nombre_resp', 'responsable.primer_apellido as paterno_resp',
                              'responsable.segundo_apellido as materno_resp', 'responsable.ci as ci_resp' )
                             ->orderBy('responsable_difunto.id', 'DESC')
                             ->first();
+
+
                             $resp=$sq->nombre_resp. " " . $sq->paterno_resp. " ".$sq->materno_resp; // ."  C.I.: ".$sq->ci_resp;
                             $ci_resp=$sq->ci_resp;
                         }

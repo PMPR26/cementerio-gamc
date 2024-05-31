@@ -175,8 +175,7 @@
 
         <h4 align="center">DETALLE LIQUIDACION</h4>
         <br>
-
-        <table  width="100%" border="1" cellspacing="0" cellpadding="10">
+                <table  width="100%" border="1" cellspacing="0" cellpadding="10">
                     <thead>
                         <tr>
                             <th width="100px" align="left">CUENTA</th>
@@ -185,7 +184,6 @@
                             <th width="10%" align="right">MONTO</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         <tr>
                             <td width="100px" align="center">{{ $deposito->cobrosDetalles[0]->cuenta }}</td>
@@ -194,7 +192,6 @@
                             <td width="10%" align="center">{{ $deposito->cobrosDetalles[0]->monto }}</td>
                         </tr>
                     </tbody>
-
                     <tfoot>
                         <tr class="odd">
                             <td width="80%" colspan="3" align="left">Total </td>
@@ -202,11 +199,6 @@
                         </tr>
                     </tfoot>
                 </table>
-
-
-
-
-
             <p>
 
                     <?php $subt1 = round($data->total_adeudado, 3);
