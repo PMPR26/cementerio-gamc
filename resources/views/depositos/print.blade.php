@@ -6,9 +6,12 @@
     <style>
         body{
        font-family: sans-serif;
+       font-size: 10px;
      }
      @page {
        margin: 160px 50px;
+       font-size: 10px;
+
      }
      header { position: fixed;
        left: 0px;
@@ -148,7 +151,7 @@
         <!-- tabla encabezado boleta -->
         <table width="100%">
             <tr>
-                <th width="80%">
+                <th width="100%">
                     <h4 align="center">BOLETA DE PRELIQUIDACION</h4>
                 </th>
                 <td width="20%">
@@ -160,56 +163,61 @@
         </table>
         <table  width="100%">
             <tr>
-                <td colspan="2"> <span class="rotulo"> IDENTIFICACION DEL CONTRIBUYENTE</span></td>
+                <td width="80%"> <span class="rotulo"> IDENTIFICACION DEL CONTRIBUYENTE</span></td>
                 <td></td>
             </tr>
             <tr>
-                <td width="80%" colspan="2">Nombre Responsable Pago: {{ucwords($deposito->nombre ?? '' )}}  </td><td  width=20%  class="text-right"> C.I.:{{ $deposito->ci??'' }}</td>
+                <td width="80%">Nombre Responsable Pago: {{ucwords($deposito->nombre ?? '' )}}  </td><td  width=20%  class="text-right"> C.I.:{{ $deposito->ci??'' }}</td>
 
             </tr>
 
         </table>
 
-        <table  width="100%">
-            <tr>
-                <td colspan="4" width="380px">
-                    <h4 align="left">DETALLE LIQUIDACION</h4>
-                </td>
-            </tr>
+        <h4 align="center">DETALLE LIQUIDACION</h4>
+        <br>
 
-                    <tr class="thead">
-                        <td width="10%" align="left">CUENTA</td>
-                        <td width="10%" align="right">CANTIDAD</td>
-                        <td width="70%" align="center">DETALLE</td>
-                        <td width="10%" align="right">MONTO</td>
-                    </tr>
+        <table  width="100%" border="1" cellspacing="0" cellpadding="10">
+                    <thead>
+                        <tr>
+                            <th width="100px" align="left">CUENTA</th>
+                            <th width="5%" align="right">CANTIDAD</th>
+                            <th width="70%" align="center">DETALLE</th>
+                            <th width="10%" align="right">MONTO</th>
+                        </tr>
+                    </thead>
 
-                    <tr>
-                        <td width="10%" align="left">{{ $deposito->cobrosDetalles[0]->cuenta }}</td>
-                        <td width="10%" align="right">{{ $deposito->cobrosDetalles[0]->cantidad }}</td>
-                        <td width="70%" align="center">{{ $deposito->cobrosDetalles[0]->detalle }}</td>
-                        <td width="10%" align="right">{{ $deposito->cobrosDetalles[0]->monto }}</td>
-                    </tr>
+                    <tbody>
+                        <tr>
+                            <td width="100px" align="center">{{ $deposito->cobrosDetalles[0]->cuenta }}</td>
+                            <td width="2%" align="center">{{ $deposito->cobrosDetalles[0]->cantidad }}</td>
+                            <td width="70%" align="center">{{ $deposito->cobrosDetalles[0]->detalle }}</td>
+                            <td width="10%" align="center">{{ $deposito->cobrosDetalles[0]->monto }}</td>
+                        </tr>
+                    </tbody>
 
-                    <tr class="odd">
-                        <td width="80%" align="left" colspan="3">Total </td>
-                        <td width="10%" align="right">{{ $data->total_adeudado ?? '' }}</td>                  </tr>
+                    <tfoot>
+                        <tr class="odd">
+                            <td width="80%" colspan="3" align="left">Total </td>
+                            <td width="10%" align="right">{{ $data->total_adeudado ?? '' }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
 
 
 
 
-            <tr>
-                <td width='100%' colspan="5" height="80px">
+
+            <p>
+
                     <?php $subt1 = round($data->total_adeudado, 3);
                     $subtLit = number_format(floatval($subt1), 2, ',', '.');
                     $lit = convertir($subtLit);
                     $txt = 'SON: BOLIVIANOS  ' . $lit . ' ';
                     ?>
                     <b> {{ $txt }} </b>
-                </td>
-            </tr>
 
-        </table>
+            </p>
+
 
     </main>
 </body>

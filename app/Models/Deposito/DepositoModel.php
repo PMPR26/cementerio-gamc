@@ -13,11 +13,11 @@ class DepositoModel extends Model
         'bloque',
         'nicho',
         'fila',
+        'tipo_nicho',
         'nombre_difunto',
         'impuesto',
         'lapida',
         'observacion',
-
         'fecha_salida_sitio',
         'fecha_ingreso_deposito',
         'cant_cuotas_adeudadas',

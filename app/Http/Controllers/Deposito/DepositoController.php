@@ -126,7 +126,8 @@ class DepositoController extends Controller
 
         $obj= new ServicioNicho;
         $response=$obj->GenerarFurDeposito($request->ci_responsable_pago,$request->nombre_pago, $request->primer_apellido_pago, $request->segundo_apellido_pago,  $nombre_difunto,
-        $cuartel,$bloque, $nicho, $fila, $request->cuenta, $request->precio, $request->descripcion,  $request->num_sec, $request->cant_cuotas_adeudadas,  $cajero,
+        $cuartel,$bloque, $nicho, $fila, $request->cuenta, $request->precio, $request->descripcion,
+         $request->num_sec, $request->cant_cuotas_adeudadas, $total_adeudado, $cajero,
         $nombre_adjudicatario, $ci_adjudicatario , $request->glosa);
         if($response['status']==true){
             $fur = $response['response'];
