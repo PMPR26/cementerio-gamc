@@ -36,6 +36,7 @@
                                     <thead>
                                         <tr>
                                             <th>Nro.</th>
+                                            <th>Tipo Nicho</th>
                                             <th>Cuartel</th>
                                             <th>Bloque</th>
                                             <th>Nicho</th>
@@ -54,6 +55,7 @@
                                         @foreach ($depositos as $key=>$deposito)
                                         <tr>
                                             <td>{{ $key+1 }}</td>
+                                            <td>{{ $deposito->tipo_nicho??'' }}</td>
                                             <td>{{ $deposito->cuartel }}</td>
                                             <td>{{ $deposito->bloque }}</td>
                                             <td>{{ $deposito->nicho }}</td>
@@ -81,15 +83,15 @@
                                                     <button type="submit" class="btn btn-danger"><i class="fas fa-credit-card 2x"></i></button>
                                                 </form>
 
+                                                @if($deposito->fur!=null || !$deposito->fur)
+                                                        <form action="{{ route('deposito.print') }}" method="POST" target="blank" style="display: inline;">
+                                                            @csrf
+                                                            <input type="hidden" name="deposito_id" id="deposito_id" value="{{ $deposito->id}}">
 
-                                                <form action="{{ route('deposito.print') }}" method="POST" style="display: inline;">
-                                                    @csrf
-                                                    <input type="hidden" name="deposito_id" id="deposito_id" value="{{ $deposito->id}}">
-
-                                                    <input type="hidden" name="fur" id="fur" value="{{ $deposito->fur??''}}">
-                                                    <button type="submit" class="btn btn-info"><i class="fas fa-file-pdf"></i></button>
-                                                </form>
-
+                                                            <input type="hidden" name="fur" id="fur" value="{{ $deposito->fur??''}}">
+                                                            <button type="submit" class="btn btn-info"><i class="fas fa-file-pdf"></i></button>
+                                                        </form>
+                                                @endif
                                             </td>
                                         </tr>
                                          @endforeach

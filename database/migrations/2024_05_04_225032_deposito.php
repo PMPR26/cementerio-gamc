@@ -19,6 +19,7 @@ class Deposito extends Migration
             $table->string('bloque');
             $table->string('nicho');
             $table->string('fila');
+            $table->string('tipo_nicho');
             $table->string('nombre_difunto');
             $table->string('impuesto');
             $table->string('lapida');

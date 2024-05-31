@@ -24,8 +24,17 @@
 
                                 <form method="POST" action="{{ route('deposito.update') }}">
                                     @csrf
-                                    <input type="text" name="id" id="id" value="{{ $deposito->id}}">
+                                    <input type="hidden" name="id" id="id" value="{{ $deposito->id}}">
                                     <div class="form-row">
+                                        <div class="col-sm-12 col-md-3 col-xl-3">
+                                            <label>Tipo Nicho</label>
+                                            <select name="tipo_nicho" id="tipo_nicho" class="form-control">
+                                                <option value="">Seleccione</option>
+                                                <option value="TEMPORAL" {{ $deposito->tipo_nicho == 'TEMPORAL' ? 'selected' : '' }}>TEMPORAL</option>
+                                                <option value="PERPETUO" {{ $deposito->tipo_nicho == 'PERPETUO' ? 'selected' : '' }}>PERPETUO</option>
+                                            </select>
+                                        </div>
+
                                         <div class="col-sm-12 col-md-3 col-xl-3">
                                             <label>CUARTEL</label>
                                             <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" value="{{ $deposito->cuartel}}" class="form-control " maxlength="3" name="cuartel"  autocomplete="off">
@@ -54,7 +63,7 @@
                                     </div>
                                     <div class="form-group col-sm-12 col-md-6 col-lg-6">
                                         <label for="impuesto">Impuesto</label>
-                                        <input type="text" name="impuesto"  value="{{ $deposito->impuesto}}" id="impuesto" class="form-control" required>
+                                        <input type="number" name="impuesto" id="impuesto" value="{{ $deposito->impuesto }}" class="form-control" required min="1999">
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6 col-lg-6">
