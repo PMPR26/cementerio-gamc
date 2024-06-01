@@ -186,7 +186,7 @@ class ServiciosController extends Controller
         ->where('bloque.codigo', '=', $request->bloque)
         ->where('nicho.nro_nicho', '=', $request->nicho)
         ->where('nicho.fila', '=', $request->fila)
-        ->where('servicio_nicho.estado', '=', 'ACTIVO')
+        //->where('servicio_nicho.estado', '=', 'ACTIVO')
         ->orderBy('servicio_nicho.id', 'DESC')
         ->orderBy('nicho.id', 'DESC')
         ->orderBy('responsable_difunto.id', 'DESC')
