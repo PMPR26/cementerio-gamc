@@ -438,10 +438,10 @@ class ServiciosController extends Controller
             //******************** recuperar los servicios adquiridos ***** */
 
 
-try {
+/* try {
     // Iniciar una transacción
     DB::beginTransaction();
-    DB::connection('RECAUDACIONES')->beginTransaction();
+    DB::connection('RECAUDACIONES')->beginTransaction(); */
             if (!empty($request->servicios_adquiridos) && is_array($request->servicios_adquiridos))
             {
                     $cantidadEnNicho=$this->contarDifuntoEnNicho($codigo_n);
@@ -725,7 +725,7 @@ try {
                                                                         $fur = $response['response'];
                                                                         //dd($fur);
                                                                     }
-                                                                    DB::connection('RECAUDACIONES')->commit();
+                                                              //      DB::connection('RECAUDACIONES')->commit();
 
                                                     }
                                                         if(!empty($tblobs)){
@@ -824,7 +824,7 @@ try {
 
 
                                                    // Confirmar la transacción
-                                                   DB::commit();
+                                                //   DB::commit();
 
                                                 return response([
                                                     'status'=> true,
@@ -841,14 +841,14 @@ try {
                                     'message'=> "Debe seleccionar al menos un servicio"
                                 ],201);
                              }
-                            } catch (\Exception $e) {
+                         /*    } catch (\Exception $e) {
                                // Ocurrió un error, revertir la transacción
                                DB::rollback();
 
                                 // Manejar el error de alguna manera
                                 echo "Ocurrió un error: " . $e->getMessage();
                             }
-
+ */
 
 
             }else{
