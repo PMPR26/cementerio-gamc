@@ -1736,9 +1736,9 @@ $(document).ready(function ()
                                                     showCancelButton: false,
                                                     showConfirmButton: false
                                                 });
-                                                setTimeout(function() {
-                                                   // location.reload();
-                                                   // window.location.href = "/servicios/servicios"
+                                                 setTimeout(function() {
+                                                   location.reload();
+                                                   window.location.href = "/servicios/servicios"
                                                 }, 2000);
                                             }
 
@@ -1765,8 +1765,8 @@ $(document).ready(function ()
                                                 setTimeout(function() {
                                                     $button.prop('disabled', false);
                                                     $button.text('Volver a Intentar ..');
-                                                   // location.reload();
-                                                    // window.location.href =  "{{URL::to('serv')}} " //"{{ route('serv') }}";
+                                                   location.reload();
+                                                    window.location.href =  "{{URL::to('serv')}} " //"{{ route('serv') }}";
 
                                                 }, 2000);
                                         }
@@ -1818,7 +1818,7 @@ $(document).ready(function ()
         $(document).on('click', '#buscarResp', function()
         {
             var ci = $('#search_resp').val();
-            console.log("esta es el carnet del gus:"+ ci);
+            console.log("esta es el carnet del resonsable  q esta siendo buscado:"+ ci);
             //var ci ="52525252";
             if(ci.length<1)
             {
@@ -2154,15 +2154,16 @@ $(document).ready(function ()
                          }
                   });
 
-                  $(document).on('click', '#asignar_difunto_nicho',function(){
-                    if ($('#asignar_difunto_nicho').is(":checked")){
-                        $('#asignar_difunto_nicho').val('asignado');
-                        $('.asignar_df').show();
+                  $(document).on('click', '#asignar_difunto_nicho',function()
+                  {
+                        if ($('#asignar_difunto_nicho').is(":checked")){
+                            $('#asignar_difunto_nicho').val('asignado');
+                            $('.asignar_df').show();
+                            }
+                        else{
+                            $('.asignar_df').hide();
+                            $('#asignar_difunto_nicho').val('');
                         }
-                    else{
-                        $('.asignar_df').hide();
-                        $('#asignar_difunto_nicho').val('');
-                    }
                     });
 
 

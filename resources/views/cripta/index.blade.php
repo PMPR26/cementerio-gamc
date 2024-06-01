@@ -8,8 +8,8 @@
 @section('plugins.Pace', true)
 @section('plugins.dropzone', true)
 
-
 {{-- <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'> --}}
+
 <link rel="stylesheet" href="{{ asset('libreries/font-awesome/font-awesome.min.css') }}">
 
 @section('content_header')
@@ -2079,30 +2079,34 @@ $("#cert_defuncion_p").dropzone({
                                     $.each(data_response.response, function(index, value)
                                     {
                                         //alert($('#tabla_difunto_row_pay').children().length );
-                                        if($('#tabla_difunto_row_pay').children().length == 0)
+                                       /* if($('#tabla_difunto_row_pay').children().length == 0)
                                             {
-                                                if (value.num_sec == '636' || value.num_sec == '622' || value.num_sec == '623' || value.num_sec == '1990' || value.num_sec == '527' || value.num_sec == '526' || value.num_sec == '525'|| value.num_sec == '640'   )
-                                                {
-                                                               var html='<div class="form-check">'+
+                                                if (value.num_sec == '636' || value.num_sec == '622' || value.num_sec == '623' || value.num_sec == '1990' || value.num_sec == '527' || value.num_sec == '526' || value.num_sec == '525'  )
+                                                {*/
+                                                    if (value.num_sec != '626' || value.num_sec != '625'){
+                                                        var html='<div class="form-check">'+
                                                                     '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs." onclick="seleccionar_hijos_list()" >'+
                                                                     '<label class="form-check-label childservice" for="'+value.num_sec+'">'+value.descripcion+' - ' + value.monto1 +'- Bs.</label>'+
                                                                     '</div>';
                                                                     $('#serv_hijos'+cuenta+'').append(html);
-                                                }
+                                                    }
+
+                                              /*  }
                                             }
                                             else{
 
 
-                                                        if ( value.num_sec == '629' || value.num_sec == '631' ) {}
-                                                                else {
+                                                       // if ( value.num_sec == '629' || value.num_sec == '631' ) {}
+                                                             //   else {
                                                                     // console.log("asdas");
                                                                     var html='<div class="form-check">'+
                                                                     '<input class="form-check-input service_child" type="checkbox" id="'+value.num_sec+'" name="serv[servicio]" value="'+ txt_cuenta +' => '+value.num_sec+' - '+ value.descripcion + ' - ' + value.monto1 +'- Bs." onclick="seleccionar_hijos_list()" >'+
                                                                     '<label class="form-check-label childservice" for="'+value.num_sec+'">'+value.descripcion+' - ' + value.monto1 +'- Bs.</label>'+
                                                                     '</div>';
                                                                     $('#serv_hijos'+cuenta+'').append(html);
-                                                                   }
+                                                                //   }
                                                 }
+                                                */
 
                                     });
                                 }
