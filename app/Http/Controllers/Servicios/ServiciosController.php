@@ -186,6 +186,7 @@ class ServiciosController extends Controller
         ->where('bloque.codigo', '=', $request->bloque)
         ->where('nicho.nro_nicho', '=', $request->nicho)
         ->where('nicho.fila', '=', $request->fila)
+        ->where('servicio_nicho.estado', '=', 'ACTIVO')
         ->orderBy('servicio_nicho.id', 'DESC')
         ->orderBy('nicho.id', 'DESC')
         ->orderBy('responsable_difunto.id', 'DESC')
@@ -375,7 +376,7 @@ class ServiciosController extends Controller
                     $this->validate($request, [
                         'nro_nicho' => 'required',
                         'bloque' => 'required',
-                        'cuartel' => 'required',
+                        'cuartel' => ['required', 'not_in:seleccione un cuartel'],
                         'fila' => 'required',
                         'tipo_nicho' => 'required',
                         'nombres_dif' => 'required',
@@ -437,9 +438,10 @@ class ServiciosController extends Controller
             //******************** recuperar los servicios adquiridos ***** */
 
 
-// try {
-//     // Iniciar una transacción
-//     DB::beginTransaction();
+try {
+    // Iniciar una transacción
+    DB::beginTransaction();
+    DB::connection('RECAUDACIONES')->beginTransaction();
             if (!empty($request->servicios_adquiridos) && is_array($request->servicios_adquiridos))
             {
                     $cantidadEnNicho=$this->contarDifuntoEnNicho($codigo_n);
@@ -603,7 +605,7 @@ class ServiciosController extends Controller
                         $d=New Difunto;
                         $existeDifunto=$d->searchDifunto($request);
 
-                        // dd($existeDifunto);
+
                         if ( !$existeDifunto ||  $existeDifunto == null) {
                              $difuntoid = $d->insertDifunto($request);
                         } else {
@@ -723,6 +725,7 @@ class ServiciosController extends Controller
                                                                         $fur = $response['response'];
                                                                         //dd($fur);
                                                                     }
+                                                                    DB::connection('RECAUDACIONES')->commit();
 
                                                     }
                                                         if(!empty($tblobs)){
@@ -732,6 +735,7 @@ class ServiciosController extends Controller
                                                         else{
                                                             $descripcion_exhumacion="";
                                                         }
+                                                      //  dd($descripcion_exhumacion);
 
                                                 $serv = new ServicioNicho;
                                                 $serv->codigo_nicho=$codigo_n ?? '';
@@ -766,6 +770,7 @@ class ServiciosController extends Controller
                                                 }
                                                 $serv->save();
                                                 $idServ=$serv->id;
+                                              //  dd( $idServ);
                                                   /// si se esta haciendo una asignacion
 
                                                   if($request->asignar_difunto_nicho=="asignado")
@@ -773,7 +778,7 @@ class ServiciosController extends Controller
                                                       $n=New Nicho;
                                                       $nuevo_n= $n->generarCodigoAsignacion($request->cuartel_nuevo, $request->bloque_nuevo, $request->nicho_nuevo, $request->fila_nuevo);
                                                       $nuevo_nicho= json_decode($nuevo_n->getContent(), true);
-            // dd($nuevo_nicho);
+
                                                       if($nuevo_nicho['status']==true){
                                                           $id_nicho_nuevo=$nuevo_nicho['nicho']['id'];
                                                           $cantidad_cuerpos_nicho_nuevo=$nuevo_nicho['nicho']['cantidad_cuerpos']+1;
@@ -787,10 +792,14 @@ class ServiciosController extends Controller
                                                               $rf->registrar_asignacion($request ,$difuntoid, $idresp, $nuevo_nicho['nicho']['codigo'], $estado_nicho, $nuevo_nicho['nicho']['id'], $nuevo_nicho['nicho']['tipo']);
                                                                 //update servicio-nicho
                                                                 //update destino y asignacion en  registro del servicio
-                                                                $rowServ=ServicioNicho::where('id', $idServ)->first();
-                                                                $rowServ->asignado=$request->asignar_difunto_nicho;
-                                                                $rowServ->destino=$nuevo_nicho['nicho']['codigo'];
-                                                                $rowServ->save();
+                                                                $rowServ = ServicioNicho::where('id', $idServ)->first();
+
+                                                                if ($rowServ) {
+                                                                    $rowServ->asignado = $request->asignar_difunto_nicho;
+                                                                    $rowServ->destino = $nuevo_nicho['nicho']['codigo'];
+                                                                    $rowServ->update();
+                                                                }
+
                                                                 //cambiar estado nuevo nicho
                                                                 $n->CambiarEstadoNicho( $id_nicho_nuevo, 'OCUPADO', $cantidad_cuerpos_nicho_nuevo);
                                                             }
@@ -815,7 +824,7 @@ class ServiciosController extends Controller
 
 
                                                    // Confirmar la transacción
-                                                 //   DB::commit();
+                                                   DB::commit();
 
                                                 return response([
                                                     'status'=> true,
@@ -832,13 +841,13 @@ class ServiciosController extends Controller
                                     'message'=> "Debe seleccionar al menos un servicio"
                                 ],201);
                              }
-                            // } catch (\Exception $e) {
-                            //     // Ocurrió un error, revertir la transacción
-                            //    // DB::rollback();
+                            } catch (\Exception $e) {
+                               // Ocurrió un error, revertir la transacción
+                               DB::rollback();
 
-                            //     // Manejar el error de alguna manera
-                            //     echo "Ocurrió un error: " . $e->getMessage();
-                            // }
+                                // Manejar el error de alguna manera
+                                echo "Ocurrió un error: " . $e->getMessage();
+                            }
 
 
 
