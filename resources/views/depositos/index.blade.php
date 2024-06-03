@@ -76,13 +76,19 @@
                                                     <button type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
                                                 </form>
 
-
+                                                @if($deposito->tipo_nicho=="TEMPORAL")
+                                                    <form action="{{ route('deposito.formPagoRenov') }}" method="POST" style="display: inline;">
+                                                    @csrf
+                                                    <input type="hidden" name="deposito_id" id="deposito_id" value="{{ $deposito->id}}">
+                                                    <button type="submit" class="btn btn-danger"><i class="fas fa-credit-card 2x"></i></button>
+                                                </form>
+                                                @elseif($deposito->tipo_nicho=="PERPETUO")
                                                 <form action="{{ route('deposito.formPago') }}" method="POST" style="display: inline;">
                                                     @csrf
                                                     <input type="hidden" name="deposito_id" id="deposito_id" value="{{ $deposito->id}}">
                                                     <button type="submit" class="btn btn-danger"><i class="fas fa-credit-card 2x"></i></button>
                                                 </form>
-
+                                                @endif
                                                 @if($deposito->fur!=null || !$deposito->fur)
                                                         <form action="{{ route('deposito.print') }}" method="POST" target="blank" style="display: inline;">
                                                             @csrf

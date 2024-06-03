@@ -236,6 +236,8 @@ Route::group(['prefix' => 'difunto', 'middleware' => 'auth'], function () {
       Route::post('/deposito_show', [App\Http\Controllers\Deposito\DepositoController::class,'show'])->name('deposito.show');
       Route::post('/deposito_edit', [App\Http\Controllers\Deposito\DepositoController::class,'edit'])->name('deposito.edit');
       Route::post('/deposito_form_pago', [App\Http\Controllers\Deposito\DepositoController::class,'formPago'])->name('deposito.formPago');
+      Route::post('/deposito_form_pago_renov', [App\Http\Controllers\Deposito\DepositoController::class,'formPagoRenov'])->name('deposito.formPagoRenov');
+
       Route::post('/deposito_preliquidacion', [App\Http\Controllers\Deposito\DepositoController::class,'preliquidacion'])->name('deposito.preliquidacion');
 
       Route::post('/deposito_delete', [App\Http\Controllers\Deposito\DepositoController::class,'destroy'])->name('deposito.destroy');
