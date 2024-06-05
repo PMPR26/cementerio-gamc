@@ -73,7 +73,15 @@
 
                             <div class="col-sm-12 col-md-3 col-xl-3">
                                 <label>NRO NICHO</label>
-                                <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control "  maxlength="5" id="nro_nicho" autocomplete="off">
+                                <input
+                                    style="text-transform:uppercase;"
+                                    oninput="javascript: this.value = this.value.slice(0, 5).toUpperCase();"
+                                    type="text"
+                                    class="form-control"
+                                    maxlength="5"
+                                    id="nro_nicho"
+                                    autocomplete="off"
+                                    placeholder="Nicho">
                             </div>
 
 
@@ -126,9 +134,11 @@
                         <div class="col-12 p-3 text-blue">ESTADO DE NICHO: <span id="estado_actual_nicho"></span></div>
                     </div>
 
-
+                    <input type="hidden" name="store_nro_renovacion" id="store_nro_renovacion">
+                    <input type="hidden" name="store_monto_renovacion" id="store_monto_renovacion">
+                    <input type="hidden" name="cant_renov_confirm" id="cant_renov_confirm">
                     {{-- datos difunto --}}
-                    <div class="card">
+                    <div class="card" id="seccion_difunto">
                         <div class="row bg-gradient-cyan">
                             <div class="card-header col-md-12 col-xl-12">
                                 <h4> DATOS DIFUNTOS </h4>
@@ -181,10 +191,8 @@
                                             </button>
 
                                         <input type="hidden" name="difunto_search" id="difunto_search">
-                                        <input type="hidden" name="store_nro_renovacion" id="store_nro_renovacion">
-                                        <input type="hidden" name="store_monto_renovacion" id="store_monto_renovacion">
+
                                         <input type="hidden" name="ci_difunto_actual" id="ci_difunto_actual">
-                                        <input type="hidden" name="cant_renov_confirm" id="cant_renov_confirm">
 
 
 
@@ -484,7 +492,17 @@
 
                                       <div class="form-group col-md-3">
                                         <label for="inputPassword4">Nuevo Nicho</label>
-                                        <input type="text" class="form-control" id="nuevo_nicho" placeholder="Nicho">
+                                        <input
+                                        style="text-transform:uppercase;"
+                                        oninput="javascript: this.value = this.value.slice(0, 5).toUpperCase();"
+                                        type="text"
+                                        class="form-control"
+                                        maxlength="5"
+                                        id="nuevo_nicho"
+                                        autocomplete="off"
+                                        placeholder="Nicho">
+
+                                        {{-- <input type="text" class="form-control" id="nuevo_nicho" placeholder="Nicho"> --}}
                                       </div>
                                       <div class="form-group col-md-3">
                                         <label for="inputPassword4">Nueva Fila</label>
@@ -890,28 +908,42 @@ $(document).ready(function ()
 
         /********************MODIFICACION CREACION TABLA DE SERVICIOS SELECCIONADOS ****************************************/
         $(document).on('click', '.service_child', function(e) {
-            var monto = 0;
-            var cantidad = 1;
-            var subtotal = 0;
-
-            // $('#list_detalle').empty();
-            // $(".service_child").each(function(index) {
-                // console.log(index + ": " + $(this).val());
+                var monto = 0;
+                var cantidad = 1;
+                var subtotal = 0;
                 var ar = $(this).val().split('-');
                 var ar1 = ar[1].split('=>');
-                console.log('ar[0]--->' +ar[0]);
-
-                console.log(ar1[1]+ ' --' +ar1[0]);
+                // console.log('ar[0]--->' +ar[0]);
+                // console.log(ar1[1]+ ' --' +ar1[0]);
                 var buscarValor= buscarValorEnTabla(ar1[1]);
-                console.log("buscar fila "+buscarValor);
+                // console.log("buscar fila "+buscarValor);
                 if(buscarValor==null){
                             if ($(this).is(':checked')) {
                                 var ar = $(this).val().split('-');
                                 var ar1 = ar[1].split('=>');
                                 subtotal = cantidad * ar[3];
+
                                                 if (ar1[1] == 642) {
 
                                                 } else {
+
+                                                    var idsToCheck = [1989, 1995, 527, 1994, 640];
+                                                    var isChecked = false;
+
+                                                    // Verificar si alguno de los elementos específicos está marcado
+                                                    idsToCheck.forEach(function(id) {
+                                                        if ($('#' + id).is(':checked')) {
+                                                            isChecked = true;
+                                                        }
+                                                        });
+
+                                                        // Mostrar u ocultar la sección en función de los elementos específicos marcados
+                                                        if (isChecked) {
+                                                            $('#seccion_difunto').hide();
+                                                        } else {
+                                                            $('#seccion_difunto').show();
+                                                        }
+
                                                     var html = '<tr class="row_' + ar[0] + ' dynamic-row"  >'
                                                         + '<td class="w-auto text-center service">' + ar[0] + '</td>'
                                                         + '<td class="w-auto text-center service_txt">' + ar1[0] + '</td>'
@@ -927,12 +959,49 @@ $(document).ready(function ()
                                                     var lastRow = $('#list_detalle .row_' + ar[0] + '.dynamic-row').last(); // Select the last row
                                                     addDragHandlers(lastRow[0]); // Make the last row draggable
                                                 }
-                            }
+
+                        }
+
                 }else{
                     if ($(this).is(':checked')) {
+                        var idsToCheck = [1989, 1995, 527, 1994, 640];
+                        var isChecked = false;
+
+                          // Verificar si alguno de los elementos específicos está marcado
+                         idsToCheck.forEach(function(id) {
+                          if ($('#' + id).is(':checked')) {
+                           isChecked = true;
+                             }
+                         });
+
+                        // Mostrar u ocultar la sección en función de los elementos específicos marcados
+                        if (isChecked) {
+                             $('#seccion_difunto').hide();
+                               } else {
+                                  $('#seccion_difunto').show();
+                               }
+                               $('#nombres_dif').prop('required', false);
 
                     }else{
                         $('#list_detalle .row_'+ar[0]+'').remove();
+                        var idsToCheck = [1989, 1995, 527, 1994, 640];
+                        var isChecked = false;
+
+                          // Verificar si alguno de los elementos específicos está marcado
+                         idsToCheck.forEach(function(id) {
+                          if ($('#' + id).is(':checked')) {
+                           isChecked = true;
+                             }
+                         });
+
+                        // Mostrar u ocultar la sección en función de los elementos específicos marcados
+                        if (isChecked) {
+                             $('#seccion_difunto').hide();
+                               } else {
+                                  $('#seccion_difunto').show();
+                               $('#nombres_dif').prop('required', true);
+
+                               }
                     }
                 }
             // });
@@ -1726,6 +1795,8 @@ $(document).ready(function ()
                                                     showCancelButton: false,
                                                     showConfirmButton: false
                                                     });
+                                                    $button.prop('disabled', false);
+                                                     $button.text('Volver a Intentar ..');
 
                                                 }else{
                                                     swal.fire({
@@ -1770,6 +1841,8 @@ $(document).ready(function ()
 
                                                 }, 2000);
                                         }
+                                        $button.prop('disabled', false);
+                                            $button.text('Volver a Intentar ..');
 
                                     }
                                 })
@@ -2170,6 +2243,7 @@ $(document).ready(function ()
 
 
                 function registrarServicioExterno(){
+                    var $button = $('#btn_guardar_servicio');
                     return  $.ajax({
                                type: 'POST',
                                headers: {
@@ -2240,6 +2314,8 @@ $(document).ready(function ()
                                        toastr["error"](error.responseJSON.errors[k]);
                                        //console.log(k + ' - ' + error.responseJSON.errors[k]);
                                        });
+                                       $button.prop('disabled', false);
+                                        $button.text('Volver a Intentar ..');
                                    }else if(error.status == 400){
                                        swal.fire({
                                            title: "Registro Duplicado!",
@@ -2253,8 +2329,11 @@ $(document).ready(function ()
                                                location.reload();
 
                                            }, 2000);
+                                           $button.prop('disabled', false);
+                                           $button.text('Volver a Intentar ..');
                                    }
-
+                                                $button.prop('disabled', false);
+                                                     $button.text('Volver a Intentar ..');
                                }
                            })
                   }
@@ -2568,6 +2647,40 @@ $(document).ready(function ()
                 function limpiarResponsable(){
                     $('.clear').val('');
                 }
+
+                $(document).on('blur', '#nro_nicho', function() {
+                    var input = $(this).val();
+                    var formattedInput = input.slice(0, 5).toUpperCase();
+                    $(this).val(formattedInput);
+
+                    if (formattedInput.length !== 5) {
+                        swal.fire({
+                            title: "Error",
+                            text: "Please ingrese 5 digitos.",
+                            icon: "error",
+                            button: "OK",
+                        });
+                    $(this).val("");
+
+                    }
+                });
+
+                $(document).on('blur', '#nuevo_nicho', function() {
+                    var input = $(this).val();
+                    var formattedInput = input.slice(0, 5).toUpperCase();
+                    $(this).val(formattedInput);
+
+                    if (formattedInput.length !== 5) {
+                        swal.fire({
+                            title: "Error",
+                            text: "Please ingrese 5 digitos.",
+                            icon: "error",
+                            button: "OK",
+                        });
+                    $(this).val("");
+
+                    }
+                });
 
 
 
