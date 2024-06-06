@@ -927,7 +927,7 @@ $(document).ready(function ()
 
                                                 } else {
 
-                                                    var idsToCheck = [1989, 1995, 527, 1994, 640];
+                                                    var idsToCheck = [1989, 1995, 527,  640];
                                                     var isChecked = false;
 
                                                     // Verificar si alguno de los elementos específicos está marcado
@@ -964,7 +964,7 @@ $(document).ready(function ()
 
                 }else{
                     if ($(this).is(':checked')) {
-                        var idsToCheck = [1989, 1995, 527, 1994, 640];
+                        var idsToCheck = [1989, 1995, 527,  640];
                         var isChecked = false;
 
                           // Verificar si alguno de los elementos específicos está marcado
@@ -984,7 +984,7 @@ $(document).ready(function ()
 
                     }else{
                         $('#list_detalle .row_'+ar[0]+'').remove();
-                        var idsToCheck = [1989, 1995, 527, 1994, 640];
+                        var idsToCheck = [1989, 1995, 527,  640];
                         var isChecked = false;
 
                           // Verificar si alguno de los elementos específicos está marcado
