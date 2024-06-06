@@ -354,23 +354,23 @@ class ServiciosController extends Controller
         if ($request->isJson())
         {
 
-            if($request->externo == "externo" && $request->gratis == "GRATIS"){
-                $this->validate($request, [
-                    'nombres_dif' => 'required',
-                    'paterno_dif'=> 'required',
-                    'tipo_dif'=> 'required',
-                    'nombres_resp' => 'required',
-                    'paterno_resp'=> 'required',
-                    'servicios_adquiridos' => 'required',
-                ], [
-                    'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
-                    'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
-                    'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
-                    'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
-                    'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
-                    'servicios_adquiridos.required' => 'Debe seleccionar a
-                    l menos un tipo de servicio',
-                ]);
+            if($request->externo == "externo" || $request->gratis == "GRATIS"){
+                // $this->validate($request, [
+                //     'nombres_dif' => 'required',
+                //     'paterno_dif'=> 'required',
+                //     'tipo_dif'=> 'required',
+                //     'nombres_resp' => 'required',
+                //     'paterno_resp'=> 'required',
+                //     'servicios_adquiridos' => 'required',
+                // ], [
+                //     'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
+                //     'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
+                //     'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
+                //     'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
+                //     'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
+                //     'servicios_adquiridos.required' => 'Debe seleccionar a
+                //     l menos un tipo de servicio',
+                // ]);
             }
             else{
                     $this->validate($request, [
@@ -1358,9 +1358,9 @@ class ServiciosController extends Controller
         {
                 $this->validate($request, [
                     // 'ci_dif' => 'required',
-                    'nombres_dif' => 'required',
-                    'paterno_dif'=> 'required',
-                    'tipo_dif'=> 'required',
+                    // 'nombres_dif' => 'required',
+                    // 'paterno_dif'=> 'required',
+                    // 'tipo_dif'=> 'required',
                     // 'genero_dif'=> 'required',
                 //   'ci_resp' => 'required',
                     'nombres_resp' => 'required',
@@ -1370,9 +1370,9 @@ class ServiciosController extends Controller
                     'servicios_adquiridos' => 'required',
                 ], [
                     // 'ci_dif.required' => 'El campo ci del difunto es obligatorio, si no tiene documento presione el boton "generar carnet provisional  (icono lapiz)" para asignarle un numero provisional',
-                    'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
-                    'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
-                    'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
+                    // 'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
+                    // 'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
+                    // 'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
                     // 'genero_dif.required'=> 'El campo genero del difunto es obligatorio',
                     // 'ci_resp.required' => 'El campo ci del responsable es obligatorio, si no tiene documento presione el boton "generar carnet provisional (icono lapiz)" para asignarle un numero provisional',
                     'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',

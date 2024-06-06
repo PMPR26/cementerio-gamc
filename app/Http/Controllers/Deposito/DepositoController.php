@@ -105,6 +105,38 @@ class DepositoController extends Controller
         return view('depositos.formpago', compact('deposito', 'precio', 'cuenta','descrip','num_sec', 'cuotas', 'total_adeudado'));
     }
 
+    public function formPagoRenov(Request $request)
+    {
+        $headers =  ['Content-Type' => 'application/json'];
+        $client = new Client();
+
+        // $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/525', [
+        $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/generate-servicios-nicho/642', [
+
+        'json' => [
+            ],
+            'headers' => $headers,
+        ]);
+        $data = json_decode((string) $response->getBody(), true);
+
+
+       if($data['status']==true){
+            $precio = $data['response'][0]['monto1'];
+            $cuenta = $data['response'][0]['cuenta'];
+            $descrip = $data['response'][0]['descripcion'];
+            $num_sec = $data['response'][0]['num_sec'];
+        }else{
+            $precio =0;
+        }
+        $deposito = DepositoModel::findOrFail($request->deposito_id);
+        $impuesto= $deposito->impuesto;
+        $year=Date('Y');
+        $cuotas=$year-$impuesto;
+        $total_adeudado=$precio*$cuotas;
+
+        return view('depositos.formpagorenov', compact('deposito', 'precio', 'cuenta','descrip','num_sec', 'cuotas', 'total_adeudado'));
+    }
+
     public function preliquidacion(Request $request){
        // dd($request);
 
