@@ -44,3 +44,4 @@ Route::group([
 
 Route::put('updatefurpay', [App\Http\Controllers\Servicios\ServiciosController::class,'updatePay'])->name('updatefurpay');
 Route::put('updatePayMant', [App\Http\Controllers\Mantenimiento\MantenimientoController::class,'updatePayMant'])->name('updatePayMant');
+Route::put('updatePayDeposito', [App\Http\Controllers\Deposito\DepositoController::class,'updatePayDeposito'])->name('updatePayDeposito');

@@ -22,6 +22,11 @@ class ResponsableDifunto extends Model
         'codigo_nicho',
         'fecha_adjudicacion',
         'tiempo',
+        'fecha_liberacion',
+        'gestion_renov',
+        'nro_renov',
+        'monto_ultima_renov',
+        'nicho_id',
         'user_id',
         'created_at'
     ];

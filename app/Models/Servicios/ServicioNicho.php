@@ -463,7 +463,9 @@ class ServicioNicho extends Model
                 if( $result['ren']==true){
                     $renov_ant=$data_nicho->renov_anterior;
                     $monto_renov_anterior=$data_nicho->monto_renov_anterior;
-                    $nicho->restaurarRenov($id_nicho, $renov_ant,  $monto_renov_anterior);
+                    $gestion_renov_anterior=$data_nicho->gestion_renov_anterior;
+
+                    $nicho->restaurarRenov($id_nicho, $renov_ant,  $monto_renov_anterior,  $gestion_renov_anterior);
                   }
                 }
                  $a= $this->anular_fur( $request);
