@@ -55,6 +55,13 @@ class Nicho extends Model
         $data->estado_nicho="LIBRE";
         $data->cantidad_anterior=$data->cantidad_cuerpos;
         $data->cantidad_cuerpos=0;
+        $data->renovacion=0;
+        $data->renov_anterior=0;
+        $data->monto_renov_anterior=0;
+        $data->monto_renov=0;
+        $data->gestion_renovacion=0;
+        $data->gestion_renov_anterior=0;
+        $data->nro_renov=0;
         $data->save();
         //desvincular registro
 
@@ -216,10 +223,11 @@ class Nicho extends Model
 
 
 
-    public function restaurarRenov($id_nicho, $renov_ant,  $monto_renov_anterior){
+    public function restaurarRenov($id_nicho, $renov_ant,  $monto_renov_anterior, $gestion_renov_anterior){
         $nicho=Nicho::where('id',$id_nicho)->first();
         $nicho->renovacion= $renov_ant;
         $nicho->monto_renov= $monto_renov_anterior;
+        $nicho->gestion_renovacion= $gestion_renov_anterior;
         $nicho->save();
 
     }
