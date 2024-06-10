@@ -1138,21 +1138,21 @@ $(document).ready(function ()
            precio_renov=$.trim(info[3]);
            console.log("----->"+precio_renov);  //class=""
 
-           var html_info_last_renov='<div class="card p-2 bg-gradient-cyan" id="ren"> <h4 class="card-info">CALCULAR RENOVATORIO</h4>'
+           var html_info_last_renov='<div class="card p-2 bg-gradient-cyan" id="ren"> <h4 class="card-info">CALCULAR RENOVACIÓN</h4>'
                                                 +'<div class="card-body">'
                                                     //'<div class="card p-2 bg-gradient-cyan" id="ren"> <h4 class="card-info">CALCULAR RENOVATORIO</h4></div><div class="row pb-2"><h6>El monto correspondiente a la primera renovación es '+precio_renov+' pasado el primer año se adiciona el 20% sobre el monto correspondiente a cada renovación</h6></div>'
                                     //+'<div class="card-body">'
                                                 +'<div class="row pb-2">'
                                                      +'<div class="col-sm-12 col-md-4 col-xl-4">'
-                                                        +'<label for="">Precio Renovatorion</label>'
+                                                        +'<label for="">Precio Renovación</label>'
                                                         +'<input type="number" name="precio_renov" id="precio_renov" value="'+precio_renov+'" class="form-control precio_renov" readonly>'
                                                      +'</div>'
                                                     +'<div class="col-sm-12 col-md-4 col-xl-4">'
-                                                        +'<label for=""># de renovacion anterior</label>'
+                                                        +'<label for=""># de renovación anterior</label>'
                                                         +'<input type="number" name="renov_ant" id="renov_ant"  onKeyPress="if(this.value.length==2) return false;"    start="1" class="form-control renov"  onkeyup="calcRenov()">'
                                                     +'</div>'
                                                     +'<div class="col-sm-12 col-md-4 col-xl-4">'
-                                                        +'<label for="">Ultimo cobro renovacion</label>'
+                                                        +'<label for="">Ultimo cobro renovación</label>'
                                                         +'<input type="number" name="precio_renov_ant" id="precio_renov_ant" class="form-control precio_renov_ant" onblur="calcRenov()" value="0">'
                                                     +'</div>'
 
@@ -1160,7 +1160,7 @@ $(document).ready(function ()
                                                 +'<div class="row pb-2">'
 
                                                      +'<div class="col-sm-12 col-md-6 col-xl-6">'
-                                                        +'<label for="">Nro de renovaciónes a calcular</label>'
+                                                        +'<label for="">Nro de renovaciones a calcular</label>'
                                                         +'<input type="number" name="nro_ren_calc" id="nro_ren_calc" value="" class="form-control nro_ren_calc">'
                                                      +'</div>'
                                                     +'<div class="col-sm-12 col-md-6 col-xl-6"> <br>'
@@ -1171,11 +1171,11 @@ $(document).ready(function ()
                                                 +'<div class="row pb-2">'
 
                                                     +'<div class="col-sm-12 col-md-6 col-xl-6">'
-                                                        +'<label for="">Ultima Gestion Renovacion Pagada</label>'
+                                                        +'<label for="">Ultima Gestión Renovación Pagada</label>'
                                                         +'<input type="number" name="gestion_renov_ant" id="gestion_renov_ant" class="form-control gestion_renov_ant" value="0">'
                                                     +'</div>'
                                                     +'<div class="col-sm-12 col-md-6 col-xl-6">'
-                                                        +'<label for="">Gestion Renovacion a Pagada</label>'
+                                                        +'<label for="">Gestión Renovación a Pagar</label>'
                                                         +'<input type="number" name="gestion_renov_act" id="gestion_renov_act" class="form-control gestion_renov_act" value="0">'
                                                     +'</div>'
                                                 +'</div>'
@@ -1184,7 +1184,7 @@ $(document).ready(function ()
                                                 +'</div>'
                                                 +'<div class="row pb-2">'
                                                     + '<div class="col-sm-12 col-md-3 col-xl-3 section_acum_ren">'
-                                                            +'<label for="">TOTAL MONTO RENOVACION </label>'
+                                                            +'<label for="">TOTAL MONTO RENOVACIÓN </label>'
                                                             +'<input type="number" name="monto_renov" id="monto_renov" class="form-control monto_renov" value="" readonly>'
                                                             +'<input type="hidden" name="nro_renovaciones" id="nro_renovaciones" class="form-control nro_renovaciones" value="'+$('#store_nro_renovacion').val()+'">'
                                                             +'<input type="hidden" name="info" id="info" class="form-control info" value="'+info+'">'
@@ -1285,15 +1285,16 @@ $(document).ready(function ()
                                                 if(!data_response.sql.renovacion  || data_response.sql.renovacion==null){
                                                      $('#renov_ant').val(0);
                                                      $('#precio_renov_ant').val(0);
-                                                     $('#gestion_renov_ant').prop('readonly', false);
-
+                                                        if(data_response.sql.gestion_renovacion==null || data_response.sql.gestion_renovacion==0){
+                                                        $('#gestion_renov_ant').prop('readonly', false);
+                                                        }
                                                     }else{
                                                         $('#renov_ant').val(data_response.sql.renovacion);
                                                         $('#precio_renov_ant').val(data_response.sql.monto_renov);
                                                         $('#gestion_renov_ant').val(data_response.sql.gestion_renovacion);
-                                                        $('#gestion_renov_ant').prop('readonly', true);
-
-
+                                                        if(data_response.sql.gestion_renovacion!=null || data_response.sql.gestion_renovacion!=0){
+                                                            $('#gestion_renov_ant').prop('readonly', true);
+                                                        }
                                                     }
                                                 }
                                                 else{
