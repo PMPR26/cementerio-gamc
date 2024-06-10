@@ -46,6 +46,8 @@
                                             <th>Lapida</th>
                                             <th>Total Adeudado </th>
                                             <th>Fur</th>
+                                            <th>Verificar Pago</th>
+
                                             <th>Estado Pago</th>
                                             <th>Responsable Pago</th>
                                             <th>Acciones</th>
@@ -65,7 +67,14 @@
                                             <td>{{ $deposito->lapida }}</td>
                                             <td>{{ $deposito->total_adeudado }}</td>
                                             <td>{{ $deposito->fur }}</td>
-                                            <td>{{ $deposito->estado_pago }}</td>
+                                            <td><button class="btn btn-warning verificar_pago" data-id="{{ $deposito->id }}" value="{{ $deposito->fur }}"><i
+                                                class="fas fa-check-square fa-2x  accent-blue " ></i></button></td>
+                                        <td>@if( $deposito->estado_pago==false)
+                                        @php( print_r( 'PENDIENTE'))
+                                        @else
+                                        @php( print_r( 'PAGADO'))
+                                        @endif
+                                    </td>
                                             <td>{{ $deposito->responsable_pago }}</td>
                                             <td>
 
@@ -76,13 +85,13 @@
                                                     <button type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
                                                 </form>
 
-                                                @if($deposito->tipo_nicho=="TEMPORAL")
+                                                @if($deposito->tipo_nicho=="TEMPORAL" && $deposito->estado_pago==false)
                                                     <form action="{{ route('deposito.formPagoRenov') }}" method="POST" style="display: inline;">
                                                     @csrf
                                                     <input type="hidden" name="deposito_id" id="deposito_id" value="{{ $deposito->id}}">
                                                     <button type="submit" class="btn btn-danger"><i class="fas fa-credit-card 2x"></i></button>
                                                 </form>
-                                                @elseif($deposito->tipo_nicho=="PERPETUO")
+                                                @elseif($deposito->tipo_nicho=="PERPETUO" && $deposito->estado_pago==false)
                                                 <form action="{{ route('deposito.formPago') }}" method="POST" style="display: inline;">
                                                     @csrf
                                                     <input type="hidden" name="deposito_id" id="deposito_id" value="{{ $deposito->id}}">
@@ -154,6 +163,87 @@
                     },
                 });
             });
+
+
+
+                        /*******************VERIFICAR PAGO*****************/
+
+        $(document).on('click', '.verificar_pago', function(e){
+            e.preventDefault();
+
+            var fur = $(this).val();
+            var servicios_id= $(this).attr('data-id');
+            verificarQR(fur, servicios_id);
+        })
+
+
+
+
+        function verificarQR(fur, servicios_id)
+        {
+
+            Swal.fire({
+                title: 'Verificando Pago!',
+                html: `Espere un momento`,
+                didOpen: () => {
+                    Swal.showLoading();
+                  //  new Promise((resolve, reject) => {
+                        $.ajax({
+                            url:"{{route('verificar.pago.deposito')}}",
+                            type: "POST",
+                            headers: {
+                                   'Content-Type':'application/json',
+                                   'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                               },
+                            data: JSON.stringify({
+                                 fur: fur,
+                            }),
+                            cache: false,
+                            contentType: "application/json; charset=utf-8",
+                            dataType: 'json',
+                            success: function(data) {
+                                console.log("respuesta verificacion");
+
+                                console.log(data.estado_pago);
+
+
+                                if(data.estado_pago=="AC")
+                                 {
+                                                Swal.fire(
+                                                    'Pago realizado',
+                                                    `El pago del fur ${fur} ya fue realizado`,
+                                                    'success'
+                                                            )
+                                                    .then(() => {
+                                                            location.reload();
+                                                        });
+                                            }else{
+                                                Swal.fire(
+                                                    'Pago no realizado',
+                                                    'Realiza el pago con la aplicación de tu banco de preferencia o en cajas',
+                                                    'info'
+                                                            )
+                                                    .then(() => {
+                                                            return false;
+                                                        });
+                                            }
+
+                                            // $('.verificar_pago').show();
+                                            $('.spiner_revision').hide();
+
+                            },
+                            error: function(resp) {
+                                Swal.fire(
+                                    'Error de verificación',
+                                    'Intente nuevamente, Si el problema continua notifica a soporte',
+                                    'error'
+                                );
+                            }
+                        });
+                  //  });
+                },
+            });
+        }
 
 
 </script>
