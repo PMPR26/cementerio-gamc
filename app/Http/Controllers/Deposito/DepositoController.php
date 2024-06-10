@@ -16,7 +16,10 @@ use Illuminate\Support\Facades\Http;
 
 class DepositoController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware('api', ['except' => ['updatePayDeposito']]);
+    }
 
     // Mostrar todos los registros
     public function index()
@@ -222,4 +225,56 @@ class DepositoController extends Controller
 
 
       }
+
+      public function verificarPagoDeposito(Request $request){
+        $service=New ServicioNicho;
+        $estado_pago=$service->buscarFur($request);
+
+        if($estado_pago->estado_pago=="AC"){
+            $this->updatePayDeposito($request);
+        }
+        return $estado_pago;
+    }
+
+
+    //service update pay from sinot
+    public function updatePayDeposito(Request $request)
+    {
+       // dd(trim($request->fur));
+        if ($request->isJson()) {
+            $this->validate($request, [
+                "fur" => 'required',
+                 //"id_usuario_caja" => 'required'
+            ]);
+
+            $deposito = DepositoModel::select('id', 'fur')
+                ->where(['fur' => trim($request->fur), 'estado_pago' => false, 'estado' => 'ACTIVO'])
+                ->first();
+
+            if ($deposito) {
+                DepositoModel::where('fur', trim($request->fur))
+                    ->update([
+                        'estado_pago' => true,
+                        //'id_usuario_caja' => $request->id_usuario_caja,
+                        'fecha_pago' => date('Y-m-d h:i:s')
+                    ]);
+                return response([
+                    'status' => true
+                    // 'message'=> 'El nro fur  no existe o ya fue pagado por favor recargue la pagina'
+                ], 200);
+            } else {
+                return response([
+                    'status' => false,
+                    'message' => 'El nro fur  no existe o ya fue pagado por favor recargue la pagina'
+                ], 200);
+            }
+        } else {
+            return response([
+                'status' => false,
+                'message' => 'No autorizado'
+            ], 401);
+        }
+    }
+
+
 }
