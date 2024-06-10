@@ -523,6 +523,7 @@ class ServiciosController extends Controller
 
                                 if($servi['serv'] == '642'){
                                         $pago_renovaciones="SI";
+
                                     }
 
                                     $texto_servicio= $texto_servicio.$separador. $servi['txt_serv']." Bs.";
@@ -543,6 +544,8 @@ class ServiciosController extends Controller
                                     $id_nicho = $existeNicho->id;
                                     $renov_anterior=$existeNicho->renovacion;
                                     $monto_renov_anterior=$existeNicho->monto_renov;
+                                    $gestion_renov_anterior=$existeNicho->gestion_renov_anterior;
+
 
                                     if(isset($estado_nicho)){
                                         $existeNicho->estado_nicho=$estado_nicho;
@@ -555,7 +558,8 @@ class ServiciosController extends Controller
                                                 $existeNicho->monto_renov=$request->monto_renov;
                                                 $existeNicho->nro_renov=$request->cant_renov_confirm;
                                                 $existeNicho->renovacion=$request->cant_renov_confirm;
-
+                                                $existeNicho->gestion_renov_anterior=$gestion_renov_anterior;
+                                                $existeNicho->gestion_renovacion=$request->gestion_renovacion;
                                               }
                                     }
                                     $existeNicho->estado="ACTIVO";
@@ -767,6 +771,8 @@ class ServiciosController extends Controller
                                                 if($pago_renovaciones=="SI"){
                                                     $serv->monto_renovacion=$request->monto_renov;
                                                     $serv->nro_renovacion=$request->nro_renovacion;
+                                                    $serv->gestion_renovacion=$request->gestion_renovacion;
+
                                                 }
                                                 $serv->save();
                                                 $idServ=$serv->id;
@@ -1554,6 +1560,7 @@ class ServiciosController extends Controller
                                                 $serv->fur=$fur;
                                                 $serv->nro_renovacion= $request->renov ?? '0';
                                                 $serv->monto_renovacion= $request->monto_renov ?? '0';
+                                                $serv->gestion_renovacion= $request->gestion_renovacion ?? '0';
                                                 $serv->monto=$request->monto;
                                                 $serv->nombrepago=$nombre_pago;
                                                 $serv->paternopago=$paterno_pago;
