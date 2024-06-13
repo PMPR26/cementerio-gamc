@@ -509,7 +509,7 @@ class ServiciosController extends Controller
                                                 $cant= 0;
                                                 //DESVINCULAR DIFUNTO DESVINCULAR RESPONSABLE
                                             }
-                                            elseif( ($cantidadEnNicho == 0 || $cantidadEnNicho == "")  && $request->tipo_nicho== "TEMPORAL" ){
+                                            elseif( ($cantidadEnNicho <= 0 || $cantidadEnNicho == "" )  && $request->tipo_nicho== "TEMPORAL" ){
                                                 $estado_nicho="LIBRE";
                                                 $cant= 0;
                                                 //DESVINCULAR DIFUNTO DESVINCULAR RESPONSABLE
