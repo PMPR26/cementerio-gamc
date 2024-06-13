@@ -35,6 +35,14 @@ class ResponsableDifunto extends Model
         'id',
         'updated_at'
     ];
+    public function desvincularResponsableDifunto($idResponsableDifunto){
+        // dd( $request);
+          // buscar relacion del nicho con difunto y desvincular inactivando
+            $resp_dif=DB::table('responsable_difunto')->where('id', $idResponsableDifunto)
+            ->update(['estado'=>'INACTIVO']);
+
+       return true;
+    }
 
     public function searchResponsableDifunt(Request $request ,$idresp, $difuntoid ,  $codigo ){
 

@@ -172,9 +172,9 @@
                     </tr>
 
 
-                    @if($codigo_nicho!=0 )
+                    @if($codigo_nicho!=0 || $codigo_nicho!="" )
                     <tr>
-                        <td><b>Codigo Nicho:  {{ $codigo_nicho }}</b></td>
+                        <td><b>Codigo Nicho:  </b></td><td><b>{{ $codigo_nicho }}</b></td>
                     </tr>
                     @endif
 

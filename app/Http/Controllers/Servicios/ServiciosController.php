@@ -417,6 +417,7 @@ class ServiciosController extends Controller
                 $asignado="";
                 $nuevo_sitio="";
                 $origen="";
+                $desvincular_responsable="NO";
 
                 // armar array de los servicios enviados del front
                 foreach($request->servicios_adquiridos as $value){
@@ -459,7 +460,7 @@ class ServiciosController extends Controller
                         {
 
                             // calcular la cantidad de cuerpos de acuerdo al servicio solicitado /inhumacion o exhumacion
-                            if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'  || $servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='1982' || $servi['serv']=='630' || $servi['serv']=='631'|| $servi['serv']=='530' || $servi['serv']=='529')
+                            if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'  || $servi['serv']=='1981' || $servi['serv']=='1980' || $servi['serv']=='1982'  || $servi['serv']=='631'|| $servi['serv']=='530' || $servi['serv']=='529')
                             { //inhumaciones
 
                                 $estado_nicho="OCUPADO";
@@ -498,7 +499,7 @@ class ServiciosController extends Controller
                                 }
                                         $texto_servicio = $texto_servicio. $separador. $servi['txt_serv']." Bs.";
                             }else if($servi['serv'] == '645' || $servi['serv'] =='644' || $servi['serv'] == '629' || $servi['serv'] == '628'
-                             ||  $servi['serv'] == '635' ||  $servi['serv'] == '636'||  $servi['serv'] == '634'||  $servi['serv'] == '633' )
+                             ||  $servi['serv'] == '635' ||  $servi['serv'] == '636'||  $servi['serv'] == '634'||  $servi['serv'] == '633' || $servi['serv']=='630' )
                             {  //exhumaciones
                                 // dd($cantidadEnNicho);
 
@@ -522,6 +523,7 @@ class ServiciosController extends Controller
                                                 $estado_nicho="LIBRE";
                                                 $cant= 0;
                                             }
+                                            $desvincular_responsable="SI";
                                             $texto_servicio= $texto_servicio.$separador.$servi['txt_serv']." Bs.";
                             }
                             else{
@@ -671,6 +673,7 @@ class ServiciosController extends Controller
 
                                     //end responsable
                                     //insertar tbl responsable_difunto
+
                                     if (isset($difuntoid) && isset($idresp))
                                     {
                                         $rf = new ResponsableDifunto();
@@ -680,7 +683,6 @@ class ServiciosController extends Controller
                                         } else {
                                             $iddifuntoResp = $rf->insDifuntoResp($request, $difuntoid, $idresp, $codigo_n , $estado_nicho, $id_nicho);
                                         }
-
                                     }
                                                 //insert pago
                                                 if($request->reg=="reg"){
@@ -833,7 +835,10 @@ class ServiciosController extends Controller
 
                                                   }
 
+                                                  if($desvincular_responsable=="SI"){
+                                                    ResponsableDifunto::desvincularResponsableDifunto($iddifuntoResp);
 
+                                                 }
 
                                                    // Confirmar la transacción
                                                 //   DB::commit();
