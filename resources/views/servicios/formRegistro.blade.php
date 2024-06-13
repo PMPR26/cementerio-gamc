@@ -2726,6 +2726,25 @@ $(document).on('click', '.checkbox_ren', function() {
                     }
                 });
 
+
+
+                $(document).on('blur', '#bloque', function() {
+                    var input = $(this).val();
+                    var formattedInput = input.slice(0, 3).toUpperCase();
+                    $(this).val(formattedInput);
+
+                    if (formattedInput.length !== 3) {
+                        swal.fire({
+                            title: "Error",
+                            text: "Please ingrese 3 digitos.",
+                            icon: "error",
+                            button: "OK",
+                        });
+                    $(this).val("");
+
+                    }
+                });
+
                 $(document).on('blur', '#nuevo_nicho', function() {
                     var input = $(this).val();
                     var formattedInput = input.slice(0, 5).toUpperCase();
@@ -2742,6 +2761,25 @@ $(document).on('click', '.checkbox_ren', function() {
 
                     }
                 });
+
+
+                $(document).on('blur', '#bloque_nuevo', function() {
+                    var input = $(this).val();
+                    var formattedInput = input.slice(0, 3).toUpperCase();
+                    $(this).val(formattedInput);
+
+                    if (formattedInput.length !== 3) {
+                        swal.fire({
+                            title: "Error",
+                            text: "Please ingrese 3 digitos.",
+                            icon: "error",
+                            button: "OK",
+                        });
+                    $(this).val("");
+
+                    }
+                });
+
 
 
 

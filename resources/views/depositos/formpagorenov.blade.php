@@ -35,7 +35,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-sm-6 col-md-4 col-lg-4">
-                                    <label for="total_adeudado">Impuesto:</label>
+                                    <label for="total_adeudado">Renovaci&oacute;n:</label>
                                     <input type="number" name="impuesto" id="impuesto" value="{{ $deposito->impuesto }}" class="form-control" required min="1999">
                                 </div>
                                 <div class="form-group col-sm-6 col-md-4 col-lg-4">

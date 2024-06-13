@@ -59,7 +59,7 @@
                                         <input type="text" name="nombre_difunto" class="form-control" required>
                                     </div>
                                     <div class="form-group col-sm-12 col-md-6 col-lg-6">
-                                        <label for="impuesto">Impuesto</label>
+                                        <label for="impuesto" id="impuestoLabel">Impuesto</label>
                                         <input type="number" name="impuesto" id="impuesto" value="" class="form-control" required min="1999">
                                     </div>
 
@@ -92,4 +92,18 @@
                 </div>
     </div>
 
+@endsection
+@section('js')
+<script>
+    document.getElementById('tipo_nicho').addEventListener('change', function() {
+        var label = document.getElementById('impuestoLabel');
+        if (this.value === 'TEMPORAL') {
+            label.textContent = 'Renovación';
+        } else if (this.value === 'PERPETUO') {
+            label.textContent = 'Impuesto';
+        } else {
+            label.textContent = 'Impuesto';  // Reset to default if neither is selected
+        }
+    });
+    </script>
 @endsection

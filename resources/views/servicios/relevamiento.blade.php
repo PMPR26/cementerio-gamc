@@ -1700,6 +1700,42 @@
                 $('#container').append(clone);
                 }
 
+                $(document).on('blur', '#nro_nicho', function() {
+                    var input = $(this).val();
+                    var formattedInput = input.slice(0, 5).toUpperCase();
+                    $(this).val(formattedInput);
+
+                    if (formattedInput.length !== 5) {
+                        swal.fire({
+                            title: "Error",
+                            text: "Please ingrese 5 digitos.",
+                            icon: "error",
+                            button: "OK",
+                        });
+                    $(this).val("");
+
+                    }
+                });
+
+
+
+                $(document).on('blur', '#bloque', function() {
+                    var input = $(this).val();
+                    var formattedInput = input.slice(0, 3).toUpperCase();
+                    $(this).val(formattedInput);
+
+                    if (formattedInput.length !== 3) {
+                        swal.fire({
+                            title: "Error",
+                            text: "Please ingrese 3 digitos.",
+                            icon: "error",
+                            button: "OK",
+                        });
+                    $(this).val("");
+
+                    }
+                });
+
         </script>
 
     @stop
