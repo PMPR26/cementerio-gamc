@@ -497,7 +497,8 @@ class ServiciosController extends Controller
                                     }
                                 }
                                         $texto_servicio = $texto_servicio. $separador. $servi['txt_serv']." Bs.";
-                            }else if($servi['serv'] == '645' || $servi['serv'] =='644' || $servi['serv'] == '629' || $servi['serv'] == '628' )
+                            }else if($servi['serv'] == '645' || $servi['serv'] =='644' || $servi['serv'] == '629' || $servi['serv'] == '628'
+                             ||  $servi['serv'] == '635' ||  $servi['serv'] == '636'||  $servi['serv'] == '634'||  $servi['serv'] == '633' )
                             {  //exhumaciones
                                 // dd($cantidadEnNicho);
 
