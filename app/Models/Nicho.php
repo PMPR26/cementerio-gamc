@@ -123,6 +123,13 @@ class Nicho extends Model
 
     }
 
+
+
+
+
+
+
+
      //desvincular responsable
      public function desvincularDifuntoNichoAsignacion($codigo){
         // dd( $request);
