@@ -464,7 +464,7 @@ class ServiciosController extends Controller
                             { //inhumaciones
 
                                 $estado_nicho="OCUPADO";
-                                if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978'){
+                                if($servi['serv']=='1979' || $servi['serv']=='1977' || $servi['serv']=='1978' || $servi['serv']=='630'){
                                       //inhumacion a nichos temporales ingreso de 1 solo cuerpo
 
                                     if( $cantidadEnNicho !=false &&  $cantidadEnNicho>=1)
@@ -499,7 +499,7 @@ class ServiciosController extends Controller
                                 }
                                         $texto_servicio = $texto_servicio. $separador. $servi['txt_serv']." Bs.";
                             }else if($servi['serv'] == '645' || $servi['serv'] =='644' || $servi['serv'] == '629' || $servi['serv'] == '628'
-                             ||  $servi['serv'] == '635' ||  $servi['serv'] == '636'||  $servi['serv'] == '634'||  $servi['serv'] == '633' || $servi['serv']=='630' )
+                             ||  $servi['serv'] == '635' ||  $servi['serv'] == '636'||  $servi['serv'] == '634'||  $servi['serv'] == '633'  )
                             {  //exhumaciones
                                 // dd($cantidadEnNicho);
 
