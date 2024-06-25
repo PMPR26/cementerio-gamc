@@ -178,7 +178,10 @@ class ServiciosController extends Controller
             $join->on('responsable.id', '=', 'responsable_difunto.responsable_id')
                  ->where('responsable_difunto.estado', '=', 'ACTIVO');
         })
-        ->leftJoin('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
+        ->leftJoin('difunto',  function($join) {
+            $join->on('difunto.id', '=', 'responsable_difunto.difunto_id')
+                 ->where('responsable_difunto.estado', '=', 'ACTIVO');
+        })
         ->join('nicho', 'nicho.codigo', '=', 'responsable_difunto.codigo_nicho')
         ->leftJoin('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
         ->leftJoin('bloque', 'bloque.id', '=', 'nicho.bloque_id')
@@ -515,11 +518,11 @@ class ServiciosController extends Controller
                                                 $cant= 0;
                                                 //DESVINCULAR DIFUNTO DESVINCULAR RESPONSABLE
                                             }
-                                            else if( $cantidadEnNicho >= 1  && $request->tipo_nicho== "PERPETUO"){
+                                            else if( $cantidadEnNicho > 1  && $request->tipo_nicho== "PERPETUO"){
                                                 $estado_nicho="OCUPADO";
                                                 $cant = $cantidadEnNicho -1;
                                             }
-                                            else if( $cantidadEnNicho == 0){
+                                            else if( $cantidadEnNicho == 0 || $cantidadEnNicho == 1){
                                                 $estado_nicho="LIBRE";
                                                 $cant= 0;
                                             }
@@ -835,9 +838,9 @@ class ServiciosController extends Controller
 
                                                   }
 
-                                                  if($desvincular_responsable=="SI"){
-                                                    ResponsableDifunto::desvincularResponsableDifunto($iddifuntoResp);
-
+                                                  if($desvincular_responsable=="SI" ){
+                                                    $rf = new ResponsableDifunto ;
+                                                    $rf->desvincularResponsableDifunto($iddifuntoResp);
                                                  }
 
                                                    // Confirmar la transacción
