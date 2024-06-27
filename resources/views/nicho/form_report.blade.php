@@ -27,13 +27,43 @@
                             </div>
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-sm-6 col-md-4 col-lg-4">
-                                    <label for="total_adeudado">Seleccionar Estado del Nicho:</label>
-                                  <select name="estado_nicho" id="estado_nicho">
-                                    <option value="seleccionar">Seleccionar</option>
+                                <div class="form-group col-sm-6 col-md-3 col-lg-3">
+                                    <label for="estado_nicho">Seleccionar Cuartel:</label>
+                                    <select id="cuartel" name="cuartel"
+                                    class="form-control clears2 select2-multiple select2-hidden-accessible cuartel" style="width: 100%">
+                                    <option value="">Seleccionar</option>
+                                        @foreach($cuartel as $cuartel)
+                                        <option value="{{$cuartel->id}}">{{$cuartel->codigo}}</option>
+                                        @endforeach
+                                  </select>
+                                </div>
+
+                                <div class="form-group col-sm-6 col-md-3 col-lg-3">
+                                    <label for="estado_nicho">Seleccionar Estado del Nicho:</label>
+                                  <select name="estado_nicho" id="estado_nicho" class="form-control" required>
+                                    <option value="">Seleccionar</option>
                                     <option value="OCUPADO">OCUPADO</option>
                                     <option value="LIBRE">LIBRE</option>
                                   </select>
+                                </div>
+
+                                <div class="form-group col-sm-6 col-md-3 col-lg-3">
+                                    <label for="tipo_nicho">Seleccionar tipo de Nicho:</label>
+                                  <select name="tipo_nicho" id="tipo_nicho" class="form-control" required>
+                                    <option value="">Seleccionar</option>
+                                    <option value="TEMPORAL">TEMPORAL</option>
+                                    <option value="PERPETUO">PERPETUO</option>
+                                  </select>
+                                </div>
+
+                                <div class="form-group col-sm-6 col-md-3 col-lg-3">
+                                    <label for="cenizarios">Cenizarios:</label>
+                                    <select name="cenizarios" id="cenizarios" class="form-control" >
+                                        <option value="">Seleccionar bloque</option>
+                                        @foreach ($cenizarios as $item)
+                                        <option value="{{$item->bloque}}">{{$item->bloque}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <!-- Agrega más campos según sea necesario -->
@@ -51,6 +81,8 @@
 
 @section('js')
     <script>
-
+        var select2 = $('.cuartel');
+        // Activa el plugin Select2 en el elemento
+        select2.select2();
 </script>
 @endsection

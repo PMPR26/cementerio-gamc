@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Nicho;
 
+use App\Models\Bloque;
 use App\Models\Nicho;
 use App\Http\Controllers\Controller;
 use App\Models\Cuartel;
@@ -168,14 +169,10 @@ class NichoController extends Controller
                                 'cuartel_id' => trim($request->cuartel),
                                 'nro_nicho' => trim($request->nro),
                                 'fila' => trim($request->fila),
-
-                                'codigo' => trim($request->codigo),
                                 'codigo_anterior' => trim($request->codigo_anterior),
                                 'cantidad_cuerpos' => trim($request->cantidad),
                                 'tipo' => trim($request->tipo),
-                                //'estado_nicho' => trim($request->estado_nicho),
-                                'estado' => trim($request->estado),
-
+                                'estado_nicho' => trim($request->estado),
                                 'user_id' => auth()->id(),
                                 'estado' => 'ACTIVO',
                                 'created_at' => date("Y-m-d H:i:s"),
@@ -359,7 +356,15 @@ class NichoController extends Controller
 
     }
     public function formEstadoNicho(Request $request){
-        return view('nicho.form_report');
+        $cenizarios=DB::table('cenizarios')
+        ->select('cenizarios.bloque','cenizarios.bloque')
+        ->get();
+
+        $cuartel=DB::table('cuartel')
+        ->select('cuartel.id','cuartel.codigo')
+        ->get();
+
+        return view('nicho.form_report', compact('cenizarios', 'cuartel'));
     }
     // public function imprimirReporteNicho(Request $request){
     //     $nicho_estado= $request->estado_nicho;
@@ -384,41 +389,154 @@ class NichoController extends Controller
     // }
 
 
+    // public function imprimirReporteNicho(Request $request)
+    // {
+    //     $this->validate($request, [
+    //         'estado_nicho'=> 'required',
+    //         'tipo_nicho'=> 'required',
+    //     ], [
+    //         'estado_nicho.required'=> 'El campo estado del nicho es obligatorio',
+    //         'tipo_nicho.required'=> 'El campo tipo del nicho es obligatorio',
+    //     ]);
+    //     // dd($request);
+    //     $estado_nicho = $request->estado_nicho;
+    //     $tipo_nicho = $request->tipo_nicho;
+    //     $cenizarios = $request->cenizarios;
+    //     $cuartel = $request->cuartel;
+
+    //     $condicion = '';
+
+    //     if ($estado_nicho == "LIBRE") {
+    //         if ((!isset($cuartel) || $cuartel == '' || $cuartel == null) && ($cenizarios != null)) {
+    //             // Properly quote the $tipo_nicho variable for SQL
+    //             $condicion = "nicho.estado_nicho = '$estado_nicho' and tipo = '$tipo_nicho'";
+    //         }
+    //     }
+
+    //     $query = DB::table('nicho')
+    //         ->select(
+    //             'nicho.id',
+    //             'nicho.codigo',
+    //             'nicho.nro_nicho',
+    //             'nicho.fila',
+    //             'nicho.tipo',
+    //             'nicho.estado_nicho',
+    //             'nicho.codigo_anterior',
+    //             'nicho.cantidad_cuerpos',
+    //             'nicho.estado'
+    //         )
+    //         ->when($condicion, function ($query, $condicion) {
+    //             return $query->whereRaw($condicion);
+    //         })
+    //         ->where('nicho.estado', '=', 'ACTIVO')
+    //         ->orderBy('nicho.id', 'asc')
+    //         ->get(); // This is the correct get() method for the query builder
+
+
+
+    //     // $query = DB::table('nicho')
+    //     //     ->select('nicho.id', 'nicho.codigo','nicho.nro_nicho', 'nicho.fila','nicho.tipo',
+    //     //     'nicho.estado_nicho',
+    //     //     'nicho.codigo_anterior','nicho.cantidad_cuerpos', 'nicho.estado'
+    //     //     )
+    //     //     ->where('nicho.estado_nicho', '=', $nicho_estado)
+    //     //     ->where('nicho.estado', '=', 'ACTIVO')
+    //     //     ->orderBy('nicho.id', 'asc');
+
+    //     $nicho = $query;
+
+    //     if($estado_nicho=="OCUPADO"){
+    //          $html = view('nicho/reportNichoOcupado', compact('nicho'))->render();
+    //      }else{
+    //         $html = view('nicho/reportNichoLibre', compact('nicho'))->render();
+
+    //             }
+
+
+
+
+    //     // Crear una instancia de Dompdf
+    //     $dompdf = new Dompdf();
+    //     $dompdf->loadHtml($html);
+    //     $dompdf->setPaper('A4', 'portrait');
+    //     $dompdf->render();
+
+    //     // Devolver el PDF como respuesta
+    //     return Response::make($dompdf->output(), 200, [
+    //         'Content-Type' => 'application/pdf',
+    //         'Content-Disposition' => 'inline; filename="reporte_nichos.pdf"',
+    //     ]);
+    // }
+
     public function imprimirReporteNicho(Request $request)
     {
-        $nicho_estado = $request->estado_nicho;
-/*
+        $this->validate($request, [
+            'estado_nicho' => 'required',
+            'tipo_nicho' => 'required',
+        ], [
+            'estado_nicho.required' => 'El campo estado del nicho es obligatorio',
+            'tipo_nicho.required' => 'El campo tipo del nicho es obligatorio',
+        ]);
+
+        $estado_nicho = $request->estado_nicho;
+        $tipo_nicho = $request->tipo_nicho;
+        $cenizarios = $request->cenizarios;
+        $cuartel = $request->cuartel;
+        // dd($request);
         $query = DB::table('nicho')
-            ->leftJoin('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
-            ->leftJoin('bloque', 'bloque.id', '=', 'nicho.bloque_id')
-            ->select('nicho.id', 'nicho.codigo','nicho.nro_nicho', 'nicho.fila','nicho.tipo',
-            'nicho.estado_nicho',
-            'nicho.codigo_anterior','nicho.cantidad_cuerpos', 'nicho.estado',
-             'cuartel.codigo as cuartel', 'bloque.codigo as bloque')
-            ->where('nicho.estado_nicho', '=', $nicho_estado)
-            ->where('nicho.estado', '=', 'ACTIVO')
-            ->orderBy('nicho.id', 'asc');
-*/
-        $query = DB::table('nicho')
-            ->select('nicho.id', 'nicho.codigo','nicho.nro_nicho', 'nicho.fila','nicho.tipo',
-            'nicho.estado_nicho',
-            'nicho.codigo_anterior','nicho.cantidad_cuerpos', 'nicho.estado'
+            ->select(
+                'nicho.id',
+                'nicho.codigo',
+                'nicho.nro_nicho',
+                'nicho.fila',
+                'nicho.tipo',
+                'nicho.estado_nicho',
+                'nicho.codigo_anterior',
+                'nicho.cantidad_cuerpos',
+                'nicho.estado'
             )
-            ->where('nicho.estado_nicho', '=', $nicho_estado)
             ->where('nicho.estado', '=', 'ACTIVO')
             ->orderBy('nicho.id', 'asc');
+
+        // Apply the condition for estado_nicho and tipo_nicho
+
+            if ((!isset($cuartel) || $cuartel == '' || $cuartel == null) && ($cenizarios == null)) {
+                $query->where('nicho.estado_nicho', '=', $estado_nicho)
+                      ->where('nicho.tipo', '=', $tipo_nicho);
+            }if ((!isset($cuartel) || $cuartel == '' || $cuartel == null) && ($cenizarios != null)){
+                $query->where('nicho.estado_nicho', '=', $estado_nicho)
+                ->where('nicho.bloque_id', '=', function ($subquery) use ($cenizarios) {
+                    $subquery->select('id')
+                             ->from('bloque')
+                             ->where('codigo', '=', $cenizarios)
+                             ->limit(1);
+                })
+                ->where('nicho.tipo', '=', $tipo_nicho);
+            }
+             elseif ((isset($cuartel) || $cuartel != '' || $cuartel != null) && ($cenizarios == null)) {
+                $query->where('nicho.estado_nicho', '=', $estado_nicho)
+                      ->where('nicho.cuartel_id', '=', $cuartel)
+                      ->where('nicho.tipo', '=', $tipo_nicho);
+            }elseif ((isset($cuartel) && $cuartel != '' && $cuartel != null) && ($cenizarios != null)) {
+                $query->where('nicho.estado_nicho', '=', $estado_nicho)
+                      ->where('nicho.cuartel_id', '=', $cuartel)
+                      ->where('nicho.bloque_id', '=', function ($subquery) use ($cenizarios) {
+                          $subquery->select('id')
+                                   ->from('bloque')
+                                   ->where('codigo', '=', $cenizarios)
+                                   ->limit(1);
+                      })
+                      ->where('nicho.tipo', '=', $tipo_nicho);
+            }
+
 
         $nicho = $query->get();
 
-        if($nicho_estado=="OCUPADO"){
-             $html = view('nicho/reportNichoOcupado', compact('nicho'))->render();
-         }else{
-            $html = view('nicho/reportNichoLibre', compact('nicho'))->render();
-
-                }
-
-
-
+        if ($estado_nicho == "OCUPADO") {
+            $html = view('nicho.reportNichoOcupado', compact('nicho'))->render();
+        } else {
+            $html = view('nicho.reportNichoLibre', compact('nicho'))->render();
+        }
 
         // Crear una instancia de Dompdf
         $dompdf = new Dompdf();
@@ -432,6 +550,7 @@ class NichoController extends Controller
             'Content-Disposition' => 'inline; filename="reporte_nichos.pdf"',
         ]);
     }
+
 
 
 }

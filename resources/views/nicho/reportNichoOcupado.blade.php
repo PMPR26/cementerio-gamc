@@ -117,6 +117,8 @@
                     <th>BLOQUE</th>
                     <th>NRO NICHO</th>
                     <th>FILA</th> --}}
+                    <th>Nro</th>
+
                     <th>CODIGO</th>
                     <th>CODIGO ANTERIOR</th>
                     <th>TIPO DE NICHO</th>
@@ -127,17 +129,13 @@
             <tbody>
                 @foreach ($nicho as $key => $value )
                     <tr>
+                        <td>{{ $key+1 }}</td>
 
-                      {{--   <td>{{ $value->cuartel ?? '' }}</td>
-                        <td>{{ $value->bloque ?? '' }}</td>
-                        <td>{{ $value->nro_nicho ?? '' }}</td>
-                        <td>{{ $value->fila ?? '' }}</td> --}}
                         <td>{{ $value->codigo ?? '' }}</td>
                         <td>{{ $value->codigo_anterior ?? '' }}</td>
                         <td>{{ $value->tipo ?? '' }}</td>
                         <td>{{ $value->cantidad_cuerpos ?? '' }}</td>
                         <td>{{ $value->estado_nicho ?? '' }}</td>
-
                     </tr>
                 @endforeach
             </tbody>
