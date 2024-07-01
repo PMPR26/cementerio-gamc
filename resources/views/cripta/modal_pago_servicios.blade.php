@@ -122,7 +122,7 @@
                             </div>
                 <div class="row">
                     <div class="col-12" id="contenedor_servicios" >
-                        <h5>SERVICIOS CRIPA-MAUSOLEOS </h5>
+                        <h5>SERVICIOS CRIPA / MAUSOLEOS </h5>
                     </div>
                 </div>
 
@@ -148,7 +148,7 @@
                                             <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdpci" autocomplete="off" value="">
 
                                             <div class="input-group-append">
-                                                <button type="submit" class="btn btn-lg btn-default" id="buscarDif">
+                                                <button type="submit" class="btn btn-lg btn-default" id="buscar_difunto_in">
                                                     <i class="fa fa-search"></i>
                                                 </button>
                                             </div>

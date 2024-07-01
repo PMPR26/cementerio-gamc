@@ -2679,7 +2679,7 @@ $("#cert_defuncion_p").dropzone({
         }
 
         /********************** funcion buscar difunto en modal pagos servicios ******************************************/
-        $(document).on('click', '#buscarDifServicio', function(e)
+        $(document).on('click', '#buscar_difunto_in', function(e)
               {
                 e.preventDefault();
                             var ci = $('#mdpci').val();
@@ -2689,7 +2689,7 @@ $("#cert_defuncion_p").dropzone({
 
                                 Swal.fire(
                                     'Busqueda finalizada!',
-                                    'El campo C.I. rrr esta vacio .',
+                                    'El campo C.I. esta vacio .',
                                     'warning'
                                 )
 
@@ -2715,6 +2715,8 @@ $("#cert_defuncion_p").dropzone({
                         "type": type
                     }),
                     success: function(data) {
+                        console.log("resultado de la busqueda de difunto");
+                        console.log(data);
                         if (data.response == null) {
                             Swal.fire(
                                 'Busqueda finalizada!',
