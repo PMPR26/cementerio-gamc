@@ -155,14 +155,14 @@ class ServicioNicho extends Model
 
       public function GenerarFurCM($ci, $nombre, $primer_apellido,
       $ap_materno, $direccion, $codigo,
-       $servicios_cementery , $cantidades, $cajero,  $adjudicatario, $tblobs, $asignado, $nuevo_sitio)
+       $servicios_cementery , $cantidades, $cajero,  $adjudicatario, $tblobs, $asignado, $nuevo_sitio,$nombre_difunto)
         {
 
             //   dd( $ci." ". $nombre." ". $primer_apellido." ".$ap_materno ." ".$direccion ." ".$codigo);
             //   dd( $servicios_cementery );
             //   dd($cantidades);
             //   dd($cajero." ". $adjudicatario);
-            //   dd($tblobs);
+            //   dd($nombre_difunto . "llego ...");
             $headers =  ['Content-Type' => 'application/json'];
             $client = new Client();
              $response = $client->post(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-fur-cementeryCM', [
@@ -181,8 +181,8 @@ class ServicioNicho extends Model
                     'adjudicatario'=>$adjudicatario,
                     'tblobs'=>$tblobs,
                     'asignado'=>$asignado,
-                    'nuevo_sitio'=>$nuevo_sitio
-
+                    'nuevo_sitio'=>$nuevo_sitio,
+                    'nombre_difunto'=>$nombre_difunto
                 ],
                 'headers' => $headers,
             ]);

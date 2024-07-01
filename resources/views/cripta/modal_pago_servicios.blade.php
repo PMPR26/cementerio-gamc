@@ -85,6 +85,7 @@
                                     <input type="hidden" name="funeraria_difunto"   id="funeraria_difunto" value="">
                                     <input type="hidden" name="causa_difunto"   id="causa_difunto" value="">
                                     <input type="hidden" name="tipo_difunto"   id="tipo_difunto" value="">
+                                    <input type="hidden" name="nombre_difunto"   id="nombre_difunto_inhumado" value="">
 
 
 

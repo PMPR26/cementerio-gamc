@@ -27,24 +27,44 @@ class CriptaController extends Controller
         // dd($request);
         if(($request->select_cuartel_search==null && $request->bloque_search ==null && $request->sitio_search ==null) ||
            (!isset($request->select_cuartel_search) && !isset($request->bloque_search) && !isset($request->sitio_search))){
-            $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo', 'superficie', 'cripta_mausoleo.estado',
-            'tipo_registro', 'enterratorios_ocupados', 'total_enterratorios', 'osarios', 'total_osarios', 'cenisarios', 'cripta_mausoleo.notable',
-            'cripta_mausoleo_responsable.documentos_recibidos', 'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos',
-            'cripta_mausoleo.ultima_gestion_pagada as ultimo_pago',
-            'cripta_mausoleo.sitio', 'cripta_mausoleo.codigo_antiguo', 'cripta_mausoleo.familia', 'cripta_mausoleo_responsable.estado as estado_rel_resp',
-            DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
-            'cuartel.codigo as cuartel_codigo', 'bloque.codigo as bloque_nombre')
-            ->join('cuartel', 'cuartel.id', '=', 'cripta_mausoleo.cuartel_id')
-            ->leftJoin('bloque', 'bloque.id', '=', 'cripta_mausoleo.bloque_id')
-            ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id', '=', 'cripta_mausoleo.id')
-            ->leftJoin('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
-          //  ->leftJoin('mantenimiento', 'mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id')
-            ->where('cripta_mausoleo.estado', 'ACTIVO')
-            ->orderBy('cripta_mausoleo.id', 'DESC')
-            ->orderBy('tipo_registro', 'DESC')
-            ->orderBy('cripta_mausoleo.codigo', 'DESC')
-            ->distinct() // Add the DISTINCT keyword here
-            ->get();
+
+
+            $cripta = DB::table('cripta_mausoleo')
+                ->select(
+                    'cripta_mausoleo.id',
+                    'cripta_mausoleo.codigo',
+                    'superficie',
+                    'cripta_mausoleo.estado',
+                    'tipo_registro',
+                    'enterratorios_ocupados',
+                    'total_enterratorios',
+                    'osarios',
+                    'total_osarios',
+                    'cenisarios',
+                    'cripta_mausoleo.notable',
+                    'cripta_mausoleo_responsable.documentos_recibidos',
+                    'cripta_mausoleo_responsable.adjudicacion',
+                    'cripta_mausoleo.difuntos',
+                    'cripta_mausoleo.ultima_gestion_pagada as ultimo_pago',
+                    'cripta_mausoleo.sitio',
+                    'cripta_mausoleo.codigo_antiguo',
+                    'cripta_mausoleo.familia',
+                    'cripta_mausoleo_responsable.estado as estado_rel_resp',
+                    DB::raw("CONCAT(responsable.nombres, ' ', responsable.primer_apellido, ' ' , responsable.segundo_apellido) AS nombre"),
+                    'cuartel.codigo as cuartel_codigo',
+                    'bloque.codigo as bloque_nombre'
+                )
+                ->join('cuartel', 'cuartel.id', '=', 'cripta_mausoleo.cuartel_id')
+                ->leftJoin('bloque', 'bloque.id', '=', 'cripta_mausoleo.bloque_id')
+                ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id', '=', 'cripta_mausoleo.id')
+                ->leftJoin('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
+                ->where('cripta_mausoleo.estado', 'ACTIVO')
+                ->orderBy('cripta_mausoleo.id', 'DESC')
+                ->orderBy('tipo_registro', 'DESC')
+                ->orderBy('cripta_mausoleo.codigo', 'DESC')
+                ->distinct()
+                ->get();
+
 
         }
         else{
@@ -69,26 +89,44 @@ class CriptaController extends Controller
                 $condicion=['cripta_mausoleo.bloque_id' =>''.$request->bloque_search.''];
             }
 
-            $cripta = Cripta::select('cripta_mausoleo.id', 'cripta_mausoleo.codigo',  'superficie','cripta_mausoleo.estado',
-            'tipo_registro','enterratorios_ocupados','total_enterratorios','osarios', 'total_osarios','cenisarios', 'cripta_mausoleo.notable',
-            'cripta_mausoleo_responsable.documentos_recibidos',   'cripta_mausoleo_responsable.adjudicacion', 'cripta_mausoleo.difuntos',
-            'cripta_mausoleo.ultima_gestion_pagada as ultimo_pago',
 
-           'cripta_mausoleo.sitio','cripta_mausoleo.codigo_antiguo','cripta_mausoleo.familia','cripta_mausoleo_responsable.estado as estado_rel_resp',
-            DB::raw('CONCAT(responsable.nombres , \' \',responsable.primer_apellido, \' \', responsable.segundo_apellido ) AS nombre'),
-            'cuartel.codigo as cuartel_codigo','bloque.codigo as bloque_nombre')
-            ->Join('cuartel','cuartel.id', '=', 'cripta_mausoleo.cuartel_id' )
-            ->leftJoin('bloque','bloque.id', '=', 'cripta_mausoleo.bloque_id' )
-           ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id','=','cripta_mausoleo.id' )
-           ->leftJoin('responsable','responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id' )
-           //->leftJoin('mantenimiento','mantenimiento.id_ubicacion', '=', 'cripta_mausoleo.id' )
-           ->where('cripta_mausoleo.estado', 'ACTIVO')
-           ->where($condicion)
-           ->orderBy('cripta_mausoleo.id', 'DESC')
-           ->orderBy('tipo_registro', 'DESC')
-           ->orderBy('cripta_mausoleo.codigo', 'DESC')
-           ->distinct()
-           ->get();
+
+            $cripta = Cripta::select([
+                    'cripta_mausoleo.id',
+                    'cripta_mausoleo.codigo',
+                    'superficie',
+                    'cripta_mausoleo.estado',
+                    'tipo_registro',
+                    'enterratorios_ocupados',
+                    'total_enterratorios',
+                    'osarios',
+                    'total_osarios',
+                    'cenisarios',
+                    'cripta_mausoleo.notable',
+                    'cripta_mausoleo_responsable.documentos_recibidos',
+                    'cripta_mausoleo_responsable.adjudicacion',
+                    'cripta_mausoleo.difuntos',
+                    'cripta_mausoleo.ultima_gestion_pagada as ultimo_pago',
+                    'cripta_mausoleo.sitio',
+                    'cripta_mausoleo.codigo_antiguo',
+                    'cripta_mausoleo.familia',
+                    'cripta_mausoleo_responsable.estado as estado_rel_resp',
+                    DB::raw("CONCAT(responsable.nombres, ' ' , responsable.primer_apellido, ' ', responsable.segundo_apellido) AS nombre"),
+                    'cuartel.codigo as cuartel_codigo',
+                    'bloque.codigo as bloque_nombre'
+                ])
+                ->join('cuartel', 'cuartel.id', '=', 'cripta_mausoleo.cuartel_id')
+                ->leftJoin('bloque', 'bloque.id', '=', 'cripta_mausoleo.bloque_id')
+                ->leftJoin('cripta_mausoleo_responsable', 'cripta_mausoleo_responsable.cripta_mausole_id', '=', 'cripta_mausoleo.id')
+                ->leftJoin('responsable', 'responsable.id', '=', 'cripta_mausoleo_responsable.responsable_id')
+                ->where('cripta_mausoleo.estado', 'ACTIVO')
+                ->where($condicion)
+                ->orderBy('cripta_mausoleo.id', 'DESC')
+                ->orderBy('tipo_registro', 'DESC')
+                ->orderBy('cripta_mausoleo.codigo', 'DESC')
+                ->distinct()
+                ->get();
+
 
         }
 
@@ -866,21 +904,15 @@ class CriptaController extends Controller
             }
 
             public function saveServiceCripta(Request $request){
-                // dd($request->tblobs);
-                // dd($request['difuntos']);
-
                 $this->validate($request, [
                     'id_cripta_mausoleo' => 'required',
                     'servicios' => 'required',
-                   // 'difuntos' => 'required',
                     'ci' => 'required',
                     'nombrepago' => 'required',
                     'paternopago' => 'required',
-                    // 'status' => 'required'
                 ],[
                     'id_cripta_mausoleo.required' => 'codigo de mausoleo o cripta es requerido!',
                     'servicios.required' => 'Debe elegir al menos un servicio!',
-                    //'difuntos.required' => 'Los datos de el/los  difunto(s) requerido!',
                     'ci.required' => 'El campo carnet de identidad de la persona que realizara el pago es requerido!',
                     'nombrepago.required' => 'El campo nombre de la persona que realizara el pago es requerido',
                     'paternopago.required' =>'El campo apellido paterno de la persona que realizara el pago es requerido',
@@ -892,8 +924,6 @@ class CriptaController extends Controller
                  ->where('id',auth()->id())
                  ->first();
                  $cajero= $datos_cajero->user_sinot;
-
-
                 $desc_exhum="";
                 $cantidades=[];
                 $tipo_servicio="";
@@ -902,12 +932,12 @@ class CriptaController extends Controller
                 $txt_servicio_hijos="";
                 $tblobs="";
                 $nuevo_sitio="";
+                $nombre_difunto="";
                 //en caso de hacer una asignacion
                 $asignado=$request->asignar_difunto_nicho;
                // guardar datos difuntos actuales como respaldo en columna list_ant_difuntos
 
                 $cript=Cripta::where('id',$request->id_cripta_mausoleo )->first();
-                // dd($cript);
                 $cript->list_ant_difuntos=  $cript->difuntos;
                 $cript->gestiones_pagadas_ant=  $cript->gestiones_pagadas;
                 $cript->ult_gestion_pagada_ant=  $cript->ultima_gestion_pagada;
@@ -929,6 +959,7 @@ class CriptaController extends Controller
 
                                  if($search_difunto!=null || $search_difunto!="" || !empty($search_difunto)){
                                      $difuntoid=$search_difunto->id;
+                                     $nombre_difunto=$search_difunto->nombres;
                                  }else{
                                      $difuntoid=$dif->insertDifunto($request);
                                  }
@@ -937,25 +968,29 @@ class CriptaController extends Controller
 
                 }else{
                     $nuevo_sitio="";
-
                             $this->addDifunto($request);
-
+                            $nombre_difunto=$request->nombre_difunto;
                 }
 
                 //generar fur
                 $obj= new ServicioNicho;
                 $cant_serv=count($request->servicio_hijos);
+
                 for($cont=0; $cont<$cant_serv; $cont++){
+                    // dd($request->servicio_hijos[$cont]);
                     $cantidades[$cont]=1;
+                    if($request->servicio_hijos[$cont]== 623 || $request->servicio_hijos[$cont]== 622){
+                        $nombre_difunto=$request->nombre_difunto??'';
+                    }
                 }
                 //    dd($request->ci_resp);
                  $adjudicatario=$request->nombre_resp." C.I.: ".$request->ci_resp;
 
                 //  $nombre_difunto= $request->difuntos[count( $request->difuntos)-1]['nombres']." ".$request->difuntos[count( $request->difuntos)-1]['segundo_apellido']." ".$request->difuntos[count( $request->difuntos)-1]['primer_apellido'];
-
+                // dd("nombre_difunto es : ".$nombre_difunto);
                 $response=$obj->GenerarFurCM($request->ci, $request->nombrepago, $request->paternopago,
                 $request->maternopago, $request->domicilio, $request->codigo_unidad,
-                $request->servicio_hijos , $cantidades, $cajero,  $adjudicatario, $request->tblobs, $asignado, $nuevo_sitio);
+                $request->servicio_hijos , $cantidades, $cajero,  $adjudicatario, $request->tblobs, $asignado, $nuevo_sitio, $nombre_difunto);
 
                     // dd( $response);
                 if($response['status']==true){

@@ -135,7 +135,7 @@
                                             <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="mdpci" autocomplete="off" value="">
 
                                             <div class="input-group-append">
-                                                <button type="submit" class="btn btn-lg btn-default" id="buscarDif">
+                                                <button type="submit" class="btn btn-lg btn-default" id="buscarDifServicio">
                                                     <i class="fa fa-search"></i>
                                                 </button>
                                             </div>
