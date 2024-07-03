@@ -153,10 +153,7 @@
             <caption>LISTA DE NICHOS LIBRES</caption>
             <thead>
                 <tr>
-                   {{--  <th>CUARTEL</th>
-                    <th>BLOQUE</th>
-                    <th>NRO NICHO</th>
-                    <th>FILA</th> --}}
+                    <th>Nro</th>
                     <th>CODIGO</th>
                     <th>CODIGO ANTERIOR</th>
                     <th>TIPO DEL NICHO</th>
@@ -168,10 +165,7 @@
             <tbody>
                 @foreach ($nicho as $key => $value )
                     <tr>
-                       {{--  <td>{{ $value->cuartel ?? '' }}</td>
-                        <td>{{ $value->bloque ?? '' }}</td>
-                        <td>{{ $value->nro_nicho ?? '' }}</td>
-                        <td>{{ $value->fila ?? '' }}</td> --}}
+                        <td>{{ $key+1 }}</td>
                         <td>{{ $value->codigo ?? '' }}</td>
                         <td>{{ $value->codigo_anterior ?? '' }}</td>
                         <td>{{ $value->tipo ?? '' }}</td>
