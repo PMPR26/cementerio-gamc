@@ -175,7 +175,6 @@
                             @php($rolUsuario = $user->role)
                         @endif
                             @if($rolUsuario != "APOYO")
-
                             <button type="button" class="btn btn-success" value="{{ $cripta->id }}" id="btn_pay_cm" title="Pagar servicios"><i class="fa fa-money"></i></button>
                             @endif
                     </td>
@@ -1979,8 +1978,6 @@ $("#cert_defuncion_p").dropzone({
                                             data: JSON.stringify({
                                                             }),
                                             success: function(data) {
-                                                console.log("gggggggggggg");
-                                                console.log(data.response);
                                                 $.each(data.response, function(key,val)
                                                 {
                                                           // console.log(val.descripcion );
@@ -2247,9 +2244,11 @@ $("#cert_defuncion_p").dropzone({
                 var fecha_nacimiento =  document.getElementById('mdpfecha_nacimiento').value;
                 var fecha_defuncion =  document.getElementById('mdpfecha_defuncion').value;
                 var fecha_ingreso =  document.getElementById('mdpfecha_ingreso').value;
+                var nombre_difunto=nombres+ " "+primer_apellido+" "+segundo_apellido;
+                $('#nombre_difunto_inhumado').val(nombre_difunto)
 
                 if(fecha_defuncion=='' ||  fecha_defuncion==null){
-                    console.log("fecha def "+fecha_defuncion+ "fecha ongrso"+fecha_ingreso );
+                    // console.log("fecha def "+fecha_defuncion+ "fecha ongrso"+fecha_ingreso );
                     swal.fire({
                               title: "Precaucion!",
                               text: "!Debe completar la fecha de defuncion!",
@@ -2258,9 +2257,7 @@ $("#cert_defuncion_p").dropzone({
                               showCancelButton: false,
                               showConfirmButton: false
                           });
-
                              return false
-
                 }
 
                 if( document.getElementById('causa_p').value=='undefined'
@@ -2278,7 +2275,6 @@ $("#cert_defuncion_p").dropzone({
                 else{
                     var fun_select=document.getElementById('funeraria_p').value;
                 }
-                // alert(fun_select);
                                             let fila = {
                                                 ci: document.getElementById('mdpci').value,
                                                 nombres: document.getElementById('mdpnombre').value,
@@ -2346,9 +2342,7 @@ $("#cert_defuncion_p").dropzone({
             });
             function add_to_list_difunto(dif_in, id_tabla_body, class_tabla, cond, key)
             {
-
-
-                                  if(dif_in.nombres=="" && dif_in.primer_apellido== "" && dif_in.fecha_nacimiento=="" && dif_in.fecha_defuncion=="" )
+               if(dif_in.nombres=="" && dif_in.primer_apellido== "" && dif_in.fecha_nacimiento=="" && dif_in.fecha_defuncion=="" )
                                   {
                                                                   swal.fire({
                                                                             title: "Precaucion!",
@@ -2619,28 +2613,26 @@ $("#cert_defuncion_p").dropzone({
 
 
 /************* metodo que recorre toda la grilla resumen de servicios adquiridos y calcula el total adeudado ******/
-function calcularMonto(){
-            var suma=0;
-            $('#totalServ').html("");
-            $( ".dt_subtotal" ).each(function( index ) {
-                console.log( index + ": " + $( this ).val() );
-                suma=parseInt(suma) + parseInt($( this ).html());
-            });
-            $('#totalServ').html(suma);
-            $('#totalservicios').val(suma);
-
-            return suma;
+       function calcularMonto()
+        {
+                var suma=0;
+                $('#totalServ').html("");
+                $( ".dt_subtotal" ).each(function( index ) {
+                    console.log( index + ": " + $( this ).val() );
+                    suma=parseInt(suma) + parseInt($( this ).html());
+                });
+                $('#totalServ').html(suma);
+                $('#totalservicios').val(suma);
+                return suma;
         }
 
 
                      // Función para buscar un valor en la tabla
         function buscarValorEnTabla(valor) {
-
             var tabla = $(".detalle_servicios");
             var encontrado = false;
             var filaEncontrada;
             var posicionEncontrada;
-
             console.log("valor busqueda-------------->"+valor);
 
             // Recorrer todas las filas del tbody
@@ -2686,6 +2678,89 @@ function calcularMonto(){
             }
         }
 
+        /********************** funcion buscar difunto en modal pagos servicios ******************************************/
+        $(document).on('click', '#buscar_difunto_in', function(e)
+              {
+                e.preventDefault();
+                            var ci = $('#mdpci').val();
+                                console.log("ciiiii"+ci);
+
+                            if (ci.length < 1) {
+
+                                Swal.fire(
+                                    'Busqueda finalizada!',
+                                    'El campo C.I. esta vacio .',
+                                    'warning'
+                                )
+
+                            } else {
+                                var type = "deceased";
+                                dats = buscar_ci_Dif_servicios(ci, type);
+
+                            }
+            });
+            function buscar_ci_Dif_servicios(ci, type) {
+                var datos = "";
+
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Content-Type': 'application/json'
+                    },
+                    url: "{{ route('search.difunto.responsable') }}",
+                    method: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        "ci": ci,
+                        "type": type
+                    }),
+                    success: function(data) {
+                        console.log("resultado de la busqueda de difunto");
+                        console.log(data);
+                        if (data.response == null) {
+                            Swal.fire(
+                                'Busqueda finalizada!',
+                                'El C.I.buscado e ingresado no esta registrado .',
+                                'warning'
+                            )
+                        } else
+                        {
+                            console.log(data);
+                            $('#mdpprimer_apellido').val(data.response.primer_apellido);
+                            $('#mdpsegundo_apellido').val(data.response.segundo_apellido);
+                            $('#mdpfecha_nacimiento').val(data.response.fecha_nacimiento);
+                            $('#mdptipo').val(data.response.tipo);
+                            $('#mdpci').val(data.response.ci);
+                            $('#mdpnombre').val(data.response.nombres);
+                            $('#mdpcertificado_defuncion').val(data.response.certificado_defuncion);
+                            $('#mdpfecha_defuncion').val(data.response.fecha_defuncion);
+
+                            $('#causa').val(data.response.causa).trigger('change');
+                            $('#funeraria').val(data.response.funeraria).trigger('change');
+                            $('#mdpgenero').val(data.response.genero);
+
+                            if(data.response.certificado_file != null){
+                               $('#mdpurl-certification').val(data.response.certificado_file);
+                                var enlace='<a href="'+data.response.certificado_file+'" id="enl" target="_black">Archivo adjunto</a><br>'+
+                                            '<img src="'+data.response.certificado_file+'" width="150px" height="150px">';
+                                $('#adjunto').append(enlace);
+                            }
+                        }
+
+                    },
+                    error: function(xhr, status) {
+
+                        Swal.fire(
+                            'Busqueda finalizada!',
+                            'El registro no ha  sido encontrado o no existe .',
+                            'error'
+                        )
+                    },
+                });
+                // return datos;
+            }
+
+/********************** funcion buscar difunto en modal pagos servicios ******************************************/
     /*************************************************************************************************************************/
     /****************************************************** function guardar pagos servicios**********************************/
     /************************************************************************************************************************/
@@ -2795,6 +2870,7 @@ function calcularMonto(){
                                                 'tblobs': tblobs,
                                                 'total_monto': monto_total,
                                                 'difuntos': difuntos,
+                                                'nombre_difunto': $('#nombre_difunto_inhumado').val(),
                                                 'codigo_unidad': codigo_unidad,
                                                 'resp_id':$('#resp_cm_id').html(),
                                                 'ci': $('#cm_ci').val(),
@@ -3241,7 +3317,7 @@ console.log("llega aquiii");
               {
                 e.preventDefault();
                             var ci = $('#mdci').val();
-
+                                console.log("ciiiii"+ci);
 
                             if (ci.length < 1) {
 
