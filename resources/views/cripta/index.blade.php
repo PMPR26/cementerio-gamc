@@ -1955,9 +1955,6 @@ $("#cert_defuncion_p").dropzone({
                                         $('#cm_maternopago').val(data.response.responsable.segundo_apellido);
 
 
-
-
-
                                         var array_difuntos = jQuery.parseJSON(data.response.cripta.difuntos);
                                          $('#difuntos_cm1').html(data.response.cripta.difuntos);
                                         $.each(array_difuntos, function(key,val)
@@ -1980,14 +1977,14 @@ $("#cert_defuncion_p").dropzone({
                                             success: function(data) {
                                                 $.each(data.response, function(key,val)
                                                 {
-                                                          // console.log(val.descripcion );
+                                                         console.log(data );
                                                     // alert($('#tabla_difunto_row_pay').children().length);
                                                         if($('#tabla_difunto_row_pay').children().length>0)
                                                         {
-                                                      //  if(val.cuenta=='15224370' || val.cuenta=='15224330' || val.cuenta=='15224380' || val.cuenta=='15224300' || val.cuenta=='15224390' ){}
-                                                       // else{
+                                                           //  if(val.cuenta=='15224370' || val.cuenta=='15224330' || val.cuenta=='15224380' || val.cuenta=='15224300' || val.cuenta=='15224390' ){}
+                                                           // else{
                                                           if( val.cuenta=='15224330' ){}
-                                                        else{
+                                                          else{
                                                             var html='<div class="form-check '+val.cuenta+'">'+
                                                                         '<input class="form-check-input services_origin" type="checkbox" id="'+val.cuenta+'" name="serv[tipo_servicio]" value="'+val.cuenta+'-'+val.descripcion+'"  onclick="cargar_sevicios_hijos(this)">'+
                                                                         '<label class="form-check-label labelservice" for="'+val.cuenta+'">'+val.descripcion+'</label>'+
@@ -2012,7 +2009,7 @@ $("#cert_defuncion_p").dropzone({
                                                         }
                                                         }
                                                         else{
-                                                            if(val.cuenta=="15224150" || val.cuenta=="15224250" || val.cuenta=="15224410"   || val.cuenta=="15224360" || val.cuenta=="15224350"){
+                                                            if(val.cuenta=="15224150" || val.cuenta=="15224250" || val.cuenta=="15224410"   || val.cuenta=="15224360" || val.cuenta=="15224350" || val.cuenta=="15224400"){
                                                                 var html='<div class="form-check '+val.cuenta+'">'+
                                                                         '<input class="form-check-input" type="checkbox" id="'+val.cuenta+'" name="serv[tipo_servicio]" value="'+val.cuenta+'-'+val.descripcion+'"  onclick="cargar_sevicios_hijos(this)">'+
                                                                         '<label class="form-check-label labelservice" for="'+val.cuenta+'">'+val.descripcion+'</label>'+
@@ -2908,7 +2905,7 @@ $("#cert_defuncion_p").dropzone({
                                             }),
                                             success: function(data)
                                             {
-console.log("llega aquiii");
+                                                console.log("llega aquiii");
                                                 console.log(data);
                                                 if(data.status==true){
                                                     swal.fire({
@@ -3631,7 +3628,7 @@ console.log("llega aquiii");
 
 
 
-              $(document).on('change', '.select_cuartel_nuevo', function(){
+                $(document).on('change', '.select_cuartel_nuevo', function(){
                     $('#bloque_nuevo').empty();
                     var sel_cuartel=$('.select_cuartel_nuevo').val();
                     $('#bloque_nuevo').prop('disabled', false);
