@@ -224,7 +224,7 @@
                             <td width='100%' colspan="5" height="80px">
                                 <?php $subt1 = round($acum, 3);
                                 $subtLit = number_format(floatval($subt1), 2, ',', '.');
-                                $lit = convertir($subt1);
+                                $lit = convertir($subtLit);
                                 $txt = 'SON: BOLIVIANOS  ' . $lit . ' ';
                                 ?>
                                 <b> {{ $txt }} </b>
