@@ -523,6 +523,47 @@
 
                 </div>
 
+                 {{-- seccion asignacion a cripta mausoleo --}}
+
+                 <div class="card">
+                    <div class="card-header">
+                        <div class="form-check bg-cyan p-4">
+                            <input class="form-check-input" type="checkbox" value="" id="asignar_difunto_cm">
+                            <label class="form-check-label" for="asignar_difunto_cm">
+                             Asignar Difunto a CRIPTA/MAUSOLEO
+                            </label>
+                        </div>
+                    </div>
+
+                {{--     <div class="card-body asignar_df_cm bg-gradient-gray" style="display: none">
+                        <div class="col-12">
+                            <form>
+                                <div class="form-row">
+                                  <div class="form-group col-md-3">
+                                    <label for="inputEmail4">Seleccione el codigo de la cripta o mausoleo</label>
+                                    <select  class="form-control select_cm" name="select_cm"  id="select_cm" style="width: 100%" >
+                                        <option selected disabled>Seleccione sitio</option>
+                                                @foreach ($cripta_mauselo as $sitios)
+                                                <option value="{{ $sitios->id }}">{{ $sitios->codigo }}</option>
+                                                @endforeach
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <label for="inputPassword4">Fecha ingreso a nuevo nicho</label>
+                                    <input type="date" class="form-control" id="nueva_fecha_ingreso" placeholder="fecha ingreso">
+                                    </div>
+                                </div>
+
+                                {{-- <button type="button" class="btn btn-warning btn_nueva_asignacion">Confirmar Ingreso</button> --}}
+                             {{-- </form>
+                        </div>
+                    </div> --}}
+
+            </div>
+            {{-- end seccion asignacion de difunto a cripta o mausoleo --}}
+
                 <div class="card">
                     <div class="card-header" id="detalle">
                         <h4>DETALLE DE SERVICIOS SOLICITADOS</h4>
