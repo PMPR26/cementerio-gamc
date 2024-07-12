@@ -524,7 +524,7 @@
                 </div>
 
                  {{-- seccion asignacion a cripta mausoleo --}}
-
+{{--
                  <div class="card">
                     <div class="card-header">
                         <div class="form-check bg-cyan p-4">
@@ -533,7 +533,7 @@
                              Asignar Difunto a CRIPTA/MAUSOLEO
                             </label>
                         </div>
-                    </div>
+                    </div> --}}
 
                 {{--     <div class="card-body asignar_df_cm bg-gradient-gray" style="display: none">
                         <div class="col-12">
@@ -847,19 +847,24 @@ $(document).ready(function ()
         $(document).on('click', '.serv', function(e){
             // e.preventDefault();
             var cuenta=$(this).attr("id");
-            var id_cuenta=   cuenta;
+            var id_cuenta= cuenta;
             var txt_cuenta=$(this).attr("value");
-
 
             if ($('#'+cuenta+'').is(":checked"))
                 {
+                   // si el servicio solicitado es renovacion verificar si ya fue pagado en el
+                  // año entonces enviar mensaje q no se puede hacer nuevamente el pago
+                  // sino continuar l proceso.
+
+
+
                     $.ajax({
                             type: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                                 'X-CSRF-TOKEN':'{{ csrf_token() }}',
                             },
-                            url: "{{route('get.serv')  }}",
+                            url: "{{route('get.serv')}}",
                             async: false,
                             data: JSON.stringify({
                                 'data': cuenta
@@ -890,6 +895,40 @@ $(document).ready(function ()
                     $('#serv-hijos-'+cuenta+'').empty();
                     $('#list_detalle .row_'+cuenta+'').remove();
                 }
+                if(cuenta=='15224300'){
+                        $.ajax({
+                        type: 'POST',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: "{{ route('verificar.pago.renovatorio')}}",
+                        async: false,
+                        data: JSON.stringify({
+                                   'nro_nicho': $('#nro_nicho').val(),
+                                   'bloque':  $('#bloque').val(),
+                                   'cuartel_id': $('#cuartel option:selected').val(),
+                                   'cuartel': $('#cuartel option:selected').text(),
+                                   'nicho': $('#nro_nicho').val(),
+                                   'fila':  $('#fila').val(),
+                                   'tipo_nicho':  $('#tipo_nicho').val(),
+                            }),
+                        success: function(datos) {
+                          console.log(datos.status);
+                            if(datos.status==true){
+                                swal.fire({
+                                title: "Error",
+                                text: datos.mensaje,
+                                icon: "error",
+                                button: "OK",
+                                });
+                                $('#15224300').prop('checked', false);
+                                $('#serv-hijos-'+cuenta+'').empty();
+                                $('#list_detalle .row_'+cuenta+'').remove();
+                            }
+                        }
+                       });
+                    }
 
                 calcularMonto();
         });
@@ -2821,8 +2860,34 @@ $(document).on('click', '.checkbox_ren', function() {
                     }
                 });
 
+                //restriccion de pago renovatorio si ya hizo un pago en la gestion
+                $(document).on('click', '#15224300', function(e){
+                    if($('#15224300').isChecked){
 
+                        $.ajax({
+                        type: 'POST',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: "{{ route('verificar.pago.renovatorio')}}",
+                        async: false,
+                        data: JSON.stringify({
+                                   'nro_nicho': $('#nro_nicho').val(),
+                                   'bloque':  $('#bloque').val(),
+                                   'cuartel_id': $('#cuartel option:selected').val(),
+                                   'cuartel': $('#cuartel option:selected').text(),
+                                   'nicho': $('#nro_nicho').val(),
+                                   'fila':  $('#fila').val(),
+                                   'tipo_nicho':  $('#tipo_nicho').val(),
+                            }),
+                        success: function(datos) {
+                          console.log(datos.response);
+                        }
+                       });
+                    }
 
+                });
 
 
     </script>

@@ -154,9 +154,8 @@ Route::group(['prefix' => 'responsable', 'middleware' => 'auth'], function () {
     Route::post('/completar-info-nicho', [App\Http\Controllers\Servicios\ServiciosController::class, 'completarInfoNicho'])->name('completar.info.nicho');
     Route::post('/verificarPago',[App\Http\Controllers\Servicios\ServiciosController::class,'verificarPago'])->name('verificar.pago');
     Route::post('/verificarPagoDeposito',[App\Http\Controllers\Deposito\DepositoController::class,'verificarPagoDeposito'])->name('verificar.pago.deposito');
-
-
     Route::post('/listar_difuntos', [App\Http\Controllers\Servicios\ServiciosController::class, 'lista_difuntos'])->name('listar.difuntos');
+    Route::post('/verificarPagoRenovatorio',[App\Http\Controllers\Servicios\ServiciosController::class,'verificarPagoRenovatorio'])->name('verificar.pago.renovatorio');
 
 
 
