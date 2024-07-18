@@ -166,22 +166,27 @@
                         @endif
                     <tr>
                         @if($table->fur==0)
-                        <td width="60%" colspan="2"><b>SERVICO GRATUITO</b></td>
+                        <td width="50%" colspan="2"><b>SERVICO GRATUITO</b></td>
                         @endif
-                        <td width="20%">Actividad: Preliquidación</td>
+                    </tr>
+                    <tr>
+                        <td width="50%">Actividad: Preliquidación</td>
                     </tr>
 
 
                     @if($codigo_nicho!=0 || $codigo_nicho!="" )
                     <tr>
-                        <td><b>Codigo Nicho:  </b></td><td><b>{{ $codigo_nicho }}</b></td>
+                        <td width="5%"><b>Codigo Nicho:  </b></td>
+                    </tr>
+                    <tr>
+                        <td width="95%"><b>{{ $codigo_nicho }}</b></td>
                     </tr>
                     @endif
 
 
                 </table>
 
-                    <table>
+                    <table width="100%">
                         <tr>
                             <td colspan="4" width="380px">
                                 <h4 align="left">DETALLE LIQUIDACION</h4>
@@ -208,7 +213,7 @@
                                 @php($acum=$acum+$cobros->monto)
                         @endforeach
                         <tr class="odd">
-                            <td width="80%" align="left" colspan="3">Total </td>
+                            <td width="90%" align="left" colspan="3">Total </td>
                             <td width="10%" align="right">{{ isset($acum) ? number_format($acum, 2) : '' }}
                         </tr>
 
