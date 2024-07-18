@@ -174,13 +174,25 @@
                     </tr>
 
 
-                    @if($codigo_nicho!=0 || $codigo_nicho!="" )
+                    @if(($codigo_nicho!=0 || $codigo_nicho!="")&&( $table->fur !=0) )
+                    @php($obs="")
                     <tr>
                         <td width="5%"><b>Codigo Nicho:  </b></td>
                     </tr>
                     <tr>
                         <td width="95%"><b>{{ $codigo_nicho }}</b></td>
                     </tr>
+                    @elseif(($codigo_nicho!=0 || $codigo_nicho!="")&&( $table->fur ==0) )
+                    <tr>
+                        <td width="5%"><b>Codigo Nicho:  </b></td>
+                    </tr>
+                    <tr>
+                        <td width="95%"><b>{{ $codigo_nicho }}</b></td>
+                    </tr>
+                    @php($obs=$observacion)
+                    @elseif(($codigo_nicho==0 || $codigo_nicho!="")&&( $table->fur ==0) )
+                    @php($obs=$observacion)
+
                     @endif
 
 
@@ -207,7 +219,7 @@
                             <tr>
                                 <td width="10%">{{ $cobros->cuenta  }}</td>
                                 <td width="15%" align="center"> 1 </td>
-                                <td width="60%" align="justify">{{ $cobros->detalle }}</td>
+                                <td width="60%" align="justify">{{ $cobros->detalle }} {{ $obs}}</td>
                                 <td width="15%" align="center">{{number_format(floatval($cobros->monto * 1), 2, ',', '.')  }}</td>
                             </tr>
                                 @php($acum=$acum+$cobros->monto)
