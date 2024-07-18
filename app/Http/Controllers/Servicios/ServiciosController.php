@@ -918,7 +918,7 @@ class ServiciosController extends Controller
 
             $resp = $sq->nombre_resp . " " . $sq->paterno_resp . " " . $sq->materno_resp; // ."  C.I.: ".$sq->ci_resp;
             $ci_resp = $sq->ci_resp;
-        } else if ($tipo_ubicacion == "EXTERNO GRATIS" ||  $tipo_ubicacion == "EXTERNO") {
+        } else if ($tipo_ubicacion == "EXTERNO GRATUITO" ||  $tipo_ubicacion == "EXTERNO") {
             $sq = ResponsableDifunto::where('responsable_difunto.id', '=', $responsable_difunto_id)
                 ->where('responsable_difunto.estado', 'ACTIVO')
                 ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
@@ -997,6 +997,8 @@ class ServiciosController extends Controller
             }
         }
     }
+
+
 
 
     //imprimir preliquidacion para criptas mausoleos

@@ -715,8 +715,6 @@ class ServicioNicho extends Model
         return $fur_response;
     }
 
-
-
     public function verificarRenovacion(Request $request) {
         $codigo_nicho = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
         $year = date('Y'); // Obtén el año actual

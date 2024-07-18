@@ -209,7 +209,7 @@
                         @endforeach
                         <tr class="odd">
                             <td width="80%" align="left" colspan="3">Total </td>
-                            <td width="10%" align="right">{{ $acum ?? '' }}</td>
+                            <td width="10%" align="right">{{ isset($acum) ? number_format($acum, 2) : '' }}
                         </tr>
 
                         {{-- @if(isset($observacion) || $observacion!= null)
