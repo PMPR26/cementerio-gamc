@@ -190,11 +190,8 @@
                     </tr>
                     <tr class="odd">
                         <td width="80%" align="left" colspan="3">Total </td>
-                        <td width="10%" align="right">{{ $table->monto ?? '' }}</td>                  </tr>
-
-
-
-
+                        <td width="10%" align="right">{{ $table->monto ?? '' }}</td>
+                    </tr>
             <tr>
                 <td width='100%' colspan="5" height="80px">
                     <?php $subt1 = round($table->monto, 3);

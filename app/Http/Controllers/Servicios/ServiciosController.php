@@ -353,22 +353,6 @@ class ServiciosController extends Controller
         if ($request->isJson()) {
 
             if ($request->externo == "externo" || $request->gratis == "GRATIS") {
-                // $this->validate($request, [
-                //     'nombres_dif' => 'required',
-                //     'paterno_dif'=> 'required',
-                //     'tipo_dif'=> 'required',
-                //     'nombres_resp' => 'required',
-                //     'paterno_resp'=> 'required',
-                //     'servicios_adquiridos' => 'required',
-                // ], [
-                //     'nombres_dif.required' => 'El campo nombres del difunto es obligatorio',
-                //     'paterno_dif.required'=> 'El campo primer apellido  del difunto es obligatorio',
-                //     'tipo_dif.required' => 'El campo tipo de difunto (adulto o parvulo) es obligatorio',
-                //     'nombres_resp.required' => 'El campo nombre del responsable es obligatorio',
-                //     'paterno_resp.required'=> 'El campo apellido paterno del responsable  es obligatorio',
-                //     'servicios_adquiridos.required' => 'Debe seleccionar a
-                //     l menos un tipo de servicio',
-                // ]);
             } else {
                 $this->validate($request, [
                     'nro_nicho' => 'required',
@@ -533,26 +517,26 @@ class ServiciosController extends Controller
 
                 if ($existeNicho != null) {
                     $id_nicho = $existeNicho->id;
-                    $renov_anterior = $existeNicho->renovacion;
-                    $monto_renov_anterior = $existeNicho->monto_renov;
-                    $gestion_renov_anterior = $existeNicho->gestion_renov_anterior;
+                    // $renov_anterior = $existeNicho->renovacion;
+                    // $monto_renov_anterior = $existeNicho->monto_renov;
+                    // $gestion_renov_anterior = $existeNicho->gestion_renov_anterior;
 
 
                     if (isset($estado_nicho)) {
                         $existeNicho->estado_nicho = $estado_nicho;
                     }
-                    if (isset($pago_renovaciones)) {
-                        if ($pago_renovaciones == "SI") {
-                            $existeNicho->renov_anterior = $renov_anterior;
-                            $existeNicho->monto_renov_anterior = $monto_renov_anterior;
-                            $existeNicho->renovacion = $request->nro_renovacion;
-                            $existeNicho->monto_renov = $request->monto_renov;
-                            $existeNicho->nro_renov = $request->cant_renov_confirm;
-                            $existeNicho->renovacion = $request->cant_renov_confirm;
-                            $existeNicho->gestion_renov_anterior = $gestion_renov_anterior;
-                            $existeNicho->gestion_renovacion = $request->gestion_renovacion;
-                        }
-                    }
+                    // if (isset($pago_renovaciones)) {
+                    //     if ($pago_renovaciones == "SI") {
+                    //         $existeNicho->renov_anterior = $renov_anterior;
+                    //         $existeNicho->monto_renov_anterior = $monto_renov_anterior;
+                    //         $existeNicho->renovacion = $request->nro_renovacion;
+                    //         $existeNicho->monto_renov = $request->monto_renov;
+                    //         $existeNicho->nro_renov = $request->cant_renov_confirm;
+                    //         $existeNicho->renovacion = $request->cant_renov_confirm;
+                    //         $existeNicho->gestion_renov_anterior = $gestion_renov_anterior;
+                    //         $existeNicho->gestion_renovacion = $request->gestion_renovacion;
+                    //     }
+                    // }
                     $existeNicho->estado = "ACTIVO";
                     $existeNicho->codigo_anterior = $request->anterior;
                     $existeNicho->cantidad_anterior = $existeNicho->cantidad_cuerpos;
@@ -738,7 +722,7 @@ class ServiciosController extends Controller
                 } else {
                     $descripcion_exhumacion = "";
                 }
-                //  dd($descripcion_exhumacion);
+                //  dd($request->nro_renovacion);
 
                 $serv = new ServicioNicho;
                 $serv->codigo_nicho = $codigo_n ?? '';
@@ -751,7 +735,7 @@ class ServiciosController extends Controller
                 $serv->id_usuario_caja = auth()->id();
                 $serv->tipo = "NICHO";
                 $serv->fur = $fur;
-                $serv->nro_renovacion = $request->renov ?? '0';
+                $serv->nro_renovacion = $request->nro_renovacion ?? '0';
                 $serv->monto_renovacion = $request->monto_renov ?? '0';
                 $serv->monto = $request->monto;
                 $serv->nombrepago = $nombre_pago;
@@ -848,7 +832,7 @@ class ServiciosController extends Controller
                                 // Manejar el error de alguna manera
                                 echo "Ocurrió un error: " . $e->getMessage();
                             }
- */
+            */
         } else {
 
             return response([
@@ -857,9 +841,6 @@ class ServiciosController extends Controller
             ], 401);
         }
     }
-
-
-
 
     public function updateResponsable($request, $difuntoid)
     {
@@ -902,7 +883,6 @@ class ServiciosController extends Controller
 
 
         if ($tipo_ubicacion == "NICHO") {
-
             $sq = Responsable::where('responsable_difunto.id', $responsable_difunto_id)
                 //  ->where('responsable_difunto.estado','ACTIVO')
                 ->join('responsable_difunto', 'responsable_difunto.responsable_id', '=', 'responsable.id')
@@ -914,7 +894,6 @@ class ServiciosController extends Controller
                 )
                 ->orderBy('responsable_difunto.id', 'DESC')
                 ->first();
-
 
             $resp = $sq->nombre_resp . " " . $sq->paterno_resp . " " . $sq->materno_resp; // ."  C.I.: ".$sq->ci_resp;
             $ci_resp = $sq->ci_resp;
@@ -941,34 +920,25 @@ class ServiciosController extends Controller
                 $tab['nombre'] = $tablelocal->nombrepago . " " . $tablelocal->paternopago . " " . $tablelocal->maternopago ?? '';
                 $tab['ci'] = $tablelocal->ci;
 
-
                 $observacion = $tablelocal->observacion;
                 $tab['cobrosDetalles'] = [];
                 $id_s = explode(',', $tablelocal->servicio_id);
                 foreach ($id_s as  $key => $value) {
-
                     $headers =  ['Content-Type' => 'application/json'];
                     $client = new Client();
-
                     $response = $client->get(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-servicios-nicho/' . trim($id_s[$key]) . '', [
-                        //$response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/generate-servicios-nicho/'.trim($id_s[$key]).'', [
                         'json' => [],
                         'headers' => $headers,
                     ]);
                     $data = json_decode((string) $response->getBody(), true);
-
-
                     if ($data['status'] == true) {
-
                         $tab['cobrosDetalles'][$key]['cuenta'] = $data['response'][0]['cuenta'];
                         $tab['cobrosDetalles'][$key]['detalle'] = $data['response'][0]['descripcion'];
                         $tab['cobrosDetalles'][$key]['monto'] = 0;
                     }
                 }
 
-
                 $table = json_decode(json_encode($tab));
-
                 $pdf = PDF::setPaper('A4', 'landscape');
                 $pdf = PDF::loadView('servicios/reportServ', compact('table', 'codigo_nicho', 'observacion', 'det_exhum', 'resp', 'ci_resp', 'pago_por', 'tipo_ubicacion'));
                 return  $pdf->stream("preliquidacion_servicio.pdf", array("Attachment" => false));
@@ -997,12 +967,7 @@ class ServiciosController extends Controller
             }
         }
     }
-
-
-
-
     //imprimir preliquidacion para criptas mausoleos
-
     public function generatePDFCM(Request $request)
     {
         //    return($request->codigo_nicho); die();
@@ -1110,20 +1075,12 @@ class ServiciosController extends Controller
         return json_encode($nro_ci_resp);
     }
 
-
-
-
     public function precioRenov()
     {
-
-
-
         $headers =  ['Content-Type' => 'application/json'];
         $client = new Client();
-
         // $response = $client->get(env('URL_MULTISERVICE').'/api/v1/cementerio/generate-servicios-nicho/642', [
         $response = $client->get('https://multiserv.cochabamba.bo/api/v1/cementerio/generate-servicios-nicho/642', [
-
             'json' => [],
             'headers' => $headers,
         ]);
@@ -1146,8 +1103,6 @@ class ServiciosController extends Controller
         }
         return response()->json($resp);
     }
-
-
 
     public function buscarRenovacion(Request $request)
     {
@@ -1301,14 +1256,27 @@ class ServiciosController extends Controller
                 'fila.required' => 'el campo fila es requerido ',
             ]);
 
-            $sql = DB::table('nicho')
-                ->where('nro_nicho', '=',  $request->nro_nicho)
-                ->where('fila', '=',  $request->fila)
-                ->where('bloque.codigo', '=',  $request->bloque)
-                ->where('cuartel.codigo', '=',  $request->cuartel)
-                ->leftJoin('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
-                ->leftJoin('bloque', 'bloque.id', '=', 'nicho.bloque_id')
-                ->first();
+            $codigo = $request->cuartel.".".$request->bloque.".".$request->nro_nicho.".".$request->fila;
+            $sql = DB::table('servicio_nicho')
+            ->select('id', 'nro_renovacion', 'monto_renovacion', 'gestion_renovacion', 'ultima_gestion_pagada', 'cantidad_renov_pagada')
+            ->where('codigo_nicho', '=', $codigo)
+            ->where(function($query) {
+                $query->whereNotNull('gestion_renovacion')
+                      ->orWhere('gestion_renovacion', '!=', 0);
+            })
+            ->where('estado', '=', 'ACTIVO')
+            ->orderByDesc('id')
+            ->first();
+
+
+              // $sql = DB::table('nicho')
+            //     ->where('nro_nicho', '=',  $request->nro_nicho)
+            //     ->where('fila', '=',  $request->fila)
+            //     ->where('bloque.codigo', '=',  $request->bloque)
+            //     ->where('cuartel.codigo', '=',  $request->cuartel)
+            //     ->leftJoin('cuartel', 'cuartel.id', '=', 'nicho.cuartel_id')
+            //     ->leftJoin('bloque', 'bloque.id', '=', 'nicho.bloque_id')
+            //     ->first();
 
             if (!empty($sql) || $sql != null) {
                 return response([
@@ -1712,32 +1680,29 @@ class ServiciosController extends Controller
         $sevicio = json_decode((string) $response->getBody(), true);
         return $sevicio;
     }
-    public function verificarPagoRenovatorio(Request $request){
-        // return response($request);
+    public function verificarPagoRenovatorio(Request $request)
+    {
 
         if ($request->isJson()) {
             $this->validate($request, [
                 'bloque' => 'required',
-                'cuartel'=>'required',
-                'nro_nicho'=>'required',
-                'fila'=>'required'
+                'cuartel' => 'required',
+                'nro_nicho' => 'required',
+                'fila' => 'required'
             ], [
                 'bloque.required' => 'El campo bloque es requerido',
                 'cuartel.required' => 'El campo cuartel requerido',
                 'nro_nicho.required' => 'El campo numero de nicho es requerido',
                 'fila.required' => 'El campo fila es requerido',
             ]);
-            $serv=New ServicioNicho();
+            $serv = new ServicioNicho();
             $verificar = $serv->verificarRenovacion($request);
             return  $verificar;
-
-
         } else {
             return response([
                 'status' => false,
                 'message' => 'Error 401 (Unauthorized)'
             ], 401);
         }
-
     }
 }
