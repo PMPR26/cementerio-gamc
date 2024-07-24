@@ -767,8 +767,6 @@
                 var cuartel = $('#cuartel').val();
                 var cuartel_txt = $('#cuartel option:selected').text();
                 var codigo_nicho = cuartel_txt + "." + bloque + "." + nicho + "." + fila;
-                console.log(nicho + "--" + bloque + "--" + fila + "--" + cuartel + "valor cuartel" + cuartel_txt);
-                console.log("nicho codigo" + codigo_nicho);
 
                 $.ajax({
                     url: "{{ route('nicho.liberar') }}",
@@ -778,8 +776,7 @@
                         codigo_nicho: codigo_nicho
                     },
                     success: function(data) {
-                        console.log('esta aqui');
-                        console.log(data);
+
                         if (data.data == true) {
                             Swal.fire({
                                 title: "Liberado!",
@@ -919,18 +916,20 @@
                                 'tipo_nicho': $('#tipo_nicho').val(),
                             }),
                             success: function(datos) {
-                                console.log(datos.status);
-                                if (datos.status == true) {
-                                    swal.fire({
-                                        title: "Error",
-                                        text: datos.mensaje,
-                                        icon: "error",
-                                        button: "OK",
-                                    });
+
+                               Swal.fire({
+                                    title: "Error",
+                                    text: datos.mensaje,
+                                    icon: "error",
+                                    button: "OK",
+                                }).then(() => {
+                                    // After user clicks OK
                                     $('#15224300').prop('checked', false);
-                                    $('#serv-hijos-' + cuenta + '').empty();
-                                    $('#list_detalle .row_' + cuenta + '').remove();
-                                }
+                                    $('#serv-hijos-15224300').prop('disable', true);
+                                    $('#serv-hijos-15224300').empty();
+                                    $('serv-hijos-15224300').hide();
+                                    $('#list_detalle .row_' + cuenta).remove();
+                                });
                             }
                         });
                     }
@@ -947,12 +946,10 @@
                             'data': cuenta
                         }),
                         success: function(data_response) {
-                            console.log("**************" + data_response.response + "*****");
                             $('#serv-hijos-' + cuenta + '').empty();
                             $.each(data_response.response, function(index, value) {
 
                                 if (value.num_sec == '526' || value.num_sec == '525') {} else {
-                                    // console.log("asdas");
                                     var html = '<div class="form-check">' +
                                         '<input class="form-check-input service_child" type="checkbox" id="' +
                                         value.num_sec + '" name="serv[servicio]" value="' +
@@ -996,9 +993,7 @@
                 var txt_srv = array_serv[0];
                 var cuenta = array_serv[1];
                 var servicio = inf[2];
-                console.log("servicio put in grid " + cuenta);
-                console.log("inf 0 put in grid " + srv);
-                console.log("inf 0 put in grid " + srv);
+
                 var cantidad = $('#cant_renov_confirm').val();
                 var precio_ren = $('#monto_renov').val();
                 var subtotal = $('#monto_renov').val();
@@ -1038,10 +1033,8 @@
                 var subtotal = 0;
                 var ar = $(this).val().split('-');
                 var ar1 = ar[1].split('=>');
-                // console.log('ar[0]--->' +ar[0]);
-                // console.log(ar1[1]+ ' --' +ar1[0]);
+
                 var buscarValor = buscarValorEnTabla(ar1[1]);
-                // console.log("buscar fila "+buscarValor);
                 if (buscarValor == null) {
                     if ($(this).is(':checked')) {
                         var ar = $(this).val().split('-');
@@ -1144,22 +1137,18 @@
                 var filaEncontrada;
                 var posicionEncontrada;
 
-                console.log("valor busqueda-------------->" + valor);
 
                 // Recorrer todas las filas del tbody
                 tabla.find('tbody tr').each(function(filaIndex) {
                     var fila = $(this);
-                    console.log('this fila**************' + fila);
 
                     // Recorrer todas las celdas de la fila
                     fila.find('td').each(function(columnaIndex) {
                         var celda = $(this);
                         var contenidoCelda = celda.text();
-                        console.log('this contenidoCelda**************' + contenidoCelda);
 
                         // Compara el contenido de la celda con el valor buscado
                         if (contenidoCelda === valor) {
-                            console.log(valor + '===========' + contenidoCelda);
 
                             encontrado = true;
                             filaEncontrada = fila;
@@ -1177,8 +1166,7 @@
 
                 // Devuelve el resultado de la búsqueda
                 if (encontrado) {
-                    console.log("fila----------------->" + fila);
-                    console.log("posicion----------------->" + posicionEncontrada);
+
 
                     return {
                         fila: filaEncontrada,
@@ -1195,11 +1183,9 @@
                 var suma = 0;
                 $('#totalServ').html("");
                 $(".subtotal").each(function(index) {
-                    console.log(index + ": " + $(this).val());
                     suma = parseInt(suma) + parseInt($(this).html());
                 });
                 $('#totalServ').html(suma);
-                console.log("suma total" + suma);
                 return suma;
             }
 
@@ -1228,8 +1214,6 @@
                     });
                 }
 
-                //console.log("serv_txt");
-                //console.log(servicios_adquiridos);
             }
 
 
@@ -1258,9 +1242,7 @@
             function adicion_seccion_renovacion() {
                 $('#contenedor_renov').empty();
                 var info = ($('#642').val()).split('-');
-                console.log("informacion: " + info);
                 precio_renov = $.trim(info[3]);
-                console.log("----->" + precio_renov);
 
                 var html_info_last_renov =
                     '<div class="card p-2 bg-gradient-cyan" id="ren"> <h4 class="card-info">CALCULAR RENOVACIÓN</h4>' +
@@ -1411,8 +1393,7 @@
                         'cuartel': textoSeleccionado
                     }),
                     success: function(data_response) {
-                        console.log("sql");
-                        console.log(data_response.status);
+
                         if (data_response.status == true) {
                             //  consolidado();
                             $('#btn_guardar_servicio').prop('disabled', true);
@@ -1514,10 +1495,7 @@
                         "fila": fila
                     }),
                     success: function(data) {
-                        console.log(data.mensaje);
                         $('#buscar').prop('disabled', false);
-
-
                         if (data.mensaje == true || data.mensaje == "liberado") {
 
                             $('#sp').hide(); //ocultar spinner
@@ -1530,7 +1508,6 @@
                             $('#cuartel').val(data.response.cuartel_id).trigger("change");
                             $('#anterior').val(data.response.anterior);
                             $('#tipo_nicho').val(data.response.tipo_nicho);
-                            console.log("--------" + data.response.tipo_nicho);
                             $('#estado_actual_nicho').html(data.response.estado_nicho);
                             // CARGAR LISTA DE DIFUTNOS A LA SECCION seccion_list_difuntos
                             if (data.response.tipo_nicho == "PERPETUO") {
@@ -1618,7 +1595,6 @@
                                 'Nicho Libre',
                                 'success'
                             )
-                            console.log(data.response.response);
                             $('#sp').hide(); //ocultar spinner
                             $('#contenido').show();
                             if (!data.response.response || data.response.response == null || data.response
@@ -1629,7 +1605,6 @@
                                 var estado_nicho = data.response.response.estado_nicho;
                                 var fecha_liberacion = data.response.response.fecha_liberacion;
                             }
-                            // console.log(data.response.response.estado_nicho);
                             $('#search_dif').val("");
                             $('#ci_difunto_actual').val("");
                             $('#nombres_dif').val("");
@@ -1941,8 +1916,7 @@
                             'add_difunto': $('#add_difunto').val(),
                         }),
                         success: function(data_response) {
-                            // console.log("successss");
-                            // return false;
+
                             $('#btn_guardar_servicio').prop('disabled', true);
 
                             if (data_response.status == false) {
@@ -1983,7 +1957,6 @@
                                     toastr["error"](error.responseJSON.errors[k]);
                                     $button.prop('disabled', false);
                                     $button.text('Volver a Intentar ..');
-                                    //console.log(k + ' - ' + error.responseJSON.errors[k]);
                                 });
                             } else if (error.status == 400) {
                                 swal.fire({
@@ -2033,7 +2006,6 @@
 
             $(document).on('click', '#buscarDifunto', function() {
                 var ci = $('#search_dif').val();
-                console.log("sadasdadasd");
                 //var ci ="52525252";
                 if (ci.length < 1) {
                     //alert("el campo Ci esta vacio");
@@ -2050,7 +2022,6 @@
             });
             $(document).on('click', '#buscarResp', function() {
                 var ci = $('#search_resp').val();
-                console.log("esta es el carnet del resonsable  q esta siendo buscado:" + ci);
                 //var ci ="52525252";
                 if (ci.length < 1) {
                     //alert("el campo Ci esta vacio");
@@ -2091,7 +2062,6 @@
                                 'warning'
                             )
                         } else {
-                            // console.log("si entro a esta madre"+ data.response.fecha_nacimiento);
                             $('#nombres_dif').val(data.response.nombres);
                             $('#paterno_dif').val(data.response.primer_apellido);
                             $('#materno_dif').val(data.response.segundo_apellido);
@@ -2144,7 +2114,6 @@
                                 'warning'
                             )
                         } else {
-                            console.log("si entro a esta chingada" + data.response.fecha_nacimiento);
                             $('#nombres_resp').val(data.response.nombres);
                             $('#paterno_resp').val(data.response.primer_apellido);
                             $('#materno_resp').val(data.response.segundo_apellido);
@@ -2180,7 +2149,6 @@
                 var strDate = parseInt(d.getFullYear()) + parseInt(tiempo);
                 var strDate = strDate + "/" + (d.getMonth() + 1) + "/" + (d.getDate() + 1);
 
-                console.log(strDate);
                 return strDate;
             }
 
@@ -2232,13 +2200,7 @@
                         "fila": $('#fila').val()
                     }),
                     success: function(data) {
-                        console.log("autocompletar");
-                        console.log(data);
-                        // data difunto
-                        //   alert(data['response'].fecha_adjudicacion);
-                        //   var adj=(data['response'].fecha_adjudicacion).split(" ");
-                        //   var f_adj=adj[0];
-                        //   alert(f_adj);
+
                         if (data.response != null) {
                             if (data.response.estado_nicho == "LIBRE") {
                                 $('#search_dif').val();
@@ -2456,7 +2418,6 @@
                         if (error.status == 422) {
                             Object.keys(error.responseJSON.errors).forEach(function(k) {
                                 toastr["error"](error.responseJSON.errors[k]);
-                                //console.log(k + ' - ' + error.responseJSON.errors[k]);
                             });
                             $button.prop('disabled', false);
                             $button.text('Volver a Intentar ..');
@@ -2554,67 +2515,6 @@
             });
 
 
-            // $(document).on('click', '.btn_nueva_asignacion', function(e){
-            //     e.preventDefault();
-            //     $.ajax({
-            //                 type: 'POST',
-            //                     headers: {
-            //                         'Content-Type':'application/json',
-            //                         'X-CSRF-TOKEN':'{{ csrf_token() }}',
-            //                     },
-            //                     url: "{{ route('registrar.asignacion') }}",
-            //                     async: false,
-            //                     data: JSON.stringify({
-            //                                 'cuartel_nuevo': $('#select_cuartel_nuevo').val(),
-            //                                 'bloque_nuevo': $('#bloque_nuevo').val(),
-            //                                 'nicho_nuevo': $('#nuevo_nicho').val(),
-            //                                 'fila_nuevo': $('#nueva_fila').val(),
-            //                                 'tipo_nicho':  $('#tipo_nicho').val(),
-            //                                'anterior':  $('#anterior').val(),
-            //                                'ci_dif':  $('#search_dif').val(),
-            //                                'nombres_dif':  $('#nombres_dif').val(),
-            //                                'paterno_dif':  $('#paterno_dif').val(),
-            //                                'materno_dif':  $('#materno_dif').val(),
-            //                                'fechanac_dif':  $('#fechanac_dif').val(),
-            //                                'fecha_def_dif':  $('#fechadef_dif').val(),
-            //                                'causa':  $('#causa').val(),
-            //                                'tipo_dif':  $('#tipo_dif').val(),
-            //                                'genero_dif':  $('#genero_dif').val(),
-            //                                'ci_resp':  $('#search_resp').val(),
-            //                                'nombres_resp':  $('#nombres_resp').val(),
-            //                                'paterno_resp':  $('#paterno_resp').val(),
-            //                                'materno_resp':  $('#materno_resp').val(),
-            //                                'fechanac_resp':  $('#fechanac_resp').val(),
-            //                                'telefono':  $('#telefono').val(),
-            //                                'celular':  $('#celular').val(),
-            //                                'genero_resp':  $('#genero_resp').val(),
-            //                                'pag_con':  $('#pag_con').val(),
-            //                                'tiempo':  $('#tiempo').val(),
-            //                                'nueva_fecha_ingreso':$('#nueva_fecha_ingreso').val(),
-
-            //                                'monto_renov':  0,
-            //                                'nro_renovacion':0,
-            //                                'monto_ultima_renov' :  0,
-            //                                'gestion_renov' : 0 ,
-            //                                'sereci':$('#sereci').val(),
-            //                                'gratis':$('#gratis').val(),
-            //                                'observacion': $('#observacion').val(),
-            //                                 'funeraria':$('#funeraria').val(),
-            //                                 'urlcertificacion':$('#url-certificacion').val(),
-            //                                 'asignar_difunto_nicho':$('#asignar_difunto_nicho').val(),
-            //                                'add_difunto':$('#add_difunto').val(),
-            //                                /****/
-
-
-            //                     }),
-            //                     success: function(response) {
-            //                       console.log(response);
-            //                     }
-            //             });
-
-
-            // });
-
 
             function mostrar_lista_difuntos() {
 
@@ -2637,7 +2537,6 @@
                         'tipo_nicho': $('#tipo_nicho').val(),
                     }),
                     success: function(datos) {
-                        console.log(datos.response);
                         var tablaBody = $("#list_difuntos tbody");
                         // Limpia el contenido actual de la tabla
                         tablaBody.empty();
@@ -2818,8 +2717,7 @@
                                 ncuota=cuota;
                              }
                              acum=parseFloat(acum)+ parseFloat(cuota);
-                             console.log("cuota"+i+"="+cuota);
-                             console.log("acum"+i+"="+acum);
+
                              acum=acum.toFixed(2);
                          }
 
@@ -2907,34 +2805,6 @@
                 }
             });
 
-            //restriccion de pago renovatorio si ya hizo un pago en la gestion
-            $(document).on('click', '#15224300', function(e) {
-                if ($('#15224300').isChecked) {
-
-                    $.ajax({
-                        type: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        },
-                        url: "{{ route('verificar.pago.renovatorio') }}",
-                        async: false,
-                        data: JSON.stringify({
-                            'nro_nicho': $('#nro_nicho').val(),
-                            'bloque': $('#bloque').val(),
-                            'cuartel_id': $('#cuartel option:selected').val(),
-                            'cuartel': $('#cuartel option:selected').text(),
-                            'nicho': $('#nro_nicho').val(),
-                            'fila': $('#fila').val(),
-                            'tipo_nicho': $('#tipo_nicho').val(),
-                        }),
-                        success: function(datos) {
-                            console.log(datos.response);
-                        }
-                    });
-                }
-
-            });
         </script>
 
     @stop
