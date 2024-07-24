@@ -901,14 +901,21 @@ class ServiciosController extends Controller
             $sq = ResponsableDifunto::where('responsable_difunto.id', '=', $responsable_difunto_id)
                 ->where('responsable_difunto.estado', 'ACTIVO')
                 ->join('responsable', 'responsable.id', '=', 'responsable_difunto.responsable_id')
+                ->join('difunto', 'difunto.id', '=', 'responsable_difunto.difunto_id')
                 ->select(
                     'responsable.nombres as nombre_resp',
                     'responsable.primer_apellido as paterno_resp',
                     'responsable.segundo_apellido as materno_resp',
-                    'responsable.ci as ci_resp'
+                    'responsable.ci as ci_resp',
+                    'difunto.nombres as nombre_dif',
+                    'difunto.primer_apellido as paterno_dif',
+                    'difunto.segundo_apellido as materno_dif',
+                    'difunto.ci as ci_dif'
                 )
                 ->orderBy('responsable_difunto.id', 'DESC')
                 ->first();
+               // dd($sq);
+            $dif = $sq->nombre_dif . " " . $sq->paterno_dif . " " . $sq->materno_dif;
             $resp = $sq->nombre_resp . " " . $sq->paterno_resp . " " . $sq->materno_resp; // ."  C.I.: ".$sq->ci_resp;
             $ci_resp = $sq->ci_resp;
         }
@@ -923,24 +930,32 @@ class ServiciosController extends Controller
                 $observacion = $tablelocal->observacion;
                 $tab['cobrosDetalles'] = [];
                 $id_s = explode(',', $tablelocal->servicio_id);
+                $obs_gratis=explode('-', $det_exhum);
+
                 foreach ($id_s as  $key => $value) {
                     $headers =  ['Content-Type' => 'application/json'];
                     $client = new Client();
-                    $response = $client->get(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-servicios-nicho/' . trim($id_s[$key]) . '', [
+                    $response = $client->get(env('URL_MULTISERVICE') . '/api/v1/cementerio/generate-servicios-nicho/' . trim($value) . '', [
                         'json' => [],
                         'headers' => $headers,
                     ]);
                     $data = json_decode((string) $response->getBody(), true);
+
+
                     if ($data['status'] == true) {
                         $tab['cobrosDetalles'][$key]['cuenta'] = $data['response'][0]['cuenta'];
                         $tab['cobrosDetalles'][$key]['detalle'] = $data['response'][0]['descripcion'];
                         $tab['cobrosDetalles'][$key]['monto'] = 0;
+                        $tab['cobrosDetalles'][$key]['obs_gratis'] = $obs_gratis[$key];
+                        $tab['cobrosDetalles'][$key]['serv'] = $value;
+
                     }
+
                 }
 
                 $table = json_decode(json_encode($tab));
                 $pdf = PDF::setPaper('A4', 'landscape');
-                $pdf = PDF::loadView('servicios/reportServ', compact('table', 'codigo_nicho', 'observacion', 'det_exhum', 'resp', 'ci_resp', 'pago_por', 'tipo_ubicacion'));
+                $pdf = PDF::loadView('servicios/reportServ', compact('table', 'codigo_nicho','dif', 'observacion', 'det_exhum', 'resp', 'ci_resp', 'pago_por', 'tipo_ubicacion'));
                 return  $pdf->stream("preliquidacion_servicio.pdf", array("Attachment" => false));
             }
         } else {
@@ -1496,7 +1511,7 @@ class ServiciosController extends Controller
                     }
                 }
                 if (!empty($tblobs)) {
-                    $descripcion_exhumacion =  implode(', ', $tblobs);
+                    $descripcion_exhumacion =  implode('- ', $tblobs);
                 }
 
                 $serv = new ServicioNicho;
@@ -1525,10 +1540,7 @@ class ServiciosController extends Controller
                 $serv->observacion = $descripcion_exhumacion;
                 $serv->det_exhum = $descripcion_exhumacion ?? '';
                 $serv->ubicacion_id = 0;
-
                 $serv->save();
-
-
 
                 return response([
                     'status' => true,

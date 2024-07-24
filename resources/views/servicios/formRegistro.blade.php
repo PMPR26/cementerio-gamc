@@ -1228,8 +1228,8 @@
                     });
                 }
 
-                console.log("serv_txt");
-                console.log(servicios_adquiridos);
+                //console.log("serv_txt");
+                //console.log(servicios_adquiridos);
             }
 
 

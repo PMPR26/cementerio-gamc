@@ -197,6 +197,52 @@
 
 
                 </table>
+                @if(($codigo_nicho==0 || $codigo_nicho!="")&&( $table->fur ==0) )
+
+                <table width="100%">
+                    <tr>
+                        <td colspan="4" width="380px">
+                            <h4 align="left">DETALLE LIQUIDACION</h4>
+                        </td>
+                    </tr>
+
+
+                    <tr class="thead">
+
+                        <td width="10%" align="left">CUENTA</td>
+                        <td width="15%" align="right">CANTIDAD</td>
+                        <td width="60%" align="center">DETALLE</td>
+                        <td width="15%" align="right">MONTO</td>
+                    </tr>
+                    @php($count = 1)
+                    @php($acum=0)
+                    @foreach ($table->cobrosDetalles as $cobros)
+
+                        <tr>
+                            <td width="10%">{{ $cobros->cuenta  }}</td>
+                            <td width="15%" align="center"> 1 </td>
+                            <td width="60%" align="justify">{{ $cobros->detalle }} {{$dif}} {{  $cobros->obs_gratis}}</td>
+                            <td width="15%" align="center">{{number_format(floatval($cobros->monto * 1), 2, ',', '.')  }}</td>
+                        </tr>
+                            @php($acum=$acum+$cobros->monto)
+                    @endforeach
+                    <tr class="odd">
+                        <td width="90%" align="left" colspan="3">Total </td>
+                        <td width="10%" align="right">{{ isset($acum) ? number_format($acum, 2) : '' }}
+                    </tr>
+                    <tr>
+                        <td width='100%' colspan="5" height="80px">
+                            <?php $subt1 = round($acum, 3);
+                            $subtLit = number_format(floatval($subt1), 2, ',', '.');
+                            $lit = convertir($subtLit);
+                            $txt = 'SON: BOLIVIANOS  ' . $lit . ' ';
+                            ?>
+                            <b> {{ $txt }} </b>
+                        </td>
+                    </tr>
+
+                </table>
+                @else
 
                     <table width="100%">
                         <tr>
@@ -229,12 +275,7 @@
                             <td width="10%" align="right">{{ isset($acum) ? number_format($acum, 2) : '' }}
                         </tr>
 
-                        {{-- @if(isset($observacion) || $observacion!= null)
-               <tr>
-                   <td  width="80%" colspan="5"><b>OBSERVACION:</b> {{ $observacion ?? '' }} {{ $det_exhum ?? '' }}  </td> --}}
-                   {{-- <td colspan="5"><b></b> {{ $det_exhum ?? '' }} </td> --}}
-               {{-- </tr>
-       @endif --}}
+
 
 
                         <tr>
@@ -248,16 +289,8 @@
                             </td>
                         </tr>
 
-
-
-                {{-- @if(isset($det_exhum) || $det_exhum!= null || $det_exhum!= "")
-                    <tr>
-                        <td colspan="5"><b>DETALLE EXHUMACION: </b>{{ $det_exhum ?? '' }}</td>
-                    </tr>
-               @endif --}}
-
                     </table>
-
+                    @endif
 
     </main>
 </body>
