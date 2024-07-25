@@ -166,22 +166,39 @@
                         @endif
                     <tr>
                         @if($table->fur==0)
-                        <td width="60%" colspan="2"><b>SERVICO GRATUITO</b></td>
+                        <td width="50%" colspan="2"><b>SERVICO GRATUITO</b></td>
                         @endif
-                        <td width="20%">Actividad: Preliquidación</td>
                     </tr>
-
-
-                    @if($codigo_nicho!=0 || $codigo_nicho!="" )
                     <tr>
-                        <td><b>Codigo Nicho:  </b></td><td><b>{{ $codigo_nicho }}</b></td>
+                        <td width="50%">Actividad: Preliquidación</td>
                     </tr>
+
+
+                    @if(($codigo_nicho!=0 || $codigo_nicho!="")&&( $table->fur !=0) )
+                    @php($obs="")
+                    <tr>
+                        <td width="5%"><b>Codigo Nicho:  </b></td>
+                    </tr>
+                    <tr>
+                        <td width="95%"><b>{{ $codigo_nicho }}</b></td>
+                    </tr>
+                    @elseif(($codigo_nicho!=0 || $codigo_nicho!="")&&( $table->fur ==0) )
+                    <tr>
+                        <td width="5%"><b>Codigo Nicho:  </b></td>
+                    </tr>
+                    <tr>
+                        <td width="95%"><b>{{ $codigo_nicho }}</b></td>
+                    </tr>
+                    @php($obs=$observacion)
+                    @elseif(($codigo_nicho==0 || $codigo_nicho!="")&&( $table->fur ==0) )
+                    @php($obs=$observacion)
+
                     @endif
 
 
                 </table>
 
-                    <table>
+                    <table width="100%">
                         <tr>
                             <td colspan="4" width="380px">
                                 <h4 align="left">DETALLE LIQUIDACION</h4>
@@ -202,14 +219,14 @@
                             <tr>
                                 <td width="10%">{{ $cobros->cuenta  }}</td>
                                 <td width="15%" align="center"> 1 </td>
-                                <td width="60%" align="justify">{{ $cobros->detalle }}</td>
+                                <td width="60%" align="justify">{{ $cobros->detalle }} {{ $obs}}</td>
                                 <td width="15%" align="center">{{number_format(floatval($cobros->monto * 1), 2, ',', '.')  }}</td>
                             </tr>
                                 @php($acum=$acum+$cobros->monto)
                         @endforeach
                         <tr class="odd">
-                            <td width="80%" align="left" colspan="3">Total </td>
-                            <td width="10%" align="right">{{ $acum ?? '' }}</td>
+                            <td width="90%" align="left" colspan="3">Total </td>
+                            <td width="10%" align="right">{{ isset($acum) ? number_format($acum, 2) : '' }}
                         </tr>
 
                         {{-- @if(isset($observacion) || $observacion!= null)
@@ -224,7 +241,7 @@
                             <td width='100%' colspan="5" height="80px">
                                 <?php $subt1 = round($acum, 3);
                                 $subtLit = number_format(floatval($subt1), 2, ',', '.');
-                                $lit = convertir($subt1);
+                                $lit = convertir($subtLit);
                                 $txt = 'SON: BOLIVIANOS  ' . $lit . ' ';
                                 ?>
                                 <b> {{ $txt }} </b>
