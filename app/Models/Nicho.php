@@ -242,8 +242,6 @@ class Nicho extends Model
           // insertar nicho
           $cuartel=Cuartel::where('id', $id_cuartel)->first();
           $bloque=Bloque::where('id', $id_bloque)->first();
-
-
           $nicho = new Nicho;
           $nicho->cuartel_id = $id_cuartel;
           $nicho->bloque_id = $id_bloque;
@@ -271,12 +269,11 @@ class Nicho extends Model
             'nro_nicho' => trim($request->nro),
             'fila' => trim($request->fila),
 
-            'codigo' => trim($request->codigo),
             'codigo_anterior' => trim($request->codigo_anterior),
             'cantidad_cuerpos' => trim($request->cantidad),
             'tipo' => trim($request->tipo),
             //'estado_nicho' => trim($request->estado_nicho),
-            'estado' => trim($request->estado),
+            // 'estado' => trim($request->estado),
 
             'user_id' => auth()->id(),
             'estado' => 'ACTIVO',
