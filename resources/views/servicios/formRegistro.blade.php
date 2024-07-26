@@ -916,7 +916,6 @@
                                 'tipo_nicho': $('#tipo_nicho').val(),
                             }),
                             success: function(datos) {
-
                                Swal.fire({
                                     title: "Error",
                                     text: datos.mensaje,

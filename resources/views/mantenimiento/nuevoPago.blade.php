@@ -6,7 +6,7 @@
 @section('plugins.Pace', true)
 
 @section('content_header')
-    <h1>Listado de transacciones diarias</h1>
+    <h1>FORMULARIO DE PAGO POR MANTENIMIENTO</h1>
 @stop
 
 @section('content')
@@ -167,10 +167,10 @@
 
 
                             <div class="col-sm-12 col-md-2 col-xl-2">
-                                <label>Fecha Ingreso al nicho</label>
+                                <label>Fecha Ingreso al nicho (fecha de adjudicacion)</label>
                                 <input style="text-transform:uppercase;"
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="date"
-                                    class="form-control clear" id="fechadef_dif" autocomplete="off">
+                                    class="form-control clear" id="fecha_adjudicacion" autocomplete="off" required>
                             </div>
 
                             {{-- <div class="col-sm-12 col-md-4 col-xl-4">
@@ -627,7 +627,7 @@
                             $('#materno_dif').val(data.difunto.segundo_apellido);
                             $('#fechanac_dif').val(data.difunto.fecha_nacimiento);
                             $('#fecha_def_dif').val(data.difunto.fecha_defuncion);
-                            $('#fechadef_dif').val(data.respdifunto.fecha_adjudicacion);
+                            $('#fecha_adjudicacion').val(data.respdifunto.fecha_adjudicacion);
                             $('#causa').val(data.difunto.causa);
                             $('#sereci').val(data.difunto.certificado_defuncion);
                             $('#tipo_dif').val(data.difunto.tipo);
@@ -710,7 +710,7 @@
                                                     var mes = fecha.substr(4, 2);
                                                     var dia = fecha.substr(6, 2);
                                                     var nuevaf = año + "-" + mes + "-" + dia;
-                                                    $('#fechadef_dif').val(nuevaf);
+                                                    $('#fecha_adjudicacion').val(nuevaf);
 
 
                                                     $('#pag_con').val(pg);
@@ -964,7 +964,7 @@
                         'materno_dif': $('#materno_dif').val(),
                         'fechanac_dif': $('#fechanac_dif').val(),
                         'fecha_def_dif': $('#fecha_def_dif').val(),
-                        'fechadef_dif': $('#fechadef_dif').val(),
+                        'fecha_ingreso_nicho': $('#fecha_adjudicacion').val(),
                         'causa': $('#causa').val(),
                         // 'ecivil_dif': $('#ecivil_dif').val(),
                         'tipo_dif': $('#tipo_dif').val(),
@@ -1122,7 +1122,7 @@
                             $('#paterno_dif').val(data.response.primer_apellido);
                             $('#materno_dif').val(data.response.segundo_apellido);
                             $('#fechanac_dif').val(data.response.fecha_nacimiento);
-                            $('#fechadef_dif').val(data.response.fecha_defuncion);
+                            $('#fecha_def_dif').val(data.response.fecha_defuncion);
                             $('#tipo_dif').val(data.response.tipo);
                             $('#sereci').val(data.response.certificado_defuncion);
                             $('#causa').val(data.response.causa);
@@ -1398,7 +1398,7 @@
                                                 $('#materno_dif').val(data['response'].segap_dif);
                                                 $('#fechanac_dif').val(data['response'].nacimiento_dif);
                                                 $('#fecha_def_dif').val(data['response'].fecha_defuncion);
-                                                $('#fechadef_dif').val(data['response'].fecha_adjudicacion);
+                                                $('#fecha_adjudicacion').val(data['response'].fecha_adjudicacion);
                                                 $('#tipo_dif').val(data['response'].tipo_dif);
                                                 $('#genero_dif').val(data['response'].genero_dif);
                                                 $('#tiempo').val(data['response'].tiempo);
