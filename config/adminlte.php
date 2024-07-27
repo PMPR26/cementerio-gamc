@@ -44,7 +44,7 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
     |
     */
-    
+
     'logo' => '',
     'logo_img' => '/img/admin/cbba.png',
     'logo_img_class' => 'brand-image',
@@ -251,7 +251,7 @@ return [
             //     'url' => 'notifications/get',         // The url to periodically fetch new data (optional).
             //     'period' => 30,                       // The update period for get new data (in seconds, optional).
             // ],
-           
+
         ],
 
         // Sidebar items:
@@ -286,12 +286,18 @@ return [
             'route'  => 'mant',
             'icon' => 'fas fa-laptop-medical',
         ],
+      /*  [
+            'text' => 'MANTENIMIENTO CRIPTA/MAUSOLEO',
+            'route'  => 'mantcp',
+            'icon' => 'fas fa-laptop-medical',
+        ],
+*/
 
         ['header' => 'REGISTROS'],
         [
             'text' => 'CUARTEL',
             'url'  => 'cuartel/index',
-            'icon' => 'fab fa-buromobelexperte', 
+            'icon' => 'fab fa-buromobelexperte',
         ],
         [
             'text' => 'BLOQUE',
@@ -299,11 +305,11 @@ return [
             'icon' => 'fab fa-docker',
         ],
         [
-            'text' => 'RELEVAMIENTO CRIPTA-MAUSOLEO',
+            'text' => 'SERVICIOS CRIPTA-MAUSOLEO',
             'url'  => 'cripta/index',
             'icon' => 'fas fa-igloo',
         ],
-       
+
         [
             'text' => 'NICHOS',
             'url'  => 'nicho/nicho',
@@ -326,8 +332,66 @@ return [
             'icon' => 'fas fa-edit',
         ],
 
-        // ['header' => 'REPORTES'],
+        [
+            'text' => 'DEPOSITO/FOSA',
+            'route'  => 'deposito',
+            'icon' => 'fas fa-archive',
+        ],
+        ['header' => 'TRANSACCIONES DIARIAS'],
+        [
+            'text' => 'GENERAR REPORTE',
+            'route'  => 'transacciones.form',
+            'target' => '_blank',
+            'icon' => 'fas fa-file',
+        ],
 
+        ['header' => 'REPORTES'],
+
+        [
+            'text' => 'MAUSOLEOS NOTABLES',
+            'route'  => 'mausoleosNotables',
+            'target' => '_blank',
+            'icon' => 'fas fa-file',
+        ],
+        [
+            'text' => 'CRIPTAS NOTABLES',
+            'route'  => 'criptasNotables',
+            'target' => '_blank',
+            'icon' => 'fas fa-file',
+        ],
+        [
+            'text' => 'NICHOS',
+            'route'  => 'form.report.nicho',
+            'target' => '_blank',
+            'icon' => 'fas fa-file',
+        ],
+        [
+            'text' => 'LISTA DEPOSITO/PENDIENTES DE PAGO',
+            'route'  => 'deposito.print.list',
+            'target' => '_blank',
+            'icon' => 'fas fa-file',
+        ],
+
+
+
+        // [
+        //    'text'    => 'NOTIFICACIONES',
+        //    'icon'     =>'fas fa-bell',
+        //    'submenu' => [
+
+        //                     [
+        //                         'text' => 'GESTION TIPOS DE NOTIFICACION',
+        //                         'route'  => 'notification-tipo',
+        //                     ],
+
+        //                     [
+        //                         'text' => 'NOTIFICAR',
+        //                         'route'  => 'notificacion.list',
+        //                     ],
+
+
+        //                  ],
+        // ],
         // [
         //     'text'    => 'NICHOS',
         //     'icon'    => 'fas fa-fw fa-share',
@@ -379,7 +443,7 @@ return [
         //     ],
         // ],
 
-       
+
         // ['header' => 'BUSQUEDAS'],
         // [
         //     'text' => 'NICHOS',  // POR BLOQUE NICHO FILA
@@ -395,7 +459,7 @@ return [
 
 
         // [
-        //     'text' => 'RESPONSABLE DE CERTIFICADO',  
+        //     'text' => 'RESPONSABLE DE CERTIFICADO',
         //     'route'  => 'relev',
         //     'icon' => 'fas fa-edit',
         // ],
@@ -450,17 +514,19 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Plugins-Configuration
     |
     */
-  
+
 
     'plugins' => [
         'Datatables' => [
             'active' => false,
             'files' => [
+
                 [
                     'type' => 'js',
                     'asset' => false,
                     'location' => '/libreries/datatable/js/jquery.dataTables.min.js',
                 ],
+
                 [
                     'type' => 'js',
                     'asset' => false,
@@ -471,6 +537,7 @@ return [
                     'asset' => false,
                     'location' => '/libreries/datatable/js/dataTables.responsive.min.js',
                 ],
+
                 [
                     'type' => 'css',
                     'asset' => false,
@@ -614,6 +681,62 @@ return [
                 ],
             ],
         ],
+        'datatable-boostrap' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/css/jquery.dataTables.min.css'
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/css/responsive.dataTables.min.css'
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/css/buttons.dataTables.min.css'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/js/jquery.dataTables.min.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/js/dataTables.buttons.min.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/js/jszip.min.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/js/buttons.html5.min.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/js/pdfmake.min.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/js/vfs_fonts.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/libreries/datatable-boostrap/js/dataTables.responsive.min.js'
+                ]
+            ]
+        ],
+
     ],
 
     /*

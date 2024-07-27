@@ -18,6 +18,7 @@ class BloqueController extends Controller
         $bloque =DB::table('bloque')
                  ->select('bloque.*', 'cuartel.codigo as cuartel_cod')
                  ->join('cuartel' , 'cuartel.id','=', 'bloque.cuartel_id')
+                 ->orderBy('id', 'Desc')
                 // ->where('bloque.estado', '=', 'ACTIVO')
                  ->get();
 
@@ -27,18 +28,22 @@ class BloqueController extends Controller
     public function createNewBloque(Request $request){
 
         if($request->isJson()){
-            
+
             $this->validate($request, [
                 'name' => 'required',
-                'codigo' => 'required|unique:cuartel',
+                // 'codigo' => 'required|unique:cuartel',
+                'codigo' => 'required',
+
                 'cuartel' => 'required',
                 'estado' => 'required'
             ], [
                 'name.required'  => 'El campo nombre de cuartel es obligatorio!',
                 'cuartel.required' => 'El campo Codigo cuartel es obligatorio!',
-                'codigo.unique' => 'El código '.$request->codigo.' ya se encuentra en uso!.'
+                'codigo.required' => 'El campo código es obligatorio!.'
+
+                // 'codigo.unique' => 'El código '.$request->codigo.' ya se encuentra en uso!.'
             ]);
-            
+
             $rep= $this->repetidoins( $request->codigo, $request->cuartel   );
           //dd($rep);
 
@@ -69,7 +74,7 @@ class BloqueController extends Controller
             }
     }
 
-    public function getBloque($id){ 
+    public function getBloque($id){
 
         $bloque =  Bloque::where('id', $id)->first();
 
@@ -95,7 +100,7 @@ class BloqueController extends Controller
 
         ]);
        $rep= $this->repetido( $request->id,$request->codigo);
-      
+
 
       if($rep=="no"){
         $bloque =  Bloque::where('id', $request->id)
@@ -119,7 +124,7 @@ class BloqueController extends Controller
          ],400);
       }
 
-      
+
 
 
     }
@@ -133,13 +138,13 @@ class BloqueController extends Controller
             }
             else{
                return $resp="si";
-            }      
+            }
 
     }
 
     public function repetidoins($codigo, $cuartel){
         $repetido =  DB::table('bloque')
-                   
+
                     ->where('codigo', '=', ''.$codigo.'')
                     ->where('cuartel_id', '=', ''.$cuartel.'')
 
@@ -150,8 +155,8 @@ class BloqueController extends Controller
             }
             else{
                return $resp="si";
-            }      
+            }
 
     }
-    
+
 }

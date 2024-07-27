@@ -26,7 +26,7 @@ class Cripta extends Model
         'cenisarios',
         'estado_construccion',
         'observaciones',
-        'foto',       
+        'foto',
         'estado',
         'tipo_registro',
         'tipo_cripta',
@@ -40,7 +40,7 @@ class Cripta extends Model
     ];
 
 
-    
+
     public function addCripta(Request $request){
         $cripta = New Cripta;
         $cripta->user_id = auth()->id();
@@ -61,10 +61,17 @@ class Cripta extends Model
        $cripta->estado_construccion = trim($request->estado_construccion);
        $cripta->observaciones = trim($request->observaciones)?? null;
        $cripta->foto = trim($request->foto)?? null;
-       $cripta->estado = 'ACTIVO';         
+       $cripta->estado = 'ACTIVO';
        $cripta->tipo_registro = $request->tipo_reg;
        $cripta->tipo_cripta = $request->tipo_cripta;
        $cripta->familia = $request->familia;
+       $cripta->notable = $request->notable;
+       $cripta->altura = $request->altura;
+
+       $cripta->list_ant_difuntos =  $cripta->difuntos;
+       $cripta->ult_gestion_pagada_ant = $cripta->ultima_gestion_pagada;
+       $cripta->gestiones_pagadas_ant = $cripta->gestiones_pagadas;
+
        $cripta->created_at = date("Y-m-d H:i:s");
        $cripta->updated_at = date("Y-m-d H:i:s");
        $cripta->save();
@@ -72,8 +79,9 @@ class Cripta extends Model
 }
 
 public function upCripta(Request $request, $id){
-    $cripta= Cripta::where('id', $id)->first();   
-    $cripta->user_id = auth()->id();
+    //dd($request);
+   $cripta= Cripta::where('id', $id)->first();
+   $cripta->user_id = auth()->id();
    $cripta->cuartel_id = trim($request->id_cuartel);
    $cripta->bloque_id = trim(strtoupper($request->bloque));
    $cripta->sitio = trim($request->sitio);
@@ -88,14 +96,33 @@ public function upCripta(Request $request, $id){
    $cripta->total_osarios = trim($request->total_osarios)?? 0;
 
    $cripta->cenisarios = trim($request->cenisarios) ?? 0;
-   
+
    $cripta->estado_construccion = trim($request->estado_construccion);
    $cripta->observaciones = trim($request->observaciones) ?? null;
-   $cripta->foto = trim($request->foto) ?? null;
-   $cripta->estado = $request->estado ?? 'ACTIVO';         
+   if(($request->foto=="" || $request->foto==null) && ($request->foto_edit!="" || $request->foto_edit!=null)){
+     $foto=$request->foto_edit;
+   }
+   else if(($request->foto!="" || $request->foto!=null) && ($request->foto_edit!="" || $request->foto_edit!=null)){
+    $foto=$request->foto;
+   }
+   else if(($request->foto!="" || $request->foto!=null) && ($request->foto_edit=="" || $request->foto_edit==null)){
+    $foto=$request->foto;
+   }
+   else if(($request->foto=="" || $request->foto!=null) && ($request->foto_edit=="" || $request->foto_edit==null)){
+    $foto='';
+   }
+   $cripta->foto = trim($foto) ?? null;
+   $cripta->estado = $request->estado ?? 'ACTIVO';
    $cripta->tipo_registro = $request->tipo_reg;
    $cripta->tipo_cripta = $request->tipo_cripta;
    $cripta->familia = $request->familia;
+   $cripta->notable = $request->notable;
+   $cripta->altura = $request->altura;
+
+   $cripta->list_ant_difuntos =  $cripta->difuntos;
+   $cripta->ult_gestion_pagada_ant = $cripta->ultima_gestion_pagada;
+   $cripta->gestiones_pagadas_ant = $cripta->gestiones_pagadas;
+
    $cripta->created_at = date("Y-m-d H:i:s");
    $cripta->updated_at = date("Y-m-d H:i:s");
    $cripta->save();
