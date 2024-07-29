@@ -894,8 +894,7 @@
                 var id_cuenta = cuenta;
                 var txt_cuenta = $(this).attr("value");
 
-                if ($('#' + cuenta + '').is(":checked"))
-                {
+                if ($('#' + cuenta + '').is(":checked")) {
                     // si el servicio solicitado es renovacion verificar si ya fue pagado en el
                     // año entonces enviar mensaje q no se puede hacer nuevamente el pago
                     // sino continuar l proceso.
@@ -919,28 +918,30 @@
                                 'tipo_nicho': $('#tipo_nicho').val(),
                             }),
 
-  success: function(datos) {
+                            success: function(datos) {
                                 console.log(datos);
-                                if(datos.status==true){
+                                if (datos.status == true) {
                                     $('#bloquear_pago').val(1);
-                                        Swal.fire({
-                                                title: "Error",
-                                                text: datos.mensaje,
-                                                icon: "error",
-                                                button: "OK",
-                                            }).then(() => {
-                                                // After user clicks OK
-                                                $('#15224300').prop('checked', false);
-                                                $('#serv-hijos-15224300').prop('disable', true);
-                                                $('#serv-hijos-15224300').empty();
-                                                $('serv-hijos-15224300').hide();
-                                                $('#list_detalle .row_' + cuenta).remove();
-                                            });
-                                        }
+                                    Swal.fire({
+                                        title: "Error",
+                                        text: datos.mensaje,
+                                        icon: "error",
+                                        button: "OK",
+                                    }).then(() => {
+                                        // After user clicks OK
+                                        $('#15224300').prop('checked', false);
+                                        $('#serv-hijos-15224300').prop('disable', true);
+                                        $('#serv-hijos-15224300').empty();
+                                        $('serv-hijos-15224300').hide();
+                                        $('#list_detalle .row_' + cuenta).remove();
+                                    });
+                                }else{
+                                    $('#bloquear_pago').val(0);
+                                }
                             }
                         });
                     }
-                    if($('#bloquear_pago').val()== 0){
+                    if ($('#bloquear_pago').val() == 0) {
 
 
                         $.ajax({
@@ -965,14 +966,18 @@
                                             id_cuenta + '-' + txt_cuenta + ' => ' + value.num_sec +
                                             ' - ' + value.descripcion + ' - ' + value.monto1 +
                                             '- Bs."  >' +
-                                            '<label class="form-check-label childservice" for="' + value
-                                            .num_sec + '" style="color:green">' + value.descripcion +
+                                            '<label class="form-check-label childservice" for="' +
+                                            value
+                                            .num_sec + '" style="color:green">' + value
+                                            .descripcion +
                                             ' - ' + value.monto1 + '- Bs.</label>' +
                                             '</div>';
                                         $('#serv-hijos-' + cuenta + '').append(html);
                                         if (value.num_sec == '642') {
-                                            var contenedor_renov = '<div id="contenedor_renov" ></div>';
-                                            $('#serv-hijos-' + cuenta + '').append(contenedor_renov);
+                                            var contenedor_renov =
+                                                '<div id="contenedor_renov" ></div>';
+                                            $('#serv-hijos-' + cuenta + '').append(
+                                            contenedor_renov);
                                         }
                                     }
 
@@ -2814,7 +2819,6 @@
 
                 }
             });
-
         </script>
 
     @stop
