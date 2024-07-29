@@ -138,6 +138,9 @@
 
                 <input type="hidden" name="store_nro_renovacion" id="store_nro_renovacion">
                 <input type="hidden" name="store_monto_renovacion" id="store_monto_renovacion">
+                <input type="hidden" name="bloquear_pago" id="bloquear_pago" value="0">
+
+
                 <input type="hidden" name="cant_renov_confirm" id="cant_renov_confirm">
                 {{-- datos difunto --}}
                 <div class="card" id="seccion_difunto">
@@ -891,8 +894,7 @@
                 var id_cuenta = cuenta;
                 var txt_cuenta = $(this).attr("value");
 
-                if ($('#' + cuenta + '').is(":checked"))
-                {
+                if ($('#' + cuenta + '').is(":checked")) {
                     // si el servicio solicitado es renovacion verificar si ya fue pagado en el
                     // año entonces enviar mensaje q no se puede hacer nuevamente el pago
                     // sino continuar l proceso.
@@ -915,60 +917,74 @@
                                 'fila': $('#fila').val(),
                                 'tipo_nicho': $('#tipo_nicho').val(),
                             }),
+
                             success: function(datos) {
-                               Swal.fire({
-                                    title: "Error",
-                                    text: datos.mensaje,
-                                    icon: "error",
-                                    button: "OK",
-                                }).then(() => {
-                                    // After user clicks OK
-                                    $('#15224300').prop('checked', false);
-                                    $('#serv-hijos-15224300').prop('disable', true);
-                                    $('#serv-hijos-15224300').empty();
-                                    $('serv-hijos-15224300').hide();
-                                    $('#list_detalle .row_' + cuenta).remove();
+                                console.log(datos);
+                                if (datos.status == true) {
+                                    $('#bloquear_pago').val(1);
+                                    Swal.fire({
+                                        title: "Error",
+                                        text: datos.mensaje,
+                                        icon: "error",
+                                        button: "OK",
+                                    }).then(() => {
+                                        // After user clicks OK
+                                        $('#15224300').prop('checked', false);
+                                        $('#serv-hijos-15224300').prop('disable', true);
+                                        $('#serv-hijos-15224300').empty();
+                                        $('serv-hijos-15224300').hide();
+                                        $('#list_detalle .row_' + cuenta).remove();
+                                    });
+                                }else{
+                                    $('#bloquear_pago').val(0);
+                                }
+                            }
+                        });
+                    }
+                    if ($('#bloquear_pago').val() == 0) {
+
+
+                        $.ajax({
+                            type: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            },
+                            url: "{{ route('get.serv') }}",
+                            async: false,
+                            data: JSON.stringify({
+                                'data': cuenta
+                            }),
+                            success: function(data_response) {
+                                $('#serv-hijos-' + cuenta + '').empty();
+                                $.each(data_response.response, function(index, value) {
+
+                                    if (value.num_sec == '526' || value.num_sec == '525') {} else {
+                                        var html = '<div class="form-check">' +
+                                            '<input class="form-check-input service_child" type="checkbox" id="' +
+                                            value.num_sec + '" name="serv[servicio]" value="' +
+                                            id_cuenta + '-' + txt_cuenta + ' => ' + value.num_sec +
+                                            ' - ' + value.descripcion + ' - ' + value.monto1 +
+                                            '- Bs."  >' +
+                                            '<label class="form-check-label childservice" for="' +
+                                            value
+                                            .num_sec + '" style="color:green">' + value
+                                            .descripcion +
+                                            ' - ' + value.monto1 + '- Bs.</label>' +
+                                            '</div>';
+                                        $('#serv-hijos-' + cuenta + '').append(html);
+                                        if (value.num_sec == '642') {
+                                            var contenedor_renov =
+                                                '<div id="contenedor_renov" ></div>';
+                                            $('#serv-hijos-' + cuenta + '').append(
+                                            contenedor_renov);
+                                        }
+                                    }
+
                                 });
                             }
                         });
                     }
-
-                    $.ajax({
-                        type: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        },
-                        url: "{{ route('get.serv') }}",
-                        async: false,
-                        data: JSON.stringify({
-                            'data': cuenta
-                        }),
-                        success: function(data_response) {
-                            $('#serv-hijos-' + cuenta + '').empty();
-                            $.each(data_response.response, function(index, value) {
-
-                                if (value.num_sec == '526' || value.num_sec == '525') {} else {
-                                    var html = '<div class="form-check">' +
-                                        '<input class="form-check-input service_child" type="checkbox" id="' +
-                                        value.num_sec + '" name="serv[servicio]" value="' +
-                                        id_cuenta + '-' + txt_cuenta + ' => ' + value.num_sec +
-                                        ' - ' + value.descripcion + ' - ' + value.monto1 +
-                                        '- Bs."  >' +
-                                        '<label class="form-check-label childservice" for="' + value
-                                        .num_sec + '" style="color:green">' + value.descripcion +
-                                        ' - ' + value.monto1 + '- Bs.</label>' +
-                                        '</div>';
-                                    $('#serv-hijos-' + cuenta + '').append(html);
-                                    if (value.num_sec == '642') {
-                                        var contenedor_renov = '<div id="contenedor_renov" ></div>';
-                                        $('#serv-hijos-' + cuenta + '').append(contenedor_renov);
-                                    }
-                                }
-
-                            });
-                        }
-                    });
                 } else {
                     if (cuenta == '15224300') {
                         $('#nro_renovacion').val(0);
@@ -2803,7 +2819,6 @@
 
                 }
             });
-
         </script>
 
     @stop
