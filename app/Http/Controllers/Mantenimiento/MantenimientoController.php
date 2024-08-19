@@ -523,7 +523,9 @@ class MantenimientoController extends Controller
 
                 $id_ubicacion = $sql_nicho->id;
                 $data_mantenimiento = DB::table('mantenimiento')->where('id_ubicacion', $id_ubicacion)
-                    ->where('estado', 'ACTIVO')->orderBy('mantenimiento.id', 'desc')->first();
+                    ->where('estado', 'ACTIVO')
+                    ->where('tipo_ubicacion', 'NICHO')
+                    ->orderBy('mantenimiento.id', 'desc')->first();
                 if ($data_mantenimiento) {
                     $id_respdifunto = $data_mantenimiento->respdifunto_id;
                     //buscar los datos del responsable y difuntos
