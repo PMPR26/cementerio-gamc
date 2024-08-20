@@ -505,7 +505,6 @@ class ServicioNicho extends Model
             }
 
             if ($result['out'] == true) {
-
                 $est = "OCUPADO";
                 $estado = "ACTIVO";
                 $nicho = new Nicho;
@@ -549,11 +548,7 @@ class ServicioNicho extends Model
                         $servicioNicho->estado = 'INACTIVO';
                         $servicioNicho->save();
                     }
-                // $renov_ant = $data_nicho->renov_anterior;
-                // $monto_renov_anterior = $data_nicho->monto_renov_anterior;
-                // $gestion_renov_anterior = $data_nicho->gestion_renov_anterior;
 
-                // $nicho->restaurarRenov($id_nicho, $renov_ant,  $monto_renov_anterior,  $gestion_renov_anterior);
             }
         }
         $a = $this->anular_fur($request);
@@ -571,7 +566,7 @@ class ServicioNicho extends Model
     {
         $data = ServicioNicho::where('id', $request->id)->first();
         $a = $this->anular_fur($request);
-        if ($a['fur_estado'] == "IN") {
+        if ($a['fur_estado'] == "IN" || $request->fur == 0) {
             $data->estado = "INACTIVO";
             $data->save();
             return response()->json(['status' => true, 'message' => 'Se anuló el registro con exito']);
@@ -760,27 +755,37 @@ class ServicioNicho extends Model
 
         $year = date('Y'); // Obtén el año actual
 
-        try {
+        // try {
             // Consulta usando Eloquent
             $result = ServicioNicho::where('codigo_nicho', $codigo_nicho)
-                        ->whereNotNull('nro_renovacion')
-                        ->where('nro_renovacion', '>', 0)
-                        ->where('estado_pago', true)
-                        ->where('estado', 'ACTIVO')
-                        ->whereYear('fecha_pago', $year)
-                        ->orderByDesc('id')
-                        ->first();
+            ->whereNotNull('nro_renovacion')
+            ->Orwhere('nro_renovacion', '>', 0)
+            ->where('estado', 'ACTIVO')
+            ->whereYear('fecha_pago', $year)
+            ->select('estado_pago')
+            ->orderByDesc('id')
+            ->first();
 
             // Depura para verificar qué está devolviendo la consulta
-            // return response($result);
+            // dd($result);
 
             if($result) {
-                return response()->json([
-                    'status' => true,
-                    'mensaje' => 'El nicho ya tiene renovación activa',
-                    'codigo_nicho' => $codigo_nicho,
-                    'result' => $result
-                ]);
+                if($result->estado_pago == true) {
+                    return response()->json([
+                        'status' => true,
+                        'mensaje' => 'El nicho ya tiene renovación activa',
+                        'codigo_nicho' => $codigo_nicho,
+                        'result' => $result
+                    ]);
+                }else{
+                    return response()->json([
+                        'status' => true,
+                        'mensaje' => 'El nicho tiene renovación pendiente de pago',
+                        'codigo_nicho' => $codigo_nicho,
+                        'result' => $result
+                    ]);
+                }
+
             } else {
                 return response()->json([
                     'status' => false,
@@ -789,11 +794,11 @@ class ServicioNicho extends Model
                 ]);
             }
 
-        } catch (Exception $e) {
-            // Manejo de errores
-            Log::error("Error en verificarRenovacion: " . $e->getMessage());
-            return response()->json(['error' => 'Error al verificar la renovación'], 500);
-        }
+        // } catch (Exception $e) {
+        //     // Manejo de errores
+        //     Log::error("Error en verificarRenovacion: " . $e->getMessage());
+        //     return response()->json(['error' => 'Error al verificar la renovación'], 500);
+        // }
     }
 
 }
