@@ -935,7 +935,7 @@
                                         $('serv-hijos-15224300').hide();
                                         $('#list_detalle .row_' + cuenta).remove();
                                     });
-                                }else{
+                                } else {
                                     $('#bloquear_pago').val(0);
                                 }
                             }
@@ -977,7 +977,7 @@
                                             var contenedor_renov =
                                                 '<div id="contenedor_renov" ></div>';
                                             $('#serv-hijos-' + cuenta + '').append(
-                                            contenedor_renov);
+                                                contenedor_renov);
                                         }
                                     }
 
@@ -1529,13 +1529,23 @@
                                 $(".seccion_list_difuntos").show();
                                 mostrar_lista_difuntos();
                                 $(".nuevo_difunto").show();
+
+                                if (data.response.estado_nicho == 'OCUPADO') {
+                                    Swal.fire(
+                                        'Atencion!',
+                                        'El nicho ya contiene cuerpo(s), pero puede adicionar mas cuerpos.',
+                                        'success'
+                                    )
+                                } else {
+                                    Swal.fire(
+                                        'Atencion!',
+                                        data.response.estado_nicho,
+                                        'success'
+                                    )
+                                }
                             }
 
-                            Swal.fire(
-                                'Atencion!',
-                                data.response.estado_nicho,
-                                'success'
-                            )
+
 
                             if (data.response.estado_nicho == "LIBRE") {
                                 $('#search_dif').val("");
@@ -1550,6 +1560,11 @@
                                 $('#sereci').val("");
                                 $('#tipo_dif').val("");
                                 $('#genero_dif').val("");
+                                Swal.fire(
+                                        'Atencion!',
+                                        data.response.estado_nicho,
+                                        'success'
+                                    )
 
                             } else {
                                 $('#search_dif').val(data.response.ci_dif);
@@ -1566,11 +1581,19 @@
                                 $('#genero_dif').val(data.response.genero_dif);
                                 $('#estado_actual_nicho').html(data.response.estado_nicho);
 
-                                Swal.fire(
-                                    'Atencion!',
-                                    'El nicho se encuentra ocupado.',
-                                    'error'
-                                )
+                                if (data.response.tipo_nicho == "PERPETUO") {
+                                    Swal.fire(
+                                        'Atencion!',
+                                        'El nicho ya contiene cuerpo(s), pero puede adicionar mas cuerpos.',
+                                        'success'
+                                    )
+                                } else {
+                                    Swal.fire(
+                                        'Atencion!',
+                                        data.response.estado_nicho,
+                                        'success'
+                                    )
+                                }
                             }
 
 
@@ -1856,149 +1879,149 @@
                 }
             });
 
+            var isSubmitting = false; // Variable para controlar el estado del envío
 
 
             $(document).on('click', '#btn_guardar_servicio', function() {
+                if (isSubmitting) return; // Si ya está enviando, no hacer nada
+
+                isSubmitting = true; // Marcar como enviando
+
                 var $button = $('#btn_guardar_servicio');
-                // Disable the button to prevent double submission
                 $button.prop('disabled', true);
                 $button.text('Guardando...');
+
                 makeArrayServices();
                 validarInfoEnviada();
 
                 if ($('#servicio_externo').is(":checked")) {
                     registrarServicioExterno();
-                } else {
-
-                    return $.ajax({
-                        type: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        },
-                        url: "{{ route('new.servicio') }}",
-                        async: false,
-                        data: JSON.stringify({
-                            'nro_nicho': $('#nro_nicho').val(),
-                            'bloque': $('#bloque').val(),
-                            'cuartel': $('#cuartel option:selected')
-                                .text(), //$('#cuartel').val().trigger("change"),
-                            'fila': $('#fila').val(),
-                            'tipo_nicho': $('#tipo_nicho').val(),
-                            'columna': $('#columna').val(),
-                            'anterior': $('#anterior').val(),
-                            'ci_dif': $('#search_dif').val(),
-                            'nombres_dif': $('#nombres_dif').val(),
-                            'paterno_dif': $('#paterno_dif').val(),
-                            'materno_dif': $('#materno_dif').val(),
-                            'fechanac_dif': $('#fechanac_dif').val(),
-                            'fecha_def_dif': $('#fechadef_dif').val(),
-                            'causa': $('#causa').val(),
-                            'fecha_ingreso_nicho': $('#fecha_ingreso_nicho').val(),
-                            'tipo_dif': $('#tipo_dif').val(),
-                            'genero_dif': $('#genero_dif').val(),
-                            'ci_resp': $('#search_resp').val(),
-                            'nombres_resp': $('#nombres_resp').val(),
-                            'paterno_resp': $('#paterno_resp').val(),
-                            'materno_resp': $('#materno_resp').val(),
-                            'fechanac_resp': $('#fechanac_resp').val(),
-                            'telefono': $('#telefono').val(),
-                            'celular': $('#celular').val(),
-                            'genero_resp': $('#genero_resp').val(),
-                            'pag_con': $('#pag_con').val(),
-                            'tiempo': $('#tiempo').val(),
-                            'name_pago': $('#name_pago').val(),
-                            'paterno_pago': $('#paterno_pago').val(),
-                            'materno_pago': $('#materno_pago').val(),
-                            'ci_pago': $('#ci_pago').val(),
-                            'pago_por': $('#pago_tercero').val(),
-                            'servicios_adquiridos': servicios_adquiridos,
-                            'monto': $('#totalServ').html(),
-                            'monto_renov': $('#monto_renov').val(),
-                            'gestion_renovacion': $('#gestion_renov_act').val(),
-                            'cant_renov_confirm': $('#cant_renov_confirm').val(),
-
-                            'cuartel_nuevo': $('#select_cuartel_nuevo').val(),
-                            'bloque_nuevo': $('#bloque_nuevo').val(),
-                            'nicho_nuevo': $('#nuevo_nicho').val(),
-                            'fila_nuevo': $('#nueva_fila').val(),
-                            'nueva_fecha_ingreso': $('#nueva_fecha_ingreso').val(),
-                            'nro_renovacion': $('#nro_renovacion').val(),
-                            'monto_renov': $('#monto_renov').val(),
-                            'sereci': $('#sereci').val(),
-                            'gratis': $('#gratis').val(),
-                            'asignar_difunto_nicho': $('#asignar_difunto_nicho').val(),
-                            'add_difunto': $('#add_difunto').val(),
-                        }),
-                        success: function(data_response) {
-
-                            $('#btn_guardar_servicio').prop('disabled', true);
-
-                            if (data_response.status == false) {
-                                // temporal_ocupado
-                                swal.fire({
-                                    title: "Precaucion!",
-                                    text: data_response
-                                        .message, //"!El nicho se encuentra ocupado, debe liberar el nicho!",
-                                    type: "warning",
-                                    timer: 2000,
-                                    showCancelButton: false,
-                                    showConfirmButton: false
-                                });
-                                $button.prop('disabled', false);
-                                $button.text('Volver a Intentar ..');
-
-                            } else {
-                                swal.fire({
-                                    title: "Guardado!",
-                                    text: data_response.message, //"!Registro realizado con éxito!",
-                                    type: "success",
-                                    timer: 2000,
-                                    showCancelButton: false,
-                                    showConfirmButton: false
-                                });
-                                setTimeout(function() {
-                                    location.reload();
-                                    window.location.href = "/servicios/servicios"
-                                }, 2000);
-                            }
-
-                            //toastr["success"]("Registro realizado con éxito!");
-                        },
-                        error: function(error) {
-
-                            if (error.status == 422) {
-                                Object.keys(error.responseJSON.errors).forEach(function(k) {
-                                    toastr["error"](error.responseJSON.errors[k]);
-                                    $button.prop('disabled', false);
-                                    $button.text('Volver a Intentar ..');
-                                });
-                            } else if (error.status == 400) {
-                                swal.fire({
-                                    title: "Registro Duplicado!",
-                                    text: "!Transacción rechazada!",
-                                    type: "error",
-                                    timer: 2000,
-                                    showCancelButton: false,
-                                    showConfirmButton: false
-                                });
-                                setTimeout(function() {
-                                    $button.prop('disabled', false);
-                                    $button.text('Volver a Intentar ..');
-                                    location.reload();
-                                    window.location.href =
-                                        "{{ URL::to('serv') }} " //"{{ route('serv') }}";
-
-                                }, 2000);
-                            }
-                            $button.prop('disabled', false);
-                            $button.text('Volver a Intentar ..');
-
-                        }
-                    })
+                    isSubmitting = false; // Rehabilitar el botón después de llamar a la función
+                    $button.prop('disabled', false);
+                    $button.text('Guardar Servicio');
+                    return;
                 }
 
+                $.ajax({
+                    type: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    url: "{{ route('new.servicio') }}",
+                    async: false,
+                    data: JSON.stringify({
+                        'nro_nicho': $('#nro_nicho').val(),
+                        'bloque': $('#bloque').val(),
+                        'cuartel': $('#cuartel option:selected')
+                            .text(), //$('#cuartel').val().trigger("change"),
+                        'fila': $('#fila').val(),
+                        'tipo_nicho': $('#tipo_nicho').val(),
+                        'columna': $('#columna').val(),
+                        'anterior': $('#anterior').val(),
+                        'ci_dif': $('#search_dif').val(),
+                        'nombres_dif': $('#nombres_dif').val(),
+                        'paterno_dif': $('#paterno_dif').val(),
+                        'materno_dif': $('#materno_dif').val(),
+                        'fechanac_dif': $('#fechanac_dif').val(),
+                        'fecha_def_dif': $('#fechadef_dif').val(),
+                        'causa': $('#causa').val(),
+                        'fecha_ingreso_nicho': $('#fecha_ingreso_nicho').val(),
+                        'tipo_dif': $('#tipo_dif').val(),
+                        'genero_dif': $('#genero_dif').val(),
+                        'ci_resp': $('#search_resp').val(),
+                        'nombres_resp': $('#nombres_resp').val(),
+                        'paterno_resp': $('#paterno_resp').val(),
+                        'materno_resp': $('#materno_resp').val(),
+                        'fechanac_resp': $('#fechanac_resp').val(),
+                        'telefono': $('#telefono').val(),
+                        'celular': $('#celular').val(),
+                        'genero_resp': $('#genero_resp').val(),
+                        'pag_con': $('#pag_con').val(),
+                        'tiempo': $('#tiempo').val(),
+                        'name_pago': $('#name_pago').val(),
+                        'paterno_pago': $('#paterno_pago').val(),
+                        'materno_pago': $('#materno_pago').val(),
+                        'ci_pago': $('#ci_pago').val(),
+                        'pago_por': $('#pago_tercero').val(),
+                        'servicios_adquiridos': servicios_adquiridos,
+                        'monto': $('#totalServ').html(),
+                        'monto_renov': $('#monto_renov').val(),
+                        'gestion_renovacion': $('#gestion_renov_act').val(),
+                        'cant_renov_confirm': $('#cant_renov_confirm').val(),
+
+                        'cuartel_nuevo': $('#select_cuartel_nuevo').val(),
+                        'bloque_nuevo': $('#bloque_nuevo').val(),
+                        'nicho_nuevo': $('#nuevo_nicho').val(),
+                        'fila_nuevo': $('#nueva_fila').val(),
+                        'nueva_fecha_ingreso': $('#nueva_fecha_ingreso').val(),
+                        'nro_renovacion': $('#nro_renovacion').val(),
+                        'monto_renov': $('#monto_renov').val(),
+                        'sereci': $('#sereci').val(),
+                        'gratis': $('#gratis').val(),
+                        'asignar_difunto_nicho': $('#asignar_difunto_nicho').val(),
+                        'add_difunto': $('#add_difunto').val(),
+                    }),
+                    success: function(data_response) {
+                        $('#btn_guardar_servicio').prop('disabled', true);
+                        if (data_response.status == false) {
+                            swal.fire({
+                                title: "Precaución!",
+                                text: data_response.message,
+                                type: "warning",
+                                timer: 2000,
+                                showCancelButton: false,
+                                showConfirmButton: false
+                            });
+                            $button.prop('disabled', false);
+                            $button.text('Volver a Intentar ..');
+                        } else {
+                            swal.fire({
+                                title: "Guardado!",
+                                text: data_response.message,
+                                type: "success",
+                                timer: 2000,
+                                showCancelButton: false,
+                                showConfirmButton: false
+                            });
+                            setTimeout(function() {
+                                location.reload();
+                                window.location.href = "/servicios/servicios";
+                            }, 2000);
+                        }
+                    },
+                    error: function(error) {
+                        console.error('Error en la solicitud:',
+                            error); // Registrar el error para depuración
+
+                        var errorMessage =
+                            "Ocurrió un error inesperado. Por favor, intente nuevamente más tarde.";
+
+                        // Comprobar el código de estado para mensajes específicos si es necesario
+                        if (error.status == 500) {
+                            // Error interno del servidor
+                            errorMessage =
+                                "Hubo un problema en el servidor. Por favor, intente nuevamente más tarde.";
+                        }
+
+                        swal.fire({
+                            title: "Error!",
+                            text: errorMessage,
+                            type: "error",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false
+                        });
+
+                        $button.prop('disabled', false);
+                        $button.text('Volver a Intentar ..');
+                    },
+                    complete: function() {
+                        isSubmitting = false; // Rehabilitar el botón una vez que se complete la llamada
+                    }
+                });
             });
+
 
 
 
