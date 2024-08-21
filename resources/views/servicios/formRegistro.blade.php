@@ -1883,34 +1883,34 @@
 
 
             $(document).on('click', '#btn_guardar_servicio', function() {
-                        // if (isSubmitting) return; // Si ya está enviando, no hacer nada
+                // if (isSubmitting) return; // Si ya está enviando, no hacer nada
 
-                        // isSubmitting = true; // Marcar como enviando
+                // isSubmitting = true; // Marcar como enviando
 
-                        var $button = $('#btn_guardar_servicio');
-                        $button.prop('disabled', true);
-                        $button.text('Guardando...');
+                var $button = $('#btn_guardar_servicio');
+                $button.prop('disabled', true);
+                $button.text('Guardando...');
 
-                        makeArrayServices();
-                        validarInfoEnviada();
+                makeArrayServices();
+                validarInfoEnviada();
 
-                        if ($('#servicio_externo').is(":checked")) {
-                            registrarServicioExterno();
-                            // isSubmitting = false; // Rehabilitar el botón después de llamar a la función
-                            // $button.prop('disabled', false);
-                            // $button.text('Guardar Servicio');
-                            // return;
-                        } else {
+                if ($('#servicio_externo').is(":checked")) {
+                    registrarServicioExterno();
+                    // isSubmitting = false; // Rehabilitar el botón después de llamar a la función
+                    // $button.prop('disabled', false);
+                    // $button.text('Guardar Servicio');
+                    // return;
+                } else {
 
-                            return $.ajax({
-                                    type: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    },
-                                    url: "{{ route('new.servicio') }}",
-                                    async: false,
-                                    data: JSON.stringify({
+                    return $.ajax({
+                        type: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+                        url: "{{ route('new.servicio') }}",
+                        async: false,
+                        data: JSON.stringify({
                             'nro_nicho': $('#nro_nicho').val(),
                             'bloque': $('#bloque').val(),
                             'cuartel': $('#cuartel option:selected')
@@ -1961,895 +1961,892 @@
                             'asignar_difunto_nicho': $('#asignar_difunto_nicho').val(),
                             'add_difunto': $('#add_difunto').val(),
                         }),
-                                    success: function(data_response) {
-                                        $('#btn_guardar_servicio').prop('disabled', true);
-                                        if (data_response.status == false) {
-                                            // temporal_ocupado
-                                            swal.fire({
-                                                title: "Precaucion!",
-                                                text: data_response
-                                                    .message, //"!El nicho se encuentra ocupado, debe liberar el nicho!",
-                                                type: "warning",
-                                                timer: 2000,
-                                                showCancelButton: false,
-                                                showConfirmButton: false
-                                            });
-                                            $button.prop('disabled', false);
-                                            $button.text('Volver a Intentar ..');
-                                        } else {
-                                            swal.fire({
-                                                title: "Guardado!",
-                                                text: data_response.message, //"!Registro realizado con éxito!",
-                                                type: "success",
-                                                timer: 2000,
-                                                showCancelButton: false,
-                                                showConfirmButton: false
-                                            });
-                                            setTimeout(function() {
-                                                location.reload();
-                                                window.location.href = "/servicios/servicios"
-                                            }, 2000);
-                                        }
+                        success: function(data_response) {
+                            $('#btn_guardar_servicio').prop('disabled', true);
+                            if (data_response.status == false) {
+                                // temporal_ocupado
+                                swal.fire({
+                                    title: "Precaucion!",
+                                    text: data_response
+                                        .message, //"!El nicho se encuentra ocupado, debe liberar el nicho!",
+                                    type: "warning",
+                                    timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: false
+                                });
+                                $button.prop('disabled', false);
+                                $button.text('Volver a Intentar ..');
+                            } else {
+                                swal.fire({
+                                    title: "Guardado!",
+                                    text: data_response.message, //"!Registro realizado con éxito!",
+                                    type: "success",
+                                    timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: false
+                                });
+                                setTimeout(function() {
+                                    location.reload();
+                                    window.location.href = "/servicios/servicios"
+                                }, 2000);
+                            }
 
-                                },
-                                error: function(error) {
-                                    if (error.status == 422) {
-                                        Object.keys(error.responseJSON.errors).forEach(function(k) {
-                                            toastr["error"](error.responseJSON.errors[k]);
-                                            $button.prop('disabled', false);
-                                            $button.text('Volver a Intentar ..');
-                                        });
-                                    } else if (error.status == 400) {
-                                        swal.fire({
-                                            title: "Registro Duplicado!",
-                                            text: "!Transacción rechazada!",
-                                            type: "error",
-                                            timer: 2000,
-                                            showCancelButton: false,
-                                            showConfirmButton: false
-                                        });
-                                        setTimeout(function() {
-                                            $button.prop('disabled', false);
-                                            $button.text('Volver a Intentar ..');
-                                            location.reload();
-                                            window.location.href =
-                                                "{{ URL::to('serv') }} " //"{{ route('serv') }}";
-                                        }, 2000);
-                                    }
-                                }
-                            })
-
+                        },
+                        error: function(error) {
+                            if (error.status == 422) {
+                                Object.keys(error.responseJSON.errors).forEach(function(k) {
+                                    toastr["error"](error.responseJSON.errors[k]);
+                                    $button.prop('disabled', false);
+                                    $button.text('Volver a Intentar ..');
+                                });
+                            } else if (error.status == 400) {
+                                swal.fire({
+                                    title: "Registro Duplicado!",
+                                    text: "!Transacción rechazada!",
+                                    type: "error",
+                                    timer: 2000,
+                                    showCancelButton: false,
+                                    showConfirmButton: false
+                                });
+                                setTimeout(function() {
+                                    $button.prop('disabled', false);
+                                    $button.text('Volver a Intentar ..');
+                                    location.reload();
+                                    window.location.href =
+                                        "{{ URL::to('serv') }} " //"{{ route('serv') }}";
+                                }, 2000);
+                            }
                         }
                     })
 
-                            $(document).on('blur', '#renov_ant', function() {
-                                // Renov();
-                                calcRenov();
+                }
+            })
 
-                            })
+            $(document).on('blur', '#renov_ant', function() {
+                // Renov();
+                calcRenov();
 
-                            $(document).on('blur', '#renov', function() {
-                                // Renov();
-                                calcRenov();
+            })
 
-                            })
+            $(document).on('blur', '#renov', function() {
+                // Renov();
+                calcRenov();
 
-
-
-
+            })
 
 
-                            $(document).on('click', '#buscarDifunto', function() {
-                                var ci = $('#search_dif').val();
-                                //var ci ="52525252";
-                                if (ci.length < 1) {
-                                    //alert("el campo Ci esta vacio");
-                                    Swal.fire(
-                                        'Busqueda finalizada!',
-                                        'El campo C.I. esta vacio .',
-                                        'warning'
-                                    )
-                                } else {
-                                    var type = "deceased";
-                                    dats = buscar_ci(ci, type);
-                                }
 
-                            });
-                            $(document).on('click', '#buscarResp', function() {
-                                var ci = $('#search_resp').val();
-                                //var ci ="52525252";
-                                if (ci.length < 1) {
-                                    //alert("el campo Ci esta vacio");
-                                    Swal.fire(
-                                        'Busqueda finalizada!',
-                                        'El campo C.I. esta vacio .',
-                                        'warning'
-                                    )
 
-                                } else {
-                                    var type = "responsable";
-                                    dats = buscar_ci_resp(ci, type);
-                                }
 
-                            });
 
-                            function buscar_ci(ci, type) {
-                                var datos = "";
+            $(document).on('click', '#buscarDifunto', function() {
+                var ci = $('#search_dif').val();
+                //var ci ="52525252";
+                if (ci.length < 1) {
+                    //alert("el campo Ci esta vacio");
+                    Swal.fire(
+                        'Busqueda finalizada!',
+                        'El campo C.I. esta vacio .',
+                        'warning'
+                    )
+                } else {
+                    var type = "deceased";
+                    dats = buscar_ci(ci, type);
+                }
 
-                                $.ajax({
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                                        'Content-Type': 'application/json'
-                                    },
-                                    url: "{{ route('search.difunto.responsable') }}",
-                                    method: 'POST',
-                                    dataType: 'json',
-                                    data: JSON.stringify({
-                                        "ci": ci,
-                                        "type": type
-                                    }),
-                                    success: function(data) {
-                                        if (data.response == null) {
-                                            //alert("El CI ingresado no esta registrado");
-                                            Swal.fire(
-                                                'Busqueda finalizada!',
-                                                'El C.I. ingresado no esta registrado .',
-                                                'warning'
-                                            )
-                                        } else {
-                                            $('#nombres_dif').val(data.response.nombres);
-                                            $('#paterno_dif').val(data.response.primer_apellido);
-                                            $('#materno_dif').val(data.response.segundo_apellido);
-                                            $('#fechanac_dif').val(data.response.fecha_nacimiento);
-                                            $('#fechadef_dif').val(data.response.fecha_defuncion);
-                                            $('#tipo_dif').val(data.response.tipo);
-                                            $('#sereci').val(data.response.certificado_defuncion);
-                                            $('#causa').val(data.response.causa);
-                                            $('#genero_dif').val(data.response.genero);
-                                            $("#difunto_search").val(data.response.id);
-                                            //$('#ecivil_dif').val(data.response.estado_civil);
-                                        }
-                                    },
-                                    error: function(xhr, status) {
-                                        //alert('Disculpe, existió un problema');
-                                        Swal.fire(
-                                            'Busqueda finalizada!',
-                                            'El registro no ha  sido encontrado o no existe .',
-                                            'error'
-                                        )
-                                    },
-                                    // complete : function(xhr, status) {
-                                    //     alert('Petición realizada');
-                                    // }
+            });
+            $(document).on('click', '#buscarResp', function() {
+                var ci = $('#search_resp').val();
+                //var ci ="52525252";
+                if (ci.length < 1) {
+                    //alert("el campo Ci esta vacio");
+                    Swal.fire(
+                        'Busqueda finalizada!',
+                        'El campo C.I. esta vacio .',
+                        'warning'
+                    )
 
-                                });
-                                // return datos;
+                } else {
+                    var type = "responsable";
+                    dats = buscar_ci_resp(ci, type);
+                }
+
+            });
+
+            function buscar_ci(ci, type) {
+                var datos = "";
+
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Content-Type': 'application/json'
+                    },
+                    url: "{{ route('search.difunto.responsable') }}",
+                    method: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        "ci": ci,
+                        "type": type
+                    }),
+                    success: function(data) {
+                        if (data.response == null) {
+                            //alert("El CI ingresado no esta registrado");
+                            Swal.fire(
+                                'Busqueda finalizada!',
+                                'El C.I. ingresado no esta registrado .',
+                                'warning'
+                            )
+                        } else {
+                            $('#nombres_dif').val(data.response.nombres);
+                            $('#paterno_dif').val(data.response.primer_apellido);
+                            $('#materno_dif').val(data.response.segundo_apellido);
+                            $('#fechanac_dif').val(data.response.fecha_nacimiento);
+                            $('#fechadef_dif').val(data.response.fecha_defuncion);
+                            $('#tipo_dif').val(data.response.tipo);
+                            $('#sereci').val(data.response.certificado_defuncion);
+                            $('#causa').val(data.response.causa);
+                            $('#genero_dif').val(data.response.genero);
+                            $("#difunto_search").val(data.response.id);
+                            //$('#ecivil_dif').val(data.response.estado_civil);
+                        }
+                    },
+                    error: function(xhr, status) {
+                        //alert('Disculpe, existió un problema');
+                        Swal.fire(
+                            'Busqueda finalizada!',
+                            'El registro no ha  sido encontrado o no existe .',
+                            'error'
+                        )
+                    },
+                    // complete : function(xhr, status) {
+                    //     alert('Petición realizada');
+                    // }
+
+                });
+                // return datos;
+            }
+
+            function buscar_ci_resp(ci, type) {
+                var datos = "";
+
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Content-Type': 'application/json'
+                    },
+                    url: "{{ route('search.difunto.responsable') }}",
+                    method: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        "ci": ci,
+                        "type": type
+                    }),
+                    success: function(data) {
+                        if (data.response == null) {
+                            Swal.fire(
+                                'Busqueda finalizada!',
+                                'El C.I. ingresado no esta registrado .',
+                                'warning'
+                            )
+                        } else {
+                            $('#nombres_resp').val(data.response.nombres);
+                            $('#paterno_resp').val(data.response.primer_apellido);
+                            $('#materno_resp').val(data.response.segundo_apellido);
+                            $('#fechanac_resp').val(data.response.fecha_nacimiento);
+                            $('#telefono_resp').val(data.response.telefono);
+                            $('#cellular_resp').val(data.response.celular);
+                            $('#ecivil_resp').val(data.response.estado_civil);
+                            $('#email_resp').val(data.response.email);
+                            $('#domicilio_resp').val(data.response.domicilio);
+                            $('#genero_resp').val(data.response.genero);
+                            $("#responsable_search").val(data.response.id);
+                            //$('#ecivil_dif').val(data.response.estado_civil);
+                        }
+                    },
+                    error: function(xhr, status) {
+                        // alert('Disculpe, existió un problema');
+                        Swal.fire(
+                            'Busqueda finalizada!',
+                            'El registro no ha  sido encontrado o no existe .',
+                            'error'
+                        )
+                    },
+                    // complete : function(xhr, status) {
+                    //     alert('Petición realizada');
+                    // }
+
+                });
+                // return datos;
+            }
+            // calcular fecha vencimiento
+            function fechaVencimiento(fecha, tiempo) {
+                var d = new Date(fecha);
+                var strDate = parseInt(d.getFullYear()) + parseInt(tiempo);
+                var strDate = strDate + "/" + (d.getMonth() + 1) + "/" + (d.getDate() + 1);
+
+                return strDate;
+            }
+
+
+            // completar.info-nicho
+            function completarInfoNicho() {
+                var datos = "";
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                            'content'),
+                        'Content-Type': 'application/json'
+                    },
+                    url: "{{ route('completar.info.nicho') }}",
+                    method: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        "bloque": $('#bloque').val(),
+                        "nicho": $('#nro_nicho').val(),
+                        "fila": $('#fila').val()
+                    }),
+                    success: function(data) {
+                        if (data.info != null) {
+                            $('#cuartel').val(data.info.cuartel_id).trigger('change.select2');
+                            // $('#cuartel').val(data.info.cuartel_id).trigger("change");
+                            $('#anterior').val(data.info.codigo_anterior);
+                        }
+                    }
+
+                });
+                return false;
+            }
+
+
+            function autocompletar() {
+                var datos = "";
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                            'content'),
+                        'Content-Type': 'application/json'
+                    },
+                    url: "{{ route('completar.datos') }}",
+                    method: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        "bloque": $('#bloque').val(),
+                        "nicho": $('#nro_nicho').val(),
+                        "fila": $('#fila').val()
+                    }),
+                    success: function(data) {
+
+                        if (data.response != null) {
+                            if (data.response.estado_nicho == "LIBRE") {
+                                $('#search_dif').val();
+                                $('#ci_difunto_actual').val();
+                                $('#nombres_dif').val();
+                                $('#paterno_dif').val();
+                                $('#materno_dif').val();
+                                $('#fechanac_dif').val();
+                                $('#fechadef_dif').val();
+                                $('#causa').val();
+                                $('#sereci').val();
+                                $('#tipo_dif').val();
+                                $('#genero_dif').val();
+                            } else {
+                                $('#search_dif').val(data['response'].ci_dif);
+                                $('#nombres_dif').val(data['response'].nombre_dif);
+                                $('#paterno_dif').val(data['response'].primerap_dif);
+                                $('#materno_dif').val(data['response'].segap_dif);
+                                $('#fechanac_dif').val(data['response'].nacimiento_dif);
+                                // $('#fecha_def_dif').val(data['response'].fecha_defuncion);
+                                $('#fechadef_dif').val(data['response'].fecha_defuncion);
+                                $('#fecha_ingreso_nicho').val(data['response'].fecha_ingreso_nicho);
+
+                                $('#tipo_dif').val(data['response'].tipo_dif);
+                                $('#genero_dif').val(data['response'].genero_dif);
+                                $('#tiempo').val(data['response'].tiempo);
+                                $('#sereci').val(data['response'].certificado_defuncion);
+                                $('#funeraria').val(data['response'].funeraria).trigger('change');
+                                $('#causa').val(data['response'].causa_dif).trigger('change');
                             }
 
-                            function buscar_ci_resp(ci, type) {
-                                var datos = "";
+                            // data responsable
+                            $('#search_resp').val(data['response'].ci_resp);
+                            $('#nombres_resp').val(data['response'].nombre_resp);
+                            $('#paterno_resp').val(data['response'].paterno_resp);
+                            $('#materno_resp').val(data['response'].segap_resp);
+                            $('#fechanac_resp').val(data.response.nacimiento_resp);
+                            $('#telefono').val(data['response'].telefono);
+                            $('#celular').val(data['response'].celular);
+                            $('#genero_resp').val(data['response'].genero_resp);
+                            $('#domicilio').val(data['response'].domicilio_resp);
+                        }
 
-                                $.ajax({
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                                        'Content-Type': 'application/json'
-                                    },
-                                    url: "{{ route('search.difunto.responsable') }}",
-                                    method: 'POST',
-                                    dataType: 'json',
-                                    data: JSON.stringify({
-                                        "ci": ci,
-                                        "type": type
-                                    }),
-                                    success: function(data) {
-                                        if (data.response == null) {
-                                            Swal.fire(
-                                                'Busqueda finalizada!',
-                                                'El C.I. ingresado no esta registrado .',
-                                                'warning'
-                                            )
-                                        } else {
-                                            $('#nombres_resp').val(data.response.nombres);
-                                            $('#paterno_resp').val(data.response.primer_apellido);
-                                            $('#materno_resp').val(data.response.segundo_apellido);
-                                            $('#fechanac_resp').val(data.response.fecha_nacimiento);
-                                            $('#telefono_resp').val(data.response.telefono);
-                                            $('#cellular_resp').val(data.response.celular);
-                                            $('#ecivil_resp').val(data.response.estado_civil);
-                                            $('#email_resp').val(data.response.email);
-                                            $('#domicilio_resp').val(data.response.domicilio);
-                                            $('#genero_resp').val(data.response.genero);
-                                            $("#responsable_search").val(data.response.id);
-                                            //$('#ecivil_dif').val(data.response.estado_civil);
-                                        }
-                                    },
-                                    error: function(xhr, status) {
-                                        // alert('Disculpe, existió un problema');
-                                        Swal.fire(
-                                            'Busqueda finalizada!',
-                                            'El registro no ha  sido encontrado o no existe .',
-                                            'error'
-                                        )
-                                    },
-                                    // complete : function(xhr, status) {
-                                    //     alert('Petición realizada');
-                                    // }
+                    }
 
-                                });
-                                // return datos;
-                            }
-                            // calcular fecha vencimiento
-                            function fechaVencimiento(fecha, tiempo) {
-                                var d = new Date(fecha);
-                                var strDate = parseInt(d.getFullYear()) + parseInt(tiempo);
-                                var strDate = strDate + "/" + (d.getMonth() + 1) + "/" + (d.getDate() + 1);
+                });
+                return false;
+            }
 
-                                return strDate;
-                            }
+            function validarInfoEnviada() {
 
+                var cuartel = $('#cuartel option:selected').text();
+                if ($('#servicio_externo').is(":checked")) {} else {
+                    if (cuartel == "Seleccione un cuartel") {
+                        swal.fire({
+                            title: "Precaucion!",
+                            text: "!Complete el campo cuartel",
+                            type: "warning",
+                            //  timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: true
+                        });
+                        setTimeout(function() {
+                            return false;
+                        }, 2000);
+                    }
+                    var $button = $('#btn_guardar_servicio');
 
-                            // completar.info-nicho
-                            function completarInfoNicho() {
-                                var datos = "";
-                                $.ajax({
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                            'content'),
-                                        'Content-Type': 'application/json'
-                                    },
-                                    url: "{{ route('completar.info.nicho') }}",
-                                    method: 'POST',
-                                    dataType: 'json',
-                                    data: JSON.stringify({
-                                        "bloque": $('#bloque').val(),
-                                        "nicho": $('#nro_nicho').val(),
-                                        "fila": $('#fila').val()
-                                    }),
-                                    success: function(data) {
-                                        if (data.info != null) {
-                                            $('#cuartel').val(data.info.cuartel_id).trigger('change.select2');
-                                            // $('#cuartel').val(data.info.cuartel_id).trigger("change");
-                                            $('#anterior').val(data.info.codigo_anterior);
-                                        }
-                                    }
-
-                                });
-                                return false;
-                            }
-
-
-                            function autocompletar() {
-                                var datos = "";
-                                $.ajax({
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                            'content'),
-                                        'Content-Type': 'application/json'
-                                    },
-                                    url: "{{ route('completar.datos') }}",
-                                    method: 'POST',
-                                    dataType: 'json',
-                                    data: JSON.stringify({
-                                        "bloque": $('#bloque').val(),
-                                        "nicho": $('#nro_nicho').val(),
-                                        "fila": $('#fila').val()
-                                    }),
-                                    success: function(data) {
-
-                                        if (data.response != null) {
-                                            if (data.response.estado_nicho == "LIBRE") {
-                                                $('#search_dif').val();
-                                                $('#ci_difunto_actual').val();
-                                                $('#nombres_dif').val();
-                                                $('#paterno_dif').val();
-                                                $('#materno_dif').val();
-                                                $('#fechanac_dif').val();
-                                                $('#fechadef_dif').val();
-                                                $('#causa').val();
-                                                $('#sereci').val();
-                                                $('#tipo_dif').val();
-                                                $('#genero_dif').val();
-                                            } else {
-                                                $('#search_dif').val(data['response'].ci_dif);
-                                                $('#nombres_dif').val(data['response'].nombre_dif);
-                                                $('#paterno_dif').val(data['response'].primerap_dif);
-                                                $('#materno_dif').val(data['response'].segap_dif);
-                                                $('#fechanac_dif').val(data['response'].nacimiento_dif);
-                                                // $('#fecha_def_dif').val(data['response'].fecha_defuncion);
-                                                $('#fechadef_dif').val(data['response'].fecha_defuncion);
-                                                $('#fecha_ingreso_nicho').val(data['response'].fecha_ingreso_nicho);
-
-                                                $('#tipo_dif').val(data['response'].tipo_dif);
-                                                $('#genero_dif').val(data['response'].genero_dif);
-                                                $('#tiempo').val(data['response'].tiempo);
-                                                $('#sereci').val(data['response'].certificado_defuncion);
-                                                $('#funeraria').val(data['response'].funeraria).trigger('change');
-                                                $('#causa').val(data['response'].causa_dif).trigger('change');
-                                            }
-
-                                            // data responsable
-                                            $('#search_resp').val(data['response'].ci_resp);
-                                            $('#nombres_resp').val(data['response'].nombre_resp);
-                                            $('#paterno_resp').val(data['response'].paterno_resp);
-                                            $('#materno_resp').val(data['response'].segap_resp);
-                                            $('#fechanac_resp').val(data.response.nacimiento_resp);
-                                            $('#telefono').val(data['response'].telefono);
-                                            $('#celular').val(data['response'].celular);
-                                            $('#genero_resp').val(data['response'].genero_resp);
-                                            $('#domicilio').val(data['response'].domicilio_resp);
-                                        }
-
-                                    }
-
-                                });
-                                return false;
-                            }
-
-                            function validarInfoEnviada() {
-
-                                var cuartel = $('#cuartel option:selected').text();
-                                if ($('#servicio_externo').is(":checked")) {} else {
-                                    if (cuartel == "Seleccione un cuartel") {
-                                        swal.fire({
-                                            title: "Precaucion!",
-                                            text: "!Complete el campo cuartel",
-                                            type: "warning",
-                                            //  timer: 2000,
-                                            showCancelButton: false,
-                                            showConfirmButton: true
-                                        });
-                                        setTimeout(function() {
-                                            return false;
-                                        }, 2000);
-                                    }
-                                    var $button = $('#btn_guardar_servicio');
-
-                                    // Disable the button to prevent double submission
-                                    $button.prop('disabled', false);
-                                    $button.text('Volver a enviar');
-                                }
+                    // Disable the button to prevent double submission
+                    $button.prop('disabled', false);
+                    $button.text('Volver a enviar');
+                }
 
 
 
-                                //volver a habilitar
+                //volver a habilitar
 
-                                //   if($('#fechadef_dif').val() =="" || !$('#fechadef_dif').val()){
-                                //     swal.fire({
-                                //                         title: "Precaucion!",
-                                //                         text: "!Complete la fecha de defuncion de la sección del difunto",
-                                //                         type: "warning",
-                                //                       //  timer: 2000,
-                                //                         showCancelButton: false,
-                                //                         showConfirmButton: true
-                                //                         });
-                                //                         setTimeout(function() {
-                                //                            return false;
-                                //                         }, 2000);
-                                //   }
+                //   if($('#fechadef_dif').val() =="" || !$('#fechadef_dif').val()){
+                //     swal.fire({
+                //                         title: "Precaucion!",
+                //                         text: "!Complete la fecha de defuncion de la sección del difunto",
+                //                         type: "warning",
+                //                       //  timer: 2000,
+                //                         showCancelButton: false,
+                //                         showConfirmButton: true
+                //                         });
+                //                         setTimeout(function() {
+                //                            return false;
+                //                         }, 2000);
+                //   }
 
-                                //   if($('#fechanac_dif').val() =="" || !$('#fechanac_dif').val()){
-                                //     swal.fire({
-                                //                         title: "Precaucion!",
-                                //                         text: "!Complete la fecha de nacimiento de la sección del difunto",
-                                //                         type: "warning",
-                                //                       //  timer: 2000,
-                                //                         showCancelButton: false,
-                                //                         showConfirmButton: true
-                                //                         });
-                                //                         setTimeout(function() {
-                                //                            return false;
-                                //                         }, 2000);
-                                //   }
+                //   if($('#fechanac_dif').val() =="" || !$('#fechanac_dif').val()){
+                //     swal.fire({
+                //                         title: "Precaucion!",
+                //                         text: "!Complete la fecha de nacimiento de la sección del difunto",
+                //                         type: "warning",
+                //                       //  timer: 2000,
+                //                         showCancelButton: false,
+                //                         showConfirmButton: true
+                //                         });
+                //                         setTimeout(function() {
+                //                            return false;
+                //                         }, 2000);
+                //   }
 
 
-                            }
-                            $("#causa").select2({
-                                width: 'resolve', // need to override the changed default
-                                // dropdownParent: $('#modal_add_difunto'),
-                                tags: true,
-                                allowClear: true
+            }
+            $("#causa").select2({
+                width: 'resolve', // need to override the changed default
+                // dropdownParent: $('#modal_add_difunto'),
+                tags: true,
+                allowClear: true
+            });
+
+
+            /**********************************************************************************************************/
+            /***************************************SERVICIOS EXTERNOS ************************************************/
+            /**********************************************************************************************************/
+
+            $(document).on('click', '#servicio_externo', function() {
+
+                if ($('#servicio_externo').is(":checked")) {
+                    $('#contenido').show();
+                    $('.busquedaNichos').hide();
+                    $('.complementoBusqueda').hide();
+                    $('.nuevo_difunto').hide();
+                } else {
+                    $('#contenido').hide();
+                    $('.busquedaNichos').show();
+                    $('.complementoBusqueda').show();
+                    $('.nuevo_difunto').show();
+                }
+            });
+
+            $(document).on('click', '#asignar_difunto_nicho', function() {
+                if ($('#asignar_difunto_nicho').is(":checked")) {
+                    $('#asignar_difunto_nicho').val('asignado');
+                    $('.asignar_df').show();
+                } else {
+                    $('.asignar_df').hide();
+                    $('#asignar_difunto_nicho').val('');
+                }
+            });
+
+
+
+
+            function registrarServicioExterno() {
+                var $button = $('#btn_guardar_servicio');
+                return $.ajax({
+                    type: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    url: "{{ route('new.servicio.externo') }}",
+                    async: false,
+                    data: JSON.stringify({
+
+                        'ci_dif': $('#search_dif').val(),
+                        'nombres_dif': $('#nombres_dif').val(),
+                        'paterno_dif': $('#paterno_dif').val(),
+                        'materno_dif': $('#materno_dif').val(),
+                        'fechanac_dif': $('#fechanac_dif').val(),
+                        'fecha_def_dif': $('#fechadef_dif').val(),
+                        'causa': $('#causa').val(),
+                        'fecha_ingreso_nicho': $('#fecha_ingreso_nicho').val(),
+                        'tipo_dif': $('#tipo_dif').val(),
+                        'genero_dif': $('#genero_dif').val(),
+                        'ci_resp': $('#search_resp').val(),
+                        'nombres_resp': $('#nombres_resp').val(),
+                        'paterno_resp': $('#paterno_resp').val(),
+                        'materno_resp': $('#materno_resp').val(),
+                        'fechanac_resp': $('#fechanac_resp').val(),
+                        'telefono': $('#telefono').val(),
+                        'celular': $('#celular').val(),
+                        'genero_resp': $('#genero_resp').val(),
+                        'pag_con': $('#pag_con').val(),
+                        'tiempo': $('#tiempo').val(),
+                        'name_pago': $('#name_pago').val(),
+                        'paterno_pago': $('#paterno_pago').val(),
+                        'materno_pago': $('#materno_pago').val(),
+                        'ci_pago': $('#ci_pago').val(),
+                        'pago_por': $('#pago_tercero').val(),
+                        'servicios_adquiridos': servicios_adquiridos,
+                        'monto': $('#totalServ').html(),
+                        'monto_renov': $('#monto_renov').val(),
+
+                        'nueva_fecha_ingreso': $('#nueva_fecha_ingreso').val(),
+
+                        'nro_renovacion': $('#renov').val(),
+                        'sereci': $('#sereci').val(),
+                        'gratis': $('#gratis').val(),
+                        'asignar_difunto_nicho': $('#asignar_difunto_nicho').val(),
+                        'add_difunto': $('#add_difunto').val(),
+
+                    }),
+                    success: function(data_response) {
+                        swal.fire({
+                            title: "Guardado!",
+                            text: "!Registro realizado con éxito!",
+                            type: "success",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false
+                        });
+                        setTimeout(function() {
+                            //    location.reload();
+                            window.location.href = "/servicios/servicios"
+                        }, 2000);
+                        //toastr["success"]("Registro realizado con éxito!");
+                    },
+                    error: function(error) {
+
+                        if (error.status == 422) {
+                            Object.keys(error.responseJSON.errors).forEach(function(k) {
+                                toastr["error"](error.responseJSON.errors[k]);
                             });
-
-
-                            /**********************************************************************************************************/
-                            /***************************************SERVICIOS EXTERNOS ************************************************/
-                            /**********************************************************************************************************/
-
-                            $(document).on('click', '#servicio_externo', function() {
-
-                                if ($('#servicio_externo').is(":checked")) {
-                                    $('#contenido').show();
-                                    $('.busquedaNichos').hide();
-                                    $('.complementoBusqueda').hide();
-                                    $('.nuevo_difunto').hide();
-                                } else {
-                                    $('#contenido').hide();
-                                    $('.busquedaNichos').show();
-                                    $('.complementoBusqueda').show();
-                                    $('.nuevo_difunto').show();
-                                }
+                            $button.prop('disabled', false);
+                            $button.text('Volver a Intentar ..');
+                        } else if (error.status == 400) {
+                            swal.fire({
+                                title: "Registro Duplicado!",
+                                text: "!Transacción rechazada!",
+                                type: "error",
+                                timer: 2000,
+                                showCancelButton: false,
+                                showConfirmButton: false
                             });
-
-                            $(document).on('click', '#asignar_difunto_nicho', function() {
-                                if ($('#asignar_difunto_nicho').is(":checked")) {
-                                    $('#asignar_difunto_nicho').val('asignado');
-                                    $('.asignar_df').show();
-                                } else {
-                                    $('.asignar_df').hide();
-                                    $('#asignar_difunto_nicho').val('');
-                                }
-                            });
-
-
-
-
-                            function registrarServicioExterno() {
-                                var $button = $('#btn_guardar_servicio');
-                                return $.ajax({
-                                    type: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    },
-                                    url: "{{ route('new.servicio.externo') }}",
-                                    async: false,
-                                    data: JSON.stringify({
-
-                                        'ci_dif': $('#search_dif').val(),
-                                        'nombres_dif': $('#nombres_dif').val(),
-                                        'paterno_dif': $('#paterno_dif').val(),
-                                        'materno_dif': $('#materno_dif').val(),
-                                        'fechanac_dif': $('#fechanac_dif').val(),
-                                        'fecha_def_dif': $('#fechadef_dif').val(),
-                                        'causa': $('#causa').val(),
-                                        'fecha_ingreso_nicho': $('#fecha_ingreso_nicho').val(),
-                                        'tipo_dif': $('#tipo_dif').val(),
-                                        'genero_dif': $('#genero_dif').val(),
-                                        'ci_resp': $('#search_resp').val(),
-                                        'nombres_resp': $('#nombres_resp').val(),
-                                        'paterno_resp': $('#paterno_resp').val(),
-                                        'materno_resp': $('#materno_resp').val(),
-                                        'fechanac_resp': $('#fechanac_resp').val(),
-                                        'telefono': $('#telefono').val(),
-                                        'celular': $('#celular').val(),
-                                        'genero_resp': $('#genero_resp').val(),
-                                        'pag_con': $('#pag_con').val(),
-                                        'tiempo': $('#tiempo').val(),
-                                        'name_pago': $('#name_pago').val(),
-                                        'paterno_pago': $('#paterno_pago').val(),
-                                        'materno_pago': $('#materno_pago').val(),
-                                        'ci_pago': $('#ci_pago').val(),
-                                        'pago_por': $('#pago_tercero').val(),
-                                        'servicios_adquiridos': servicios_adquiridos,
-                                        'monto': $('#totalServ').html(),
-                                        'monto_renov': $('#monto_renov').val(),
-
-                                        'nueva_fecha_ingreso': $('#nueva_fecha_ingreso').val(),
-
-                                        'nro_renovacion': $('#renov').val(),
-                                        'sereci': $('#sereci').val(),
-                                        'gratis': $('#gratis').val(),
-                                        'asignar_difunto_nicho': $('#asignar_difunto_nicho').val(),
-                                        'add_difunto': $('#add_difunto').val(),
-
-                                    }),
-                                    success: function(data_response) {
-                                        swal.fire({
-                                            title: "Guardado!",
-                                            text: "!Registro realizado con éxito!",
-                                            type: "success",
-                                            timer: 2000,
-                                            showCancelButton: false,
-                                            showConfirmButton: false
-                                        });
-                                        setTimeout(function() {
-                                            //    location.reload();
-                                            window.location.href = "/servicios/servicios"
-                                        }, 2000);
-                                        //toastr["success"]("Registro realizado con éxito!");
-                                    },
-                                    error: function(error) {
-
-                                        if (error.status == 422) {
-                                            Object.keys(error.responseJSON.errors).forEach(function(k) {
-                                                toastr["error"](error.responseJSON.errors[k]);
-                                            });
-                                            $button.prop('disabled', false);
-                                            $button.text('Volver a Intentar ..');
-                                        } else if (error.status == 400) {
-                                            swal.fire({
-                                                title: "Registro Duplicado!",
-                                                text: "!Transacción rechazada!",
-                                                type: "error",
-                                                timer: 2000,
-                                                showCancelButton: false,
-                                                showConfirmButton: false
-                                            });
-                                            setTimeout(function() {
-                                                location.reload();
-
-                                            }, 2000);
-                                            $button.prop('disabled', false);
-                                            $button.text('Volver a Intentar ..');
-                                        }
-                                        $button.prop('disabled', false);
-                                        $button.text('Volver a Intentar ..');
-                                    }
-                                })
-                            }
-
-                            var dragSrcElement = null;
-
-                            function addDragHandlers(elem) {
-                                elem.draggable = true;
-
-                                elem.addEventListener('dragstart', handleDragStart, false);
-                                elem.addEventListener('dragover', handleDragOver, false);
-                                elem.addEventListener('drop', handleDrop, false);
-                            }
-
-                            function handleDragStart(event) {
-                                event.dataTransfer.effectAllowed = 'move';
-                                event.dataTransfer.setData('text/html', this.outerHTML);
-                                dragSrcElement = this;
-                            }
-
-                            function handleDragOver(event) {
-                                event.preventDefault();
-                                event.dataTransfer.dropEffect = 'move';
-                            }
-
-                            function handleDrop(event) {
-                                event.preventDefault();
-                                if (dragSrcElement !== this) {
-                                    this.parentNode.removeChild(dragSrcElement);
-                                    this.insertAdjacentElement('beforebegin', dragSrcElement);
-
-                                }
-                            }
-
-                            // select cuartel for search
-                            $(".select_cuartel_nuevo").select2({
-                                width: 'resolve', // need to override the changed default
-                            });
-
-                            // select cuartel for search
-                            $(".cuartel").select2({
-                                width: 'resolve', // need to override the changed default
-                            });
-
-                            $("#bloque_nuevo").select2({
-                                width: 'resolve', // need to override the changed default
-                            });
-
-
-                            $(document).on('change', '.select_cuartel_nuevo', function() {
-                                $('#bloque_nuevo').empty();
-                                var sel_cuartel = $('.select_cuartel_nuevo').val();
-                                $('#bloque_nuevo').prop('disabled', false);
-                                $.ajax({
-                                    type: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    },
-                                    url: "{{ route('bloqueid.get') }}",
-                                    async: false,
-                                    data: JSON.stringify({
-                                        'cuartel': $('#select_cuartel_nuevo').val(),
-                                    }),
-                                    success: function(data_bloque) {
-                                        var op1 = '<option value="" >SELECCIONAR</option>';
-                                        $('#bloque_nuevo').append(op1);
-                                        $.each(data_bloque.response, function(key, value) {
-                                            opt2 = '<option value="' + value.id + '">' + value
-                                                .codigo + '</option>';
-                                            $('#bloque_nuevo').append(opt2);
-                                        });
-                                    }
-                                });
-                            });
-
-
-
-                            function mostrar_lista_difuntos() {
-
-                                $('#seccion_list_difuntos').show();
-                                $.ajax({
-                                    type: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    },
-                                    url: "{{ route('listar.difuntos') }}",
-                                    async: false,
-                                    data: JSON.stringify({
-                                        'nro_nicho': $('#nro_nicho').val(),
-                                        'bloque': $('#bloque').val(),
-                                        'cuartel_id': $('#cuartel option:selected').val(),
-                                        'cuartel': $('#cuartel option:selected').text(),
-                                        'nicho': $('#nro_nicho').val(),
-                                        'fila': $('#fila').val(),
-                                        'tipo_nicho': $('#tipo_nicho').val(),
-                                    }),
-                                    success: function(datos) {
-                                        var tablaBody = $("#list_difuntos tbody");
-                                        // Limpia el contenido actual de la tabla
-                                        tablaBody.empty();
-
-                                        // Recorre el array JSON y agrega una fila por cada objeto
-                                        $.each(datos.response, function(index, item) {
-                                            var fila = "<tr><td>" + item.ci + "</td><td>" + item.nombres +
-                                                " " + item
-                                                .primer_apellido + " " + item.segundo_apellido +
-                                                "</td><td>" + item
-                                                .fecha_defuncion + "</td><td>" + item.fecha_adjudicacion +
-                                                "</td></tr>";
-                                            tablaBody.append(fila);
-                                        });
-                                    }
-                                });
-                            }
-
-                            // $(document).ready(function() {
-                            //     $("#tableServices").sortable({
-                            //         axis: "y", // Allow vertical dragging
-                            //         handle: ".drag-handle", // Use a specific handle for dragging, add the class to the appropriate cell
-                            //         update: function(event, ui) {
-                            //             // This function is called when the user finishes dragging and updates the order
-                            //             // You can perform any necessary actions here, such as updating your data
-                            //         }
-                            //     });
-                            // });
-
-
-                            $(document).on('click', '#calcular_cuotas', function() {
-                                $('.row_cuotas').remove();
-
-                                var porcentaje = 20;
-                                var adicion = 0;
-                                var precio_sinot = $('#precio_renov').val();
-                                var ren_row = "";
-                                var nrocuota = 0;
-                                var nro_cuotas = $('#nro_ren_calc').val();
-                                var cuota_ant = $('#renov_ant').val();
-                                var ncuota = $('#precio_renov_ant').val();
-                                var acum = 0;
-                                var acum_gestion = parseInt($('#gestion_renov_ant').val());
-
-                                for (var i = 1; i <= nro_cuotas; i++) {
-                                    nrocuota = parseInt(cuota_ant) + parseInt(i);
-                                    var gestion_actual = acum_gestion + i;
-
-                                    if (cuota_ant == 0 && i == 1) {
-                                        porcentaje = 0;
-                                        adicion = precio_sinot * porcentaje / 100;
-                                        cuota = parseFloat(precio_sinot) + parseFloat(adicion);
-                                        ncuota = cuota;
-                                    } else {
-                                        porcentaje = 20;
-                                        adicion = ncuota * porcentaje / 100;
-                                        cuota = parseFloat(ncuota) + parseFloat(adicion);
-                                        ncuota = cuota;
-                                    }
-                                    acum = parseFloat(acum) + parseFloat(cuota);
-                                    acum = acum.toFixed(2);
-
-                                    ren_row = '<div class="row pb-2 row_cuotas">' +
-                                        '<div class="col-sm-12 col-md-2 col-xl-2">' +
-                                        '<label for="">Nro de cuota</label>' +
-                                        '<input type="number" name="nro_cuota" id="nro_cuota-' + i + '" value="' +
-                                        nrocuota +
-                                        '" class="form-control nro_cuota" readonly>' +
-                                        '</div>' +
-                                        '<div class="col-sm-12 col-md-2 col-xl-2">' +
-                                        '<label for="">Monto renovacion</label>' +
-                                        '<input type="number" name="amount" id="amount-' + i +
-                                        '" class="form-control amount" value="' +
-                                        cuota + '" readonly>' +
-                                        '</div>' +
-                                        '<div class="col-sm-12 col-md-3 col-xl-3">' +
-                                        '<label for="">Total acumulado</label>' +
-                                        '<input type="number" name="parcial_amount" id="parcial_amount-' + i +
-                                        '" class="form-control parcial_amount" value="' + acum + '" readonly>' +
-                                        '</div>' +
-                                        '<div class="col-sm-12 col-md-3 col-xl-3">' +
-                                        '<label for="">Gestion a pagar </label>' +
-                                        '<input type="number" name="gestion_a_pagar" id="gestion_a_pagar-' + i +
-                                        '" class="form-control gestion_a_pagar" value="' + gestion_actual +
-                                        '" readonly>' +
-                                        '</div>' +
-                                        '<div class="col-sm-12 col-md-2 col-xl-2">' +
-                                        '<label for="">Seleccionar pago</label>' +
-                                        '<input type="checkbox" name="checkbox" id="checkbox_ren-' + i + '" value="' +
-                                        i +
-                                        '" class="form-control checkbox_ren">' +
-                                        '</div>' +
-                                        '</div>';
-
-                                    $('#section_cuotas').append(ren_row);
-                                }
-                            });
-
-                            $(document).on('click', '.checkbox_ren', function() {
-                                var nro = 0;
-                                var acum = 0;
-                                var maxChecked = 0;
-
-                                $(".checkbox_ren").each(function(index) {
-                                    if ($(this).is(":checked")) {
-                                        maxChecked = Math.max(maxChecked, parseInt($(this).val()));
-                                    }
-                                });
-
-                                var allConsecutive = true;
-                                for (var i = 1; i <= maxChecked; i++) {
-                                    if (!$("#checkbox_ren-" + i).is(":checked")) {
-                                        allConsecutive = false;
-                                        break;
-                                    }
-                                }
-
-                                if (!allConsecutive) {
-                                    $(".checkbox_ren").prop('checked', false);
-                                    $('#monto_renov').val(0);
-                                    $('#cant_renov_confirm').val(0);
-                                    $('#pu_15224300').html(0);
-                                    $('#gestion_renov_act').val("");
-
-                                    $('#btn_guardar_servicio').prop('disabled', true);
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error',
-                                        text: 'El pago debe ser consecutivo.'
-                                    });
-                                } else {
-                                    var lastGestionPagar = 0;
-                                    $(".checkbox_ren").each(function(index) {
-                                        if ($(this).is(":checked")) {
-                                            nro = $(this).val();
-                                            acum = $('#parcial_amount-' + nro).val();
-                                            lastGestionPagar = $('#gestion_a_pagar-' + nro).val();
-                                        }
-                                    });
-
-                                    $('#monto_renov').val(acum);
-                                    $('#cant_renov_confirm').val(nro);
-                                    $('#pu_15224300').html(acum);
-                                    $('#btn_guardar_servicio').prop('disabled', false);
-                                    $('#gestion_renov_act').val(lastGestionPagar);
-                                }
-                            });
-
-
-
-
-
-
-
-
-
-
-                            /* function calcRenov()
-                                     {
-                                         $('#monto_renov').val(0);
-                                         var precio_sinot=$('#precio_renov').val(); //precio devuelto por el servicio del sinot
-                                         var precio_ant=$('#precio_renov_ant').val();
-                                         var cuota_ant=$('#precio_renov_ant').val();
-                                       //  var cuota=$('#precio_renov_ant').val();
-                                         var cuota1=$('#precio_renov').val();
-                                         var acum=0;
-                                         var adicion=0;
-                                         var ncuota=$('#precio_renov_ant').val();
-                                         var nro_renov_ant=$('#renov_ant').val();
-                                         var nro_renov_act=$('#renov').val();
-                                         var nro_iteraciones=Math.abs(nro_renov_act-nro_renov_ant);
-                                             $('#nro_renovaciones').val(nro_iteraciones);
-                                             var porcentaje=20;
-
-                                         for(var i=nro_renov_ant ; i<nro_renov_act; i++){
-                                             if(cuota_ant==0 && i==0){
-                                                 porcentaje=0;
-                                                 adicion= precio_sinot*porcentaje/100;
-                                                 cuota=  parseFloat(precio_sinot) + parseFloat(adicion);
-                                                 ncuota=cuota;
-                                             }else{
-                                                porcentaje=20;
-                                                adicion=ncuota*porcentaje/100;
-                                                cuota=  parseFloat(ncuota) + parseFloat(adicion);
-                                                ncuota=cuota;
-                                             }
-                                             acum=parseFloat(acum)+ parseFloat(cuota);
-
-                                             acum=acum.toFixed(2);
-                                         }
-
-                                         $('#monto_renov').val(acum);
-
-                                         $('#pu_15224300').html(acum);
-                                         $('#btn_guardar_servicio').prop('disabled', false);
-
-
-                                     }*/
-
-                            //limpiar responsable
-                            function limpiarResponsable() {
-                                $('.clear').val('');
-                            }
-
-                            $(document).on('blur', '#nro_nicho', function() {
-                                var input = $(this).val();
-                                var formattedInput = input.slice(0, 5).toUpperCase();
-                                $(this).val(formattedInput);
-
-                                if (formattedInput.length !== 5) {
-                                    swal.fire({
-                                        title: "Error",
-                                        text: "Please ingrese 5 digitos.",
-                                        icon: "error",
-                                        button: "OK",
-                                    });
-                                    $(this).val("");
-
-                                }
-                            });
-
-
-
-                            $(document).on('blur', '#bloque', function() {
-                                var input = $(this).val();
-                                var formattedInput = input.slice(0, 3).toUpperCase();
-                                $(this).val(formattedInput);
-
-                                if (formattedInput.length !== 3) {
-                                    swal.fire({
-                                        title: "Error",
-                                        text: "Please ingrese 3 digitos.",
-                                        icon: "error",
-                                        button: "OK",
-                                    });
-                                    $(this).val("");
-
-                                }
-                            });
-
-                            $(document).on('blur', '#nuevo_nicho', function() {
-                                var input = $(this).val();
-                                var formattedInput = input.slice(0, 5).toUpperCase();
-                                $(this).val(formattedInput);
-
-                                if (formattedInput.length !== 5) {
-                                    swal.fire({
-                                        title: "Error",
-                                        text: "Please ingrese 5 digitos.",
-                                        icon: "error",
-                                        button: "OK",
-                                    });
-                                    $(this).val("");
-
-                                }
-                            });
-
-
-                            $(document).on('blur', '#bloque_nuevo', function() {
-                                var input = $(this).val();
-                                var formattedInput = input.slice(0, 3).toUpperCase();
-                                $(this).val(formattedInput);
-
-                                if (formattedInput.length !== 3) {
-                                    swal.fire({
-                                        title: "Error",
-                                        text: "Please ingrese 3 digitos.",
-                                        icon: "error",
-                                        button: "OK",
-                                    });
-                                    $(this).val("");
-
-                                }
-                            });
+                            setTimeout(function() {
+                                location.reload();
+
+                            }, 2000);
+                            $button.prop('disabled', false);
+                            $button.text('Volver a Intentar ..');
+                        }
+                        $button.prop('disabled', false);
+                        $button.text('Volver a Intentar ..');
+                    }
+                })
+            }
+
+            var dragSrcElement = null;
+
+            function addDragHandlers(elem) {
+                elem.draggable = true;
+
+                elem.addEventListener('dragstart', handleDragStart, false);
+                elem.addEventListener('dragover', handleDragOver, false);
+                elem.addEventListener('drop', handleDrop, false);
+            }
+
+            function handleDragStart(event) {
+                event.dataTransfer.effectAllowed = 'move';
+                event.dataTransfer.setData('text/html', this.outerHTML);
+                dragSrcElement = this;
+            }
+
+            function handleDragOver(event) {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = 'move';
+            }
+
+            function handleDrop(event) {
+                event.preventDefault();
+                if (dragSrcElement !== this) {
+                    this.parentNode.removeChild(dragSrcElement);
+                    this.insertAdjacentElement('beforebegin', dragSrcElement);
+
+                }
+            }
+
+            // select cuartel for search
+            $(".select_cuartel_nuevo").select2({
+                width: 'resolve', // need to override the changed default
+            });
+
+            // select cuartel for search
+            $(".cuartel").select2({
+                width: 'resolve', // need to override the changed default
+            });
+
+            $("#bloque_nuevo").select2({
+                width: 'resolve', // need to override the changed default
+            });
+
+
+            $(document).on('change', '.select_cuartel_nuevo', function() {
+                $('#bloque_nuevo').empty();
+                var sel_cuartel = $('.select_cuartel_nuevo').val();
+                $('#bloque_nuevo').prop('disabled', false);
+                $.ajax({
+                    type: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    url: "{{ route('bloqueid.get') }}",
+                    async: false,
+                    data: JSON.stringify({
+                        'cuartel': $('#select_cuartel_nuevo').val(),
+                    }),
+                    success: function(data_bloque) {
+                        var op1 = '<option value="" >SELECCIONAR</option>';
+                        $('#bloque_nuevo').append(op1);
+                        $.each(data_bloque.response, function(key, value) {
+                            opt2 = '<option value="' + value.id + '">' + value
+                                .codigo + '</option>';
+                            $('#bloque_nuevo').append(opt2);
+                        });
+                    }
+                });
+            });
+
+
+
+            function mostrar_lista_difuntos() {
+
+                $('#seccion_list_difuntos').show();
+                $.ajax({
+                    type: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    url: "{{ route('listar.difuntos') }}",
+                    async: false,
+                    data: JSON.stringify({
+                        'nro_nicho': $('#nro_nicho').val(),
+                        'bloque': $('#bloque').val(),
+                        'cuartel_id': $('#cuartel option:selected').val(),
+                        'cuartel': $('#cuartel option:selected').text(),
+                        'nicho': $('#nro_nicho').val(),
+                        'fila': $('#fila').val(),
+                        'tipo_nicho': $('#tipo_nicho').val(),
+                    }),
+                    success: function(datos) {
+                        var tablaBody = $("#list_difuntos tbody");
+                        // Limpia el contenido actual de la tabla
+                        tablaBody.empty();
+
+                        // Recorre el array JSON y agrega una fila por cada objeto
+                        $.each(datos.response, function(index, item) {
+                            var fila = "<tr><td>" + item.ci + "</td><td>" + item.nombres +
+                                " " + item
+                                .primer_apellido + " " + item.segundo_apellido +
+                                "</td><td>" + item
+                                .fecha_defuncion + "</td><td>" + item.fecha_adjudicacion +
+                                "</td></tr>";
+                            tablaBody.append(fila);
+                        });
+                    }
+                });
+            }
+
+            // $(document).ready(function() {
+            //     $("#tableServices").sortable({
+            //         axis: "y", // Allow vertical dragging
+            //         handle: ".drag-handle", // Use a specific handle for dragging, add the class to the appropriate cell
+            //         update: function(event, ui) {
+            //             // This function is called when the user finishes dragging and updates the order
+            //             // You can perform any necessary actions here, such as updating your data
+            //         }
+            //     });
+            // });
+
+
+            $(document).on('click', '#calcular_cuotas', function() {
+                $('.row_cuotas').remove();
+
+                var porcentaje = 20;
+                var adicion = 0;
+                var precio_sinot = $('#precio_renov').val();
+                var ren_row = "";
+                var nrocuota = 0;
+                var nro_cuotas = $('#nro_ren_calc').val();
+                var cuota_ant = $('#renov_ant').val();
+                var ncuota = $('#precio_renov_ant').val();
+                var acum = 0;
+                var acum_gestion = parseInt($('#gestion_renov_ant').val());
+
+                for (var i = 1; i <= nro_cuotas; i++) {
+                    nrocuota = parseInt(cuota_ant) + parseInt(i);
+                    var gestion_actual = acum_gestion + i;
+
+                    if (cuota_ant == 0 && i == 1) {
+                        porcentaje = 0;
+                        adicion = precio_sinot * porcentaje / 100;
+                        cuota = parseFloat(precio_sinot) + parseFloat(adicion);
+                        ncuota = cuota;
+                    } else {
+                        porcentaje = 20;
+                        adicion = ncuota * porcentaje / 100;
+                        cuota = parseFloat(ncuota) + parseFloat(adicion);
+                        ncuota = cuota;
+                    }
+                    acum = parseFloat(acum) + parseFloat(cuota);
+                    acum = acum.toFixed(2);
+
+                    ren_row = '<div class="row pb-2 row_cuotas">' +
+                        '<div class="col-sm-12 col-md-2 col-xl-2">' +
+                        '<label for="">Nro de cuota</label>' +
+                        '<input type="number" name="nro_cuota" id="nro_cuota-' + i + '" value="' +
+                        nrocuota +
+                        '" class="form-control nro_cuota" readonly>' +
+                        '</div>' +
+                        '<div class="col-sm-12 col-md-2 col-xl-2">' +
+                        '<label for="">Monto renovacion</label>' +
+                        '<input type="number" name="amount" id="amount-' + i +
+                        '" class="form-control amount" value="' +
+                        cuota + '" readonly>' +
+                        '</div>' +
+                        '<div class="col-sm-12 col-md-3 col-xl-3">' +
+                        '<label for="">Total acumulado</label>' +
+                        '<input type="number" name="parcial_amount" id="parcial_amount-' + i +
+                        '" class="form-control parcial_amount" value="' + acum + '" readonly>' +
+                        '</div>' +
+                        '<div class="col-sm-12 col-md-3 col-xl-3">' +
+                        '<label for="">Gestion a pagar </label>' +
+                        '<input type="number" name="gestion_a_pagar" id="gestion_a_pagar-' + i +
+                        '" class="form-control gestion_a_pagar" value="' + gestion_actual +
+                        '" readonly>' +
+                        '</div>' +
+                        '<div class="col-sm-12 col-md-2 col-xl-2">' +
+                        '<label for="">Seleccionar pago</label>' +
+                        '<input type="checkbox" name="checkbox" id="checkbox_ren-' + i + '" value="' +
+                        i +
+                        '" class="form-control checkbox_ren">' +
+                        '</div>' +
+                        '</div>';
+
+                    $('#section_cuotas').append(ren_row);
+                }
+            });
+
+            $(document).on('click', '.checkbox_ren', function() {
+                var nro = 0;
+                var acum = 0;
+                var maxChecked = 0;
+
+                $(".checkbox_ren").each(function(index) {
+                    if ($(this).is(":checked")) {
+                        maxChecked = Math.max(maxChecked, parseInt($(this).val()));
+                    }
+                });
+
+                var allConsecutive = true;
+                for (var i = 1; i <= maxChecked; i++) {
+                    if (!$("#checkbox_ren-" + i).is(":checked")) {
+                        allConsecutive = false;
+                        break;
+                    }
+                }
+
+                if (!allConsecutive) {
+                    $(".checkbox_ren").prop('checked', false);
+                    $('#monto_renov').val(0);
+                    $('#cant_renov_confirm').val(0);
+                    $('#pu_15224300').html(0);
+                    $('#gestion_renov_act').val("");
+
+                    $('#btn_guardar_servicio').prop('disabled', true);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'El pago debe ser consecutivo.'
+                    });
+                } else {
+                    var lastGestionPagar = 0;
+                    $(".checkbox_ren").each(function(index) {
+                        if ($(this).is(":checked")) {
+                            nro = $(this).val();
+                            acum = $('#parcial_amount-' + nro).val();
+                            lastGestionPagar = $('#gestion_a_pagar-' + nro).val();
+                        }
+                    });
+
+                    $('#monto_renov').val(acum);
+                    $('#cant_renov_confirm').val(nro);
+                    $('#pu_15224300').html(acum);
+                    $('#btn_guardar_servicio').prop('disabled', false);
+                    $('#gestion_renov_act').val(lastGestionPagar);
+                }
+            });
+
+
+
+
+
+
+
+
+
+
+            /* function calcRenov()
+                     {
+                         $('#monto_renov').val(0);
+                         var precio_sinot=$('#precio_renov').val(); //precio devuelto por el servicio del sinot
+                         var precio_ant=$('#precio_renov_ant').val();
+                         var cuota_ant=$('#precio_renov_ant').val();
+                       //  var cuota=$('#precio_renov_ant').val();
+                         var cuota1=$('#precio_renov').val();
+                         var acum=0;
+                         var adicion=0;
+                         var ncuota=$('#precio_renov_ant').val();
+                         var nro_renov_ant=$('#renov_ant').val();
+                         var nro_renov_act=$('#renov').val();
+                         var nro_iteraciones=Math.abs(nro_renov_act-nro_renov_ant);
+                             $('#nro_renovaciones').val(nro_iteraciones);
+                             var porcentaje=20;
+
+                         for(var i=nro_renov_ant ; i<nro_renov_act; i++){
+                             if(cuota_ant==0 && i==0){
+                                 porcentaje=0;
+                                 adicion= precio_sinot*porcentaje/100;
+                                 cuota=  parseFloat(precio_sinot) + parseFloat(adicion);
+                                 ncuota=cuota;
+                             }else{
+                                porcentaje=20;
+                                adicion=ncuota*porcentaje/100;
+                                cuota=  parseFloat(ncuota) + parseFloat(adicion);
+                                ncuota=cuota;
+                             }
+                             acum=parseFloat(acum)+ parseFloat(cuota);
+
+                             acum=acum.toFixed(2);
+                         }
+
+                         $('#monto_renov').val(acum);
+
+                         $('#pu_15224300').html(acum);
+                         $('#btn_guardar_servicio').prop('disabled', false);
+
+
+                     }*/
+
+            //limpiar responsable
+            function limpiarResponsable() {
+                $('.clear').val('');
+            }
+
+            $(document).on('blur', '#nro_nicho', function() {
+                var input = $(this).val();
+                var formattedInput = input.slice(0, 5).toUpperCase();
+                $(this).val(formattedInput);
+
+                if (formattedInput.length !== 5) {
+                    swal.fire({
+                        title: "Error",
+                        text: "Please ingrese 5 digitos.",
+                        icon: "error",
+                        button: "OK",
+                    });
+                    $(this).val("");
+
+                }
+            });
+
+
+
+            $(document).on('blur', '#bloque', function() {
+                var input = $(this).val();
+                var formattedInput = input.slice(0, 3).toUpperCase();
+                $(this).val(formattedInput);
+
+                if (formattedInput.length !== 3) {
+                    swal.fire({
+                        title: "Error",
+                        text: "Please ingrese 3 digitos.",
+                        icon: "error",
+                        button: "OK",
+                    });
+                    $(this).val("");
+
+                }
+            });
+
+            $(document).on('blur', '#nuevo_nicho', function() {
+                var input = $(this).val();
+                var formattedInput = input.slice(0, 5).toUpperCase();
+                $(this).val(formattedInput);
+
+                if (formattedInput.length !== 5) {
+                    swal.fire({
+                        title: "Error",
+                        text: "Please ingrese 5 digitos.",
+                        icon: "error",
+                        button: "OK",
+                    });
+                    $(this).val("");
+
+                }
+            });
+
+
+            $(document).on('blur', '#bloque_nuevo', function() {
+                var input = $(this).val();
+                var formattedInput = input.slice(0, 3).toUpperCase();
+                $(this).val(formattedInput);
+
+                if (formattedInput.length !== 3) {
+                    swal.fire({
+                        title: "Error",
+                        text: "Please ingrese 3 digitos.",
+                        icon: "error",
+                        button: "OK",
+                    });
+                    $(this).val("");
+
+                }
+            });
         </script>
 
     @stop
-
-
-
