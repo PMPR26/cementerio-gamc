@@ -736,7 +736,7 @@ class ServiciosController extends Controller
                 $serv->tipo = "NICHO";
                 $serv->fur = $fur;
                 // if($pago_renovaciones == "SI"){
-                    $serv->nro_renovacion = $request->nro_renovacion??'';
+                    $serv->nro_renovacion = $request->nro_renovacion??'0';
                 // }
                 $serv->monto_renovacion = $request->monto_renov ?? '0';
                 $serv->monto = $request->monto;
