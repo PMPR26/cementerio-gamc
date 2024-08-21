@@ -40,11 +40,11 @@
                             <input type="checkbox" name="gratis" id="gratis"  style="width: 30px; height:30px"  >
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
 
-        <div class="col-12 interno" >   
+        <div class="col-12 interno" >
             {{-- datos busqueda --}}
 
             <div class="card">
@@ -83,7 +83,7 @@
                 </div>
             </div>
 
-           
+
                 <div class="card">
                     <div class="row">
                         <div class="col-sm-12 col-md-3 col-xl-3">
@@ -190,8 +190,8 @@
                                 onkeyup="javascript:this.value=this.value.toUpperCase();"
                                 class="form-control select2-multiple select2-hidden-accessible">
                                 <option value="">SELECIONAR CAUSA FALLECIMIENTO</option>
-                                @foreach ($causa as $causa)                                  
-                                        <option value="{{ $causa->causa }}">{{$causa->causa }}</option>                                   
+                                @foreach ($causa as $causa)
+                                        <option value="{{ $causa->causa }}">{{$causa->causa }}</option>
                                 @endforeach
                             </select>
                             </div>
@@ -232,8 +232,8 @@
                                 onkeyup="javascript:this.value=this.value.toUpperCase();"
                                 class="form-control select2-multiple select2-hidden-accessible">
                                 <option value="">SELECIONAR FUNERARIA</option>
-                                @foreach ($funeraria as $fun)                                  
-                                        <option value="{{ $fun->funeraria }}">{{$fun->funeraria }}</option>                                   
+                                @foreach ($funeraria as $fun)
+                                        <option value="{{ $fun->funeraria }}">{{$fun->funeraria }}</option>
                                 @endforeach
                             </select>
                             </div>
@@ -252,9 +252,9 @@
                                 <div id="cert-defuncion" class="dropzone" style="text-align: center">
                             </div>
                             <hr>
-    
+
                             <input type="hidden" id="url-certification">
-                           
+
                         </div>
                     </div>
                 </div>
@@ -373,14 +373,14 @@
                                     onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
                                     class="form-control" id="domicilio" autocomplete="off">
                             </div>
-                           
+
                         </div>
                     </div>
                 </div>
 
                 <input type="hidden" name="origen" id="origen">
                 <input type="hidden" name="pag_con" id="pag_con" value="">
-               
+
                 <input type="hidden" name="vencido" id="vencido">
                 <input type="hidden" name="aniosdeuda" id="aniosdeuda">
                 <input type="hidden" name="cant_cuerpos" id="cant_cuerpos" value="0">
@@ -488,7 +488,7 @@
                     </div>
 
                     <div class="card-body">
-                    
+
                         <div class="form-row " id="ren" style="display: none">
                             <div class="col-sm-12 col-md-12 col-xl-12">
                                 <h2>Calcular monto renovacion de enterratorio</h2>
@@ -591,7 +591,7 @@
 
                     </div>
 
-            
+
 
                     <div class="col-sm-12" style="text-align: center" id="print">
                         <button type="button" id="btn_guardar_pago" class="btn btn-success">Registrar servicio</button>
@@ -603,7 +603,7 @@
         </div>
     @stop
     @section('css')
-   
+
         <style>
              .dropzone .dz-preview .dz-error-message {
                   top: 150px!important;
@@ -617,7 +617,7 @@
             }
 
         </style>
-  
+
 
 @stop
 
@@ -671,16 +671,16 @@
                 sending: function(file, xhr, formData){
                             formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
                             formData.append('collector', 'certificados de difuncion');
-                        
+
                         },
                 success: function (file, response) {
                     file.previewElement.classList.add("dz-success");
                     $('#url-certification').val(response.response[0].url_file);
                     // $(file._removeLink).attr('href', response.response[0].url_file);
-                    // $(file._removeLink).attr('id', 'btn-remove-file'); 
+                    // $(file._removeLink).attr('id', 'btn-remove-file');
                 },
                 error: function (file, response) {
-                
+
                     if(response == 'You can not upload any more files.'){
                         toastr["error"]('No se puede subir mas archivos');
                         this.removeFile(file);
@@ -729,19 +729,19 @@
 
                // quitar exhumacion de la lista de servicios
                     $("#tipo_servicio_value option[value='15224330']").remove();
-              
+
 
 
                 //select event foreach
                 $('#tipo_servicio_value').on('select2:select', function (e) {
                         var data_request = $(this).val();
-                    
+
                         $('#service').show(1000);
                         $parrafos = '';
                         $('#servicios-data').empty();
                         $.each($(this).select2('data'), function( index, value ) {
-                            
-                            
+
+
                             $parrafos = '<p id="'+value.id+'">' + $parrafos + (index + 1) + '.- '+ value.text+'</p>';
                             $('#servicios-data').html($parrafos);
                 });
@@ -765,7 +765,7 @@
                                 if (value.num_sec == '630' || value.num_sec == '628' ||
                                     value.num_sec == '526' || value.num_sec == '1995' ||
                                     value.num_sec == '525') {} else {
-                                  
+
                                     $('#servicio-hijos').append('<option value="' + value
                                         .num_sec + '">' + value.cuenta + ' - ' + value
                                         .descripcion + ' - ' + value.monto1 +
@@ -825,7 +825,7 @@
                     $('#servicios-hijos').empty();
                     $('#servicios-hijos-price').empty();
                     $.each($(this).select2('data'), function(index, value) {
-                      
+
                         $parrafos = '<p id="' + value.id + '">' + $parrafos + (index + 1) + ' - ' +
                             value.text + '</p>';
                         $('#servicios-hijos').html($parrafos);
@@ -833,13 +833,13 @@
                             {
                                  $('#ren').show();
                                  buscarUltimaRenovacion();
-                         
+
                             }else{
                                 var v = (value.text).split('-');
                                 var costo = '<input type="hidden" name="costo" value="' + v[v.length - 2] +
                                     '" class="costo" id="txt-' + value.id + '" />';
                                 $('#servicios-hijos-price').append(costo);
-                               
+
                             }
                             // calcularPrice();
                             consolidado();
@@ -865,7 +865,7 @@
                             $parrafos = '<p id="' + value.id + '">' + $parrafos + (index + 1) + ' - ' +
                             value.text + '</p>';
                         $('#servicios-hijos').html($parrafos);
-                        var v = (value.text).split('-'); 
+                        var v = (value.text).split('-');
                         console.log(v);
                         if(v[0]=='15224401 '){ existe=1;
                         }
@@ -879,17 +879,17 @@
                             // calcularPrice();
                             consolidado();
                             $('#ren').hide();
-                           
+
                         }
                     });
                     if(existe==1){
-                       
+
                             $('#ren').show();
                             //  Renov();
                             buscarUltimaRenovacion();
                             //   calcularPrice();
                             consolidado();
-                       
+
                     }else{
                         $('#ren').hide();
                         $('#cuenta_renov').val("0");
@@ -901,7 +901,7 @@
                     }
 
 
-                   
+
                 });
 
 
@@ -931,11 +931,11 @@
                     $('.clean').html("");
                     $('#pag_con').val();
                     $('#sp').append('<i class="fa fa-spinner fa-spin"></i>');
-                  
+
                     var bloque = $('#bloque').val();
                     var nicho = $('#nro_nicho').val();
                     var fila = $('#fila').val();
-                  
+
 
                     cuartel = buscarCuartel(bloque, nicho, fila);
 
@@ -968,7 +968,7 @@
                         }),
                         success: function(data) {
 
-                            if (data.mensaje) 
+                            if (data.mensaje)
                             {
                                 $('#sp').empty();
                                 $('#origen').val('tabla_nueva');
@@ -1023,7 +1023,7 @@
                                                     } else if (data.response.tiempo == 5) {
                                                         $('#tipo_dif').val('ADULTO')
                                                     }
-                            } else 
+                            } else
                             {
                                 $.ajax({
                                     headers: {
@@ -1031,7 +1031,7 @@
                                             'content'),
                                         'Content-Type': 'application/json'
                                     },
-                                    url: "https://multiservdev.cochabamba.bo/api/v1/cementerio/get-data",
+                                    url: "{{ env('URL_MULTISERVICE') }}/api/v1/cementerio/get-data",
                                     method: 'POST',
                                     dataType: 'json',
                                     data: JSON.stringify({
@@ -1039,7 +1039,7 @@
                                         "nicho": nicho,
                                         "fila": fila
                                     }),
-                                    success: function(data) 
+                                    success: function(data)
                                     {
                                                 $('#sp').empty();
                                                 $('#form').show();
@@ -1053,9 +1053,9 @@
                                                     $('#anterior').val(data.codigo_ni);
                                                 }
 
-                                        if (data.response.datos_difuntos != "") 
+                                        if (data.response.datos_difuntos != "")
                                             {
-                                                        // datos difunto       
+                                                        // datos difunto
                                                         var pg = data.response.datos_difuntos[0]
                                                             .pag_con;
 
@@ -1068,7 +1068,7 @@
 
 
 
-                                                            if (data.response.datos_difuntos != "") 
+                                                            if (data.response.datos_difuntos != "")
                                                             {
                                                                         var fecha = data.response.datos_difuntos[0]
                                                                             .fecha;
@@ -1100,14 +1100,14 @@
                                                                                         {
 
                                                                                                     if (!$.isNumeric(t)) {
-                                                                                                        t = 30;  
+                                                                                                        t = 30;
                                                                                                         Swal.fire(
                                                                                                             'Se autocompletará el tiempo de permanencia del difunto como 30 años, debido a la ausencia de la información!',
                                                                                                             'Si no fuera correcto el dato por favor completar de manera manual',
                                                                                                             'warning'
-                                                                                                        )  ;                                              
+                                                                                                        )  ;
                                                                                                     } else if(t=="") {
-                                                                                                    
+
                                                                                                         seTime();
                                                                                                     }
                                                                                                     if (t == 2) {
@@ -1173,11 +1173,11 @@
                                                         }
 
                                             }
-                                          
+
 
                                         } else {
                                             $('#sp').empty();
-                                          
+
                                             // Swal.fire(
                                             //     'Busqueda finalizada!',
                                             //     'El registro no ha  sido encontrado o no existe .',
@@ -1186,9 +1186,9 @@
 
                                             $('.clear').val("");
                                             $('#form').hide();
-                                           
+
                                         }
-                                       
+
                                     },
                                      error: function(error) {
                                         Swal.fire(
@@ -1198,10 +1198,10 @@
                                                 )
                                         }
                                 });
-                              
+
 
                             }
-                           
+
                         },
                         error: function(error) {
                             Swal.fire(
@@ -1227,7 +1227,7 @@
                     plazo = parseInt(año) + parseInt(tiempo);
                     var fecha = new Date();
                     var year = fecha.getFullYear();
-                    var adeuda = year - plazo; 
+                    var adeuda = year - plazo;
                     $('#aniosdeuda').val(adeuda);
 
                     if (plazo < year) {
@@ -1330,7 +1330,7 @@
                     //         cpago.push($(this).val());
                     //     }
                     // });
-                   
+
 
                     return $.ajax({
                         type: 'POST',
@@ -1394,11 +1394,11 @@
                             'totalservicios': $('#totalservicios').val(),
                             'reg': $('#reg').val(),
                             'nrofur': $('#nrofur').val(),
-                            'txttotal':$('#totalservicios').val(), 
-                            'gratis':$('#gratis').val(), 
-                            'externo':$('#externo').val(), 
-                            'funeraria':$('#funeraria').val(), 
-                            'urlcertificacion':$('#url-certificacion').val(), 
+                            'txttotal':$('#totalservicios').val(),
+                            'gratis':$('#gratis').val(),
+                            'externo':$('#externo').val(),
+                            'funeraria':$('#funeraria').val(),
+                            'urlcertificacion':$('#url-certificacion').val(),
                             'cant':$('#cant_cuerpos').val()
                         }),
                         success: function(data_response) { //alert(data_response['status']);
@@ -1415,7 +1415,7 @@
                             }
                             else{
 
-                         
+
                             swal.fire({
                                 title: "Guardado!",
                                 text: "!Registro realizado con éxito!",
@@ -1781,13 +1781,13 @@
                 });
             });
 
-      
+
             $(document).on('keyup', '#renov_ant', function() {
               $('#totalServ').html(0);
               $('#totalservicios').val(0);
              $('#monto_renov').val(0);
 
-              
+
                buscarUltimaRenovacion();
             //    calcularPrice();
                 consolidado();
@@ -1820,7 +1820,7 @@
                 }
 
                 $('#monto_renov').val(acum);
-               
+
                 consolidado();
 
             }
@@ -1831,7 +1831,7 @@
                 var acum = 0;
 
                 console.log("monto renov" + $('#monto_renov').val());
-              
+
                 console.log($('#totalservicios').val());
                 if ($('#monto_renov').val() != 0 || $('#monto_renov').val() != null ) {
 
@@ -1871,7 +1871,7 @@
                                 "fila":$('#fila').val()
                         }),
                         success: function(data) {
-                           
+
                             if(data.status==true){
                                 $('#renov_ant').val(data.data.nro_renovacion);
                                  $('#precio_renov_ant').val(data.data.monto_renovacion);
@@ -1879,16 +1879,16 @@
                                  $('#renov').val(rn);
                             }
                            else {
-                                var renov_ant = $('#renov_ant').val();                       
-                                    if (renov_ant == 0) {                                         
+                                var renov_ant = $('#renov_ant').val();
+                                    if (renov_ant == 0) {
                                         var precio = $('#precio_renov').val();
                                         $('#precio_renov_ant').val(precio);
                                         anios_ren = $('#aniosdeuda').val();
-                                        if (anios_ren <= 0 && anios_ren =="" ) {  
+                                        if (anios_ren <= 0 && anios_ren =="" ) {
                                             $('#renov').val(1);
                                         }
                                         // else if(anios_ren!=""){
-                                        //     $('#renov').val(anios_ren);  
+                                        //     $('#renov').val(anios_ren);
                                         // }
                                      }
                                 }
@@ -1900,7 +1900,7 @@
 
             }
 
-            $(document).on('click', '#externo', function() { 
+            $(document).on('click', '#externo', function() {
                 if ($(this).is(':checked')) {
                     $('#externo').val('externo');
                     $('.externo').prop('disabled', false);
@@ -1915,7 +1915,7 @@
                 }
             });
 
-            $(document).on('click', '#gratis', function() { 
+            $(document).on('click', '#gratis', function() {
                 if ($(this).is(':checked')) {
                     $('#gratis').val('gratis');
                     $('#totalServ').html(0);
@@ -1925,8 +1925,8 @@
                     consolidado();
                 }
             });
-           
-            
+
+
              //causa
              $("#causa").select2({
                 tags: true,
@@ -1935,10 +1935,10 @@
                 });
 
             $(document).on('click' ,  'button[aria-describedby="select2-causa-container"] span', function(){
-                   $('#causa option:selected').remove(); 
+                   $('#causa option:selected').remove();
             })
 
-           
+
 
 
             //funeraria
@@ -1948,9 +1948,9 @@
 
                 });
             $(document).on('click' ,  'button[aria-describedby="select2-funeraria-container"] span', function(){
-                   $('#funeraria option:selected').remove(); 
+                   $('#funeraria option:selected').remove();
             })
-           
+
             function seTime(){
                 if($('#tipo_nicho option:selected').val()=="TEMPORAL"){
                       if($('#tipo_dif  option:selected').val()=='ADULTO' ){
@@ -1989,8 +1989,8 @@
                                         "nicho": $('#nro_nicho').val(),
                                         "fila": $('#fila').val()
                                     }),
-                                    success: function(data) 
-                                    {     
+                                    success: function(data)
+                                    {
                                        console.log(data);
                                           // data difunto
                                             if(data.response!=null)
@@ -2016,10 +2016,10 @@
                                                 $('#celular').val(data['response'].celular);
                                                 $('#genero_resp').val(data['response'].genero_resp);
                                                 $('#domicilio').val(data['response'].domicilio);
-                                            } 
-                                           
-                                    }  
-                                                   
+                                            }
+
+                                    }
+
                      });
                    return false;
             }

@@ -230,14 +230,14 @@ class Nicho extends Model
 
 
 
-    // public function restaurarRenov($id_nicho, $renov_ant,  $monto_renov_anterior, $gestion_renov_anterior){
-    //     $nicho=Nicho::where('id',$id_nicho)->first();
-    //     $nicho->renovacion= $renov_ant;
-    //     $nicho->monto_renov= $monto_renov_anterior;
-    //     $nicho->gestion_renovacion= $gestion_renov_anterior;
-    //     $nicho->save();
+    public function restaurarRenov($id_nicho, $renov_ant,  $monto_renov_anterior, $gestion_renov_anterior){
+        $nicho=Nicho::where('id',$id_nicho)->first();
+        $nicho->renovacion= $renov_ant;
+        $nicho->monto_renov= $monto_renov_anterior;
+        $nicho->gestion_renovacion= $gestion_renov_anterior;
+        $nicho->save();
 
-    // }
+    }
     public function InsertNichoPartial( $id_cuartel,  $id_bloque,  $nro_nicho, $fila, $tipo_nicho,$estado_nicho, $cant, $cant_ant, $anterior){
           // insertar nicho
           $cuartel=Cuartel::where('id', $id_cuartel)->first();

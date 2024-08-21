@@ -735,7 +735,9 @@ class ServiciosController extends Controller
                 $serv->id_usuario_caja = auth()->id();
                 $serv->tipo = "NICHO";
                 $serv->fur = $fur;
-                $serv->nro_renovacion = $request->nro_renovacion ?? '0';
+                // if($pago_renovaciones == "SI"){
+                    $serv->nro_renovacion = $request->nro_renovacion??'0';
+                // }
                 $serv->monto_renovacion = $request->monto_renov ?? '0';
                 $serv->monto = $request->monto;
                 $serv->nombrepago = $nombre_pago;
@@ -1589,7 +1591,7 @@ class ServiciosController extends Controller
     /**** anular servicio para externos ****/
     public function anularFurExterno(Request $request)
     {
-        // todo: terminar modulo
+
         $sn = new ServicioNicho;
         $serv = $sn->anularServicioExterno($request);
         return $serv;
@@ -1612,7 +1614,6 @@ class ServiciosController extends Controller
         $codigo_nicho = $request->cuartel . "." . $request->bloque . "." . $request->nicho . "." . $request->fila;
         $rf = new ResponsableDifunto;
         $difuntos =  $rf->lista_difuntos_perpetuo($codigo_nicho);
-
         return $difuntos;
     }
 

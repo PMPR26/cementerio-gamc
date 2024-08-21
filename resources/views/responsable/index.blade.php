@@ -12,7 +12,7 @@
 
 @section('content')
 
-  
+
          <div class="card">
      <div class="card-body">
      <button id="new-responsable" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Responsable</button>
@@ -22,14 +22,14 @@
     <table id="responsable-data" class="table table-striped table-bordered responsive" role="grid"
     aria-describedby="example">
     <thead class="bg-table-header">
-       
+
             <tr role="row">
-                <th scope="col">#</th>                           
+                <th scope="col">#</th>
                 <th scope="col">Cedula de identidad</th>
                 <th scope="col">Nombre</th>
-                <th scope="col">Telefono</th>  
+                <th scope="col">Telefono</th>
                 <th scope="col">Celular</th>
-                <th scope="col">Dirección</th>       
+                {{-- <th scope="col">Dirección</th> --}}
                 <th scope="col">Opciones</th>
             </tr>
         </thead>
@@ -37,16 +37,16 @@
         <tbody>
             @php($count = 1)
             @foreach ($responsable as $responsable)
-                       
+
                 <tr>
                     <td scope="row">{{ $count++ }}</td>
-                   
-                    <td>{{ $responsable->ci }}</td>                           
+
+                    <td>{{ $responsable->ci }}</td>
                     <td>{{ $responsable->nombre }}</td>
                     <td>{{ $responsable->telefono }}</td>
                     <td>{{ $responsable->celular }}</td>
-                    <td>{{ $responsable->domicilio }}</td>
-                   
+                    {{-- <td>{{ $responsable->domicilio }}</td> --}}
+
                     <td>
                         <button type="button" class="btn btn-info" value="{{ $responsable->id }}" id="btn-editar" title="Editar responsable"><i class="fas fa-edit"></i></button>
                         @if($responsable->estado =='ACTIVO')
@@ -64,8 +64,8 @@
         'id_button' => 'btn_guardar_responsable',
         'title_buton' => 'Guardar Responsable',
         'title_modal' => 'Nuevo Responsable'
-        ]) 
-    
+        ])
+
 
     <!-- Modal -->
 <div class="modal fade  animated bounceIn" id="edit-responsable" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -138,17 +138,17 @@
                 </div>
 
                 <div class="col-sm-6">
-                 
+
                     <div class="form-group">
                         <label>Genero :</label>
                         <select name="status" id="genero-responsable" class="form-control">
-    
+
                             <option value="MASCULINO"> Masculino</option>
                             <option value="FEMENINO"> Femenino</option>
 
                         </select>
-                       
-                    </div> 
+
+                    </div>
                 </div>
 
                 <div class="col-sm-6">
@@ -165,35 +165,35 @@
                     </div>
                 </div>
 
-                <div class="col-sm-6">
-                 
+                {{-- <div class="col-sm-6">
+
                     <div class="form-group">
                         <label>Estado civil:</label>
                         <select name="status" id="estado_civil-responsable" class="form-control">
-    
+
                             <option value="SOLTERO"> Soltero/a</option>
                             <option value="CASADO"> Casado/a</option>
                             <option value="DIVORCIADO"> Divociado/a</option>
                             <option value="VIUDO"> Viudo/a</option>
 
                         </select>
-                       
-                    </div> 
-                </div>
 
-                <div class="col-sm-6">
+                    </div>
+                </div> --}}
+
+                {{-- <div class="col-sm-6">
                     <div class="form-group">
                         <label>Email :</label>
                         <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="email-responsable" autocomplete="off">
                     </div>
-                </div>
+                </div> --}}
 
-                <div class="col-sm-6">
+                {{-- <div class="col-sm-6">
                     <div class="form-group">
                         <label>Domicilio :</label>
                         <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="domicilio-responsable" autocomplete="off">
                     </div>
-                </div>
+                </div> --}}
             </div>
           </div>
         </div>
@@ -215,7 +215,7 @@
     .modal .modal-dialog {
     width: 100%;
     max-width: none;
-    
+
     margin: 0;
     }
     .modal .modal-content {
@@ -230,8 +230,8 @@
 @stop
 
 @section('js')
-    <script> 
-    
+    <script>
+
     $(document).ready(function () {
 
 
@@ -243,20 +243,20 @@
                             'Content-Type':'application/json',
                             'X-CSRF-TOKEN':'{{ csrf_token() }}',
                         },
-                        url: "{{ route('responsable.update') }}",
+                        url: "{{ route('responsable.update.single') }}",
                         async: false,
                         data: JSON.stringify({
-                            'ci':  $('#ci-responsable').val(),
-                            'nombres':  $('#nombre-responsable').val(),
-                            'primer_apellido':  $('#primer_apellido-responsable').val(),
-                            'segundo_apellido':  $('#segundo_apellido-responsable').val(),
-                            'fecha_nacimiento':  $('#fecha_nacimiento-responsable').val(),
-                            'genero':  $('#genero-responsable').val(),
+                            'ci_resp':  $('#ci-responsable').val(),
+                            'nombres_resp':  $('#nombre-responsable').val(),
+                            'paterno_resp':  $('#primer_apellido-responsable').val(),
+                            'materno_resp':  $('#segundo_apellido-responsable').val(),
+                            // 'fecha_nacimiento':  $('#fecha_nacimiento-responsable').val(),
+                            'genero_resp':  $('#genero-responsable').val(),
                             'telefono':  $('#telefono-responsable').val(),
                             'celular':  $('#celular-responsable').val(),
-                            'estado_civil':  $('#estado_civil-responsable').val(),
-                            'email': $('#email-responsable').val(),
-                            'domicilio': $('#domicilio-responsable').val(),
+                            // 'estado_civil':  $('#estado_civil-responsable').val(),
+                            // 'email': $('#email-responsable').val(),
+                            // 'domicilio': $('#domicilio-responsable').val(),
                             'id': $('#btn-editar-va').val()
                         }),
                         success: function(data_response) {
@@ -268,13 +268,13 @@
                             showCancelButton: false,
                             showConfirmButton: false
                             });
-                            setTimeout(function() { 
+                            setTimeout(function() {
                                 location.reload();
                             }, 2000);
                             //toastr["success"]("Registro realizado con éxito!");
                         },
                         error: function (error) {
-                            
+
                             if(error.status == 422){
                                 Object.keys(error.responseJSON.errors).forEach(function(k){
                                 toastr["error"](error.responseJSON.errors[k]);
@@ -311,13 +311,13 @@
                             showCancelButton: false,
                             showConfirmButton: false
                             });
-                            setTimeout(function() { 
+                            setTimeout(function() {
                                 location.reload();
                             }, 2000);
                             //toastr["success"]("Registro realizado con éxito!");
                         },
                         error: function (error) {
-                            
+
                             if(error.status == 422){
                                 Object.keys(error.responseJSON.errors).forEach(function(k){
                                 toastr["error"](error.responseJSON.errors[k]);
@@ -333,9 +333,9 @@
 
 
         $(document).on('click', '#btn-editar', function(){
-      
+
             $('#btn-editar-va').val($(this).val());
-     
+
             $.ajax({
                         type: 'GET',
                         headers: {
@@ -345,7 +345,7 @@
                         url: '/responsable/get-responsable/' + $(this).val(),
                         async: false,
                         success: function(data_response) {
-                           
+
                             $('#edit-responsable').modal('show');
                             $('#nombre-responsable').val(data_response.response.nombres);
                             $('#ci-responsable').val(data_response.response.ci);
@@ -355,9 +355,9 @@
                             $('#genero-responsable').val(data_response.response.genero);
                             $('#telefono-responsable').val(data_response.response.telefono);
                             $('#celular-responsable').val(data_response.response.celular);
-                            $('#estado_civil-responsable').val(data_response.response.estado_civil);
-                            $('#email-responsable').val(data_response.response.email);
-                            $('#domicilio-responsable').val(data_response.response.domicilio);
+                            // $('#estado_civil-responsable').val(data_response.response.estado_civil);
+                            // $('#email-responsable').val(data_response.response.email);
+                            // $('#domicilio-responsable').val(data_response.response.domicilio);
 
                             $('#estado option[value="'+data_response.response.estado+'"]').attr("selected", "selected");
                         }
@@ -380,17 +380,17 @@
                         url: "{{ route('new.responsable') }}",
                         async: false,
                         data: JSON.stringify({
-                            'ci':  $('#ci').val(),
-                            'nombres':  $('#nombre').val(),
-                            'primer_apellido':  $('#primer_apellido').val(),
-                            'segundo_apellido':  $('#segundo_apellido').val(),
-                            'fecha_nacimiento':  $('#fecha_nacimiento').val(),
-                            'genero':  $('#genero').val(),
+                            'ci_resp':  $('#ci').val(),
+                            'nombres_resp':  $('#nombre').val(),
+                            'paterno_resp':  $('#primer_apellido').val(),
+                            'materno_resp':  $('#segundo_apellido').val(),
+                            // 'fecha_nacimiento':  $('#fecha_nacimiento').val(),
+                            'genero_resp':  $('#genero').val(),
                             'telefono':  $('#telefono').val(),
                             'celular':  $('#celular').val(),
-                            'estado_civil':  $('#estado_civil').val(),
-                            'email': $('#email').val(),
-                            'domicilio': $('#domicilio').val(),
+                            // 'estado_civil':  $('#estado_civil').val(),
+                            // 'email': $('#email').val(),
+                            // 'domicilio': $('#domicilio').val(),
                         }),
                         success: function(data_response) {
                             swal.fire({
@@ -401,13 +401,13 @@
                             showCancelButton: false,
                             showConfirmButton: false
                             });
-                            setTimeout(function() { 
+                            setTimeout(function() {
                                 location.reload();
                             }, 2000);
                             //toastr["success"]("Registro realizado con éxito!");
                         },
                         error: function (error) {
-                            
+
                             if(error.status == 422){
                                 Object.keys(error.responseJSON.errors).forEach(function(k){
                                 toastr["error"](error.responseJSON.errors[k]);
@@ -463,7 +463,7 @@
         },
     });
 
-       
+
     });
 
     </script>

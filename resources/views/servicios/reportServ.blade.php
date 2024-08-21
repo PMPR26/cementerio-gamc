@@ -90,6 +90,9 @@
             padding: 5px;
 
         }
+        .text-right{
+    text-align: right !important;
+}
 
     </style>
 </head>
@@ -104,7 +107,7 @@
                 </td>
                 <td width="30%" class="txthead">
                     <span class="txthead">GOBIERNO AUTONOMO MUNICIPAL DE COCHABAMBA <br>
-                        DIVISION DE INGRESOS NO TRIBUTARIOS<br>
+                        DIRECCION DE INGRESOS NO TRIBUTARIOS<br>
                         DIVISION DE CEMENTERIO</span>
 
                 </td>
@@ -129,11 +132,11 @@
     <!-- Envuelva el contenido de su PDF dentro de una etiqueta principal -->
     <main>
         <pre>
-               {{-- @php(print_r($codigo_nicho)) 
+               {{-- @php(print_r($codigo_nicho))
                @php(die()) --}}
         </pre>
 
-       
+
 
                 <table width="100%">
                     <tr>
@@ -147,61 +150,132 @@
 
                     </tr>
                 </table>
-                <table>
+                <table width="100%">
                     <tr>
                         <td colspan="2"> <span class="rotulo"> IDENTIFICACION DEL CONTRIBUYENTE</span></td>
-                        <td></td>
+
                     </tr>
                     <tr>
-                        <td width="80%" colspan="2">Nombre: {{ucwords($table->nombre ?? '' )}}  </td>
-                        <td width="20%">C.I.:{{ $table->ci ??'' }} </td>
+                        <td width="80%" colspan="2">Nombre Adjudicatario: {{ucwords($resp ?? '' )}}  </td><td width="20%"  class="text-right"> C.I.:{{ $ci_resp ??'' }}   </td>
+
                     </tr>
+                        @if($pago_por=="Tercera persona")
+                        <tr>
+                            <td width="100%" colspan="2">Pagado por: {{ucwords($table->nombre ?? '' )}}  </td><td class="text-right"> C.I.:{{ $table->ci ??'' }}   </td>
+                        </tr>
+                        @endif
                     <tr>
                         @if($table->fur==0)
-                        <td width="60%" colspan="2"><b>SERVICO GRATUITO</b></td>
+                        <td width="50%" colspan="2"><b>SERVICO GRATUITO</b></td>
                         @endif
-                        <td width="20%">Actividad: Preliquidación</td>
                     </tr>
                     <tr>
-                        <td><b>Codigo Nicho:  {{ $codigo_nicho }}</b></td>
+                        <td width="50%">Actividad: Preliquidación</td>
+                    </tr>
+
+
+                    @if(($codigo_nicho!=0 || $codigo_nicho!="")&&( $table->fur !=0) )
+                    @php($obs="")
+                    <tr>
+                        <td width="5%"><b>Codigo Nicho:  </b></td>
+                    </tr>
+                    <tr>
+                        <td width="95%"><b>{{ $codigo_nicho }}</b></td>
+                    </tr>
+                    @elseif(($codigo_nicho!=0 || $codigo_nicho!="")&&( $table->fur ==0) )
+                    <tr>
+                        <td width="5%"><b>Codigo Nicho:  </b></td>
+                    </tr>
+                    <tr>
+                        <td width="95%"><b>{{ $codigo_nicho }}</b></td>
+                    </tr>
+                    @php($obs=$observacion)
+                    @elseif(($codigo_nicho==0 || $codigo_nicho!="")&&( $table->fur ==0) )
+                    @php($obs=$observacion)
+
+                    @endif
+
+
+                </table>
+                @if(($codigo_nicho==0 || $codigo_nicho!="")&&( $table->fur ==0) )
+
+                <table width="100%">
+                    <tr>
+                        <td colspan="4" width="380px">
+                            <h4 align="left">DETALLE LIQUIDACION</h4>
+                        </td>
+                    </tr>
+
+
+                    <tr class="thead">
+
+                        <td width="10%" align="left">CUENTA</td>
+                        <td width="15%" align="right">CANTIDAD</td>
+                        <td width="60%" align="center">DETALLE</td>
+                        <td width="15%" align="right">MONTO</td>
+                    </tr>
+                    @php($count = 1)
+                    @php($acum=0)
+                    @foreach ($table->cobrosDetalles as $cobros)
+
+                        <tr>
+                            <td width="10%">{{ $cobros->cuenta  }}</td>
+                            <td width="15%" align="center"> 1 </td>
+                            <td width="60%" align="justify">{{ $cobros->detalle }} {{$dif}} {{  $cobros->obs_gratis}}</td>
+                            <td width="15%" align="center">{{number_format(floatval($cobros->monto * 1), 2, ',', '.')  }}</td>
+                        </tr>
+                            @php($acum=$acum+$cobros->monto)
+                    @endforeach
+                    <tr class="odd">
+                        <td width="90%" align="left" colspan="3">Total </td>
+                        <td width="10%" align="right">{{ isset($acum) ? number_format($acum, 2) : '' }}
+                    </tr>
+                    <tr>
+                        <td width='100%' colspan="5" height="80px">
+                            <?php $subt1 = round($acum, 3);
+                            $subtLit = number_format(floatval($subt1), 2, ',', '.');
+                            $lit = convertir($subtLit);
+                            $txt = 'SON: BOLIVIANOS  ' . $lit . ' ';
+                            ?>
+                            <b> {{ $txt }} </b>
+                        </td>
                     </tr>
 
                 </table>
-         
-                    <table>
+                @else
+
+                    <table width="100%">
                         <tr>
                             <td colspan="4" width="380px">
                                 <h4 align="left">DETALLE LIQUIDACION</h4>
                             </td>
                         </tr>
-                    
+
 
                         <tr class="thead">
-                            <td width="10%" align="left">NRO</td>
+
                             <td width="10%" align="left">CUENTA</td>
-                            <td width="50%" align="center">CONCEPTO</td>
-                            <td width="10%" align="right">P.U.</td>
-                            <td width="10%" align="right">CANTIDAD</td>
-                            <td width="10%" align="right">TOTAL</td>
+                            <td width="15%" align="right">CANTIDAD</td>
+                            <td width="60%" align="center">DETALLE</td>
+                            <td width="15%" align="right">MONTO</td>
                         </tr>
                         @php($count = 1)
                         @php($acum=0)
                         @foreach ($table->cobrosDetalles as $cobros)
                             <tr>
-                                <td scope="row">{{ $count++ }}</td>
-
-                                <td>{{ $cobros->cuenta  }}</td>
-                                <td width="50%" align="justify">{{ $cobros->detalle }}</td>
-                                <td width="15%" align="center">{{ $cobros->monto }} </td>
-                                <td width="5%" align="center"> 1 </td>
-                                <td width="10%" align="center">{{number_format(floatval($cobros->monto * 1), 2, ',', '.')  }}</td>
+                                <td width="10%">{{ $cobros->cuenta  }}</td>
+                                <td width="15%" align="center"> 1 </td>
+                                <td width="60%" align="justify">{{ $cobros->detalle }} {{ $obs}}</td>
+                                <td width="15%" align="center">{{number_format(floatval($cobros->monto * 1), 2, ',', '.')  }}</td>
                             </tr>
                                 @php($acum=$acum+$cobros->monto)
                         @endforeach
                         <tr class="odd">
-                            <td width="80%" align="left" colspan="5">Total </td>
-                            <td width="10%" align="right">{{ $acum ?? '' }}</td>
+                            <td width="90%" align="left" colspan="3">Total </td>
+                            <td width="10%" align="right">{{ isset($acum) ? number_format($acum, 2) : '' }}
                         </tr>
+
+
 
 
                         <tr>
@@ -215,13 +289,8 @@
                             </td>
                         </tr>
 
-                        @if(isset($observacion) || $observacion!= null)
-                                <tr>
-                                    <td colspan="5">OBSERVACION: {{ $observacion ?? '' }}</td>
-                                </tr>
-                        @endif
                     </table>
- 
+                    @endif
 
     </main>
 </body>

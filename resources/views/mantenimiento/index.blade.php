@@ -13,7 +13,7 @@
 @section('content')
 
 <div>
-   
+
 </div>
     <div class="card">
         <div class="card-body">
@@ -21,7 +21,12 @@
             <div class="row">
                 <div class="col-sm-6">
                     <a href="{{ route('pay') }}" id="new-mant" class="btn btn-info col-sm-12"> <i
-                            class="fas fa-plus-circle text-white fa-2x"></i> Nuevo Pago</a>
+                            class="fas fa-plus-circle text-white fa-2x"></i> Pago Mant. Nichos</a>
+                </div>
+
+                <div class="col-sm-6">
+                    <a href="{{ route('paycm_mant') }}" id="new-mant" class="btn btn-success col-sm-12"> <i
+                            class="fas fa-plus-circle text-white fa-2x"></i> Pago Mant. Criptas / Mausoleo</a>
                 </div>
             </div>
         </div>
@@ -34,7 +39,9 @@
 
             <tr role="row">
                 <th scope="col">#</th>
+                <th scope="col">TIPO UBICACION</th>
                 <th scope="col">PAGO</th>
+                <th scope="col">VERIFICAR PAGO</th>
                 <th scope="col">FUR</th>
                 <th scope="col">RESPONSABLE</th>
                 <th scope="col">GESTION/ES</th>
@@ -49,8 +56,13 @@
             @foreach ($mant as $mant)
                 <tr>
                     <td scope="row">{{ $count++ }}</td>
+                    <td scope="row">{{ $mant->tipo_ubicacion }}</td>
 
                     <td>{{ $mant->pagado == true ? 'Pagado' : 'Pendiente' }}</td>
+
+                    <td><button class="btn btn-warning verificar_pago" data-id="{{ $mant->id }}" value="{{ $mant->fur }}"><i
+                        class="fas fa-check-square fa-2x  accent-blue " ></i></button></td>
+
                     <td>{{ $mant->fur }}</td>
                     <td>{{ $mant->nombre }} </td>
                     <td>{{ $mant->gestion }}</td>
@@ -58,14 +70,32 @@
                     <td>{{ $mant->observacion }}</td>
                     <td>
 
-                        <form action="{{ route('generatePDF') }}" method="GET" target="blank">
-                            @csrf
-                            <input type="hidden" name="id" value={{ $mant->id }}>
-                            <button type='sumit' class="btn btn-info "><i
-                                    class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
-                        </form>
+                        @if($mant->tipo_ubicacion=="CRIPTA" || $mant->tipo_ubicacion=="MAUSOLEO")
+                                <form action="{{ route('mant.generatePDFCM') }}" method="GET" target="blank">
+                                    @csrf
+                                    <input type="hidden" name="id" value={{ $mant->id }}>
+                                    <input type="hidden" name="fur" value={{ $mant->fur }}>
+                                    <input type="hidden" name="tipo_sitio" value="CRIPTA_MAUSELEO">
 
-                      
+                                    <button type='sumit' class="btn btn-info "><i
+                                            class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
+                                </form>
+                        @else
+                            <form action="{{ route('generatePDF') }}" method="GET" target="blank">
+                                @csrf
+                                <input type="hidden" name="id" value={{ $mant->id }}>
+                                <input type="hidden" name="fur" value={{ $mant->fur }}>
+                                <input type="hidden" name="tipo_sitio" value="NICHOS">
+
+
+                                <button type='sumit' class="btn btn-info "><i
+                                        class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
+                            </form>
+                        @endif
+                        @if($mant->pagado != true )
+                        <button type='button' class="btn btn-danger anular"  id="{{ $mant->fur }}"  data-id="{{ $mant->id  }}"><i
+                            class="fas fa-trash fa-2x"></i></button>
+                        @endif
                     </td>
                 </tr>
             @endforeach
@@ -144,5 +174,178 @@
 
 
         });
+
+
+    /*******************VERIFICAR PAGO*****************/
+
+    $(document).on('click', '.verificar_pago', function(e){
+            e.preventDefault();
+
+            var fur = $(this).val();
+            var servicios_id= $(this).attr('data-id');
+            verificarQR(fur, servicios_id);
+        })
+
+
+
+
+        function verificarQR(fur, servicios_id) {
+
+            Swal.fire({
+                title: 'Verificando Pago!',
+                html: `Espere un momento`,
+                didOpen: () => {
+                    Swal.showLoading();
+                  //  new Promise((resolve, reject) => {
+                        $.ajax({
+                            url:"{{route('verificar.pago.mant')}}",
+                            type: "POST",
+                            headers: {
+                                   'Content-Type':'application/json',
+                                   'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                               },
+                            data: JSON.stringify({
+                                 fur: fur,
+                            }),
+                            cache: false,
+                            contentType: "application/json; charset=utf-8",
+                            dataType: 'json',
+                            success: function(data) {
+                                console.log("respuesta verificacion");
+
+                                console.log(data.estado_pago);
+                                // console.log(data);
+                                // return false;
+                                // alert(data.data.ok);
+                                // alert(data.data.pagado);
+
+                                if(data.estado_pago=="AC")
+                                 {
+                                                Swal.fire(
+                                                    'Pago realizado',
+                                                    `El pago del fur ${fur} ya fue realizado`,
+                                                    'success'
+                                                            )
+                                                    .then(() => {
+                                                            location.reload();
+                                                        });
+                                            }else{
+                                                Swal.fire(
+                                                    'Pago no realizado',
+                                                    'Realiza el pago con la aplicación de tu banco de preferencia o en cajas',
+                                                    'info'
+                                                            )
+                                                    .then(() => {
+                                                            return false;
+                                                        });
+                                            }
+
+                                            // $('.verificar_pago').show();
+                                            $('.spiner_revision').hide();
+
+                            },
+                            error: function(resp) {
+                                Swal.fire(
+                                    'Error de verificación',
+                                    'Intente nuevamente, Si el problema continua notifica a soporte',
+                                    'error'
+                                );
+                            }
+                        });
+                  //  });
+                },
+            });
+        }
+
+
+        $(document).on('click', '.anular', function(e){
+            e.preventDefault();
+            var fur= $(this).attr('id');
+
+            var id = $(this).attr('data-id');
+            console.log('id: '+id+" fur: "+fur);
+                Swal.fire({
+                        title: 'Esta seguro de anular el registro?',
+                        showDenyButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: 'Realizar',
+                        denyButtonText: `No realizar`,
+                        }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+
+                                Swal.fire({
+                                        title: 'Ejecutando la solicitud!',
+                                        html: `Espere un momento`,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        //  new Promise((resolve, reject) => {
+                                                $.ajax({
+                                                    url:"{{route('mant.anularFur')}}",
+                                                    type: "POST",
+                                                    headers: {
+                                                        'Content-Type':'application/json',
+                                                        'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                                                    },
+                                                    data: JSON.stringify({
+                                                        fur: fur,
+                                                        id: id,
+                                                    }),
+                                                    cache: false,
+                                                    contentType: "application/json; charset=utf-8",
+                                                    dataType: 'json',
+                                                    success: function(data) {
+                                                        console.log("respuesta anulacion");
+
+                                                        console.log(data.status==true);
+
+
+                                                        if(data.status==true)
+                                                        {
+                                                            Swal.fire(
+                                                                            'Proceso realizado con éxito',
+                                                                            `FUR ${fur} : ${data.message}`,
+                                                                            'success'
+                                                                                    )
+                                                                            .then(() => {
+                                                                                    location.reload();
+                                                                                });
+
+
+                                                                    }else{
+                                                                        Swal.fire(
+                                                                            'Proceso fallado',
+                                                                            ` ${data.message}`,
+
+                                                                                    )
+                                                                            .then(() => {
+                                                                                    return false;
+                                                                                });
+                                                                    }
+
+                                                                    // $('.verificar_pago').show();
+                                                                    $('.spiner_revision').hide();
+
+                                                    },
+                                                    error: function(resp) {
+                                                        Swal.fire(
+                                                            'Error de verificación',
+                                                            'Intente nuevamente, Si el problema continua notifica a soporte',
+                                                            'error'
+                                                        );
+                                                    }
+                                                });
+                                        //  });
+                                        },
+                                    });
+                                } else if (result.isDenied) {
+                            Swal.fire('Los cambios no fueron realizados', '', 'info')
+                        }
+                    })
+        })
+
+
     </script>
+
+
 @stop

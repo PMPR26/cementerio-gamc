@@ -16,7 +16,7 @@
 
 @section('content')
 
-  
+
          <div class="card">
      <div class="card-body">
      <button id="new-difunto" type="button" class="btn btn-info col-4" > <i class="fas fa-plus-circle text-white fa-2x"></i> Crear Difunto</button>
@@ -26,16 +26,19 @@
     <table id="difunto-data" class="table table-striped table-bordered responsive" role="grid"
     aria-describedby="example">
     <thead class="bg-table-header">
-       
+
             <tr role="row">
-                <th scope="col">#</th>                           
+                <th scope="col">#</th>
                 <th scope="col">Cedula de identidad</th>
                 <th scope="col">Nombre</th>
-                <th scope="col">Fecha de defunción</th>  
+                <th scope="col">Fecha de defunción</th>
                 <th scope="col">Causa</th>
-                <th scope="col">Tipo</th>   
-                <th scope="col">Funeraria</th>       
-                <th scope="col">Certificado Defunción</th> 
+                <th scope="col">Tipo</th>
+                <th scope="col">Ubicación</th>
+
+                {{-- <th scope="col">Funeraria</th> --}}
+
+                <th scope="col">Certificado Defunción</th>
                 <th scope="col">Opciones</th>
             </tr>
         </thead>
@@ -43,27 +46,29 @@
         <tbody>
             @php($count = 1)
             @foreach ($difunto as $difunto)
-                       
+
                 <tr>
                     <td scope="row">{{ $count++ }}</td>
-                   
-                    <td>{{ $difunto->ci }}</td>                           
+
+                    <td>{{ $difunto->ci }}</td>
                     <td>{{ $difunto->nombre }}</td>
                     <td>{{ $difunto->fecha_defuncion }}</td>
                     <td>{{ $difunto->causa }}</td>
                     <td>{{ $difunto->tipo }}</td>
-                    <td>{{ $difunto->funeraria }}</td>
+                    <td>{{ $difunto->codigo }}</td>
+                    {{-- <td>{{ $difunto->funeraria }}</td> --}}
                     <td>@if(  $difunto->certificado_file!="")
                         <a href="{{ $difunto->certificado_file ?? '' }}" target="blank">Certificado de defunción</a>
                         @else
                         @php( print_r( 'ARCHIVO AUSENTE'))
                         @endif
-                     </td>     
-                                       
+                     </td>
+
                     <td>
                         <button type="button" class="btn btn-info" value="{{ $difunto->id }}" id="btn-editar-difunto-value" title="Editar datos difunto"><i class="fas fa-edit"></i></button>
                         @if($difunto->estado =='ACTIVO')
                         <button type="button" class="btn btn-warning" value="{{ $difunto->id }}" id="btn-desactivar"><i class="fas fa-thumbs-down"></i></button>
+                        <button type="button" class="btn btn-danger" value="{{ $difunto->id }}" id="btn-eliminar"><i class="fas fa-trash"></i></button>
                         @else
                         <button type="button" class="btn btn-success" value="{{ $difunto->id }}" id="btn-desactivar"><i class="fas fa-thumbs-up"></i></button>
                         @endif
@@ -73,7 +78,7 @@
         </tbody>
     </table>
 
-    
+
 <!-- Modal registro nuevo difunto -->
 <div class="modal fade fullscreen-modal animated bounceIn" id="modal-register-difunto" data-backdrop="static" tabindex="-1" role="dialog"
 aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -89,7 +94,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
 
             <div class="card">
                 <div class="card-body">
-            
+
                     <div class="row">
                         <div class="col-sm-6">
                                 <div class="form-group">
@@ -147,30 +152,30 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         </div>
 
 
-                       
+
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Tipo :</label>
                                 <select name="tipo_dif" id="tipo" class="form-control">
                                     <option value="">Seleccionar</option>
                                     <option value="ADULTO">ADULTO</option>
-                                    <option value="PARVULO">PARVULO</option>                            
-                                </select> 
+                                    <option value="PARVULO">PARVULO</option>
+                                </select>
                             </div>
                         </div>
 
                         <div class="col-sm-6">
-                 
+
                             <div class="form-group">
                                 <label>Genero :</label>
                                 <select name="status" id="genero" class="form-control">
-            
+
                                     <option value="MASCULINO">MASCULINO</option>
                                     <option value="FEMENINO">FEMENINO</option>
-        
+
                                 </select>
-                               
-                            </div> 
+
+                            </div>
                         </div>
                         <hr>
 
@@ -179,24 +184,29 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <select id="funeraria"
                             class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
                             <option value="">SELECIONAR FUNERARIA</option>
-                            @foreach ($funeraria as $fun)                                  
-                                    <option value="{{ $fun->funeraria }}">{{$fun->funeraria }}</option>                                   
+                            @foreach ($funeraria as $fun)
+                                    <option value="{{ $fun->funeraria }}">{{$fun->funeraria }}</option>
                             @endforeach
                            </select>
                         </div>
-                        <div class="col-sm-12 col-md-6 col-xl-6">
-                            <label>Adjuntar certificado de defunción :</label>                        
+                        <div class="col-sm-12 col-md-3 col-xl-3">
+                            <label>Nro de documento de identidad del responsable :</label>
+                            <input type="text" name="ci_resp" id="ci_resp" class="form-control">
+                        </div>
+
+                        <div class="col-sm-12 col-md-3 col-xl-3">
+                            <label>Adjuntar certificado de defunción :</label>
                             <div id="cert-defuncion" class="dropzone" style="text-align: center"> </div>
                              <hr>
                              <input type="hidden" id="url-certification">
                         </div>
-            
-                   
+
+
                     <div class="col-sm-12" style="text-align: center">
                         <button type="button" id="btn_guardar_difunto" class="btn btn-success">Guardar</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    </div> 
-            
+                    </div>
+
                 </div>
               </div>
         </div>
@@ -206,7 +216,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
 </div>
 
 
-  
+
 <!-- Modal upload difunto -->
 <div class="modal fade fullscreen-modal animated bounceIn" id="modal-update-difunto" data-backdrop="static" tabindex="-1" role="dialog"
 aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -222,7 +232,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
 
             <div class="card">
                 <div class="card-body">
-            
+
                     <div class="row">
                         <div class="col-sm-6">
                                 <div class="form-group">
@@ -276,8 +286,8 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <select id="funeraria_edit"
                             class="form-control select2-multiple select2-hidden-accessible" style="width: 100%">
                             <option value="">SELECIONAR FUNERARIA</option>
-                            @foreach ($funeraria as $fune)                                  
-                                    <option value="{{ $fune->funeraria }}">{{$fune->funeraria }}</option>                                   
+                            @foreach ($funeraria as $fune)
+                                    <option value="{{ $fune->funeraria }}">{{$fune->funeraria }}</option>
                             @endforeach
                            </select>
                         </div>
@@ -295,41 +305,45 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                 <select name="tipo_dif" id="tipo-edit" class="form-control">
                                     <option value="">Seleccionar</option>
                                     <option value="ADULTO">ADULTO</option>
-                                    <option value="PARVULO">PARVULO</option>                            
-                                </select> 
+                                    <option value="PARVULO">PARVULO</option>
+                                </select>
                             </div>
                         </div>
 
                         <div class="form-group col-sm-12 col-md-6 col-xl-6">
                                 <label>Genero :</label>
-                                <select name="status" id="genero-edit" class="form-control">            
+                                <select name="status" id="genero-edit" class="form-control">
                                     <option value="MASCULINO">MASCULINO</option>
-                                    <option value="FEMENINO">fEMENINO</option>        
+                                    <option value="FEMENINO">fEMENINO</option>
                                 </select>
                         </div>
 
                         <div class="form-group col-sm-12 col-md-6 col-xl-6">
                             <label>Estado</label>
-                            <select name="status" id="estado-edit" class="form-control col-12" style="width: 100%">        
+                            <select name="status" id="estado-edit" class="form-control col-12" style="width: 100%">
                                 <option value="ACTIVO">ACTIVO</option>
-                                <option value="INACTIVO">INACTIVO</option>    
-                            </select>                           
-                        </div> 
+                                <option value="INACTIVO">INACTIVO</option>
+                            </select>
+                        </div>
 
                         <hr>
-                        <div class="col-sm-12 col-md-12 col-xl-12">
-                                <label>Adjuntar certificado de defunción :</label>
-                                <div id="file_cert"></div>     
-                            <div class="col-sm-12" style="text-align: center" id="show-file"></div>                        
-                            <input type="hidden" id="url-certification-edit">
-                            
+                        <div class="col-sm-12 col-md-6 col-xl-6">
+                            <label>Nro de documento de identidad del responsable :</label>
+                            <input type="text" name="ci_resp_edit" id="ci_resp_edit" class="form-control">
                         </div>
-            
+                        <div class="col-sm-12 col-md-6 col-xl-6">
+                                <label>Adjuntar certificado de defunción :</label>
+                                <div id="file_cert"></div>
+                            <div class="col-sm-12" style="text-align: center" id="show-file"></div>
+                            <input type="hidden" id="url-certification-edit">
+
+                        </div>
+
                     <div class="col-sm-12" style="text-align: center">
                         <button type="button" id="btn_difunto-editar" class="btn btn-success">Guardar</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    </div> 
-            
+                    </div>
+
                 </div>
               </div>
         </div>
@@ -364,7 +378,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
     .modal .modal-dialog {
     width: 100%;
     max-width: none;
-    
+
     margin: 0;
     }
     .modal .modal-content {
@@ -379,8 +393,8 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
 @stop
 
 @section('js')
-    <script> 
-    
+    <script>
+
 $(document).ready(function ()
  {
 
@@ -396,7 +410,7 @@ $(document).ready(function ()
         acceptedFiles: 'image/jpeg, image/png, image/jpg, application/pdf',
         parallelUploads: 1,
         maxFiles: 1,
-        init: function() 
+        init: function()
         {
                 this.on("complete", function(file) {
                     if(file.type != 'application/pdf' && file.type != 'image/png' && file.type != 'image/jpg' && file.type != 'image/jpeg') {
@@ -406,7 +420,7 @@ $(document).ready(function ()
                     }
                 });
 
-        
+
 
                 this.on("removedfile", function(file) {
                     $.ajax({
@@ -432,17 +446,19 @@ $(document).ready(function ()
         },
         sending: function(file, xhr, formData){
                     formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
-                    formData.append('collector', 'certificados de difuncion');
-                   
+                    formData.append('collector', 'cementerio certificado de difuncion');
+                    formData.append('nro_documento', $('#ci_resp').val());
+
+
                 },
         success: function (file, response) {
             file.previewElement.classList.add("dz-success");
             $('#url-certification').val(response.response[0].url_file);
             // $(file._removeLink).attr('href', response.response[0].url_file);
-            // $(file._removeLink).attr('id', 'btn-remove-file'); 
+            // $(file._removeLink).attr('id', 'btn-remove-file');
         },
         error: function (file, response) {
-         
+
             if(response == 'You can not upload any more files.'){
                 toastr["error"]('No se puede subir mas archivos');
                 this.removeFile(file);
@@ -500,16 +516,18 @@ $(document).ready(function ()
         },
         sending: function(file, xhr, formData){
                     formData.append('sistema_id', '00e8a371-8927-49b6-a6aa-0c600e4b6a19');
-                    formData.append('collector', 'certificados de difuncion');
-                   
+                    formData.append('collector', 'cementerio certificados de difuncion');
+                    formData.append('nro_documento', $('#ci_resp_edit').val());
+
+
                 },
         success: function (file, response) {
             file.previewElement.classList.add("dz-success");
             $('#url-certification-edit').val(response.response[0].url_file);
-          
+
         },
         error: function (file, response) {
-         
+
             if(response == 'You can not upload any more files.'){
                 toastr["error"]('No se puede subir mas archivos');
                 this.removeFile(file);
@@ -518,7 +536,7 @@ $(document).ready(function ()
             $('.dz-error-message').text('No se pudo subir el archivo '+ file.name);
         }
 
-        
+
     });
 
 
@@ -545,8 +563,8 @@ $(document).ready(function ()
 
 
         //editar difunto
-        $('#btn_difunto-editar').on('click', function(){
-       
+        $(document).on('click', '#btn_difunto-editar', function(){
+
             $.ajax({
                         type: 'PUT',
                         headers: {
@@ -567,7 +585,7 @@ $(document).ready(function ()
                             'tipo': $('#tipo-edit').val(),
                             'funeraria': $('#funeraria_edit').val(),
                             'url_certificacion': $('#url-certification-edit').val(),
-
+                            'ci_resp':$('#ci_resp_edit').val(),
                             'genero': $('#genero-edit').val(),
                             'status': $('#estado-edit').val(),
                             'id': $('#btn_difunto-editar').val()
@@ -581,13 +599,13 @@ $(document).ready(function ()
                             showCancelButton: false,
                             showConfirmButton: false
                             });
-                            setTimeout(function() { 
+                            setTimeout(function() {
                                 location.reload();
                             }, 2000);
                             //toastr["success"]("Registro realizado con éxito!");
                         },
                         error: function (error) {
-                            
+
                             if(error.status == 422){
                                 Object.keys(error.responseJSON.errors).forEach(function(k){
                                 toastr["error"](error.responseJSON.errors[k]);
@@ -623,13 +641,13 @@ $(document).ready(function ()
                             showCancelButton: false,
                             showConfirmButton: false
                             });
-                            setTimeout(function() { 
+                            setTimeout(function() {
                                 location.reload();
                             }, 2000);
                             //toastr["success"]("Registro realizado con éxito!");
                         },
                         error: function (error) {
-                            
+
                             if(error.status == 422){
                                 Object.keys(error.responseJSON.errors).forEach(function(k){
                                 toastr["error"](error.responseJSON.errors[k]);
@@ -646,7 +664,7 @@ $(document).ready(function ()
 
         //modal editar difunto
         $(document).on('click', '#btn-editar-difunto-value', function(){
-    
+
             $.ajax({
                         type: 'GET',
                         headers: {
@@ -656,7 +674,7 @@ $(document).ready(function ()
                         url: '/difunto/get-difunto/' + $(this).val(),
                         async: false,
                         success: function(data_response) {
-                         console.log(data_response);
+                        //  console.log(data_response);
                            $('#btn_difunto-editar').val(data_response.response.id);
                             $('#modal-update-difunto').modal('show');
 
@@ -681,8 +699,8 @@ $(document).ready(function ()
                                 }else{
                                     $('#show-file').html('<iframe  style="border:1px solid #666CCC" src="'+data_response.response.certificado_file+'" frameborder="1" scrolling="auto" height="500" width="90%" ></iframe>');
                                 }
-                            }else{                               
-                                    var contenedor_file='<div id="cert-defuncion-edit" class="dropzone" style="text-align: center"> </div>';                             
+                            }else{
+                                    var contenedor_file='<div id="cert-defuncion-edit" class="dropzone" style="text-align: center"> </div>';
                                     $('#file_cert').append(contenedor_file);
                                 }
                        }
@@ -697,7 +715,7 @@ $(document).ready(function ()
 
 
 
-        $('#btn_guardar_difunto').on('click', function(){
+        $(document).on('click','#btn_guardar_difunto', function(){
             $.ajax({
                         type: 'POST',
                         headers: {
@@ -718,6 +736,7 @@ $(document).ready(function ()
                             'tipo': $('#tipo').val(),
                             'funeraria': $('#funeraria').val(),
                             'genero': $('#genero').val(),
+                            'ci_resp':$('#ci_resp').val(),
                             'certificado_file': $('#url-certification').val() //aqui
                         }),
                         success: function(data_response) {
@@ -729,13 +748,13 @@ $(document).ready(function ()
                             showCancelButton: false,
                             showConfirmButton: false
                             });
-                            setTimeout(function() { 
+                            setTimeout(function() {
                                 location.reload();
                             }, 2000);
                             //toastr["success"]("Registro realizado con éxito!");
                         },
                         error: function (error) {
-                            
+
                             if(error.status == 422){
                                 Object.keys(error.responseJSON.errors).forEach(function(k){
                                 toastr["error"](error.responseJSON.errors[k]);
@@ -751,7 +770,7 @@ $(document).ready(function ()
 
 
 
-        $('#new-difunto').on('click', function(){
+        $(document).on('click', '#new-difunto', function(){
 
             $('#modal-register-difunto').modal('show');
         });
@@ -791,7 +810,7 @@ $(document).ready(function ()
         },
     });
 
-       
+
     });
 
 
@@ -799,25 +818,131 @@ $(document).ready(function ()
   //funeraria  { dropdownParent: "#modal-container" }
   $("#funeraria").select2({
                 width: 'resolve', // need to override the changed default
-                dropdownParent: $('#modal-register-difunto'),                
+                dropdownParent: $('#modal-register-difunto'),
                 tags: true,
                 allowClear: true
                 });
   $("#funeraria_edit").select2({
                 width: 'resolve', // need to override the changed default
-                dropdownParent: $('#modal-update-difunto'), 
+                dropdownParent: $('#modal-update-difunto'),
                 tags: true,
                 allowClear: true
                 });
 
     $(document).on('click' ,  '.select2-selection__clear', function(){
 
-                   $('#funeraria option:selected').remove(); 
-                   $('#funeraria_edit option:selected').remove(); 
+                   $('#funeraria option:selected').remove();
+                   $('#funeraria_edit option:selected').remove();
     });
 
-    // $(document).on('click' ,  '#funeraria_edit .select2-selection__clear', function(){
-    //                $('#funeraria_edit option:selected').remove(); 
-    // })
-    // </script>
+
+//eliminar difunto
+    $(document).on('click', '#btn-eliminar', function(){
+        var id_difunto=$(this).val();
+            $.ajax({
+                        type: 'GET',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: '/difunto/ver-registro-difunto/' + $(this).val(),
+                        async: false,
+                        success: function(data_response) {
+                            // console.log(data_response);
+                            if(data_response.status==true){
+                                if(data_response.response.tipo=="servicio"){
+                                    swal.fire({
+                                    title: "Atención",
+                                    text: "Imposible eliminar. el difutno tiene registros relacionados con  el pago de servicios",
+                                    type: "warning",
+                                    timer: 1000,
+                                    showCancelButton: false,
+                                    showConfirmButton: false
+                                    });
+                                    return false;
+                                }else{
+                                    console.log("****"+data_response.response.ci_dif);
+                                        swal.fire({
+                                            title: 'Precaucion',
+                                            text: "El difunto se encuentra asociado a la siguiente ubicacion. codigo: "+data_response.response.codigo+" , si elimina el registro afectara a los registros relacionados, desea ejecutar la operacion? ",
+                                            icon: "warning",
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#00B74A',
+                                            confirmButtonText: 'Sí!',
+                                            cancelButtonText: "No, cancelar!",
+                                            reverseButtons: true
+                                        }).then(function(result) {
+
+                                            if (result.value== true) {
+                                               eliminarDifunto(id_difuto, data_response.response.id, data_response.response.tipo, data_response.response.ci_dif);
+                                               location.reload();
+                                            }
+                                        });
+                                }
+
+                            }else{
+                                eliminarDifunto(id_difunto, null ,null, null);
+                                location.reload();
+                            }
+
+                        },
+                        error: function (error) {
+
+                            if(error.status == 422){
+                                Object.keys(error.responseJSON.errors).forEach(function(k){
+                                toastr["error"](error.responseJSON.errors[k]);
+                                //console.log(k + ' - ' + error.responseJSON.errors[k]);
+                                });
+                            }else if(error.status == 419){
+                                // location.reload();
+                            }
+
+                        }
+                    })
+        });
+
+        function eliminarDifunto(id_difunto, id_tabla, tipo, ci_dif)
+        {
+
+            if(tipo=="MAUSOLEO" || tipo=="CRIPTA" ){
+                var tbl="cripta_mausoleo";
+            }
+            else{
+                var tbl="responsable_difunto";
+            }
+
+            $.ajax({
+                        type: 'POST',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}',
+                        },
+                        url: "{{ route('difunto.delete') }}",
+                        async: false,
+                        data: JSON.stringify({
+                            'id_difunto':  id_difunto,
+                            'id_tabla':  id_tabla,
+                            'tbl':  tbl,
+                            'tipo':tipo,
+                            'ci_dif':ci_dif,
+
+
+                        }),
+                        success: function(response) {
+                            swal.fire({
+                            title: "Eliminado!",
+                            text: "!Registro eliminado con éxito!",
+                            type: "success",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false
+                            });
+                            setTimeout(function() {
+                                // location.reload();
+                            }, 2000);
+                          }
+                })
+        }
+
+     </script>
 @stop
