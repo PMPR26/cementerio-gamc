@@ -35,7 +35,7 @@
                         <label>Cuartel</label>
                         <input style="text-transform:uppercase;"
                             onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
-                            class="form-control" id="cuartel" autocomplete="off">
+                            class="form-control" id="cuartel" autocomplete="off" required>
                     </div>
 
 
@@ -76,7 +76,7 @@
                             <label>Codigo antiguo</label>
                             <input style="text-transform:uppercase;"
                                 onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
-                                class="form-control clear" id="anterior" autocomplete="off">
+                                class="form-control clear" id="anterior" autocomplete="off" >
                         </div>
 
                         <div class="col-sm-12 col-md-3 col-xl-3">
