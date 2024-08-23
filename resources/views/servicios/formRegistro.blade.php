@@ -106,7 +106,7 @@
                             <label for="inputEmail4">Cuartel</label>
                             {{-- <label>Cuartel</label>
                                 <input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control clear" id="cuartel" > --}}
-                            <select class="form-control cuartel" name="cuartel" id="cuartel" style="width: 100%">
+                            <select class="form-control cuartel" name="cuartel" id="cuartel" style="width: 100%" required>
                                 <option selected disabled>Seleccione un cuartel</option>
                                 @foreach ($cuarteles as $cuart)
                                     <option value="{{ $cuart->id }}">{{ $cuart->codigo }}</option>

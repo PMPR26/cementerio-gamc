@@ -757,17 +757,22 @@ class ServicioNicho extends Model
 
         // try {
             // Consulta usando Eloquent
-            $result = ServicioNicho::where('codigo_nicho', $codigo_nicho)
-            ->whereNotNull('nro_renovacion')
-            ->Orwhere('nro_renovacion', '>', 0)
-            ->where('estado', 'ACTIVO')
-            ->whereYear('fecha_pago', $year)
-            ->select('estado_pago')
-            ->orderByDesc('id')
-            ->first();
+            $result = DB::table('servicio_nicho')
+             ->where('codigo_nicho',  $codigo_nicho)
+             ->where(function($query) {
+                 $query->whereNotNull('nro_renovacion')
+                       ->orWhere('nro_renovacion', '>', 0);
+             })
+             ->where('estado', 'ACTIVO')
+             ->whereYear('fecha_pago',$year)
+             ->orderBy('id', 'desc')
+             ->limit(1)
+             ->value('estado_pago');
+
 
             // Depura para verificar qué está devolviendo la consulta
-            // dd($result);
+
+
 
             if($result) {
                 if($result->estado_pago == true) {
