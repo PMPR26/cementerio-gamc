@@ -881,7 +881,7 @@ class ServiciosController extends Controller
         $det_exhum = $tablelocal->det_exhum ?? '';
         $responsable_difunto_id = $tablelocal->responsable_difunto_id;
         $pago_por = $tablelocal->pago_por;
-        // dd( $responsable_difunto_id);
+        dd($tipo_ubicacion);
 
 
         if ($tipo_ubicacion == "NICHO") {
@@ -916,7 +916,7 @@ class ServiciosController extends Controller
                 )
                 ->orderBy('responsable_difunto.id', 'DESC')
                 ->first();
-               // dd($sq);
+               dd($sq);
             $dif = $sq->nombre_dif . " " . $sq->paterno_dif . " " . $sq->materno_dif;
             $resp = $sq->nombre_resp . " " . $sq->paterno_resp . " " . $sq->materno_resp; // ."  C.I.: ".$sq->ci_resp;
             $ci_resp = $sq->ci_resp;
