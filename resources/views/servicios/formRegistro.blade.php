@@ -87,7 +87,7 @@
                             <label>FILA</label>
                             <input style="text-transform:uppercase;"
                                 onkeyup="javascript:this.value=this.value.toUpperCase();" type="text"
-                                class="form-control " id="fila" maxlength="3" autocomplete="off">
+                                class="form-control " id="fila" maxlength="1" autocomplete="off">
                         </div>
 
                         <div class="col-sm-12 col-md-3 col-xl-3 p-4 mt-2">
