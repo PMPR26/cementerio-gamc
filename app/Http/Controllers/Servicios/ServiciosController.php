@@ -881,7 +881,7 @@ class ServiciosController extends Controller
         $det_exhum = $tablelocal->det_exhum ?? '';
         $responsable_difunto_id = $tablelocal->responsable_difunto_id;
         $pago_por = $tablelocal->pago_por;
-        dd($tipo_ubicacion);
+        // dd( $tipo_ubicacion);
 
 
         if ($tipo_ubicacion == "NICHO") {
@@ -892,13 +892,22 @@ class ServiciosController extends Controller
                     'responsable.nombres as nombre_resp',
                     'responsable.primer_apellido as paterno_resp',
                     'responsable.segundo_apellido as materno_resp',
-                    'responsable.ci as ci_resp'
+                    'responsable.ci as ci_resp',
+                    'responsable_difunto.difunto_id'
+
                 )
                 ->orderBy('responsable_difunto.id', 'DESC')
                 ->first();
 
             $resp = $sq->nombre_resp . " " . $sq->paterno_resp . " " . $sq->materno_resp; // ."  C.I.: ".$sq->ci_resp;
             $ci_resp = $sq->ci_resp;
+            $sq_dif=Difunto::where('id', $sq->difunto_id)
+            ->where('estado', 'ACTIVO')
+            ->select('nombres', 'primer_apellido', 'segundo_apellido', 'ci')
+            ->first();
+            $dif = $sq_dif->nombres . " " . $sq_dif->primer_apellido . " " . $sq_dif->segundo_apellido; // ."  C.I.: ".$sq_dif->ci_dif;
+            $ci_dif = $sq_dif->ci;
+
         } else if ($tipo_ubicacion == "EXTERNO GRATUITO" ||  $tipo_ubicacion == "EXTERNO") {
             $sq = ResponsableDifunto::where('responsable_difunto.id', '=', $responsable_difunto_id)
                 ->where('responsable_difunto.estado', 'ACTIVO')
@@ -916,7 +925,7 @@ class ServiciosController extends Controller
                 )
                 ->orderBy('responsable_difunto.id', 'DESC')
                 ->first();
-               dd($sq);
+            //    dd($sq);
             $dif = $sq->nombre_dif . " " . $sq->paterno_dif . " " . $sq->materno_dif;
             $resp = $sq->nombre_resp . " " . $sq->paterno_resp . " " . $sq->materno_resp; // ."  C.I.: ".$sq->ci_resp;
             $ci_resp = $sq->ci_resp;
