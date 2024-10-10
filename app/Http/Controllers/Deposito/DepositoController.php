@@ -229,7 +229,7 @@ class DepositoController extends Controller
       public function verificarPagoDeposito(Request $request){
         $service=New ServicioNicho;
         $estado_pago=$service->buscarFur($request);
-
+        // dd($estado_pago->estado_pago);
         if($estado_pago->estado_pago=="AC"){
             $this->updatePayDeposito($request);
         }
@@ -240,7 +240,6 @@ class DepositoController extends Controller
     //service update pay from sinot
     public function updatePayDeposito(Request $request)
     {
-       // dd(trim($request->fur));
         if ($request->isJson()) {
             $this->validate($request, [
                 "fur" => 'required',
@@ -248,8 +247,15 @@ class DepositoController extends Controller
             ]);
 
             $deposito = DepositoModel::select('id', 'fur')
-                ->where(['fur' => trim($request->fur), 'estado_pago' => false, 'estado' => 'ACTIVO'])
-                ->first();
+            ->where('fur', trim($request->fur))
+            ->where(function($query) {
+                $query->where('estado_pago', '=', false)
+                      ->orWhereNull('estado_pago');
+            })
+            ->where('estado', 'ACTIVO')
+            ->first();
+
+
 
             if ($deposito) {
                 DepositoModel::where('fur', trim($request->fur))

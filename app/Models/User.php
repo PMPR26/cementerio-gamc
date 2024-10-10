@@ -44,7 +44,7 @@ class User extends Authenticatable implements JWTSubject {
     ];
 
     //return profile user image
-    public function adminlte_image(){
+    public static function adminlte_image(){
 
         if(Auth::user()->genero == 'MASCULINO'){
             return url('/').'/img/profile_image/men.png';
@@ -55,7 +55,7 @@ class User extends Authenticatable implements JWTSubject {
     }
 
     //return role user
-    public function adminlte_desc(){
+    public  function adminlte_desc(){
         if (auth()->check()) {
             $user = auth()->user();
             $rolUsuario = $user->role;

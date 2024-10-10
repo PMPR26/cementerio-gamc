@@ -354,7 +354,17 @@ class ServicioNicho extends Model
         return $fur_response;
     }
 
+        $cm->save();
 
+        if ($data->asignado == "asignado") {
+            $rd = ResponsableDifunto::where('id', $data->responsable_difunto_id)
+                ->where('estado', 'ACTIVO')
+                ->whereDate('created_at', '=', date('Y-m-d', strtotime($data->created_at)))
+                ->first();
+            if (!empty($rd)) {
+                $rd->estado = 'INACTIVO';
+                $rd->save();
+            }
 
     public function getSevHijosByFather(Request $request)
     {
@@ -505,7 +515,6 @@ class ServicioNicho extends Model
             }
 
             if ($result['out'] == true) {
-
                 $est = "OCUPADO";
                 $estado = "ACTIVO";
                 $nicho = new Nicho;
@@ -539,11 +548,17 @@ class ServicioNicho extends Model
             }
 
             if ($result['ren'] == true) {
-                $renov_ant = $data_nicho->renov_anterior;
-                $monto_renov_anterior = $data_nicho->monto_renov_anterior;
-                $gestion_renov_anterior = $data_nicho->gestion_renov_anterior;
+                $id = $request->id;
 
-                $nicho->restaurarRenov($id_nicho, $renov_ant,  $monto_renov_anterior,  $gestion_renov_anterior);
+                    // Buscar el registro por ID
+                    $servicioNicho = ServicioNicho::find($id);
+
+                    if ($servicioNicho) {
+                        // Actualizar el estado a 'INACTIVO'
+                        $servicioNicho->estado = 'INACTIVO';
+                        $servicioNicho->save();
+                    }
+
             }
         }
         $a = $this->anular_fur($request);
@@ -561,7 +576,7 @@ class ServicioNicho extends Model
     {
         $data = ServicioNicho::where('id', $request->id)->first();
         $a = $this->anular_fur($request);
-        if ($a['fur_estado'] == "IN") {
+        if ($a['fur_estado'] == "IN" || $request->fur == 0) {
             $data->estado = "INACTIVO";
             $data->save();
             return response()->json(['status' => true, 'message' => 'Se anuló el registro con exito']);
@@ -715,31 +730,90 @@ class ServicioNicho extends Model
         return $fur_response;
     }
 
+    // public function verificarRenovacion(Request $request) {
+    //     $codigo_nicho = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
+    //     // dd($$codigo_nicho);
+
+    //     $year = date('Y'); // Obtén el año actual
+
+    //     // try {
+    //         // Consulta usando Eloquent con whereRaw para manejar correctamente los valores vacíos
+    //         $result = ServicioNicho::where('codigo_nicho1', $codigo_nicho)
+    //                     ->whereNotNull('nro_renovacion')
+    //                     ->where('nro_renovacion', '>', 0)
+    //                     ->where('estado_pago', 1)
+    //                     ->where('estado', 'ACTIVO')
+    //                     ->whereYear('fecha_pago', $year)
+    //                     ->get();
+
+
+    //         if($result->isNotEmpty()){
+    //             return response()->json(['status' => true, 'mensaje' => 'El nicho ya tiene renovación activa', 'codigo_nicho'=>$codigo_nicho, 'result'=>$result]);
+    //         } else {
+    //             return response()->json(['status' => false, 'mensaje' => 'El nicho no tiene renovación activa', 'codigo_nicho'=>$codigo_nicho,]);
+    //         }
+
+    //     // } catch (Exception $e) {
+    //     //     // Manejo de errores
+    //     //     Log::error("Error en verificarRenovacion: " . $e->getMessage());
+    //     //     return response()->json(['error' => 'Error al verificar la renovación'], 500);
+    //     // }
+    // }
+
     public function verificarRenovacion(Request $request) {
         $codigo_nicho = $request->cuartel . "." . $request->bloque . "." . $request->nro_nicho . "." . $request->fila;
+
         $year = date('Y'); // Obtén el año actual
 
-        try {
-            // Consulta usando Eloquent con whereRaw para manejar correctamente los valores vacíos
-            $result = ServicioNicho::where('codigo_nicho', $codigo_nicho)
-                        ->whereNotNull('nro_renovacion')
-                        ->where('nro_renovacion', '>', 0)
-                        ->where('estado_pago', true)
-                        ->whereYear('fecha_pago', $year)
-                        ->get();
+        // try {
+            // Consulta usando Eloquent
+            $result = DB::table('servicio_nicho')
+             ->where('codigo_nicho',  $codigo_nicho)
+             ->where(function($query) {
+                 $query->whereNotNull('nro_renovacion')
+                       ->orWhere('nro_renovacion', '>', 0);
+             })
+             ->where('estado', 'ACTIVO')
+             ->whereYear('fecha_pago',$year)
+             ->orderBy('id', 'desc')
+             ->limit(1)
+             ->value('estado_pago');
 
-            if($result->isNotEmpty()){
-                return response()->json(['status' => true, 'mensaje' => 'El nicho ya tiene renovación activa']);
+
+            // Depura para verificar qué está devolviendo la consulta
+
+
+
+            if($result) {
+                if($result->estado_pago == true) {
+                    return response()->json([
+                        'status' => true,
+                        'mensaje' => 'El nicho ya tiene renovación activa',
+                        'codigo_nicho' => $codigo_nicho,
+                        'result' => $result
+                    ]);
+                }else{
+                    return response()->json([
+                        'status' => true,
+                        'mensaje' => 'El nicho tiene renovación pendiente de pago',
+                        'codigo_nicho' => $codigo_nicho,
+                        'result' => $result
+                    ]);
+                }
+
             } else {
-                return response()->json(['status' => false, 'mensaje' => 'El nicho no tiene renovación activa']);
+                return response()->json([
+                    'status' => false,
+                    'mensaje' => 'El nicho no tiene renovación activa',
+                    'codigo_nicho' => $codigo_nicho
+                ]);
             }
 
-        } catch (Exception $e) {
-            // Manejo de errores
-            Log::error("Error en verificarRenovacion: " . $e->getMessage());
-            return response()->json(['error' => 'Error al verificar la renovación'], 500);
-        }
+        // } catch (Exception $e) {
+        //     // Manejo de errores
+        //     Log::error("Error en verificarRenovacion: " . $e->getMessage());
+        //     return response()->json(['error' => 'Error al verificar la renovación'], 500);
+        // }
     }
-
 
 }

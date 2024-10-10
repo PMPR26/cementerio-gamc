@@ -95,10 +95,9 @@
                                     <input type="hidden" name="codigo_nicho" value={{ $serv->codigo_nicho }}>
                                     <input type="hidden" name="id" value={{ $serv->serv_id }}>
                                     <input type="hidden" name="fur" value={{ $serv->fur }}>
-
                                     <button type='submit' class="btn btn-info "><i
                                             class="fas fa-file-pdf fa-2x  accent-blue "></i></button>
-                                </form>
+                                 </form>
                                 <button type='button' class="btn btn-danger anular_cm" id="{{ $serv->fur }}"
                                     data-id="{{ $serv->serv_id }}"><i class="fas fa-trash fa-2x"></i></button>
                             @endif
